@@ -130,6 +130,20 @@ void ADog::Tick(float DeltaTime)
 	if (AttachActor)
 	{
 		SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+		SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+
+		if (GetMesh()->GetPhysicsLinearVelocity().Size() + GetMesh()->GetPhysicsAngularVelocity().Size() >= 2000.0f)
+		{
+			// 이런 식으로 할 것 -> 결과로 메시만 가만히 있고 특정 애니메이션을 동작함
+			/*Dog->GetMesh()->SetSimulatePhysics(false);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-R-Thigh", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-L-Thigh", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);
+			Dog->GetMesh()->SetRelativeRotation(FRotator(0.0f, Dog->GetMesh()->GetComponentRotation().Yaw, 0.0f));
+			Dog->CurrentDogState = EDogState::Chase;*/
+		}
 	}
 }
 
