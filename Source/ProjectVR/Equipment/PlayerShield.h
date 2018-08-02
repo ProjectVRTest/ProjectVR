@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -24,11 +24,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class USceneComponent* ShieldScene;				// ¾À ÄÄÆ÷³ÍÆ®
+		class USceneComponent* ShieldScene;				// ì”¬ ì»´í¬ë„ŒíŠ¸
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UStaticMeshComponent* ShieldMesh;			// ¸Ş½¬¿¡ ¹æÆĞ¸¦ ºÙÀÏ ÄÄÆ÷³ÍÆ®
+		class UStaticMeshComponent* ShieldMesh;			// ë©”ì‰¬ì— ë°©íŒ¨ë¥¼ ë¶™ì¼ ì»´í¬ë„ŒíŠ¸
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UWidgetComponent* CharacterStateWidget;		// Ä³¸¯ÅÍ »óÅÂ À§Á¬ ( ¹°¾à / Ã¼·Â / ½ºÅ×¹Ì³Ê ) ÄÄÆ÷³ÍÆ®
+		class UWidgetComponent* CharacterStateWidget;		// ìºë¦­í„° ìƒíƒœ ìœ„ì ¯ ( ë¬¼ì•½ / ì²´ë ¥ / ìŠ¤í…Œë¯¸ë„ˆ ) ì»´í¬ë„ŒíŠ¸
 
 	UFUNCTION()
 		void ConvertOfOpacity(float opacity);

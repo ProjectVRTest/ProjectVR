@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Engine/StaticMesh.h"
 
 // Sets default values
 APotionBag::APotionBag()
@@ -12,7 +13,7 @@ APotionBag::APotionBag()
 	PrimaryActorTick.bCanEverTick = true;
 
 	PotionBagMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PotionBagMesh"));
-	PotionBagMesh->SetupAttachment(RootComponent);
+	SetRootComponent(PotionBagMesh);
 	PotionBagMesh->SetRelativeScale3D(FVector(0.3f, 0.4f, 0.4f));
 
 	PotionBagCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("PotionBagCollision"));

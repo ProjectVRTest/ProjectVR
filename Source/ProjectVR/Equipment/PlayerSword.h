@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -24,18 +24,18 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UStaticMeshComponent* SwordMesh;				// ¸Ş½¬¿¡ °ËÀ» ºÙÀÏ ÄÄÆ÷³ÍÆ®
+		class UStaticMeshComponent* SwordMesh;				// ë©”ì‰¬ì— ê²€ì„ ë¶™ì¼ ì»´í¬ë„ŒíŠ¸
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UCapsuleComponent* SwordCollision;				// °Ë¿¡ Äİ¸®ÀüÀ» ºÙÀÌ±â À§ÇÑ ÄÄÆ÷³ÍÆ®
+		class UCapsuleComponent* SwordCollision;				// ê²€ì— ì½œë¦¬ì „ì„ ë¶™ì´ê¸° ìœ„í•œ ì»´í¬ë„ŒíŠ¸
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		float Timer;			// Áö¼ÓÀûÀÎ °ø°İÀ» ¸·±âÀ§ÇÑ Å¸ÀÌ¸Ó
+		float Timer;			// ì§€ì†ì ì¸ ê³µê²©ì„ ë§‰ê¸°ìœ„í•œ íƒ€ì´ë¨¸
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		float Damage;		// µ¥¹ÌÁö
+		float Damage;		// ë°ë¯¸ì§€
 	
 	UFUNCTION()
 		void OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
-			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// ¿À¹ö·¦ÀÌº¥Æ®·Î µ¥¹ÌÁö¸¦ Àü´ŞÇÏ±âÀ§ÇÑ ÇÔ¼ö
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// ì˜¤ë²„ë©ì´ë²¤íŠ¸ë¡œ ë°ë¯¸ì§€ë¥¼ ì „ë‹¬í•˜ê¸°ìœ„í•œ í•¨ìˆ˜
 	
 	UFUNCTION()
 		void ConvertOfOpacity(float opacity);

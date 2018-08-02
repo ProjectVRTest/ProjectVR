@@ -1,10 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PlayerSword.h"
-#include "Components/StaticMeshComponent.h"			// ½ºÅÂÆ½¸Ş½¬ ÄÄÆ÷³ÍÆ®
-#include "UObject/ConstructorHelpers.h"					// ConstructorHelpers »ç¿ë
-#include "Components/CapsuleComponent.h"				// Ä¸½¶ÄÄÆ÷³ÍÆ®
-#include "Kismet/GameplayStatics.h"							// µ¥¹ÌÁöÀü´Ş½Ã »ç¿ë
+#include "Components/StaticMeshComponent.h"			// ìŠ¤íƒœí‹±ë©”ì‰¬ ì»´í¬ë„ŒíŠ¸
+#include "UObject/ConstructorHelpers.h"					// ConstructorHelpers ì‚¬ìš©
+#include "Components/CapsuleComponent.h"				// ìº¡ìŠì»´í¬ë„ŒíŠ¸
+#include "Kismet/GameplayStatics.h"							// ë°ë¯¸ì§€ì „ë‹¬ì‹œ ì‚¬ìš©
 
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "HandMotionController/Widget/LeftHandWidget.h"
@@ -13,21 +13,23 @@
 
 #include "Runtime/Engine/Classes/Materials/MaterialParameterCollectionInstance.h"
 #include "Runtime/Engine/Classes/Materials/MaterialParameterCollection.h"
+#include "Engine/StaticMesh.h"
+
 // Sets default values
 APlayerSword::APlayerSword()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	/* ½ºÅÂÆ½ ¸Å½¬ ÄÄÆ÷³ÍÆ® »ı¼º */
+	/* ìŠ¤íƒœí‹± ë§¤ì‰¬ ì»´í¬ë„ŒíŠ¸ ìƒì„± */
 	SwordMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwordMesh"));
-	SwordMesh->SetupAttachment(RootComponent);			// ½ºÅÂÆ½ ¸Ş½¬ ÄÄÆ÷³ÍÆ®°¡ ·çÆ® ÄÄÆ÷³ÍÆ®°¡ µÇµµ·Ï ÇÔ
-	SwordMesh->SetCollisionProfileName(TEXT("NoCollision"));		// ¸Ş½¬ÀÇ Äİ¸®Àü »óÅÂ°ªÀ» NoCollisionÀ¸·Î ÁÜ.
+	SetRootComponent(SwordMesh);
+	SwordMesh->SetCollisionProfileName(TEXT("NoCollision"));		// ë©”ì‰¬ì˜ ì½œë¦¬ì „ ìƒíƒœê°’ì„ NoCollisionìœ¼ë¡œ ì¤Œ.
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/Equipment/Mesh/sword_high.sword_high'"));		// ·¹ÆÛ·±½º °æ·Î·Î ¹æÆĞ ¸Å½¬¸¦ Ã£À½
-	if (SM_Sword.Succeeded())		// °Ë ¸Ş½¬¸¦ Ã£¾ÒÀ» °æ¿ì ½ÇÇà
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/Equipment/Mesh/sword_high.sword_high'"));		// ë ˆí¼ëŸ°ìŠ¤ ê²½ë¡œë¡œ ë°©íŒ¨ ë§¤ì‰¬ë¥¼ ì°¾ìŒ
+	if (SM_Sword.Succeeded())		// ê²€ ë©”ì‰¬ë¥¼ ì°¾ì•˜ì„ ê²½ìš° ì‹¤í–‰
 	{
-		SwordMesh->SetStaticMesh(SM_Sword.Object);			// ½ºÅÂÆ½ ¸Ş½¬¿¡ °Ë ¸ğ¾ç ¼³Á¤
+		SwordMesh->SetStaticMesh(SM_Sword.Object);			// ìŠ¤íƒœí‹± ë©”ì‰¬ì— ê²€ ëª¨ì–‘ ì„¤ì •
 	}
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> SwordMaterial(TEXT("Material'/Game/Assets/Equipment/Texture/SwordMaterial.SwordMaterial'"));
@@ -36,22 +38,22 @@ APlayerSword::APlayerSword()
 		SwordMesh->SetMaterial(0, SwordMaterial.Object);
 	}
 
-	/* Äİ¸®Àü ÄÄÆ÷³ÍÆ® »ı¼º */
+	/* ì½œë¦¬ì „ ì»´í¬ë„ŒíŠ¸ ìƒì„± */
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));			
-	SwordCollision->SetupAttachment(SwordMesh);		// Äİ¸®ÀüÀ» °Ë ¸Ş½¬¿¡ ºÙÀÓ
+	SwordCollision->SetupAttachment(SwordMesh);		// ì½œë¦¬ì „ì„ ê²€ ë©”ì‰¬ì— ë¶™ì„
 
-	// Äİ¸®Àü À§Ä¡ ¹× ¹æÇâ, Å©±â ¼³Á¤
+	// ì½œë¦¬ì „ ìœ„ì¹˜ ë° ë°©í–¥, í¬ê¸° ì„¤ì •
 	SwordCollision->SetRelativeLocation(FVector(0.0f, 450.0f, 0.0f));
 	SwordCollision->SetRelativeRotation(FRotator(0.0f,0.0f,90.0f));
 	SwordCollision->SetRelativeScale3D(FVector(1.0f, 1.0f, 8.0f));
 
-	// °Ë ¸Ş½¬ÀÇ Å©±â ¼³Á¤
+	// ê²€ ë©”ì‰¬ì˜ í¬ê¸° ì„¤ì •
 	SwordMesh->SetRelativeScale3D(FVector(0.25f, 0.25f, 0.25f));
 
 
-	Timer = 0.0f;		// Å¸ÀÌ¸Ó ÃÊ±âÈ­
+	Timer = 0.0f;		// íƒ€ì´ë¨¸ ì´ˆê¸°í™”
 
-	Tags.Add(FName(TEXT("PlayerSword")));		// »ı¼ºÇÑ ¹æÆĞ¸¦ 'PlayerSword'¶õ ÀÌ¸§À¸·Î ÅÂ±×¸¦ ÁÜ
+	Tags.Add(FName(TEXT("PlayerSword")));		// ìƒì„±í•œ ë°©íŒ¨ë¥¼ 'PlayerSword'ë€ ì´ë¦„ìœ¼ë¡œ íƒœê·¸ë¥¼ ì¤Œ
 }
 
 // Called when the game starts or when spawned
@@ -59,19 +61,19 @@ void APlayerSword::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// ¸ÓÅ×¸®¾ó Äİ·º¼Ç Ã£±â
+	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// ë¨¸í…Œë¦¬ì–¼ ì½œë ‰ì…˜ ì°¾ê¸°
 		TEXT("MaterialParameterCollection'/Game/Assets/Equipment/Texture/EquipmentMaterialCollection.EquipmentMaterialCollection'"), NULL, LOAD_None, NULL));
 
 	if (Collection)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("dd %s"), *Collection->GetName());
-		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// Ã£Àº Äİ·º¼ÇÀ» Äİ·º¼ÇÀÎ½ºÅÏ½º¿¡ ÀúÀå
-		CollectionInstance->SetScalarParameterValue(FName("Opacity_Sword"), 0.75);		// 'Opacity_Sword'°ªÀ» °¡Áø ÆÄ¶ó¹ÌÅÍ °ªÀ» ¼¼ÆÃ
+		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// ì°¾ì€ ì½œë ‰ì…˜ì„ ì½œë ‰ì…˜ì¸ìŠ¤í„´ìŠ¤ì— ì €ì¥
+		CollectionInstance->SetScalarParameterValue(FName("Opacity_Sword"), 0.75);		// 'Opacity_Sword'ê°’ì„ ê°€ì§„ íŒŒë¼ë¯¸í„° ê°’ì„ ì„¸íŒ…
 	}
 
 	if (SwordMesh)	
 	{
-		SwordMesh->OnComponentBeginOverlap.AddDynamic(this, &APlayerSword::OnSwordOverlap);		// ¿À¹ö·¦ ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ³ ¼ö ÀÖµµ·Ï ¼³Á¤
+		SwordMesh->OnComponentBeginOverlap.AddDynamic(this, &APlayerSword::OnSwordOverlap);		// ì˜¤ë²„ë© ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¬ ìˆ˜ ìˆë„ë¡ ì„¤ì •
 	}
 }
 
@@ -80,47 +82,47 @@ void APlayerSword::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Timer += DeltaTime;		// Å¸ÀÌ¸Ó
+	Timer += DeltaTime;		// íƒ€ì´ë¨¸
 }
 
 void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)		// ¿À¹ö·¦ÀÌº¥Æ®½Ã ½ÇÇàÇÒ °Íµé
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)		// ì˜¤ë²„ë©ì´ë²¤íŠ¸ì‹œ ì‹¤í–‰í•  ê²ƒë“¤
 {
-	if (OtherActor->ActorHasTag("Monster"))		// ¿À¹ö·¦µÈ ¾×ÅÍ°¡ 'Monster'¶ó´Â ÅÂ±×¸¦ °¡Áö°í ÀÖÀ¸¸é ½ÇÇà
+	if (OtherActor->ActorHasTag("Monster"))		// ì˜¤ë²„ë©ëœ ì•¡í„°ê°€ 'Monster'ë¼ëŠ” íƒœê·¸ë¥¼ ê°€ì§€ê³  ìˆìœ¼ë©´ ì‹¤í–‰
 	{
 		UE_LOG(LogClass, Warning, TEXT("22222222222222222"));
-		if (Timer >= 0.5f)			// Å¸ÀÌ¸Ó°¡ 0.5 ÀÌ»óÀÇ ¼ö¸¦ °¡Áö°í ÀÖÀ» ¶§ ½ÇÇà (Á¶°Ç1)
+		if (Timer >= 0.5f)			// íƒ€ì´ë¨¸ê°€ 0.5 ì´ìƒì˜ ìˆ˜ë¥¼ ê°€ì§€ê³  ìˆì„ ë•Œ ì‹¤í–‰ (ì¡°ê±´1)
 		{
-			if (SwordMesh->GetPhysicsLinearVelocity().Size() >= 200.0f)		// ¼±¼ÓµµÀÇ Å©±â°¡ 200 ÀÌ»óÀÏ ¶§¸¸ °ø°İ ÆÇÁ¤ÀÌ ÀÏ¾î³² (Á¶°Ç2)
+			if (SwordMesh->GetPhysicsLinearVelocity().Size() >= 200.0f)		// ì„ ì†ë„ì˜ í¬ê¸°ê°€ 200 ì´ìƒì¼ ë•Œë§Œ ê³µê²© íŒì •ì´ ì¼ì–´ë‚¨ (ì¡°ê±´2)
 			{
-				Timer = 0.0f;		// °ø°İ ÆÇÁ¤ÀÌ ÀÏ¾î³µÀ» ¶§ Å¸ÀÌ¸Ó 0À¸·Î
+				Timer = 0.0f;		// ê³µê²© íŒì •ì´ ì¼ì–´ë‚¬ì„ ë•Œ íƒ€ì´ë¨¸ 0ìœ¼ë¡œ
 
-				if (SwordMesh->GetPhysicsLinearVelocity().Size() <= 500)		// ¼±¼ÓµµÀÇ Å©±â°¡ 500ÀÌÇÏÀÏ ¶§ µ¥¹ÌÁö 10 (Á¶°Ç4)
+				if (SwordMesh->GetPhysicsLinearVelocity().Size() <= 500)		// ì„ ì†ë„ì˜ í¬ê¸°ê°€ 500ì´í•˜ì¼ ë•Œ ë°ë¯¸ì§€ 10 (ì¡°ê±´4)
 					Damage = 10.0f;
-				else			// ¼±¼ÓµµÀÇ Å©±â°¡ 500ÃÊ°úÀÏ ¶§ µ¥¹ÌÁö 15 (Á¶°Ç4)
+				else			// ì„ ì†ë„ì˜ í¬ê¸°ê°€ 500ì´ˆê³¼ì¼ ë•Œ ë°ë¯¸ì§€ 15 (ì¡°ê±´4)
 					Damage = 15.0f;
 
 				//AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(GetOwner());
 				//ULeftHandWidget* MyStateUI = Cast<ULeftHandWidget>(MyCharacter->LeftHand->Shield->CharacterStateWidget);
-				// ÀÌÇÏ Ä³¸¯ÅÍ ½ºÅ×¹Ì³Ê °¨¼Ò
-				// ÀÌÇÏ UI½ºÅ×¹Ì³Ê °¨¼Ò
+				// ì´í•˜ ìºë¦­í„° ìŠ¤í…Œë¯¸ë„ˆ ê°ì†Œ
+				// ì´í•˜ UIìŠ¤í…Œë¯¸ë„ˆ ê°ì†Œ
  				 
-				UGameplayStatics::ApplyDamage(OtherActor, Damage, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// ¿À¹ö·¦µÈ ¾×ÅÍ¿¡ µ¥¹ÌÁö Àü´Ş
-				// (¿À¹ö·¦¹ß»ıµÈ ¾×ÅÍ, µ¥¹ÌÁö, µ¥¹ÌÁö¸¦°¡ÇÑ ÁÖÃ¼, ½ÇÁ¦ µ¥¹ÌÁö¸¦ °¡ÇÑÁÖÃ¼, µ¥¹ÌÁöÁ¾·ùÅ¬·¡½º)
+				UGameplayStatics::ApplyDamage(OtherActor, Damage, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// ì˜¤ë²„ë©ëœ ì•¡í„°ì— ë°ë¯¸ì§€ ì „ë‹¬
+				// (ì˜¤ë²„ë©ë°œìƒëœ ì•¡í„°, ë°ë¯¸ì§€, ë°ë¯¸ì§€ë¥¼ê°€í•œ ì£¼ì²´, ì‹¤ì œ ë°ë¯¸ì§€ë¥¼ ê°€í•œì£¼ì²´, ë°ë¯¸ì§€ì¢…ë¥˜í´ë˜ìŠ¤)
 			}
 		}
 	}	
 }
 
-void APlayerSword::ConvertOfOpacity(float opacity)		// Opacity°ª ¼¼ÆÃ(Ä³¸¯ÅÍ¿¡¼­ È£Ãâ)
+void APlayerSword::ConvertOfOpacity(float opacity)		// Opacityê°’ ì„¸íŒ…(ìºë¦­í„°ì—ì„œ í˜¸ì¶œ)
 {
-	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// ¸ÓÅ×¸®¾ó Äİ·º¼Ç Ã£±â
+	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// ë¨¸í…Œë¦¬ì–¼ ì½œë ‰ì…˜ ì°¾ê¸°
 		TEXT("MaterialParameterCollection'/Game/Assets/Equipment/Texture/EquipmentMaterialCollection.EquipmentMaterialCollection'"), NULL, LOAD_None, NULL));
 
 	if (Collection)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("dd %s"), *Collection->GetName());
-		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// Ã£Àº Äİ·º¼ÇÀ» Äİ·º¼ÇÀÎ½ºÅÏ½º¿¡ ÀúÀå
-		CollectionInstance->SetScalarParameterValue(FName("Opacity_Sword"), opacity);		// 'Opacity_Sword'°ªÀ» °¡Áø ÆÄ¶ó¹ÌÅÍ °ªÀ» ¼¼ÆÃ
+		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// ì°¾ì€ ì½œë ‰ì…˜ì„ ì½œë ‰ì…˜ì¸ìŠ¤í„´ìŠ¤ì— ì €ì¥
+		CollectionInstance->SetScalarParameterValue(FName("Opacity_Sword"), opacity);		// 'Opacity_Sword'ê°’ì„ ê°€ì§„ íŒŒë¼ë¯¸í„° ê°’ì„ ì„¸íŒ…
 	}
 }

@@ -1,12 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PlayerShield.h"
-#include "Components/WidgetComponent.h"			// À§Á¬ ÄÄÆ÷³ÍÆ®
-#include "Components/StaticMeshComponent.h"		// ½ºÅÂÆ½ ¸Ş½¬ ÄÄÆ÷³ÍÆ®
-#include "UObject/ConstructorHelpers.h"				// ConstructorHelpers »ç¿ë
+#include "Components/WidgetComponent.h"			// ìœ„ì ¯ ì»´í¬ë„ŒíŠ¸
+#include "Components/StaticMeshComponent.h"		// ìŠ¤íƒœí‹± ë©”ì‰¬ ì»´í¬ë„ŒíŠ¸
+#include "UObject/ConstructorHelpers.h"				// ConstructorHelpers ì‚¬ìš©
 
 #include "Runtime/Engine/Classes/Materials/MaterialParameterCollectionInstance.h"
 #include "Runtime/Engine/Classes/Materials/MaterialParameterCollection.h"
+#include "Engine/StaticMesh.h"
 
 // Sets default values
 APlayerShield::APlayerShield()
@@ -14,20 +15,20 @@ APlayerShield::APlayerShield()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	/* ¾À ÄÄÆ÷³ÍÆ® »ı¼º */
+	/* ì”¬ ì»´í¬ë„ŒíŠ¸ ìƒì„± */
 	ShieldScene = CreateDefaultSubobject<USceneComponent>(TEXT("ShieldScene"));
-	ShieldScene->SetupAttachment(RootComponent);		// ¾À ÄÄÆ÷³ÍÆ®°¡ ·çÆ® ÄÄÆ÷³ÍÆ®°¡ µÇµµ·Ï ÇÔ
+	SetRootComponent(ShieldScene);	
 
-	/* ½ºÅÂÆ½ ¸Å½¬ ÄÄÆ÷³ÍÆ® »ı¼º */
+	/* ìŠ¤íƒœí‹± ë§¤ì‰¬ ì»´í¬ë„ŒíŠ¸ ìƒì„± */
 	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));
 
-	ShieldMesh->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));			// Ä³¸¯ÅÍ¿ÍÀÇ Ãæµ¹À» ÇÇÇÏ±âÀ§ÇØ¼­ Pawn(Ä³¸¯ÅÍ)¸¸ OverlapµÇµµ·Ï ¼³Á¤
-	ShieldMesh->SetupAttachment(ShieldScene);		// »ı¼ºÇÑ ½ºÅÂÆ½ ¸Å½¬¸¦ ¾À ÄÄÆ÷³ÍÆ®¿¡ ºÙÀÓ
+	ShieldMesh->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));			// ìºë¦­í„°ì™€ì˜ ì¶©ëŒì„ í”¼í•˜ê¸°ìœ„í•´ì„œ Pawn(ìºë¦­í„°)ë§Œ Overlapë˜ë„ë¡ ì„¤ì •
+	ShieldMesh->SetupAttachment(ShieldScene);		// ìƒì„±í•œ ìŠ¤íƒœí‹± ë§¤ì‰¬ë¥¼ ì”¬ ì»´í¬ë„ŒíŠ¸ì— ë¶™ì„
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shield(TEXT("StaticMesh'/Game/Assets/Equipment/Mesh/shield_low.shield_low'"));		// ·¹ÆÛ·±½º °æ·Î·Î ¹æÆĞ ¸Å½¬¸¦ Ã£À½
-	if (SM_Shield.Succeeded())		// ¹æÆĞ ¸Ş½¬¸¦ Ã£¾ÒÀ» °æ¿ì ½ÇÇà
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shield(TEXT("StaticMesh'/Game/Assets/Equipment/Mesh/shield_low.shield_low'"));		// ë ˆí¼ëŸ°ìŠ¤ ê²½ë¡œë¡œ ë°©íŒ¨ ë§¤ì‰¬ë¥¼ ì°¾ìŒ
+	if (SM_Shield.Succeeded())		// ë°©íŒ¨ ë©”ì‰¬ë¥¼ ì°¾ì•˜ì„ ê²½ìš° ì‹¤í–‰
 	{
-		ShieldMesh->SetStaticMesh(SM_Shield.Object);		// ½ºÅÂÆ½ ¸Ş½¬¿¡ ¹æÆĞ ¸ğ¾ç ¼³Á¤
+		ShieldMesh->SetStaticMesh(SM_Shield.Object);		// ìŠ¤íƒœí‹± ë©”ì‰¬ì— ë°©íŒ¨ ëª¨ì–‘ ì„¤ì •
 	}
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> ShieldMaterial(TEXT("Material'/Game/Assets/Equipment/Texture/ShieldMaterial.ShieldMaterial'"));
@@ -36,22 +37,22 @@ APlayerShield::APlayerShield()
 		ShieldMesh->SetMaterial(0, ShieldMaterial.Object);
 	}
 
-	/* À§Á¬ ÄÄÆ÷³ÍÆ® »ı¼º */
+	/* ìœ„ì ¯ ì»´í¬ë„ŒíŠ¸ ìƒì„± */
 	CharacterStateWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("StateInfoWidget"));	
-	CharacterStateWidget->SetupAttachment(ShieldMesh);			// À§Á¬À» ¹æÆĞ ¸Ş½¬¿¡ ºÙÀÓ
+	CharacterStateWidget->SetupAttachment(ShieldMesh);			// ìœ„ì ¯ì„ ë°©íŒ¨ ë©”ì‰¬ì— ë¶™ì„
 
-	static ConstructorHelpers::FClassFinder<UUserWidget> StaminaUI(TEXT("WidgetBlueprint'/Game/Blueprints/UI/LeftHandWidget.LeftHandWidget_C'"));		// ·¹ÆÛ·±½º °æ·Î·Î À§Á¬ ºí·çÇÁ¸°Æ®¸¦ Ã£À½
-	if (StaminaUI.Succeeded())		// À§Á¬ºí·çÇÁ¸°Æ®¸¦ Ã£¾ÒÀ» °æ¿ì ½ÇÇà
+	static ConstructorHelpers::FClassFinder<UUserWidget> StaminaUI(TEXT("WidgetBlueprint'/Game/Blueprints/UI/LeftHandWidget.LeftHandWidget_C'"));		// ë ˆí¼ëŸ°ìŠ¤ ê²½ë¡œë¡œ ìœ„ì ¯ ë¸”ë£¨í”„ë¦°íŠ¸ë¥¼ ì°¾ìŒ
+	if (StaminaUI.Succeeded())		// ìœ„ì ¯ë¸”ë£¨í”„ë¦°íŠ¸ë¥¼ ì°¾ì•˜ì„ ê²½ìš° ì‹¤í–‰
 	{
-		CharacterStateWidget->SetWidgetClass(StaminaUI.Class);		// Ã£Àº À§Á¬ Å¬·¡½º·Î ¼³Á¤
+		CharacterStateWidget->SetWidgetClass(StaminaUI.Class);		// ì°¾ì€ ìœ„ì ¯ í´ë˜ìŠ¤ë¡œ ì„¤ì •
 	}
 
-	// À§Á¬À» ÀûÀıÇÑ À§Ä¡¿Í ¹æÇâ, Å©±â·Î ¼³Á¤
+	// ìœ„ì ¯ì„ ì ì ˆí•œ ìœ„ì¹˜ì™€ ë°©í–¥, í¬ê¸°ë¡œ ì„¤ì •
 	CharacterStateWidget->SetRelativeRotation(FRotator(0, -90.0f, 0));
 	CharacterStateWidget->SetRelativeScale3D(FVector(0.112368, -0.112368, 0.112368));
 	CharacterStateWidget->SetRelativeLocation(FVector(9.0f, -16.0f, 60.0f));
 
-	Tags.Add(FName(TEXT("PlayerShield")));		// »ı¼ºÇÑ ¹æÆĞ¸¦ 'PlayerShield'¶õ ÀÌ¸§À¸·Î ÅÂ±×¸¦ ÁÜ
+	Tags.Add(FName(TEXT("PlayerShield")));		// ìƒì„±í•œ ë°©íŒ¨ë¥¼ 'PlayerShield'ë€ ì´ë¦„ìœ¼ë¡œ íƒœê·¸ë¥¼ ì¤Œ
 }
 
 // Called when the game starts or when spawned
@@ -59,14 +60,14 @@ void APlayerShield::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// ¸ÓÅ×¸®¾ó Äİ·º¼Ç Ã£±â
+	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// ë¨¸í…Œë¦¬ì–¼ ì½œë ‰ì…˜ ì°¾ê¸°
 		TEXT("Material'/Game/Assets/Equipment/Texture/SwordMaterial.SwordMaterial'"), NULL, LOAD_None, NULL));
 
 	if (Collection)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("dd %s"), *Collection->GetName());
-		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// Ã£Àº Äİ·º¼ÇÀ» Äİ·º¼ÇÀÎ½ºÅÏ½º¿¡ ÀúÀå
-		CollectionInstance->SetScalarParameterValue(FName("Opacity_Shield"), 0.75f);		// 'Opacity_Sword'°ªÀ» °¡Áø ÆÄ¶ó¹ÌÅÍ °ªÀ» ¼¼ÆÃ
+		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// ì°¾ì€ ì½œë ‰ì…˜ì„ ì½œë ‰ì…˜ì¸ìŠ¤í„´ìŠ¤ì— ì €ì¥
+		CollectionInstance->SetScalarParameterValue(FName("Opacity_Shield"), 0.75f);		// 'Opacity_Sword'ê°’ì„ ê°€ì§„ íŒŒë¼ë¯¸í„° ê°’ì„ ì„¸íŒ…
 	}
 
 }
@@ -78,16 +79,16 @@ void APlayerShield::Tick(float DeltaTime)
 
 }
 
-void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity°ª ¼¼ÆÃ(Ä³¸¯ÅÍ¿¡¼­ È£Ãâ)
+void APlayerShield::ConvertOfOpacity(float opacity)		// Opacityê°’ ì„¸íŒ…(ìºë¦­í„°ì—ì„œ í˜¸ì¶œ)
 {
-	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// ¸ÓÅ×¸®¾ó Äİ·º¼Ç Ã£±â
+	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// ë¨¸í…Œë¦¬ì–¼ ì½œë ‰ì…˜ ì°¾ê¸°
 		TEXT("Material'/Game/Assets/Equipment/Texture/SwordMaterial.SwordMaterial'"), NULL, LOAD_None, NULL));	
 
 	if (Collection)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("dd %s"), *Collection->GetName());
-		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// Ã£Àº Äİ·º¼ÇÀ» Äİ·º¼ÇÀÎ½ºÅÏ½º¿¡ ÀúÀå
-		CollectionInstance->SetScalarParameterValue(FName("Opacity_Shield"), opacity);		// 'Opacity_Sword'°ªÀ» °¡Áø ÆÄ¶ó¹ÌÅÍ °ªÀ» ¼¼ÆÃ
+		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// ì°¾ì€ ì½œë ‰ì…˜ì„ ì½œë ‰ì…˜ì¸ìŠ¤í„´ìŠ¤ì— ì €ì¥
+		CollectionInstance->SetScalarParameterValue(FName("Opacity_Shield"), opacity);		// 'Opacity_Sword'ê°’ì„ ê°€ì§„ íŒŒë¼ë¯¸í„° ê°’ì„ ì„¸íŒ…
 	}
 }
 

@@ -1,10 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "LeftHandMotionController.h"
-#include "Public/MotionControllerComponent.h" //¸ğ¼ÇÄÁÆ®·Ñ·¯ ÄÄÆ÷³ÍÆ® Çì´õÆÄÀÏ
-#include "Components/SkeletalMeshComponent.h" //½ºÄÌ·¹Å»¸Ş½¬ ÄÄÆ÷³ÍÆ® Çì´õÆÄÀÏ
-#include "Components/SphereComponent.h" //½ºÇÇ¾îÄİ¸®Àü ÄÄÆ÷³ÍÆ® Çì´õÆÄÀÏ
-#include "SteamVRChaperoneComponent.h" //»óÈ£ÀÛ¿ë¿ª¿µÀ» º¸¿©ÁÖ´Â ÄÄÆ÷³ÍÆ® Çì´õÆÄÀÏ
+#include "Public/MotionControllerComponent.h" //ëª¨ì…˜ì»¨íŠ¸ë¡¤ëŸ¬ ì»´í¬ë„ŒíŠ¸ í—¤ë”íŒŒì¼
+#include "Components/SkeletalMeshComponent.h" //ìŠ¤ì¼ˆë ˆíƒˆë©”ì‰¬ ì»´í¬ë„ŒíŠ¸ í—¤ë”íŒŒì¼
+#include "Components/SphereComponent.h" //ìŠ¤í”¼ì–´ì½œë¦¬ì „ ì»´í¬ë„ŒíŠ¸ í—¤ë”íŒŒì¼
+#include "SteamVRChaperoneComponent.h" //ìƒí˜¸ì‘ìš©ì—­ì˜ì„ ë³´ì—¬ì£¼ëŠ” ì»´í¬ë„ŒíŠ¸ í—¤ë”íŒŒì¼
 #include "UObject/ConstructorHelpers.h" //
 #include "Animation/AnimBlueprint.h"
 
@@ -17,61 +17,62 @@ ALeftHandMotionController::ALeftHandMotionController()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("MotionController")); //¸ğ¼ÇÄÁÆ®·Ñ·¯ ÄÄÆ÷³ÍÆ®¸¦ »ı¼ºÇØ¼­ MotionController¿¡ ³Ö´Â´Ù.
-	MotionController->SetupAttachment(RootComponent); //»ı¼ºÇØÁØ MotionController¸¦ RootComponent¿¡ ºÙÀÎ´Ù.
+	MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("MotionController")); //ëª¨ì…˜ì»¨íŠ¸ë¡¤ëŸ¬ ì»´í¬ë„ŒíŠ¸ë¥¼ ìƒì„±í•´ì„œ MotionControllerì— ë„£ëŠ”ë‹¤.
+	SetRootComponent(MotionController);
+	//MotionController->SetupAttachment(RootComponent); //ìƒì„±í•´ì¤€ MotionControllerë¥¼ RootComponentì— ë¶™ì¸ë‹¤.
 
-	HandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HandMesh")); //½ºÄÌ·¹Å»¸Ş½¬ ÄÄÆ÷³ÍÆ®¸¦ »ı¼ºÇØ¼­ HandMesh¿¡ ³Ö´Â´Ù.
-	HandMesh->SetupAttachment(MotionController); //»ı¼ºÇØÁØ HandMesh¸¦ MotionController¿¡ ºÙÀÎ´Ù.
+	HandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HandMesh")); //ìŠ¤ì¼ˆë ˆíƒˆë©”ì‰¬ ì»´í¬ë„ŒíŠ¸ë¥¼ ìƒì„±í•´ì„œ HandMeshì— ë„£ëŠ”ë‹¤.
+	HandMesh->SetupAttachment(MotionController); //ìƒì„±í•´ì¤€ HandMeshë¥¼ MotionControllerì— ë¶™ì¸ë‹¤.
 
-												 //½ºÄÌ·¹Å»¸Ş½¬ ÄÄÆ÷³ÍÆ®¿¡ ½ºÄÌ·¹Å»À» ³Ö¾îÁÖ±â À§ÇØ ¿¡µğÅÍ »ó¿¡ ÀÖ´Â ½ºÄÌ·¹Å»¸Ş½¬¸¦ °¡Á®¿Í¼­ SK_LeftHand¿¡ ³Ö¾îÁØ´Ù.
+												 //ìŠ¤ì¼ˆë ˆíƒˆë©”ì‰¬ ì»´í¬ë„ŒíŠ¸ì— ìŠ¤ì¼ˆë ˆíƒˆì„ ë„£ì–´ì£¼ê¸° ìœ„í•´ ì—ë””í„° ìƒì— ìˆëŠ” ìŠ¤ì¼ˆë ˆíƒˆë©”ì‰¬ë¥¼ ê°€ì ¸ì™€ì„œ SK_LeftHandì— ë„£ì–´ì¤€ë‹¤.
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>SK_LeftHand(TEXT("SkeletalMesh'/Game/Assets/MyCharacter/Hand/Mesh/MannequinHand_Right.MannequinHand_Right'"));
-	if (SK_LeftHand.Succeeded()) //ºÒ·¯¿À´Âµ¥ ¼º°øÇŞÀ¸¸é
+	if (SK_LeftHand.Succeeded()) //ë¶ˆëŸ¬ì˜¤ëŠ”ë° ì„±ê³µí–‡ìœ¼ë©´
 	{
-		HandMesh->SetSkeletalMesh(SK_LeftHand.Object); //½ºÄÌ·¹Å»¸Ş½¬ÄÄÆ÷³ÍÆ®ÀÇ ½ºÄÌ·¹Å»¸Ş½¬¿¡ ¾Õ¿¡¼­ °¡Á®¿Â ½ºÄÌ·¹Å»¸Ş½¬¸¦ ³Ö¾îÁØ´Ù.
+		HandMesh->SetSkeletalMesh(SK_LeftHand.Object); //ìŠ¤ì¼ˆë ˆíƒˆë©”ì‰¬ì»´í¬ë„ŒíŠ¸ì˜ ìŠ¤ì¼ˆë ˆíƒˆë©”ì‰¬ì— ì•ì—ì„œ ê°€ì ¸ì˜¨ ìŠ¤ì¼ˆë ˆíƒˆë©”ì‰¬ë¥¼ ë„£ì–´ì¤€ë‹¤.
 	}
 
-	HandMesh->SetRelativeRotation(FRotator(0, 0, 90.0f)); //½ºÄÌ·¹Å» ¸Ş½¬°¡ Á¤¸éÀ» ¹Ù¶óº¸°Ô °¢µµ¸¦ º¯°æÇÑ´Ù.
+	HandMesh->SetRelativeRotation(FRotator(0, 0, 90.0f)); //ìŠ¤ì¼ˆë ˆíƒˆ ë©”ì‰¬ê°€ ì •ë©´ì„ ë°”ë¼ë³´ê²Œ ê°ë„ë¥¼ ë³€ê²½í•œë‹¤.
 
-	GrabSphere = CreateDefaultSubobject<USphereComponent>(TEXT("GrabComponent")); //¼ÕÁÖÀ§¿¡ ÀÖ´Â ¾×ÅÍµéÀ» ÆÇº°ÇÏ±â À§ÇÑ Äİ¸®ÀüÀ» ½ºÇÇ¾îÄİ¸®ÀüÀ¸·Î »ı¼ºÇØ¼­ GrabShere¿¡ ³Ö´Â´Ù.
-	GrabSphere->SetupAttachment(HandMesh); //»ı¼ºÇÑ ½ºÇÇ¾îÄİ¸®ÀüÀ» HandMesh¿¡ ºÙÀÎ´Ù.
+	GrabSphere = CreateDefaultSubobject<USphereComponent>(TEXT("GrabComponent")); //ì†ì£¼ìœ„ì— ìˆëŠ” ì•¡í„°ë“¤ì„ íŒë³„í•˜ê¸° ìœ„í•œ ì½œë¦¬ì „ì„ ìŠ¤í”¼ì–´ì½œë¦¬ì „ìœ¼ë¡œ ìƒì„±í•´ì„œ GrabShereì— ë„£ëŠ”ë‹¤.
+	GrabSphere->SetupAttachment(HandMesh); //ìƒì„±í•œ ìŠ¤í”¼ì–´ì½œë¦¬ì „ì„ HandMeshì— ë¶™ì¸ë‹¤.
 
-	GrabSphere->SetRelativeLocation(FVector(14.0f, 0, 0)); //½ºÇÇ¾îÄİ¸®ÀüÀÇ À§Ä¡¸¦ Á¶Á¤ÇÑ´Ù.
-	GrabSphere->SetSphereRadius(10.0f); //½ºÇÇ¾îÄİ¸®ÀüÀÇ Å©±â¸¦ ÁöÁ¤ÇÑ´Ù.
+	GrabSphere->SetRelativeLocation(FVector(14.0f, 0, 0)); //ìŠ¤í”¼ì–´ì½œë¦¬ì „ì˜ ìœ„ì¹˜ë¥¼ ì¡°ì •í•œë‹¤.
+	GrabSphere->SetSphereRadius(10.0f); //ìŠ¤í”¼ì–´ì½œë¦¬ì „ì˜ í¬ê¸°ë¥¼ ì§€ì •í•œë‹¤.
 	SteamVRChaperone = CreateDefaultSubobject<USteamVRChaperoneComponent>(TEXT("SteamVRChaperone"));
 
-	WantToGrip = false; //Áã°í ÀÖÁö ¾ÊÀº »óÈ²À¸·Î ÃÊ±â°ªÀ» ¼³Á¤ÇÑ´Ù.
-	AttachedActor = nullptr; //ºÙÀÏ ¾×ÅÍ¸¦ ÃÊ±â°ªÀ¸·Î nullptr·Î ¼³Á¤ÇÏ³®.
+	WantToGrip = false; //ì¥ê³  ìˆì§€ ì•Šì€ ìƒí™©ìœ¼ë¡œ ì´ˆê¸°ê°’ì„ ì„¤ì •í•œë‹¤.
+	AttachedActor = nullptr; //ë¶™ì¼ ì•¡í„°ë¥¼ ì´ˆê¸°ê°’ìœ¼ë¡œ nullptrë¡œ ì„¤ì •í•˜ë‚Ÿ.
 
-	HandState = E_HandState::Grab; //¿Ş¼ÕÀÇ »óÅÂ¸¦ ±×·¦»óÅÂ·Î ÃÊ±âÈ­ÇÑ´Ù.
-	Hand = EControllerHand::Left; //¸ğ¼ÇÄÁÆ®·Ñ·¯ÄÄÆ÷³ÍÆ®¿¡ ³Ö¾îÁÖ±â À§ÇØ Hand¸¦ Left·Î ÃÊ±âÈ­ÇÑ´Ù.
-	VisibleShieldFlag = true;	  // ±×·¦»óÅÂ¿©¾ß º¸ÀÌ¹Ç·Î Æò½Ã¿¡´Â Åõ¸íµµ¸¦ ÁØ´Ù.
+	HandState = E_HandState::Grab; //ì™¼ì†ì˜ ìƒíƒœë¥¼ ê·¸ë©ìƒíƒœë¡œ ì´ˆê¸°í™”í•œë‹¤.
+	Hand = EControllerHand::Left; //ëª¨ì…˜ì»¨íŠ¸ë¡¤ëŸ¬ì»´í¬ë„ŒíŠ¸ì— ë„£ì–´ì£¼ê¸° ìœ„í•´ Handë¥¼ Leftë¡œ ì´ˆê¸°í™”í•œë‹¤.
+	VisibleShieldFlag = true;	  // ê·¸ë©ìƒíƒœì—¬ì•¼ ë³´ì´ë¯€ë¡œ í‰ì‹œì—ëŠ” íˆ¬ëª…ë„ë¥¼ ì¤€ë‹¤.
 
-	FString HandName = GetEnumToString(Hand); //Left¸¦ ½ºÆ®¸µÀ¸·Î Çüº¯È¯ÇØ¼­ HandName¿¡ ³Ö°í
-	MotionController->MotionSource = (FName(*HandName)); //¸ğ¼ÇÄÁÆ®·Ñ·¯ÄÄÆ÷³ÍÆ®ÀÇ MotionSource¿¡ ³Ö´Â´Ù.
+	FString HandName = GetEnumToString(Hand); //Leftë¥¼ ìŠ¤íŠ¸ë§ìœ¼ë¡œ í˜•ë³€í™˜í•´ì„œ HandNameì— ë„£ê³ 
+	MotionController->MotionSource = (FName(*HandName)); //ëª¨ì…˜ì»¨íŠ¸ë¡¤ëŸ¬ì»´í¬ë„ŒíŠ¸ì˜ MotionSourceì— ë„£ëŠ”ë‹¤.
 
-	ShieldAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("ShieldAttachScene")); //¹æÆĞ¸¦ ºÙÀÏ ¾ÀÄÄÆ÷³ÍÆ®¸¦ »ı¼ºÇØ¼­ ShieldAttachScene¿¡ ³Ö´Â´Ù.
-	ShieldAttachScene->SetupAttachment(HandMesh);//»ı¼ºÇÑ ¾ÀÄÄÆ÷³ÍÆ®¸¦ HandMesh¿¡ ºÙÀÎ´Ù.
+	ShieldAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("ShieldAttachScene")); //ë°©íŒ¨ë¥¼ ë¶™ì¼ ì”¬ì»´í¬ë„ŒíŠ¸ë¥¼ ìƒì„±í•´ì„œ ShieldAttachSceneì— ë„£ëŠ”ë‹¤.
+	ShieldAttachScene->SetupAttachment(HandMesh);//ìƒì„±í•œ ì”¬ì»´í¬ë„ŒíŠ¸ë¥¼ HandMeshì— ë¶™ì¸ë‹¤.
 
-	ShieldAttachScene->SetRelativeRotation(FRotator(0, 0, -90.0f)); //¹æÆĞ ¾ÀÄÄÆ÷³ÍÆ®ÀÇ °¢µµ¿Í
-	ShieldAttachScene->SetRelativeLocation(FVector(10.0f, 20.0f, 0)); //À§Ä¡¸¦ Á¶Á¤ÇÑ´Ù.
+	ShieldAttachScene->SetRelativeRotation(FRotator(0, 0, -90.0f)); //ë°©íŒ¨ ì”¬ì»´í¬ë„ŒíŠ¸ì˜ ê°ë„ì™€
+	ShieldAttachScene->SetRelativeLocation(FVector(-5.0f, 20.0f, 11.0f)); //ìœ„ì¹˜ë¥¼ ì¡°ì •í•œë‹¤.
 
-																	  //Æ÷¼Ç°¡¹æÀ» ºÙÀÏ ¾ÀÄÄÆ÷³ÍÆ®¸¦ »ı¼ºÇØ¼­ PotionBagAttachScene¿¡ ÀúÀåÇÑ´Ù.
+																	  //í¬ì…˜ê°€ë°©ì„ ë¶™ì¼ ì”¬ì»´í¬ë„ŒíŠ¸ë¥¼ ìƒì„±í•´ì„œ PotionBagAttachSceneì— ì €ì¥í•œë‹¤.
 	PotionBagAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("PotionAttachScene"));
-	PotionBagAttachScene->SetupAttachment(HandMesh); //»ı¼ºÇÑ ¾ÀÄÄÆ÷³ÍÆ®¸¦ HandMesh¿¡ ºÙÀÎ´Ù.
+	PotionBagAttachScene->SetupAttachment(HandMesh); //ìƒì„±í•œ ì”¬ì»´í¬ë„ŒíŠ¸ë¥¼ HandMeshì— ë¶™ì¸ë‹¤.
 
-	PotionBagAttachScene->SetRelativeLocation(FVector(-8.0f, 0, -18.0f)); //À§Ä¡¸¦ Á¶Á¤ÇÑ´Ù.
+	PotionBagAttachScene->SetRelativeLocation(FVector(-8.0f, 0, -18.0f)); //ìœ„ì¹˜ë¥¼ ì¡°ì •í•œë‹¤.
 	PotionBagAttachScene->SetRelativeRotation(FRotator(0, 90.0f, 0));
 
-	//¿Ş¼ÕÀÇ ¾Ö´Ï¸ŞÀÌ¼ÇÀ» ÁöÁ¤ÇØÁÖ±â À§ÇØ ¿¡µğÅÍ»ó¿¡ ÀÖ´Â ¾Ö´Ï¸ŞÀÌ¼Çºí·çÇÁ¸°Æ®¸¦ °¡Á®¿Í¼­ ABP_Hand¿¡ ³Ö´Â´Ù.
+	//ì™¼ì†ì˜ ì• ë‹ˆë©”ì´ì…˜ì„ ì§€ì •í•´ì£¼ê¸° ìœ„í•´ ì—ë””í„°ìƒì— ìˆëŠ” ì• ë‹ˆë©”ì´ì…˜ë¸”ë£¨í”„ë¦°íŠ¸ë¥¼ ê°€ì ¸ì™€ì„œ ABP_Handì— ë„£ëŠ”ë‹¤.
 	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>ABP_Hand(TEXT("AnimBlueprint'/Game/Blueprints/MyCharacter/Hand/ABP_LeftHand.ABP_LeftHand'"));
 
-	if (ABP_Hand.Succeeded()) //ºÒ·¯¿À´Âµ¥ ¼º°øÇßÀ¸¸é
+	if (ABP_Hand.Succeeded()) //ë¶ˆëŸ¬ì˜¤ëŠ”ë° ì„±ê³µí–ˆìœ¼ë©´
 	{
-		HandMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint); //¿Ş¼ÕÀÇ ¾Ö´Ï¸ŞÀÌ¼Ç¸ğµå¸¦ ºí·çÇÁ¸°Æ®·Î ÁöÁ¤ÇÑ´Ù.
-		HandMesh->SetAnimInstanceClass(ABP_Hand.Object->GeneratedClass); //¿Ş¼ÕÀÇ ¾Ö´Ï¸ŞÀÌ¼Çºí·çÇÁ¸°Æ®¸¦ ABP_Hand·Î ÁöÁ¤ÇÑ´Ù.
+		HandMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint); //ì™¼ì†ì˜ ì• ë‹ˆë©”ì´ì…˜ëª¨ë“œë¥¼ ë¸”ë£¨í”„ë¦°íŠ¸ë¡œ ì§€ì •í•œë‹¤.
+		HandMesh->SetAnimInstanceClass(ABP_Hand.Object->GeneratedClass); //ì™¼ì†ì˜ ì• ë‹ˆë©”ì´ì…˜ë¸”ë£¨í”„ë¦°íŠ¸ë¥¼ ABP_Handë¡œ ì§€ì •í•œë‹¤.
 	}
 
-	Tags.Add(FName(TEXT("LeftHand"))); //¿Ş¼ÕÀÇ ÅÂ±×¸¦ LeftHand·Î Á¤ÇÑ´Ù.
+	Tags.Add(FName(TEXT("LeftHand"))); //ì™¼ì†ì˜ íƒœê·¸ë¥¼ LeftHandë¡œ ì •í•œë‹¤.
 }
 
 // Called when the game starts or when spawned
@@ -79,24 +80,24 @@ void ALeftHandMotionController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FActorSpawnParameters SpawnActorOption;//½ºÆùÇÒ¶§ÀÇ ¿É¼ÇÀ» ÁöÁ¤ÇÏ±â À§ÇØ FActorSpawnParameters¸¦ ¼±¾ğÇÑ´Ù.
-	SpawnActorOption.Owner = this; //½ºÆùÇÒ ¾×ÅÍÀÇ ¼ÒÀ¯ÀÚ¸¦ this·Î ÁöÁ¤ÇÑ´Ù.
-	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; //½ºÆùÇÏ´Â ¾×ÅÍ°¡ Äİ¸®Àü¿¡ »ó°ü¾øÀÌ Ç×»ó ½ºÆùµÇµµ·Ï ÁöÁ¤ÇÑ´Ù.
+	FActorSpawnParameters SpawnActorOption;//ìŠ¤í°í• ë•Œì˜ ì˜µì…˜ì„ ì§€ì •í•˜ê¸° ìœ„í•´ FActorSpawnParametersë¥¼ ì„ ì–¸í•œë‹¤.
+	SpawnActorOption.Owner = this; //ìŠ¤í°í•  ì•¡í„°ì˜ ì†Œìœ ìë¥¼ thisë¡œ ì§€ì •í•œë‹¤.
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; //ìŠ¤í°í•˜ëŠ” ì•¡í„°ê°€ ì½œë¦¬ì „ì— ìƒê´€ì—†ì´ í•­ìƒ ìŠ¤í°ë˜ë„ë¡ ì§€ì •í•œë‹¤.
 
-	 //½ºÆùÇÒ ¾×ÅÍ¸¦ AttachÇÒ¶§ÀÇ ¿É¼ÇÀ» ÁöÁ¤ÇÏ±âÀ§ÇØ FAttachmentTransfromRules¸¦ ¼±¾ğÇÏ°í 
-	//ºÙÀÏÀ§Ä¡´Â Å¸°ÙÀ¸·Î, ºÙÀÏ°¢µµµµ Å¸°ÙÀ¸·Î, Å©±â´Â ¿ùµåÅ©±â¿¡ ¸Â°Ô²û ºÙ¿©ÁØ´Ù.
+	 //ìŠ¤í°í•  ì•¡í„°ë¥¼ Attachí• ë•Œì˜ ì˜µì…˜ì„ ì§€ì •í•˜ê¸°ìœ„í•´ FAttachmentTransfromRulesë¥¼ ì„ ì–¸í•˜ê³  
+	//ë¶™ì¼ìœ„ì¹˜ëŠ” íƒ€ê²Ÿìœ¼ë¡œ, ë¶™ì¼ê°ë„ë„ íƒ€ê²Ÿìœ¼ë¡œ, í¬ê¸°ëŠ” ì›”ë“œí¬ê¸°ì— ë§ê²Œë” ë¶™ì—¬ì¤€ë‹¤.
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
-	//¹æÆĞ¸¦ ½¯µå ¾À ÄÄÆ÷³ÍÆ®¿¡ ½ºÆù½ÃÅ²´Ù.
+	//ë°©íŒ¨ë¥¼ ì‰´ë“œ ì”¬ ì»´í¬ë„ŒíŠ¸ì— ìŠ¤í°ì‹œí‚¨ë‹¤.
 	Shield = GetWorld()->SpawnActor<APlayerShield>(Shield->StaticClass(), ShieldAttachScene->GetComponentLocation(), ShieldAttachScene->GetComponentRotation(), SpawnActorOption);
-	//¹æÆĞ¸¦ AttachRules¸¦ Åä´ë·Î ½¯µå ¾À ÄÄÆ÷³ÍÆ®¿¡ ºÙÀÎ´Ù.
+	//ë°©íŒ¨ë¥¼ AttachRulesë¥¼ í† ëŒ€ë¡œ ì‰´ë“œ ì”¬ ì»´í¬ë„ŒíŠ¸ì— ë¶™ì¸ë‹¤.
 	Shield->AttachToComponent(ShieldAttachScene, AttachRules);
 
 	PotionBag = GetWorld()->SpawnActor<APotionBag>(PotionBag->StaticClass(), PotionBagAttachScene->GetComponentLocation(), PotionBagAttachScene->GetComponentRotation(), SpawnActorOption);
 	PotionBag->AttachToComponent(PotionBagAttachScene, AttachRules);
 
-	//±âº» ¸Ş½¬°¡ ¿À¸¥ÂÊÀ¸·Î µ¹¾Æ°¡ ÀÕÀ¸¹Ç·Î
-	//¿Ş¼ÕÀ¸·Î Ç¥ÇöÇÏ±â À§ÇØ Å©±â¿Í °¢µµ¸¦ Á¶Á¤ÇØÁØ´Ù.
+	//ê¸°ë³¸ ë©”ì‰¬ê°€ ì˜¤ë¥¸ìª½ìœ¼ë¡œ ëŒì•„ê°€ ì‡ìœ¼ë¯€ë¡œ
+	//ì™¼ì†ìœ¼ë¡œ í‘œí˜„í•˜ê¸° ìœ„í•´ í¬ê¸°ì™€ ê°ë„ë¥¼ ì¡°ì •í•´ì¤€ë‹¤.
 	if (HandMesh)
 	{
 		HandMesh->SetWorldScale3D(FVector(1.0f, 1.0f, -1.0f));
@@ -109,101 +110,101 @@ void ALeftHandMotionController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//Æ½À» µ¹¶§¸¶´Ù ±ÙÃ³¿¡ ¾×ÅÍ°¡ ÀÖ´ÂÁö, ºÙÀº ¾×ÅÍ°¡ ÀÖ´ÂÁö, ±×¸³À» ´©¸¥ »óÅÂÀÎÁö ÆÇº°ÇØ¼­
-	//¼ÕÀÇ ¾Ö´Ï¸ŞÀÌ¼Ç »óÅÂ¸¦ ¾÷µ¥ÀÌÆ® ÇÑ´Ù.
-	AActor* NearestMesh;  //±ÙÃ³¿¡ ÀÖ´Â ¾×ÅÍ¸¦ ÀúÀåÇØµÑ º¯¼ö
+	//í‹±ì„ ëŒë•Œë§ˆë‹¤ ê·¼ì²˜ì— ì•¡í„°ê°€ ìˆëŠ”ì§€, ë¶™ì€ ì•¡í„°ê°€ ìˆëŠ”ì§€, ê·¸ë¦½ì„ ëˆ„ë¥¸ ìƒíƒœì¸ì§€ íŒë³„í•´ì„œ
+	//ì†ì˜ ì• ë‹ˆë©”ì´ì…˜ ìƒíƒœë¥¼ ì—…ë°ì´íŠ¸ í•œë‹¤.
+	AActor* NearestMesh;  //ê·¼ì²˜ì— ìˆëŠ” ì•¡í„°ë¥¼ ì €ì¥í•´ë‘˜ ë³€ìˆ˜
 
-	if (AttachedActor != nullptr || WantToGrip == true || VisibleShieldFlag) //ºÙÀº ¾×ÅÍ°¡ ÀÖ°Å³ª, Áå»óÅÂÀÌ¸é
+	if (AttachedActor != nullptr || WantToGrip == true || VisibleShieldFlag) //ë¶™ì€ ì•¡í„°ê°€ ìˆê±°ë‚˜, ì¥”ìƒíƒœì´ë©´
 	{
-		HandState = E_HandState::Grab; //¼ÕÀÇ »óÅÂ¸¦ GrabÀ¸·Î ¹Ù²ã¼­ Áå»óÅÂ·Î ¾Ö´Ï¸ŞÀÌ¼ÇÀ» Ãâ·ÂÇÑ´Ù.
+		HandState = E_HandState::Grab; //ì†ì˜ ìƒíƒœë¥¼ Grabìœ¼ë¡œ ë°”ê¿”ì„œ ì¥”ìƒíƒœë¡œ ì• ë‹ˆë©”ì´ì…˜ì„ ì¶œë ¥í•œë‹¤.
 	}
-	else //ºÙÀº ¾×ÅÍ°¡ ¾ø°Å³ª, Áå»óÅÂ°¡ ¾Æ´Ï¸é
+	else //ë¶™ì€ ì•¡í„°ê°€ ì—†ê±°ë‚˜, ì¥”ìƒíƒœê°€ ì•„ë‹ˆë©´
 	{
-		NearestMesh = GetActorNearHand(); //±ÙÃ³¿¡ ÀÖ´Â ¾×ÅÍ°¡ ÀÖ´ÂÁö ÆÇº°ÇÑ´Ù.
-		if (NearestMesh != nullptr) //±ÙÃ³¿¡ ¾×ÅÍ°¡ ÀÖÀ¸¸é
+		NearestMesh = GetActorNearHand(); //ê·¼ì²˜ì— ìˆëŠ” ì•¡í„°ê°€ ìˆëŠ”ì§€ íŒë³„í•œë‹¤.
+		if (NearestMesh != nullptr) //ê·¼ì²˜ì— ì•¡í„°ê°€ ìˆìœ¼ë©´
 		{
-			HandState = E_HandState::CanGrab; //¼ÕÀÇ »óÅÂ¸¦ CanGrabÀ¸·Î ¹Ù²ã¼­ Áæ¼ö ÀÖ´Â »óÅÂ·Î ¾Ö´Ï¸ŞÀÌ¼ÇÀ» Ãâ·ÂÇÑ´Ù.
+			HandState = E_HandState::CanGrab; //ì†ì˜ ìƒíƒœë¥¼ CanGrabìœ¼ë¡œ ë°”ê¿”ì„œ ì¥˜ìˆ˜ ìˆëŠ” ìƒíƒœë¡œ ì• ë‹ˆë©”ì´ì…˜ì„ ì¶œë ¥í•œë‹¤.
 		}
-		else //±ÙÃ³¿¡ ¾×ÅÍ°¡ ¾ø´Ù¸é
+		else //ê·¼ì²˜ì— ì•¡í„°ê°€ ì—†ë‹¤ë©´
 		{
-			if (WantToGrip) //Áå»óÅÂÀÎÁö ÆÇº°ÇÏ°í
+			if (WantToGrip) //ì¥”ìƒíƒœì¸ì§€ íŒë³„í•˜ê³ 
 			{
-				HandState = E_HandState::Grab; //Áå»óÅÂÀÌ¸é ¼ÕÀÇ »óÅÂ¸¦ GrabÀ¸·Î ¹Ù²Û´Ù.
+				HandState = E_HandState::Grab; //ì¥”ìƒíƒœì´ë©´ ì†ì˜ ìƒíƒœë¥¼ Grabìœ¼ë¡œ ë°”ê¾¼ë‹¤.
 			}
 			else
 			{
-				HandState = E_HandState::Open; //Áå»óÅÂ°¡ ¾Æ´Ï¸é ¼ÕÀÇ »óÅÂ¸¦ OpenÀ¸·Î ¹Ù²Û´Ù.
+				HandState = E_HandState::Open; //ì¥”ìƒíƒœê°€ ì•„ë‹ˆë©´ ì†ì˜ ìƒíƒœë¥¼ Openìœ¼ë¡œ ë°”ê¾¼ë‹¤.
 			}
 		}
 	}
 }
 
-//±×¸³¹öÆ°À» ´©¸¦¶§ È£ÃâµÇ´Â ÇÔ¼ö
+//ê·¸ë¦½ë²„íŠ¼ì„ ëˆ„ë¥¼ë•Œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
 void ALeftHandMotionController::GrabActor()
 {
-	AActor* NearestMesh; //±ÙÃ³¿¡ ÀÖ´Â ¾×ÅÍ¸¦ ÀúÀåÇØµÑ º¯¼ö
-	WantToGrip = true; //Áå»óÅÂ·Î ¹Ù²Û´Ù.
+	AActor* NearestMesh; //ê·¼ì²˜ì— ìˆëŠ” ì•¡í„°ë¥¼ ì €ì¥í•´ë‘˜ ë³€ìˆ˜
+	WantToGrip = true; //ì¥”ìƒíƒœë¡œ ë°”ê¾¼ë‹¤.
 
-	if (HandTouchActorFlag)//¼Õ¿¡ ¾×ÅÍ°¡ ºÎµúÈù »óÅÂÀÌ¸é
+	if (HandTouchActorFlag)//ì†ì— ì•¡í„°ê°€ ë¶€ë”ªíŒ ìƒíƒœì´ë©´
 	{
-		NearestMesh = GetActorNearHand(); //±ÙÃ³¿¡ ÀÖ´Â ¾×ÅÍ°¡ ¹ºÁö ÆÇº°ÇÑ´Ù.
-		if (NearestMesh) //±ÙÃ³¿¡ ¾×ÅÍ°¡ ÀÖÀ¸¸é
+		NearestMesh = GetActorNearHand(); //ê·¼ì²˜ì— ìˆëŠ” ì•¡í„°ê°€ ë­”ì§€ íŒë³„í•œë‹¤.
+		if (NearestMesh) //ê·¼ì²˜ì— ì•¡í„°ê°€ ìˆìœ¼ë©´
 		{
-			// ¿Ş¼ÕÀº ¾î¶² °Íµµ ÁıÀ» ¼ö ¾ø´Ù.
-			// ¹®À» ¿©´Â °ÍÀÌ¶ó¸é ºÙÀÏ ¼ö´Â ÀÖ°ÚÁö¸¸, ¼ÕÀ» µû¶ó´Ù´ÏÁö´Â ¾Ê´Â´Ù.
+			// ì™¼ì†ì€ ì–´ë–¤ ê²ƒë„ ì§‘ì„ ìˆ˜ ì—†ë‹¤.
+			// ë¬¸ì„ ì—¬ëŠ” ê²ƒì´ë¼ë©´ ë¶™ì¼ ìˆ˜ëŠ” ìˆê² ì§€ë§Œ, ì†ì„ ë”°ë¼ë‹¤ë‹ˆì§€ëŠ” ì•ŠëŠ”ë‹¤.
 		}
 	}
 }
 
-//±×¸³¹öÆ°À» ¶¿¶§ È£ÃâµÇ´Â ÇÔ¼ö
+//ê·¸ë¦½ë²„íŠ¼ì„ ë—„ë•Œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
 void ALeftHandMotionController::ReleaseActor()
 {
 	if (AttachedActor)
 	{
-		WantToGrip = false;//ÁãÁö¾ÊÀº »óÅÂ·Î ¹Ù²Û´Ù.
-		VisibleShieldFlag = false;			// ´ÜÁö ±×·¦À» Ç®¾úÀ» »Ó. ¿À¹ö·¦¿£µå ÇÔ¼ö¿¡¼­ ¾×ÅÍ·ÎºÎÅÍ ºüÁ®³ª¿À¸é true·Î ¹Ù²Û´Ù.
+		WantToGrip = false;//ì¥ì§€ì•Šì€ ìƒíƒœë¡œ ë°”ê¾¼ë‹¤.
+		VisibleShieldFlag = false;			// ë‹¨ì§€ ê·¸ë©ì„ í’€ì—ˆì„ ë¿. ì˜¤ë²„ë©ì—”ë“œ í•¨ìˆ˜ì—ì„œ ì•¡í„°ë¡œë¶€í„° ë¹ ì ¸ë‚˜ì˜¤ë©´ trueë¡œ ë°”ê¾¼ë‹¤.
 		if (AttachedActor->GetRootComponent()->GetAttachParent() == MotionController)
 		{
-			if (AttachedActor->ActorHasTag("Door"))			// ¿Ş¼ÕÀÌ ÀâÀ» ¼ö ÀÖ´Â°ÍÀº ¹® »ÓÀÌ´Ù.
+			if (AttachedActor->ActorHasTag("Door"))			// ì™¼ì†ì´ ì¡ì„ ìˆ˜ ìˆëŠ”ê²ƒì€ ë¬¸ ë¿ì´ë‹¤.
 			{
-				// ¹®À» Àâ¾Ò´Ù ³õ¾ÒÀ» ¶§
+				// ë¬¸ì„ ì¡ì•˜ë‹¤ ë†“ì•˜ì„ ë•Œ
 			}
 		}
 	}
 }
 
-//¼ÕÁÖÀ§¿¡ ÀÖ´Â ¾×ÅÍµé Áß¿¡¼­ °¡Àå °¡±îÀÌ ÀÖ´Â ¾×ÅÍ¸¦ ±¸ÇÏ´Â ÇÔ¼ö
+//ì†ì£¼ìœ„ì— ìˆëŠ” ì•¡í„°ë“¤ ì¤‘ì—ì„œ ê°€ì¥ ê°€ê¹Œì´ ìˆëŠ” ì•¡í„°ë¥¼ êµ¬í•˜ëŠ” í•¨ìˆ˜
 AActor * ALeftHandMotionController::GetActorNearHand()
 {
-	TArray<AActor*> OverlappingActors;//¼ÕÁÖÀ§¿¡ ÀÖ´Â ¾×ÅÍµéÀ» ´ã±âÀ§ÇØ ¼±¾ğÇØÁØ º¯¼ö
+	TArray<AActor*> OverlappingActors;//ì†ì£¼ìœ„ì— ìˆëŠ” ì•¡í„°ë“¤ì„ ë‹´ê¸°ìœ„í•´ ì„ ì–¸í•´ì¤€ ë³€ìˆ˜
 
-	FVector GrabSphereLocation; //¼Õ Äİ¸®ÀüÀÇ À§Ä¡¸¦ ÀúÀåÇØµÑ º¯¼ö
-	FVector OverlappingActorLocation; //Äİ¸®Àü¿¡ ºÎµúÈù ¾×ÅÍÀÇ À§Ä¡¸¦ ÀúÀåÇØµÑ º¯¼ö
-	FVector SubActorLocation; //¼Õ Äİ¸®Àü°ú Äİ¸®Àü¿¡ ºÎµúÈù ¾×ÅÍÀÇ °Å¸®°ªÀ» ÀúÀåÇØµÑ º¯¼ö
-	AActor* NearestOverlappingActor = nullptr; //¼Õ¿¡¼­ °¡Àå°¡±îÀÌ ÀÖ´Â ¾×ÅÍ¸¦ ÀúÀåÇØµÑ º¯¼ö 
-	float NearestOverlap = 10000.0f;//°¡Àå °¡±îÀÌ ÀÖ´Â ¾×ÅÍ¸¦ ÆÇº°ÇØÁÖ±â À§ÇØ ÀÓÀÇ·Î ÁöÁ¤ÇÑ °Å¸®°ª
+	FVector GrabSphereLocation; //ì† ì½œë¦¬ì „ì˜ ìœ„ì¹˜ë¥¼ ì €ì¥í•´ë‘˜ ë³€ìˆ˜
+	FVector OverlappingActorLocation; //ì½œë¦¬ì „ì— ë¶€ë”ªíŒ ì•¡í„°ì˜ ìœ„ì¹˜ë¥¼ ì €ì¥í•´ë‘˜ ë³€ìˆ˜
+	FVector SubActorLocation; //ì† ì½œë¦¬ì „ê³¼ ì½œë¦¬ì „ì— ë¶€ë”ªíŒ ì•¡í„°ì˜ ê±°ë¦¬ê°’ì„ ì €ì¥í•´ë‘˜ ë³€ìˆ˜
+	AActor* NearestOverlappingActor = nullptr; //ì†ì—ì„œ ê°€ì¥ê°€ê¹Œì´ ìˆëŠ” ì•¡í„°ë¥¼ ì €ì¥í•´ë‘˜ ë³€ìˆ˜ 
+	float NearestOverlap = 10000.0f;//ê°€ì¥ ê°€ê¹Œì´ ìˆëŠ” ì•¡í„°ë¥¼ íŒë³„í•´ì£¼ê¸° ìœ„í•´ ì„ì˜ë¡œ ì§€ì •í•œ ê±°ë¦¬ê°’
 
-	GrabSphere->GetOverlappingActors(OverlappingActors, AActor::StaticClass()); //¼Õ Äİ¸®Àü¿¡ ºÎµúÈù ¸ğµç¾×ÅÍµéÀ» °¡Á®¿Í¼­ ¾Õ¼­ ¼±¾ğÇØÁØ ¹è¿­¿¡ ´ã´Â´Ù.
-	GrabSphereLocation = GrabSphere->GetComponentLocation(); //¼Õ Äİ¸®ÀüÀÇ À§Ä¡¸¦ ÀúÀåÇØµĞ´Ù.
+	GrabSphere->GetOverlappingActors(OverlappingActors, AActor::StaticClass()); //ì† ì½œë¦¬ì „ì— ë¶€ë”ªíŒ ëª¨ë“ ì•¡í„°ë“¤ì„ ê°€ì ¸ì™€ì„œ ì•ì„œ ì„ ì–¸í•´ì¤€ ë°°ì—´ì— ë‹´ëŠ”ë‹¤.
+	GrabSphereLocation = GrabSphere->GetComponentLocation(); //ì† ì½œë¦¬ì „ì˜ ìœ„ì¹˜ë¥¼ ì €ì¥í•´ë‘”ë‹¤.
 
-	for (AActor* OverlappingActor : OverlappingActors) //¹è¿­¿¡ ´ã°ÜÀÖ´Â ¾×ÅÍµéÀ» µ¹¸é¼­
+	for (AActor* OverlappingActor : OverlappingActors) //ë°°ì—´ì— ë‹´ê²¨ìˆëŠ” ì•¡í„°ë“¤ì„ ëŒë©´ì„œ
 	{
 		if (OverlappingActor->ActorHasTag("Character") || OverlappingActor->ActorHasTag("RightHand") || OverlappingActor->ActorHasTag("PlayerSword")
-			|| OverlappingActor->ActorHasTag("PlayerShield") || OverlappingActor->ActorHasTag("PotionBag")) //¾È¿¡ ´ã°Ü ÀÖ´Â ¾×ÅÍ°¡ Ä³¸¯ÅÍ, ¿À¸¥¼Õ, °Ë, ¹æÆĞÀÌ¸é 
+			|| OverlappingActor->ActorHasTag("PlayerShield") || OverlappingActor->ActorHasTag("PotionBag")) //ì•ˆì— ë‹´ê²¨ ìˆëŠ” ì•¡í„°ê°€ ìºë¦­í„°, ì˜¤ë¥¸ì†, ê²€, ë°©íŒ¨ì´ë©´ 
 		{
-			continue; //¹«½ÃÇÏ°í ´ÙÀ½¹ø ¹è¿­·Î ¼ÓÇàÇÑ´Ù.
+			continue; //ë¬´ì‹œí•˜ê³  ë‹¤ìŒë²ˆ ë°°ì—´ë¡œ ì†í–‰í•œë‹¤.
 		}
-		else if (OverlappingActor->ActorHasTag("Door"))		// Á¢ÇÑ ¾×ÅÍ°¡ 'Door'¶ó´Â ÅÂ±×¸¦ °¡Áö°í ÀÖÀ¸¸é ½ÇÇà.
+		else if (OverlappingActor->ActorHasTag("Door"))		// ì ‘í•œ ì•¡í„°ê°€ 'Door'ë¼ëŠ” íƒœê·¸ë¥¼ ê°€ì§€ê³  ìˆìœ¼ë©´ ì‹¤í–‰.
 		{
-			OverlappingActorLocation = OverlappingActor->GetActorLocation();// ¹è¿­¿¡ ÀÖ´Â ¾×ÅÍÀÇ °Å¸®¸¦ ÀúÀåÇÑ´Ù.
-			SubActorLocation = OverlappingActorLocation - GrabSphereLocation; // ºÎµúÈù ¾×ÅÍ¿Í ¼ÕÄİ¸®Àü »çÀÌÀÇ À§Ä¡¸¦ ±¸ÇÑ´Ù.
-			if (SubActorLocation.Size() < NearestOverlap) //ºÎµúÈù ¾×ÅÍ¿Í ¼ÕÄİ¸®Àü »çÀÌÀÇ °Å¸®°¡ ÀÌÀü ¾×ÅÍÀÇ °Å¸®º¸´Ù ÀÛÀ¸¸é
+			OverlappingActorLocation = OverlappingActor->GetActorLocation();// ë°°ì—´ì— ìˆëŠ” ì•¡í„°ì˜ ê±°ë¦¬ë¥¼ ì €ì¥í•œë‹¤.
+			SubActorLocation = OverlappingActorLocation - GrabSphereLocation; // ë¶€ë”ªíŒ ì•¡í„°ì™€ ì†ì½œë¦¬ì „ ì‚¬ì´ì˜ ìœ„ì¹˜ë¥¼ êµ¬í•œë‹¤.
+			if (SubActorLocation.Size() < NearestOverlap) //ë¶€ë”ªíŒ ì•¡í„°ì™€ ì†ì½œë¦¬ì „ ì‚¬ì´ì˜ ê±°ë¦¬ê°€ ì´ì „ ì•¡í„°ì˜ ê±°ë¦¬ë³´ë‹¤ ì‘ìœ¼ë©´
 			{
-				NearestOverlappingActor = OverlappingActor; //ºÎµúÈù ¾×ÅÍ¸¦ °¡Àå°¡±îÀÌ ÀÖ´Â ¾×ÅÍ·Î Á¤ÇÑ´Ù.
+				NearestOverlappingActor = OverlappingActor; //ë¶€ë”ªíŒ ì•¡í„°ë¥¼ ê°€ì¥ê°€ê¹Œì´ ìˆëŠ” ì•¡í„°ë¡œ ì •í•œë‹¤.
 			}
 		}
 	}
-	return NearestOverlappingActor; //¹İº¹¹®À» µ¹¸ç ±¸ÇÑ °¡Àå°¡±îÀÌ ÀÖ´Â ¾×ÅÍ¸¦ ¹İÈ¯ÇÑ´Ù.
+	return NearestOverlappingActor; //ë°˜ë³µë¬¸ì„ ëŒë©° êµ¬í•œ ê°€ì¥ê°€ê¹Œì´ ìˆëŠ” ì•¡í„°ë¥¼ ë°˜í™˜í•œë‹¤.
 }
 
 void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
@@ -213,11 +214,11 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 		return;
 	}
 
-	if (OtherActor->ActorHasTag("Door"))			// ¹®¿¡¼­ ¿À¹ö·¦ µÇ¸é ½ÇÇà
+	if (OtherActor->ActorHasTag("Door"))			// ë¬¸ì—ì„œ ì˜¤ë²„ë© ë˜ë©´ ì‹¤í–‰
 	{
-		VisibleShieldFlag = false;					// ¹æÆĞ¸¦ º¸ÀÌ°Ô ÇÏÁö ¾Ê´Â´Ù.
-		Shield->SetActorHiddenInGame(true);			// ¹æÆĞ¸¦ ¼û±ä´Ù.(º¸ÀÌÁö ¾Ê°Ô ÇÑ´Ù.)
-		HandTouchActorFlag = true;					// ¼Õ¿¡¼­ ¹°Ã¼¿Í ºÎµúÇû´Ù.
+		VisibleShieldFlag = false;					// ë°©íŒ¨ë¥¼ ë³´ì´ê²Œ í•˜ì§€ ì•ŠëŠ”ë‹¤.
+		Shield->SetActorHiddenInGame(true);			// ë°©íŒ¨ë¥¼ ìˆ¨ê¸´ë‹¤.(ë³´ì´ì§€ ì•Šê²Œ í•œë‹¤.)
+		HandTouchActorFlag = true;					// ì†ì—ì„œ ë¬¼ì²´ì™€ ë¶€ë”ªí˜”ë‹¤.
 		return;
 	}
 }
@@ -229,23 +230,23 @@ void ALeftHandMotionController::OnHandEndOverlap(UPrimitiveComponent * Overlappe
 	{
 		return;
 	}
-	if (OtherActor->ActorHasTag("Door"))			// ¹®¿¡¼­ ¿À¹ö·¦ ¿£µå µÇ¸é ½ÇÇà
+	if (OtherActor->ActorHasTag("Door"))			// ë¬¸ì—ì„œ ì˜¤ë²„ë© ì—”ë“œ ë˜ë©´ ì‹¤í–‰
 	{
-		VisibleShieldFlag = true;					// ¹æÆĞ¸¦ º¼ ¼ö ÀÖ´Ù.
-		HandTouchActorFlag = false;					// ¼Õ¿¡¼­ ¹°Ã¼¿Í ºÎµúÈ÷Áö ¾Ê¾Ò´Ù.
-		Shield->SetActorHiddenInGame(false);		// ¹æÆĞ¸¦ ¼û±âÁö ¾Ê´Â´Ù.(º¸ÀÌ°Ô ÇÑ´Ù)
+		VisibleShieldFlag = true;					// ë°©íŒ¨ë¥¼ ë³¼ ìˆ˜ ìˆë‹¤.
+		HandTouchActorFlag = false;					// ì†ì—ì„œ ë¬¼ì²´ì™€ ë¶€ë”ªíˆì§€ ì•Šì•˜ë‹¤.
+		Shield->SetActorHiddenInGame(false);		// ë°©íŒ¨ë¥¼ ìˆ¨ê¸°ì§€ ì•ŠëŠ”ë‹¤.(ë³´ì´ê²Œ í•œë‹¤)
 		return;
 	}
 }
 
 FString ALeftHandMotionController::GetEnumToString(EControllerHand Value)
 {
-	//ÀüÃ¼ ÆĞÅ°ÁöÁß UEumÀÇ Å¸ÀÔ¿¡¼­ EControllerHand¸¦ Ã£¾Æ¼­ enumPtr¿¡ ³Ö¾îÁØ´Ù.
+	//ì „ì²´ íŒ¨í‚¤ì§€ì¤‘ UEumì˜ íƒ€ì…ì—ì„œ EControllerHandë¥¼ ì°¾ì•„ì„œ enumPtrì— ë„£ì–´ì¤€ë‹¤.
 	UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EControllerHand"), true);
-	if (!enumPtr) //enumPtrÀÌ ºñ¾î ÀÖÀ¸¸é
+	if (!enumPtr) //enumPtrì´ ë¹„ì–´ ìˆìœ¼ë©´
 	{
-		return FString("Invalid"); //ºÒ°¡´ÉÇÏ´Ù°í ¸®ÅÏÇÏ°í
+		return FString("Invalid"); //ë¶ˆê°€ëŠ¥í•˜ë‹¤ê³  ë¦¬í„´í•˜ê³ 
 	}
-	//°¡´ÉÇÏ¸é 
+	//ê°€ëŠ¥í•˜ë©´ 
 	return enumPtr->GetEnumName((int32)Value);
 }

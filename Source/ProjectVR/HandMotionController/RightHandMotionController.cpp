@@ -34,7 +34,7 @@ ARightHandMotionController::ARightHandMotionController()
 	//모션컨트롤러 컴포넌트를 생성해서 MotionController에 넣는다.
 	MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("MotionController"));
 	//생성한 모션컨트롤러 컴포넌트를 RootComponent에 붙인다.
-	MotionController->SetupAttachment(RootComponent);
+	SetRootComponent(MotionController);
 
 	//HandMesh에 사용할 스켈레탈 메쉬 컴포넌트를 생성해서 HandMesh에 넣는다.
 	HandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HandMesh"));
@@ -138,6 +138,10 @@ void ARightHandMotionController::BeginPlay()
 	//손에 다른 액터가 부딪히고 벗어날때 호출할 함수(OnHandEndOverlap)를 바인딩한다.
 	HandMesh->OnComponentEndOverlap.AddDynamic(this, &ARightHandMotionController::OnHandEndOverlap);
 
+	if (HandMesh)
+	{
+		//HandMesh->SetWorldRotation(FRotator(-60.0f,0,90.0f));
+	}
 }
 
 // Called every frame

@@ -16,7 +16,7 @@ APotion::APotion()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PotionMesh"));
-	Mesh->SetupAttachment(RootComponent);
+	SetRootComponent(Mesh);	
 
 	Mesh->SetSimulatePhysics(false);
 	Mesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));		// 크기 설정		-> 테스트용 포션메쉬 나오면 테스트해서 재수정

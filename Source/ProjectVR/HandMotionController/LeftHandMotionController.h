@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -24,64 +24,64 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	//¸ğ¼ÇÄÁÆ®·Ñ·¯ ÄÄÆ÷³ÍÆ®
+	//ëª¨ì…˜ì»¨íŠ¸ë¡¤ëŸ¬ ì»´í¬ë„ŒíŠ¸
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UMotionControllerComponent* MotionController;
-	//Ãâ·ÂÇØÁÙ ¼Õ¸ğ¾ç ¸Ş½¬
+	//ì¶œë ¥í•´ì¤„ ì†ëª¨ì–‘ ë©”ì‰¬
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USkeletalMeshComponent* HandMesh;
-	//¼ÕÁÖÀ§¿¡ ÀÖ´Â ¾×ÅÍµéÀ» ÆÇº°ÇÒ ¿øÇü Äİ¸®Àü
+	//ì†ì£¼ìœ„ì— ìˆëŠ” ì•¡í„°ë“¤ì„ íŒë³„í•  ì›í˜• ì½œë¦¬ì „
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USphereComponent* GrabSphere;
-	//»óÈ£ÀÛ¿ë¿µ¿ªÀ» Ç¥½ÃÇØÁÙ ÄÄÆ÷³ÍÆ®
+	//ìƒí˜¸ì‘ìš©ì˜ì—­ì„ í‘œì‹œí•´ì¤„ ì»´í¬ë„ŒíŠ¸
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USteamVRChaperoneComponent* SteamVRChaperone;
-	//±×¸³¹öÆ°À» ´­·µ´ÂÁö ¾È´­·µ´ÂÁö ÆÇº°ÇØÁÙ º¯¼ö
+	//ê·¸ë¦½ë²„íŠ¼ì„ ëˆŒëŸ¿ëŠ”ì§€ ì•ˆëˆŒëŸ¿ëŠ”ì§€ íŒë³„í•´ì¤„ ë³€ìˆ˜
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool WantToGrip;
-	//¿À¸¥¼Õ¿¡ ºÙÀÎ °ËÀÌ º¸ÀÌ´ÂÁö ¾Èº¸ÀÌ´ÂÁö ÆÇ´ÜÇØÁÙ º¯¼ö
+	//ì˜¤ë¥¸ì†ì— ë¶™ì¸ ê²€ì´ ë³´ì´ëŠ”ì§€ ì•ˆë³´ì´ëŠ”ì§€ íŒë‹¨í•´ì¤„ ë³€ìˆ˜
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shield")
 		bool VisibleShieldFlag;
-	//¿À¸¥¼Õ¿¡ ¹°Ã¼°¡ ´ê¾Ñ´ÂÁö ¾È´ê¾Ñ´ÂÁö ÆÇ´ÜÇØÁÙ º¯¼ö
+	//ì˜¤ë¥¸ì†ì— ë¬¼ì²´ê°€ ë‹¿ì•—ëŠ”ì§€ ì•ˆë‹¿ì•—ëŠ”ì§€ íŒë‹¨í•´ì¤„ ë³€ìˆ˜
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool HandTouchActorFlag;
-	//¼Õ¿¡ ºÙÀÏ ¾×ÅÍ
+	//ì†ì— ë¶™ì¼ ì•¡í„°
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		AActor* AttachedActor;
-	//¼ÕÀÇ »óÅÂ (¿ÀÇÂ, Áæ¼ö ÀÖ´Â »óÅÂ, Áå»óÅÂ)
+	//ì†ì˜ ìƒíƒœ (ì˜¤í”ˆ, ì¥˜ìˆ˜ ìˆëŠ” ìƒíƒœ, ì¥”ìƒíƒœ)
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		E_HandState HandState;
-	//¸ğ¼ÇÄÁÆ®·Ñ·¯ ÄÄÆ÷³ÍÆ®¿¡ ³Ö¾îÁÙ º¯¼ö (¿Ş¼ÕÀÎÁö ¿À¸¥¼ÕÀÎÁö µî)
+	//ëª¨ì…˜ì»¨íŠ¸ë¡¤ëŸ¬ ì»´í¬ë„ŒíŠ¸ì— ë„£ì–´ì¤„ ë³€ìˆ˜ (ì™¼ì†ì¸ì§€ ì˜¤ë¥¸ì†ì¸ì§€ ë“±)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hand")
 		EControllerHand Hand;
-	//¹æÆĞºÙÀÏ À§Ä¡ÀÇ ¾ÀÄÄÆ÷³ÍÆ®
+	//ë°©íŒ¨ë¶™ì¼ ìœ„ì¹˜ì˜ ì”¬ì»´í¬ë„ŒíŠ¸
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shield")
 		class USceneComponent* ShieldAttachScene;
-	//¹æÆĞ
+	//ë°©íŒ¨
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shield")
 		class APlayerShield* Shield;
-	//Æ÷¼Ç°¡¹æºÙÀÏ À§Ä¡ÀÇ ¾ÀÄÄÆ÷³ÍÆ®
+	//í¬ì…˜ê°€ë°©ë¶™ì¼ ìœ„ì¹˜ì˜ ì”¬ì»´í¬ë„ŒíŠ¸
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PotionBag")
 		class USceneComponent* PotionBagAttachScene;
-	//Æ÷¼Ç°¡¹æ
+	//í¬ì…˜ê°€ë°©
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PotionBag")
 		class APotionBag* PotionBag;
-	//±×¸³¹öÆ°À» ´©¸¦¶§ È£ÃâµÇ´Â ÇÔ¼ö
+	//ê·¸ë¦½ë²„íŠ¼ì„ ëˆ„ë¥¼ë•Œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
 	UFUNCTION()
 		void GrabActor();
-	//±×¸³¹öÆ°À» ¶¿¶§ È£ÃâµÇ´Â ÇÔ¼ö
+	//ê·¸ë¦½ë²„íŠ¼ì„ ë—„ë•Œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
 	UFUNCTION()
 		void ReleaseActor();
-	//ÀÚ±â ÀÚ½ÅÁÖÀ§¿¡ ¾×ÅÍ°¡ ÀÖ´ÂÁö È®ÀÎÇØÁÖ´Â ÇÔ¼ö
+	//ìê¸° ìì‹ ì£¼ìœ„ì— ì•¡í„°ê°€ ìˆëŠ”ì§€ í™•ì¸í•´ì£¼ëŠ” í•¨ìˆ˜
 	UFUNCTION()
 		AActor* GetActorNearHand();
-	//¿Ş¼Õ¿¡ ´Ù¸¥ ¾×ÅÍ°¡ ºÎµúÈ÷¸é È£ÃâµÇ´Â ÇÔ¼ö
+	//ì™¼ì†ì— ë‹¤ë¥¸ ì•¡í„°ê°€ ë¶€ë”ªíˆë©´ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
 	UFUNCTION()
 		void OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-	//¼ÕÀÌ ´Ù¸¥ ¾×ÅÍ¿¡¼­ ¿À¹ö·¦‰Â ÈÄ ºüÁ®³ª¿Ã ¶§ È£Ãâ
+	//ì†ì´ ë‹¤ë¥¸ ì•¡í„°ì—ì„œ ì˜¤ë²„ë©ë€ í›„ ë¹ ì ¸ë‚˜ì˜¬ ë•Œ í˜¸ì¶œ
 	UFUNCTION()
 		void OnHandEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-	//¿­°ÅÇüÀ» StringÀ¸·Î Çüº¯È¯ÇØÁÖ´Â ÇÔ¼ö
+	//ì—´ê±°í˜•ì„ Stringìœ¼ë¡œ í˜•ë³€í™˜í•´ì£¼ëŠ” í•¨ìˆ˜
 	UFUNCTION()
 		FString GetEnumToString(EControllerHand Value);
 };
