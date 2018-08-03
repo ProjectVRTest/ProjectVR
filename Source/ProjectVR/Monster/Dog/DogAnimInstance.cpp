@@ -8,6 +8,7 @@
 #include "HandMotionController/RightHandMotionController.h"
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/BoxComponent.h"
 
 void UDogAnimInstance::NativeInitializeAnimation()
 {
@@ -51,7 +52,7 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 			if (FloorDistance.FloorDist < 200.0f)
 			{
-				UE_LOG(LogClass, Warning, TEXT("Zennaro KaTuSSo"));
+				//UE_LOG(LogClass, Warning, TEXT("Zennaro KaTuSSo"));
 				RagdollDog->CurrentDogState = EDogState::Chase;
 				RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
 				RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
@@ -72,6 +73,7 @@ void UDogAnimInstance::AnimNotify_JumpStart(UAnimNotify * Notify)
 
 		if (Target)
 		{
+			RagdollDog->DogAttackCollision->SetActive(true);
 			FVector LaunchVector;
 			FVector GoalVector = Target->Camera->GetComponentLocation();
 			UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(),

@@ -51,7 +51,7 @@ public:
 
 	bool CurrentFalling;
 	bool bIsAttack;
-
+	bool OnLandFlag;
 	UFUNCTION()
 		void AttachVirtualHandWithHead();
 
