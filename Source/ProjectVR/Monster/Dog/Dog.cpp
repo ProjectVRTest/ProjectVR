@@ -120,13 +120,15 @@ void ADog::Tick(float DeltaTime)
 	FFindFloorResult FloorDistance;;
 	GetCharacterMovement()->ComputeFloorDist(GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34, 0);
 
-	//------------------------------------------------
-
 	AI = Cast<ADogAIController>(GetController());
 
-	if (Target)
+	if (OnLandFlag)
 	{
-		// 뒤쪽을 전후로 60도 차이 이내면 공격 가능 각도
+		if (AI->BBComponent->GetValueAsFloat("DistanceWithLand") < 3.0f)
+		{
+			GetCapsuleComponent()->SetSimulatePhysics(false);
+			OnLandFlag = false;
+		}
 	}
 
 	if (AI)
@@ -152,19 +154,19 @@ void ADog::Tick(float DeltaTime)
 			AttachActor = nullptr;
 			bIsAttack = false;
 
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", false, true);
+			/*GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", false, true);
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-R-Thigh", false, true);
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-L-Thigh", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);*/
 
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 			Character->RightHand->AttachDog = nullptr;
 
-			FVector Direction = UKismetMathLibrary::MakeVector(ForceVector.X, ForceVector.Y, ForceVector.Z);
+			FVector Direction = UKismetMathLibrary::MakeVector(0.0f, 0.0f, 1.0f);
 
 			GetCapsuleComponent()->SetSimulatePhysics(true);
-			GetCapsuleComponent()->AddForce(Character->Camera->GetUpVector() * 1000.0f);
+			//GetCapsuleComponent()->AddForce(Direction * 100000.0f);
 			
 			OnLandFlag = true;		// 바닥에 닿았을 때 한번만 실행
 		}
