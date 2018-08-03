@@ -35,8 +35,8 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			float MonAngle = RagdollDog->GetActorRotation().Yaw + 180.0f;
 
 
-			float Max = StandardAngle + 40.0f;
-			float Min = Max - 80.0f;
+			float Max = StandardAngle + Range;
+			float Min = Max - (Range * 2);
 
 			Max = Max >= 360.0f ? Max - 360.0f : Max;
 			Min = Min < 0.0f ? 360.0f + Min : Min;
@@ -55,13 +55,13 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 
 				}
 				else if (MonAngle < StandardAngle || MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else
 				{
@@ -79,14 +79,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle || MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 
 
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else
 				{
@@ -105,14 +105,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 
 
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else
 				{
@@ -130,14 +130,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 
 
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else
 				{
@@ -155,14 +155,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle || MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 
 
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else
 				{
@@ -180,14 +180,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 
 
 				}
 				else if (MonAngle < StandardAngle || MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else
 				{

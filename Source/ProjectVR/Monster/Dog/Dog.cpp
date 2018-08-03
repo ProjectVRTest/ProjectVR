@@ -26,6 +26,8 @@
 
 #include "Kismet/KismetMathLibrary.h"
 
+#include "HandMotionController/RightHandMotionController.h"
+
 // Sets default values
 ADog::ADog()
 {
@@ -72,7 +74,9 @@ ADog::ADog()
 	DogAttackCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 	DogAttackCollision->SetRelativeLocation(FVector(0.0f, 72.0f, 82.0f));
 	DogAttackCollision->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+	DogAttackCollision->SetActive(false);
 	DogAttackCollision->ComponentTags.Add("DogAttackCollision");
+
 
 	PawnSensing->bHearNoises = false;
 	PawnSensing->bSeePawns = true;
@@ -81,6 +85,7 @@ ADog::ADog()
 	PawnSensing->SensingInterval = 0.1f;
 
 	bIsAttack = false;
+	OnLandFlag = false;
 
 	GetMesh()->SetSimulatePhysics(false);
 	GetMesh()->SetCollisionProfileName("Ragdoll");
@@ -110,6 +115,12 @@ void ADog::BeginPlay()
 void ADog::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, GetCapsuleComponent()->GetComponentRotation().Yaw, 0.0f));
+
+	FFindFloorResult FloorDistance;;
+	GetCharacterMovement()->ComputeFloorDist(GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34, 0);
+
+	//------------------------------------------------
 
 	AI = Cast<ADogAIController>(GetController());
 
@@ -130,6 +141,32 @@ void ADog::Tick(float DeltaTime)
 	if (AttachActor)
 	{
 		SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+		SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+
+		FVector ForceVector = GetMesh()->GetPhysicsLinearVelocity() + GetMesh()->GetPhysicsAngularVelocity();
+
+		if (ForceVector.Size() >= 2000.0f)
+		{
+			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+			AttachActor = nullptr;
+			bIsAttack = false;
+
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-R-Thigh", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-L-Thigh", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);
+
+			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+			Character->RightHand->AttachDog = nullptr;
+
+			FVector Direction = UKismetMathLibrary::MakeVector(ForceVector.X, ForceVector.Y, ForceVector.Z);
+
+			GetCapsuleComponent()->SetSimulatePhysics(true);
+			GetCapsuleComponent()->AddForce(Character->Camera->GetUpVector() * 1000.0f);
+			
+			OnLandFlag = true;		// 바닥에 닿았을 때 한번만 실행
+		}
 	}
 }
 
@@ -142,7 +179,10 @@ void ADog::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ADog::OnSeePlayer(APawn * Pawn)
 {
-	if (Pawn->ActorHasTag("Character"))
+	FFindFloorResult FloorDistance;;
+	GetCharacterMovement()->ComputeFloorDist(GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34, 0);
+
+	if (Pawn->ActorHasTag("Character") && FloorDistance.FloorDist < 3.0f)
 	{
 		ADogAIController* AI = Cast<ADogAIController>(GetController());
 
@@ -166,18 +206,27 @@ void ADog::AttachVirtualHandWithHead()
 
 void ADog::OnBodyOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("Dondo"))
+	/*if (OtherActor)
 	{
-
+		UE_LOG(LogClass, Warning, TEXT("%s"),*(OtherActor->GetName()));
 	}
+	
+	if(OtherComp)
+	{
+		UE_LOG(LogClass, Warning, TEXT("%s"), *(OtherComp->GetName()));
+	}*/
 }
 
 void ADog::OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("Character"))
-	{
-		//AttachVirtualHandWithHead();
+	//if (OtherActor)
+	//{
+	//	UE_LOG(LogClass, Warning, TEXT("--------------------------- %s"), *(OtherActor->GetName()));
+	//}
 
-	}
+	//if (OtherComp)
+	//{
+	//	UE_LOG(LogClass, Warning, TEXT("--------------------------- %s"), *(OtherComp->GetName()));
+	//}
 }
 

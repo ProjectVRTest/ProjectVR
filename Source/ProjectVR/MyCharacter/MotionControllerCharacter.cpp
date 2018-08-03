@@ -471,8 +471,9 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 		}
 	}
 
-	if (OtherActor->ActorHasTag("Monster"))
+	if (OtherComp->ComponentHasTag("DogAttackCollision"))
 	{
+
 		ARightHandMotionController* RightController = Cast<ARightHandMotionController>(RightHand);
 		
 		if (!RightController->AttachDog)
@@ -480,8 +481,11 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 			ADog* Dog = Cast<ADog>(OtherActor);
 			if (Dog)
 			{
-				RightController->AttachDog = Dog;
+				UE_LOG(LogClass, Warning, TEXT("dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd") );
 
+				RightController->AttachDog = Dog;
+				Dog->bIsAttack = true;
+				Dog->DogAttackCollision->SetActive(false);
 
 				// KeepRelative : 손의 각도가 같으면 붙는 각도도 일정함
 				FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
@@ -495,8 +499,8 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 
 				Dog->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 				Dog->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
-				Dog->GetCharacterMovement()->DisableMovement();
-
+				//Dog->GetCharacterMovement()->DisableMovement();
+				//Dog->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
 				Dog->AttachActor = this;
 			}
 		}
