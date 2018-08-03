@@ -16,6 +16,7 @@ class PROJECTVR_API UBTService_DogStateUpdate : public UBTService_BlackboardBase
 	
 	
 		float Distance;
+	float DistanceWithLand;
 	float AttackDistance;
 	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;

@@ -30,8 +30,8 @@ void UBTService_DogStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 		if (RagdollDog && MyCharacter)
 		{
 			Distance = FVector::Distance(RagdollDog->GetActorLocation(), Player->GetActorLocation());
-			//AI->BBComponent->SetValueAsFloat("DistanceFor", Distance);
 
+			DistanceWithLand = AI->BBComponent->GetValueAsFloat("DistanceWithLand");
 			//UE_LOG(LogClass, Warning, TEXT("%f"), Distance);
 
 			switch (RagdollDog->CurrentDogState)
@@ -53,7 +53,7 @@ void UBTService_DogStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					RagdollDog->CurrentDogState = EDogState::Chase;
 					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
 				}
-				else
+				else if(DistanceWithLand < 3.0f)
 				{
 					RagdollDog->CurrentDogState = EDogState::Battle;
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;

@@ -134,6 +134,7 @@ void ADog::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentDogState", (uint8)CurrentDogState);
 		AI->BBComponent->SetValueAsEnum("CurrentDogAnimState", (uint8)CurrentDogAnimState);
 		AI->BBComponent->SetValueAsEnum("CurrentDogJumpState", (uint8)CurrentDogJumpState);
+		AI->BBComponent->SetValueAsFloat("DistanceWithLand", FloorDistance.FloorDist);
 
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 	}
