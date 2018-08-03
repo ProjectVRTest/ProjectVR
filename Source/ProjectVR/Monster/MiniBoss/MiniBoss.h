@@ -41,8 +41,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UBehaviorTree* BehaviorTree;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-		TArray<class AMyTargetPoint*> PatrolPoints; 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 		class AActor* Target; 
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimMontage")

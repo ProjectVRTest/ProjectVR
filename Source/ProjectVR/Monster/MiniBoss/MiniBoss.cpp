@@ -129,7 +129,6 @@ void AMiniBoss::OnSeeCharacter(APawn * Pawn)
 				Target = Pawn;
 				CurrentState = EMonsterState::Idle;
 				CurrentAnimState = EMonsterAnimState::Roar;
-				UE_LOG(LogClass, Warning, TEXT("111"));
 				break;
 			case EMonsterState::Chase:
 				break;
