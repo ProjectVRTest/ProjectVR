@@ -143,16 +143,17 @@ void ADog::Tick(float DeltaTime)
 
 	if (AttachActor)
 	{
-		SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+		// 위치 각도 조정
+		SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));		
 		SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 
 		FVector ForceVector = GetMesh()->GetPhysicsLinearVelocity() + GetMesh()->GetPhysicsAngularVelocity();
 
 		if (ForceVector.Size() >= 2000.0f)
 		{
-			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-			AttachActor = nullptr;
-			bIsAttack = false;
+			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// 뗌
+			AttachActor = nullptr;		// 개의 붙은 액터 초기화
+			bIsAttack = false;			// 공격상태 아님
 
 			/*GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", false, true);
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
@@ -160,13 +161,18 @@ void ADog::Tick(float DeltaTime)
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-L-Thigh", false, true);
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);*/
 
+			// 캐릭터의 오른손의 붙어있는 액터를 초기화
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 			Character->RightHand->AttachDog = nullptr;
 
-			FVector Direction = UKismetMathLibrary::MakeVector(0.0f, 0.0f, 1.0f);
+			// 날라가는 방향
+			FVector Direction = Character->Camera->GetUpVector() + Character->Camera->GetForwardVector();
 
+			// 날라가는 힘을 조절
+			GetCapsuleComponent()->SetPhysicsLinearVelocity(Direction* 500.0f);
+			GetCapsuleComponent()->SetPhysicsAngularVelocity(Direction* 500.0f);
 			GetCapsuleComponent()->SetSimulatePhysics(true);
-			//GetCapsuleComponent()->AddForce(Direction * 100000.0f);
+			GetCapsuleComponent()->AddForce(Direction * 500.0f);
 			
 			OnLandFlag = true;		// 바닥에 닿았을 때 한번만 실행
 		}
