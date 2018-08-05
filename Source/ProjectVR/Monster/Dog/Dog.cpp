@@ -73,7 +73,7 @@ ADog::ADog()
 
 	DogAttackCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 	DogAttackCollision->SetRelativeLocation(FVector(0.0f, 72.0f, 82.0f));
-	DogAttackCollision->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+	DogAttackCollision->SetRelativeScale3D(FVector(0.8f, 0.8f, 0.8f));
 	DogAttackCollision->SetActive(false);
 	DogAttackCollision->ComponentTags.Add("DogAttackCollision");
 
@@ -126,8 +126,14 @@ void ADog::Tick(float DeltaTime)
 	{
 		if (AI->BBComponent->GetValueAsFloat("DistanceWithLand") < 3.0f)
 		{
-			GetCapsuleComponent()->SetSimulatePhysics(false);
-			OnLandFlag = false;
+			// 땅에 붙으면 실행됨 -> 날라가는 액션이 추가되면 #1, #2만 남겨두고 나머지는 태스크 추가해서 실행할 것
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-R-Thigh", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-L-Thigh", false, true);
+			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);
+			GetCapsuleComponent()->SetSimulatePhysics(false);		// #1
+			OnLandFlag = false;		// #2
 		}
 	}
 
@@ -147,19 +153,30 @@ void ADog::Tick(float DeltaTime)
 		SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));		
 		SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 
-		FVector ForceVector = GetMesh()->GetPhysicsLinearVelocity() + GetMesh()->GetPhysicsAngularVelocity();
+		FVector ForceVector = GetMesh()->GetPhysicsAngularVelocity();
+		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		UE_LOG(LogTemp, Log, TEXT("%f / %f / %f / %f"), GetMesh()->GetPhysicsLinearVelocity().Size(), GetMesh()->GetPhysicsAngularVelocity().Size());
 
-		if (ForceVector.Size() >= 2000.0f)
+		// 포인트 식으로 일정 횟수 누적되면 개가 떨어짐 8이 적당함
+		if (GetMesh()->GetPhysicsLinearVelocity().Size() >= 300.0f && GetMesh()->GetPhysicsAngularVelocity().Size() >= 400.0f)
 		{
+			point++;
+		}
+		else
+		{
+			if(prelinear < 300 && preangular < 400)		// 전 속도의 최소한계
+				point--;
+		}
+
+		prelinear = GetMesh()->GetPhysicsLinearVelocity().Size();
+		preangular = GetMesh()->GetPhysicsAngularVelocity().Size();
+
+		if (point >= 8)
+		{
+			point = 0;
 			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// 뗌
 			AttachActor = nullptr;		// 개의 붙은 액터 초기화
 			bIsAttack = false;			// 공격상태 아님
-
-			/*GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-R-Thigh", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-L-Thigh", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);*/
 
 			// 캐릭터의 오른손의 붙어있는 액터를 초기화
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
