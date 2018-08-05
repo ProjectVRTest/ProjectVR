@@ -21,12 +21,13 @@ enum class EDogAnimState : uint8
 	Idle = 0 UMETA(DisplayName = "Idle"),
 	Bark = 1 UMETA(DisplayName = "Bark"),
 	Walk = 2 UMETA(DisplayName = "Walk"),
-	SideWalk = 3 UMETA(DisplayName = "SideWalk"),
+	RightSideWalk = 3 UMETA(DisplayName = "RightSideWalk"),
 	Run = 4 UMETA(DisplayName = "Run"),
 	JumpAttack = 5 UMETA(DisplayName = "JumpAttack"),
 	Fly = 6 UMETA(DisplayName = "Fly"),
 	StandUp = 7 UMETA(DisplayName = "StandUp"),
-	Nothing = 8 UMETA(DisplayName = "Nothing")
+	Nothing = 8 UMETA(DisplayName = "Nothing"),
+	LeftSideWalk = 3 UMETA(DisplayName = "LeftSideWalk")
 };
 
 UENUM(BlueprintType)

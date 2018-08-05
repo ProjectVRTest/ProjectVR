@@ -55,12 +55,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
+					RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
 					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 
 				}
 				else if (MonAngle < StandardAngle || MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
+					RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
 					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else

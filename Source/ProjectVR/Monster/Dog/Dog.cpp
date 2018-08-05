@@ -176,7 +176,7 @@ void ADog::Tick(float DeltaTime)
 			point = 0;
 			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// 뗌
 			AttachActor = nullptr;		// 개의 붙은 액터 초기화
-			bIsAttack = false;			// 공격상태 아님
+			bIsAttack = false;			// 공격상태 아님/
 
 			// 캐릭터의 오른손의 붙어있는 액터를 초기화
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
