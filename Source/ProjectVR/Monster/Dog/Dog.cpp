@@ -91,6 +91,8 @@ ADog::ADog()
 	GetMesh()->SetCollisionProfileName("Ragdoll");
 	GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 	Tags.Add("Monster");
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned

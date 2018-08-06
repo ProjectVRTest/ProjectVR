@@ -54,6 +54,8 @@ APlayerSword::APlayerSword()
 	Timer = 0.0f;		// 타이머 초기화
 
 	Tags.Add(FName(TEXT("PlayerSword")));		// 생성한 방패를 'PlayerSword'란 이름으로 태그를 줌
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned

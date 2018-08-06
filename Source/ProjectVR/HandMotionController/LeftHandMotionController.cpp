@@ -73,6 +73,8 @@ ALeftHandMotionController::ALeftHandMotionController()
 	}
 
 	Tags.Add(FName(TEXT("LeftHand"))); //왼손의 태그를 LeftHand로 정한다.
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
@@ -189,8 +191,7 @@ AActor * ALeftHandMotionController::GetActorNearHand()
 
 	for (AActor* OverlappingActor : OverlappingActors) //배열에 담겨있는 액터들을 돌면서
 	{
-		if (OverlappingActor->ActorHasTag("Character") || OverlappingActor->ActorHasTag("RightHand") || OverlappingActor->ActorHasTag("PlayerSword")
-			|| OverlappingActor->ActorHasTag("PlayerShield") || OverlappingActor->ActorHasTag("PotionBag")) //안에 담겨 있는 액터가 캐릭터, 오른손, 검, 방패이면 
+		if (OverlappingActor->ActorHasTag("DisregardForLeftHand")) //안에 담겨 있는 액터가 캐릭터, 오른손, 검, 방패이면 
 		{
 			continue; //무시하고 다음번 배열로 속행한다.
 		}
@@ -209,7 +210,7 @@ AActor * ALeftHandMotionController::GetActorNearHand()
 
 void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("PlayerSword") || OtherActor->ActorHasTag("LeftHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("PlayerShield") || OtherActor->ActorHasTag("RightHand"))
+	if (OtherActor->ActorHasTag("DisregardForLeftHand"))
 	{
 		return;
 	}
@@ -226,7 +227,7 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 void ALeftHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
 
-	if (OtherActor->ActorHasTag("PlayerSword") || OtherActor->ActorHasTag("LeftHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("PlayerShield") || OtherActor->ActorHasTag("RightHand"))
+	if (OtherActor->ActorHasTag("DisregardForLeftHand"))
 	{
 		return;
 	}

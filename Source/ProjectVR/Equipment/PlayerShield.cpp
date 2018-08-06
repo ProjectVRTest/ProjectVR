@@ -53,6 +53,8 @@ APlayerShield::APlayerShield()
 	CharacterStateWidget->SetRelativeLocation(FVector(9.0f, -16.0f, 60.0f));
 
 	Tags.Add(FName(TEXT("PlayerShield")));		// 생성한 방패를 'PlayerShield'란 이름으로 태그를 줌
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
