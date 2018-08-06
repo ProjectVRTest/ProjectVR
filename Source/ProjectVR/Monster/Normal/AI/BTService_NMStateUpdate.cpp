@@ -1,10 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTService_NMStateUpdate.h"
-#include "Monster/Normal/NormalMonsterAIController.h"
-#include "Monster/Normal/NormalMonster.h"
-
-#include "BehaviorTree/BlackboardComponent.h"
+#include "Headers/NormalMonsterAIHeader.h"
 
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Camera/CameraComponent.h"
@@ -21,11 +18,30 @@ void UBTService_NMStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 
 		AActor* Player = Cast<AActor>(AI->BBComponent->GetValueAsObject(TEXT("Player")));
 
-		if (NormalMonster && Player)
+		if (NormalMonster)
 		{
-			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
-			Distance = FVector::Distance(NormalMonster->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
-			AI->BBComponent->SetValueAsFloat("Distance", Distance);
+			
+
+			switch (NormalMonster->CurrentAnimState)
+			{
+			case ENormalMonsterAnimState::Wait:
+				NormalMonster->GetCharacterMovement()->MaxWalkSpeed = 0;
+				break;
+			case ENormalMonsterAnimState::Walk:
+				NormalMonster->GetCharacterMovement()->MaxWalkSpeed = 450.0f;
+				break;
+			case ENormalMonsterAnimState::Run:
+				NormalMonster->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+				break;
+			}
+
+			if (Player)
+			{
+				AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
+				Distance = FVector::Distance(NormalMonster->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+				AI->BBComponent->SetValueAsFloat("Distance", Distance);
+
+			}
 		}
 	}
 }

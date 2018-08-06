@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -39,7 +39,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EPlayerState CurrentState; //Ä³¸¯ÅÍÀÇ ÇöÀç »óÅÂ
+		EPlayerState CurrentState; //ìºë¦­í„°ì˜ í˜„ì¬ ìƒíƒœ
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		E_HandState GrabState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
@@ -79,7 +79,7 @@ public:
 		float DashPower;
 	
 	UPROPERTY()
-		bool InvincibleTimeOn;		// ¹«Àû½Ã°£ÀÎÁö ¾Æ´ÑÁö ÆÇº°
+		bool InvincibleTimeOn;		// ë¬´ì ì‹œê°„ì¸ì§€ ì•„ë‹Œì§€ íŒë³„
 
 	UFUNCTION(BlueprintPure, Category = "Hit")
 		bool PlayBloodyOverlay();
@@ -119,16 +119,16 @@ public:
 	UFUNCTION()
 		void DashEnd();
 
-	void AttackPointSet();
+	//void AttackPointSet();
 		
 	UFUNCTION()
 		void SetAllowBreathe();
 	UFUNCTION()
-		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// µ¥¹ÌÁö ¹Ş±â
+		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// ë°ë¯¸ì§€ ë°›ê¸°
 	UFUNCTION()
-		void DamageTimer();			// ¹«Àû½Ã°£ On ÇÔ¼ö
+		void DamageTimer();			// ë¬´ì ì‹œê°„ On í•¨ìˆ˜
 	
 	UFUNCTION()
 		void OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
-			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// ¿À¹ö·¦ÀÌº¥Æ®·Î µ¥¹ÌÁö¸¦ Àü´ŞÇÏ±âÀ§ÇÑ ÇÔ¼ö
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// ì˜¤ë²„ë©ì´ë²¤íŠ¸ë¡œ ë°ë¯¸ì§€ë¥¼ ì „ë‹¬í•˜ê¸°ìœ„í•œ í•¨ìˆ˜
 };

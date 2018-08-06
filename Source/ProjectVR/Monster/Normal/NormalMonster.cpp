@@ -12,6 +12,9 @@
 
 #include "Animation/AnimBlueprint.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 // Sets default values
 ANormalMonster::ANormalMonster()
 {
@@ -38,7 +41,7 @@ ANormalMonster::ANormalMonster()
 	PawnSensing->bSeePawns = true;
 	PawnSensing->SetPeripheralVisionAngle(30.0f);
 	PawnSensing->SightRadius = 3000.0f;
-	PawnSensing->SensingInterval = 0.1f;
+	PawnSensing->SensingInterval = 0.01f;
 
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree>NormalMonster_BT(TEXT("BehaviorTree'/Game/Blueprints/Monster/Normal/AI/BT_NormalMonster.BT_NormalMonster'"));
 
@@ -60,6 +63,7 @@ ANormalMonster::ANormalMonster()
 		GetMesh()->SetAnimInstanceClass(ABP_NormalMonster.Object->GeneratedClass);
 	}
 
+	GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 	Tags.Add(TEXT("Monster"));
 }
 
@@ -72,6 +76,7 @@ void ANormalMonster::BeginPlay()
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &ANormalMonster::OnSeeCharacter);
 	}
+
 }
 
 // Called every frame
@@ -95,6 +100,7 @@ void ANormalMonster::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+
 }
 
 void ANormalMonster::OnSeeCharacter(APawn * Pawn)
@@ -109,6 +115,13 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 			{
 			case ENormalMonsterState::Idle:
 				AI->BBComponent->SetValueAsObject("Player", Pawn);
+				CurrentState = ENormalMonsterState::Chase;
+				CurrentAnimState = ENormalMonsterAnimState::Walk;
+				break;
+			case ENormalMonsterState::Patrol:
+				AI->BBComponent->SetValueAsObject("Player", Pawn);
+				CurrentState = ENormalMonsterState::Chase;
+				CurrentAnimState = ENormalMonsterAnimState::Walk;
 				break;
 			}
 		}

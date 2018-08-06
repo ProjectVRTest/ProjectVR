@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MotionControllerCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -94,7 +94,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	CurrentState = EPlayerState::Idle;
 	bAllowBreathe = true;
 	DashPower = 800.0f;
-	GrabState = E_HandState::Open;		// ³ªÁß¿¡ ¹«±â Åõ¸íÈ­ Ã³¸®ÇÏ¸é ±×·¦»óÅÂ·Î ¹Ù²ã¾ßÇÔ
+	GrabState = E_HandState::Open;		// ë‚˜ì¤‘ì— ë¬´ê¸° íˆ¬ëª…í™” ì²˜ë¦¬í•˜ë©´ ê·¸ë©ìƒíƒœë¡œ ë°”ê¿”ì•¼í•¨
 
 	Tags.Add(FName("Character"));
 	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -121,10 +121,10 @@ void AMotionControllerCharacter::BeginPlay()
 
 	if (HeadBox)
 	{
-		HeadBox->OnComponentBeginOverlap.AddDynamic(this, &AMotionControllerCharacter::OnHeadOverlap);		// ¿À¹ö·¦ ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ³ ¼ö ÀÖµµ·Ï ¼³Á¤
+		HeadBox->OnComponentBeginOverlap.AddDynamic(this, &AMotionControllerCharacter::OnHeadOverlap);		// ì˜¤ë²„ë© ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¬ ìˆ˜ ìˆë„ë¡ ì„¤ì •
 	}
 
-	AttackPointSet();
+	//AttackPointSet();
 }
 
 // Called every frame
@@ -167,11 +167,11 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 	//	Stereo->SetTexture(Widget->GetRenderTarget());
 	//}
 
-	//// Idle »óÅÂ, ¿òÁ÷ÀÌÁö ¾ÊÀ» ¶§ Ä«¸Ş¶ó ¼û½¬±â Èçµé¸².
+	//// Idle ìƒíƒœ, ì›€ì§ì´ì§€ ì•Šì„ ë•Œ ì¹´ë©”ë¼ ìˆ¨ì‰¬ê¸° í”ë“¤ë¦¼.
 	//if (CurrentState != EPlayerState::Idle && this->GetVelocity().Size() == 0)
 	//{
 	//	CurrentState = EPlayerState::Idle;
-	//	GetWorld()->GetTimerManager().SetTimer(SetIdleTimerHandle, this, &AMotionControllerCharacter::SetAllowBreathe, 0.01f, false, 1.0f);		// 1.5ÃÊ ÈÄ ¹«Àû½Ã°£À» ºñÈ°¼ºÈ­
+	//	GetWorld()->GetTimerManager().SetTimer(SetIdleTimerHandle, this, &AMotionControllerCharacter::SetAllowBreathe, 0.01f, false, 1.0f);		// 1.5ì´ˆ í›„ ë¬´ì ì‹œê°„ì„ ë¹„í™œì„±í™”
 	//}
 	//else if (this->GetVelocity().Size() > 0)
 	//{
@@ -209,21 +209,21 @@ void AMotionControllerCharacter::SetupPlayerInputComponent(UInputComponent* Play
 	PlayerInputComponent->BindAction(TEXT("DashRight"), IE_Released, this, &AMotionControllerCharacter::DashEnd);
 }
 
-// ¿ÀÆÄ½ÃÆ¼°ªÀÌ ÀÖ¾îµµ Ç×»ó ±×·¦»óÅÂ·Î ÀÖ´Â´Ù°í °¡Á¤ÇÒ ¶§
+// ì˜¤íŒŒì‹œí‹°ê°’ì´ ìˆì–´ë„ í•­ìƒ ê·¸ë©ìƒíƒœë¡œ ìˆëŠ”ë‹¤ê³  ê°€ì •í•  ë•Œ
 void AMotionControllerCharacter::GrabLeftOn()
 {
-	// ¿Ş¼ÕÀ¸·Î ÇÒ¼ö ÀÖ´Â°ÍÀº ¾Æ¹«°Íµµ ¾øÀ¸¹Ç·Î LeftHand->GrabActor();¸¦ »©´Â°Å °í·ÁÇØ¾ßÇÔ, ±×·±µ¥ ¹®À» µÎ¼ÕÀ¸·Î ¿¬´Ù°íÇÏ¸é Á¶°Ç¹® Áà¼­ ¹®ÀÌ ¾Æ´Ò¶§´Â °É·¯Áà¾ßÇÔ
+	// ì™¼ì†ìœ¼ë¡œ í• ìˆ˜ ìˆëŠ”ê²ƒì€ ì•„ë¬´ê²ƒë„ ì—†ìœ¼ë¯€ë¡œ LeftHand->GrabActor();ë¥¼ ë¹¼ëŠ”ê±° ê³ ë ¤í•´ì•¼í•¨, ê·¸ëŸ°ë° ë¬¸ì„ ë‘ì†ìœ¼ë¡œ ì—°ë‹¤ê³ í•˜ë©´ ì¡°ê±´ë¬¸ ì¤˜ì„œ ë¬¸ì´ ì•„ë‹ë•ŒëŠ” ê±¸ëŸ¬ì¤˜ì•¼í•¨
 
 	GrabState = E_HandState::Grab;
 
-	// GrabActor¸¦ »©°í ¿Ş¼ÕÀº ¹®ÀÏ ¶§¸¦ °¡Á¤ÇØ¼­ »õ·Î¿î ÇÔ¼ö ¸¸µé±â
+	// GrabActorë¥¼ ë¹¼ê³  ì™¼ì†ì€ ë¬¸ì¼ ë•Œë¥¼ ê°€ì •í•´ì„œ ìƒˆë¡œìš´ í•¨ìˆ˜ ë§Œë“¤ê¸°
 	LeftHand->GrabActor();
 
-	// if(ÀâÈù°Ô ¹®ÀÌ¸é)
-	// ¹®À¸·Î ÀÛ¿ëÇÏ´Â ÇÔ¼ö
+	// if(ì¡íŒê²Œ ë¬¸ì´ë©´)
+	// ë¬¸ìœ¼ë¡œ ì‘ìš©í•˜ëŠ” í•¨ìˆ˜
 
-	// Ã³À½¿¡ ±×·¦»óÅÂ¸¦ State::GrabÀ¸·Î ¼¼ÆÃÇØ¾ßÇÔ, GrabActor()ÇÔ¼ö¿¡¼­ ¹İÈ¯°ª bool·Î º¯È¯ÇØ¾ßÇÔ -> ¾ÆÁ÷ È®½ÇÇÏÁö ¾ÊÀ¸¹Ç·Î Àåºñ·Î Å×½ºÆ®
-	// if(ÀâÈù°Ô ¾øÀ¸¸é) 
+	// ì²˜ìŒì— ê·¸ë©ìƒíƒœë¥¼ State::Grabìœ¼ë¡œ ì„¸íŒ…í•´ì•¼í•¨, GrabActor()í•¨ìˆ˜ì—ì„œ ë°˜í™˜ê°’ boolë¡œ ë³€í™˜í•´ì•¼í•¨ -> ì•„ì§ í™•ì‹¤í•˜ì§€ ì•Šìœ¼ë¯€ë¡œ ì¥ë¹„ë¡œ í…ŒìŠ¤íŠ¸
+	// if(ì¡íŒê²Œ ì—†ìœ¼ë©´) 
 	LeftHand->Shield->ConvertOfOpacity(1.0);
 }
 
@@ -323,85 +323,85 @@ void AMotionControllerCharacter::DashEnd()
 	GetCharacterMovement()->GroundFriction = 8.0f;
 }
 
-void AMotionControllerCharacter::AttackPointSet()
-{
-	AMyTargetPoint* AttackPoint;
-	FAttachmentTransformRules AttachRules(EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false);
-	FVector CalculatePoint;
-	FVector InitPoint =	Camera->GetComponentLocation();
-	FVector Point;
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X + 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-	AttackPoints.Add(AttackPoint);
-	AttackPoint->AttachToComponent(Camera, AttachRules);
-
-	CalculatePoint.X = InitPoint.X - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-	AttackPoints.Add(AttackPoint);
-	AttackPoint->AttachToComponent(Camera, AttachRules);
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.Y = InitPoint.Y - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-	AttackPoints.Add(AttackPoint);
-	AttackPoint->AttachToComponent(Camera, AttachRules);
-
-	CalculatePoint.Y = InitPoint.Y + 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-	AttackPoints.Add(AttackPoint);
-	AttackPoint->AttachToComponent(Camera, AttachRules);
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X + 200.0f;
-	CalculatePoint.Y = InitPoint.Y - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-	AttackPoints.Add(AttackPoint);
-	AttackPoint->AttachToComponent(Camera, AttachRules);
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X + 200.0f;
-	CalculatePoint.Y = InitPoint.Y + 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-	AttackPoints.Add(AttackPoint);
-	AttackPoint->AttachToComponent(Camera, AttachRules);
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X - 200.0f;
-	CalculatePoint.Y = InitPoint.Y - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-	AttackPoints.Add(AttackPoint);
-	AttackPoint->AttachToComponent(Camera, AttachRules);
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X - 200.0f;
-	CalculatePoint.Y = InitPoint.Y + 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-	AttackPoints.Add(AttackPoint);
-	AttackPoint->AttachToComponent(Camera, AttachRules);
-}
+//void AMotionControllerCharacter::AttackPointSet()
+//{
+//	AMyTargetPoint* AttackPoint;
+//	FAttachmentTransformRules AttachRules(EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false);
+//	FVector CalculatePoint;
+//	FVector InitPoint =	Camera->GetComponentLocation();
+//	FVector Point;
+//
+//	CalculatePoint = InitPoint;
+//	CalculatePoint.X = InitPoint.X + 200.0f;
+//	Point = CalculatePoint;
+//	Point.Z = Point.Z - 248.0f;
+//
+//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+//	AttackPoints.Add(AttackPoint);
+//	AttackPoint->AttachToComponent(Camera, AttachRules);
+//
+//	CalculatePoint.X = InitPoint.X - 200.0f;
+//	Point = CalculatePoint;
+//	Point.Z = Point.Z - 248.0f;
+//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+//	AttackPoints.Add(AttackPoint);
+//	AttackPoint->AttachToComponent(Camera, AttachRules);
+//
+//	CalculatePoint = InitPoint;
+//	CalculatePoint.Y = InitPoint.Y - 200.0f;
+//	Point = CalculatePoint;
+//	Point.Z = Point.Z - 248.0f;
+//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+//	AttackPoints.Add(AttackPoint);
+//	AttackPoint->AttachToComponent(Camera, AttachRules);
+//
+//	CalculatePoint.Y = InitPoint.Y + 200.0f;
+//	Point = CalculatePoint;
+//	Point.Z = Point.Z - 248.0f;
+//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+//	AttackPoints.Add(AttackPoint);
+//	AttackPoint->AttachToComponent(Camera, AttachRules);
+//
+//	CalculatePoint = InitPoint;
+//	CalculatePoint.X = InitPoint.X + 200.0f;
+//	CalculatePoint.Y = InitPoint.Y - 200.0f;
+//	Point = CalculatePoint;
+//	Point.Z = Point.Z - 248.0f;
+//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+//	AttackPoints.Add(AttackPoint);
+//	AttackPoint->AttachToComponent(Camera, AttachRules);
+//
+//	CalculatePoint = InitPoint;
+//	CalculatePoint.X = InitPoint.X + 200.0f;
+//	CalculatePoint.Y = InitPoint.Y + 200.0f;
+//	Point = CalculatePoint;
+//	Point.Z = Point.Z - 248.0f;
+//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+//	AttackPoints.Add(AttackPoint);
+//	AttackPoint->AttachToComponent(Camera, AttachRules);
+//
+//	CalculatePoint = InitPoint;
+//	CalculatePoint.X = InitPoint.X - 200.0f;
+//	CalculatePoint.Y = InitPoint.Y - 200.0f;
+//	Point = CalculatePoint;
+//	Point.Z = Point.Z - 248.0f;
+//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+//	AttackPoints.Add(AttackPoint);
+//	AttackPoint->AttachToComponent(Camera, AttachRules);
+//
+//	CalculatePoint = InitPoint;
+//	CalculatePoint.X = InitPoint.X - 200.0f;
+//	CalculatePoint.Y = InitPoint.Y + 200.0f;
+//	Point = CalculatePoint;
+//	Point.Z = Point.Z - 248.0f;
+//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+//	AttackPoints.Add(AttackPoint);
+//	AttackPoint->AttachToComponent(Camera, AttachRules);
+//}
 
 void AMotionControllerCharacter::SetAllowBreathe()
 {
-	bAllowBreathe = true;			// Å¸ÀÌ¸Ó·Î ¿òÁ÷ÀÎÈÄ ¸î ÃÊ ÈÄ¿¡ ´Ù½Ã ¼û½¯¼ö ÀÖ°Ô ÇÔ
+	bAllowBreathe = true;			// íƒ€ì´ë¨¸ë¡œ ì›€ì§ì¸í›„ ëª‡ ì´ˆ í›„ì— ë‹¤ì‹œ ìˆ¨ì‰´ìˆ˜ ìˆê²Œ í•¨
 }
 
 
@@ -413,25 +413,25 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 		bisHit = true;
 		Widget->bVisible = true;
 
-		if (Widget->bVisible)		// ÇÇ°İ À§Á¬ÀÌ È°¼ºÈ­ µÉ¶§ ½ÇÇà
+		if (Widget->bVisible)		// í”¼ê²© ìœ„ì ¯ì´ í™œì„±í™” ë ë•Œ ì‹¤í–‰
 		{
-			UHitBloodyWidget* bloodyWidget = Cast<UHitBloodyWidget>(Widget->GetUserWidgetObject());		// UHitBloodyWidgetÇÔ¼ö¸¦ »ç¿ëÇÒ¼ö ÀÖ°Ô ÇÔ
+			UHitBloodyWidget* bloodyWidget = Cast<UHitBloodyWidget>(Widget->GetUserWidgetObject());		// UHitBloodyWidgetí•¨ìˆ˜ë¥¼ ì‚¬ìš©í• ìˆ˜ ìˆê²Œ í•¨
 			if (bloodyWidget)
 			{
-				bloodyWidget->PlayAnimationByName("Bloody",0.0, 1,EUMGSequencePlayMode::Forward, 1.0f);		// ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+				bloodyWidget->PlayAnimationByName("Bloody",0.0, 1,EUMGSequencePlayMode::Forward, 1.0f);		// ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
 			}
 		}
 
-		CurrentHp -= Damage;			// ÇöÀç Ã¼·Â°¨¼Ò
+		CurrentHp -= Damage;			// í˜„ì¬ ì²´ë ¥ê°ì†Œ
 		ULeftHandWidget* HandWidget = Cast<ULeftHandWidget>
-			(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// ¿Ş¼Õ ¹æÆĞÀÇ À§Á¬À» ULeftHandWidget³»ÀÇ ÇÔ¼ö¸¦ »ç¿ëÇÒ ¼ö ÀÖµµ·Ï Ä³½ºÆ®ÇÑ´Ù.
+			(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// ì™¼ì† ë°©íŒ¨ì˜ ìœ„ì ¯ì„ ULeftHandWidgetë‚´ì˜ í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•  ìˆ˜ ìˆë„ë¡ ìºìŠ¤íŠ¸í•œë‹¤.
 
 		if (HandWidget)
 		{
-			HandWidget->ReceiveDamage(Damage);			// µ¥¹ÌÁö¸¦ ¹Ş´Â´Ù.
+			HandWidget->ReceiveDamage(Damage);			// ë°ë¯¸ì§€ë¥¼ ë°›ëŠ”ë‹¤.
 		}
-		InvincibleTimeOn = true;		// ÇÇ°İµÇ¸é Áï½Ã ¹«Àû½Ã°£ È°¼ºÈ­
-		GetWorld()->GetTimerManager().SetTimer(DamageTimerHandle, this, &AMotionControllerCharacter::DamageTimer, 0.01f, false, 1.5f);		// 1.5ÃÊ ÈÄ ¹«Àû½Ã°£À» ºñÈ°¼ºÈ­
+		InvincibleTimeOn = true;		// í”¼ê²©ë˜ë©´ ì¦‰ì‹œ ë¬´ì ì‹œê°„ í™œì„±í™”
+		GetWorld()->GetTimerManager().SetTimer(DamageTimerHandle, this, &AMotionControllerCharacter::DamageTimer, 0.01f, false, 1.5f);		// 1.5ì´ˆ í›„ ë¬´ì ì‹œê°„ì„ ë¹„í™œì„±í™”
 	}
 	
 	return Damage;
@@ -439,7 +439,7 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 
 void AMotionControllerCharacter::DamageTimer()
 {
-	InvincibleTimeOn = false;			// ¹«Àû½Ã°£ ºñÈ°¼ºÈ­
+	InvincibleTimeOn = false;			// ë¬´ì ì‹œê°„ ë¹„í™œì„±í™”
 }
 
 bool AMotionControllerCharacter::PlayBloodyOverlay()
@@ -455,21 +455,21 @@ bool AMotionControllerCharacter::PlayBloodyOverlay()
 void AMotionControllerCharacter::DisableBloody()		
 {
 	if (Widget->bVisible)		
-		Widget->bVisible = false;		// À§Á¬À» º¸ÀÌÁö ¾Ê°Ô ÇÔ
+		Widget->bVisible = false;		// ìœ„ì ¯ì„ ë³´ì´ì§€ ì•Šê²Œ í•¨
 }
 
 void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("Potion") && GrabState == E_HandState::Grab)		// ÄÄÆ÷³ÍÆ® ±âÁØ, ¾×ÅÍ ±âÁØÀÌ¸é Ã¹¹øÂ° Á¶°Ç OtherActor->ActorHasTas("Potion") À¸·Î º¯È¯
+	if (OtherActor->ActorHasTag("Potion") && GrabState == E_HandState::Grab)		// ì»´í¬ë„ŒíŠ¸ ê¸°ì¤€, ì•¡í„° ê¸°ì¤€ì´ë©´ ì²«ë²ˆì§¸ ì¡°ê±´ OtherActor->ActorHasTas("Potion") ìœ¼ë¡œ ë³€í™˜
 	{
-		CurrentHp += 30;		// È¸º¹·®
+		CurrentHp += 30;		// íšŒë³µëŸ‰
 
 		ULeftHandWidget* HandWidget = Cast<ULeftHandWidget>
-			(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// ¿Ş¼Õ ¹æÆĞÀÇ À§Á¬À» ULeftHandWidget³»ÀÇ ÇÔ¼ö¸¦ »ç¿ëÇÒ ¼ö ÀÖµµ·Ï Ä³½ºÆ®ÇÑ´Ù.
+			(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// ì™¼ì† ë°©íŒ¨ì˜ ìœ„ì ¯ì„ ULeftHandWidgetë‚´ì˜ í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•  ìˆ˜ ìˆë„ë¡ ìºìŠ¤íŠ¸í•œë‹¤.
 
 		if (HandWidget)
 		{
-			HandWidget->GainHP(30);		// È¸º¹
+			HandWidget->GainHP(30);		// íšŒë³µ
 		}
 	}
 
@@ -489,7 +489,7 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 				Dog->bIsAttack = true;
 				Dog->DogAttackCollision->SetActive(false);
 
-				// KeepRelative : ¼ÕÀÇ °¢µµ°¡ °°À¸¸é ºÙ´Â °¢µµµµ ÀÏÁ¤ÇÔ
+				// KeepRelative : ì†ì˜ ê°ë„ê°€ ê°™ìœ¼ë©´ ë¶™ëŠ” ê°ë„ë„ ì¼ì •í•¨
 				FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
 
 				Dog->AttachToComponent(RightController->AttachDogPosition, AttachRules);
