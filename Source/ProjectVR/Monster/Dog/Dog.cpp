@@ -27,6 +27,7 @@
 #include "Kismet/KismetMathLibrary.h"
 
 #include "HandMotionController/RightHandMotionController.h"
+#include "HandMotionController/LeftHandMotionController.h"
 
 // Sets default values
 ADog::ADog()
@@ -157,16 +158,15 @@ void ADog::Tick(float DeltaTime)
 
 		FVector ForceVector = GetMesh()->GetPhysicsAngularVelocity();
 		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		UE_LOG(LogTemp, Log, TEXT("%f / %f / %f / %f"), GetMesh()->GetPhysicsLinearVelocity().Size(), GetMesh()->GetPhysicsAngularVelocity().Size());
 
-		// 포인트 식으로 일정 횟수 누적되면 개가 떨어짐 8이 적당함
+		// 포인트 식으로 일정 횟수 누적되면 개가 떨어짐 8이 적당함 - 각도만 틀면 떨어지는것 방지
 		if (GetMesh()->GetPhysicsLinearVelocity().Size() >= 300.0f && GetMesh()->GetPhysicsAngularVelocity().Size() >= 400.0f)
 		{
 			point++;
 		}
 		else
 		{
-			if(prelinear < 300 && preangular < 400)		// 전 속도의 최소한계
+			if(prelinear < 300 && preangular < 400)		// 전 속도의 최소한계 - GetPhysicsVelocity는 역으로 이동하면 값이 작아짐 -> 전과 비교를해서 낙차가 작으면 포인트 감소
 				point--;
 		}
 
@@ -247,14 +247,14 @@ void ADog::OnBodyOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherAct
 
 void ADog::OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	//if (OtherActor)
-	//{
-	//	UE_LOG(LogClass, Warning, TEXT("--------------------------- %s"), *(OtherActor->GetName()));
-	//}
+	if (OtherActor->ActorHasTag("LeftHand"))
+	{
+		ALeftHandMotionController* LeftHand = Cast<ALeftHandMotionController>(OtherActor);
 
-	//if (OtherComp)
-	//{
-	//	UE_LOG(LogClass, Warning, TEXT("--------------------------- %s"), *(OtherComp->GetName()));
-	//}
+		if (LeftHand)
+		{
+			// 왼손의 속도가 최소속도 이상일 때 떨어지게 핢
+		}
+	}
 }
 

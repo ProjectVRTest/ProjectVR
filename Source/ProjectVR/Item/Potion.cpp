@@ -25,7 +25,7 @@ APotion::APotion()
 
 															// 포션 태그
 	Tags.Add(FName(TEXT("Potion")));		// 생성한 포션을 'Potion'란 이름으로 태그를 줌
-	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
 }
 
 // Called when the game starts or when spawned

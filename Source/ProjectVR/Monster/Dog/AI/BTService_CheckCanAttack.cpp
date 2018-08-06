@@ -14,7 +14,7 @@ void UBTService_CheckCanAttack::InitializeFromAsset(UBehaviorTree & Asset)
 {
 	Super::InitializeFromAsset(Asset);
 
-	Range = 40.0f;
+	Range = 50.0f;
 }
 
 void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
@@ -31,39 +31,35 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 		if (RagdollDog && MyCharacter)
 		{
-			float StandardAngle = MyCharacter->Camera->GetComponentRotation().Yaw + 180.0f;
-			float MonAngle = RagdollDog->GetActorRotation().Yaw + 180.0f;
+			float StandardAngle = MyCharacter->Camera->GetComponentRotation().Yaw + 180.0f;		// 플레이어 기준 각도
+			float MonAngle = RagdollDog->GetActorRotation().Yaw + 180.0f;	// 개 기준 각도
 
+			float Max = StandardAngle + Range;		// 개의 공격가능 우 범위 
+			float Min = Max - (Range * 2);			// 개의 공격가능 좌 범위
 
-			float Max = StandardAngle + Range;
-			float Min = Max - (Range * 2);
-
+			// 0~360도 범위 -> 360도 초과시 0도부터 시작
 			Max = Max >= 360.0f ? Max - 360.0f : Max;
 			Min = Min < 0.0f ? 360.0f + Min : Min;
 
-			Max += 180.0;
-			Min += 180.0;
+			Max += 180.0;		// 우 범위 - 플레이어 기준을 개 기준으로 바꿈
+			Min += 180.0;		// 좌 범위 - 플레이어 기준을 개 기준으로 바꿈
 
+			// 0~360도 범위 -> 360도 초과시 0도부터 시작
 			Max = Max >= 360.0f ? Max - 360.0f : Max;
 			Min = Min >= 360.0f ? Min - 360.0f : Min;
 
-			float oppPlayer = StandardAngle + 180.0f;
-			oppPlayer = oppPlayer >= 360.0f ? oppPlayer - 360.0f : oppPlayer;
-
-			if (StandardAngle <= Range && StandardAngle >= 0.0f)		// 1
+			// 주위를 도는 경우의 수는 6가지, 개의 보는 각도랑 플레이어와 보는 각도 반전 -------------------------------------------------------------------- 주석 대기
+			if (StandardAngle <= Range && StandardAngle >= 0.0f)
 			{
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
-					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
-
+					//RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
 				}
 				else if (MonAngle < StandardAngle || MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
-					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
+					//RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
 				}
 				else
 				{
@@ -76,19 +72,15 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
 				}
 			}
-			else if (StandardAngle >= 360.0f - Range && StandardAngle >= 0.0f)		// 2
+			else if (StandardAngle >= 360.0f - Range && StandardAngle >= 0.0f)		
 			{
 				if (MonAngle >= StandardAngle || MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
-
-
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else
 				{
@@ -107,14 +99,10 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
-
-
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else
 				{
@@ -132,14 +120,10 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
-
-
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else
 				{
@@ -157,14 +141,10 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle || MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
-
-
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else
 				{
@@ -182,14 +162,10 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					//UE_LOG(LogClass, Warning, TEXT("Left ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
-
-
 				}
 				else if (MonAngle < StandardAngle || MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					//UE_LOG(LogClass, Warning, TEXT("Right ------ %f / %f / %f / %f"), StandardAngle, Min, Max, MonAngle);
 				}
 				else
 				{
@@ -202,11 +178,6 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
 				}
 			}
-
-			//UE_LOG(LogClass, Warning, TEXT("%f / %f / %f / %f"), StandardAngle, Max, Min, MonAngle);
-
-
-
 		}
 	}
 	

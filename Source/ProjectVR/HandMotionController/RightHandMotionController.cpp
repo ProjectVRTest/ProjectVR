@@ -111,8 +111,8 @@ ARightHandMotionController::ARightHandMotionController()
 	HandTouchActorFlag = true; //처음에는 오른손에 검이 붙여있으므로 true로 해준다
 	bisRightGrab = false;
 	Tags.Add(FName(TEXT("RightHand"))); //오른손에 태그를 달아준다.
-	Tags.Add(FName(TEXT("DisregardForLeftHand")));
-	Tags.Add(FName(TEXT("DisregardForRightHand")));
+	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	//Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
@@ -302,21 +302,19 @@ AActor * ARightHandMotionController::GetActorNearHand()
 
 	for (AActor* OverlappingActor : OverlappingActors)
 	{
-		if (OverlappingActor->ActorHasTag("DisregardForRightHand"))
+		if (OverlappingActor->ActorHasTag("DisregardForRightHand") || OverlappingActor->ActorHasTag("Character") ||
+			OverlappingActor->ActorHasTag("RightHand") || OverlappingActor->ActorHasTag("LeftHand"))
 		{
-			UE_LOG(LogTemp, Log, TEXT("1  %s"), *(OverlappingActor->GetName()));
 			continue;
 		}
 		else if (OverlappingActor->ActorHasTag("PotionBag"))
 		{
 			NearestOverlappingActor = OverlappingActor;
-			UE_LOG(LogTemp, Log, TEXT("2  %s"), *(OverlappingActor->GetName()));
 			break;
 		}
 		else if (OverlappingActor->ActorHasTag("Door"))
 		{
 			NearestOverlappingActor = OverlappingActor;
-			UE_LOG(LogTemp, Log, TEXT("3  %s"), *(OverlappingActor->GetName()));
 			break;
 		}
 		else		// 기타 액터
@@ -325,7 +323,6 @@ AActor * ARightHandMotionController::GetActorNearHand()
 			SubActorLocation = OverlappingActorLocation - GrabSphereLocation;
 			if (SubActorLocation.Size() < NearestOverlap)
 			{
-				UE_LOG(LogTemp, Log, TEXT("4  %s"), *(OverlappingActor->GetName()));
 				NearestOverlappingActor = OverlappingActor;
 				break;
 			}
@@ -376,7 +373,7 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 		HandOpenState();
 		return;
 	}
-	else if (OtherActor->ActorHasTag("DisregardForRightHand"))
+	else if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
 	{
 		return;
 	}
@@ -389,7 +386,7 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 
 void ARightHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->ActorHasTag("DisregardForRightHand"))
+	if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
 	{
 		return;
 	}
