@@ -65,6 +65,8 @@ ANormalMonster::ANormalMonster()
 
 	GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 	Tags.Add(TEXT("Monster"));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned

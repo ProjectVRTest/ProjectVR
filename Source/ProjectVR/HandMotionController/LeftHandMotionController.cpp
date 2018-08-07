@@ -73,8 +73,8 @@ ALeftHandMotionController::ALeftHandMotionController()
 	}
 
 	Tags.Add(FName(TEXT("LeftHand"))); //왼손의 태그를 LeftHand로 정한다.
-	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
-	//Tags.Add(FName(TEXT("DisregardForRightHand")));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
@@ -111,6 +111,8 @@ void ALeftHandMotionController::BeginPlay()
 void ALeftHandMotionController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	//UE_LOG(LogTemp, Log, TEXT("%f"), GrabSphere->GetPhysicsLinearVelocity().Size());
 
 	//틱을 돌때마다 근처에 액터가 있는지, 붙은 액터가 있는지, 그립을 누른 상태인지 판별해서
 	//손의 애니메이션 상태를 업데이트 한다.

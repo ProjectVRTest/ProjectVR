@@ -28,7 +28,7 @@
 
 #include "HandMotionController/RightHandMotionController.h"
 #include "HandMotionController/LeftHandMotionController.h"
-
+#include "Components/SphereComponent.h"
 // Sets default values
 ADog::ADog()
 {
@@ -173,20 +173,20 @@ void ADog::Tick(float DeltaTime)
 		prelinear = GetMesh()->GetPhysicsLinearVelocity().Size();
 		preangular = GetMesh()->GetPhysicsAngularVelocity().Size();
 
-		if (point >= 8)
+		if (point >= 8 || bpunchDetach)
 		{
 			point = 0;
 			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// 뗌
 			AttachActor = nullptr;		// 개의 붙은 액터 초기화
 			bIsAttack = false;			// 공격상태 아님/
-
+			bpunchDetach = false;
 			// 캐릭터의 오른손의 붙어있는 액터를 초기화
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 			Character->RightHand->AttachDog = nullptr;
 
 			// 날라가는 방향
 			FVector Direction = Character->Camera->GetUpVector() + Character->Camera->GetForwardVector();
-
+			
 			// 날라가는 힘을 조절
 			GetCapsuleComponent()->SetPhysicsLinearVelocity(Direction* 500.0f);
 			GetCapsuleComponent()->SetPhysicsAngularVelocity(Direction* 500.0f);
@@ -234,15 +234,7 @@ void ADog::AttachVirtualHandWithHead()
 
 void ADog::OnBodyOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	/*if (OtherActor)
-	{
-		UE_LOG(LogClass, Warning, TEXT("%s"),*(OtherActor->GetName()));
-	}
 	
-	if(OtherComp)
-	{
-		UE_LOG(LogClass, Warning, TEXT("%s"), *(OtherComp->GetName()));
-	}*/
 }
 
 void ADog::OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
@@ -254,6 +246,10 @@ void ADog::OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherAct
 		if (LeftHand)
 		{
 			// 왼손의 속도가 최소속도 이상일 때 떨어지게 핢
+			if (LeftHand->GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
+			{
+				bpunchDetach = true;
+			}
 		}
 	}
 }

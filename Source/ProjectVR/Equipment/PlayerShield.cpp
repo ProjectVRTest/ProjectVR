@@ -22,7 +22,7 @@ APlayerShield::APlayerShield()
 	/* 스태틱 매쉬 컴포넌트 생성 */
 	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));
 
-	ShieldMesh->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));			// 캐릭터와의 충돌을 피하기위해서 Pawn(캐릭터)만 Overlap되도록 설정
+	ShieldMesh->SetCollisionProfileName(TEXT("OverlapAll"));			// 캐릭터와의 충돌을 피하기위해서 Pawn(캐릭터)만 Overlap되도록 설정
 	ShieldMesh->SetupAttachment(ShieldScene);		// 생성한 스태틱 매쉬를 씬 컴포넌트에 붙임
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shield(TEXT("StaticMesh'/Game/Assets/Equipment/Mesh/shield_low.shield_low'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
@@ -79,6 +79,7 @@ void APlayerShield::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//UE_LOG(LogTemp, Log, TEXT(" ** %f"), ShieldMesh->GetPhysicsLinearVelocity().Size());
 }
 
 void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭터에서 호출)

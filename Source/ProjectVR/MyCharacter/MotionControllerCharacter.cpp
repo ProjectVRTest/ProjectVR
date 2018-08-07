@@ -97,8 +97,8 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	GrabState = E_HandState::Open;		// 나중에 무기 투명화 처리하면 그랩상태로 바꿔야함
 
 	Tags.Add(FName("Character"));
-	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
-	//Tags.Add(FName(TEXT("DisregardForRightHand")));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
@@ -131,20 +131,6 @@ void AMotionControllerCharacter::BeginPlay()
 void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	float StandardAngle = Camera->GetComponentRotation().Yaw + 180.0f;
-
-	float Max = StandardAngle + 40.0f;
-	float Min = Max - 80.0f;
-
-	Max = Max >= 360.0f ? Max - 360.0f : Max;
-	Min = Min < 0.0f ? 360.0f + Min : Min;
-
-	Max += 180.0;
-	Min += 180.0;
-
-	Max = Max >= 360.0f ? Max - 360.0f : Max;
-	Min = Min >= 360.0f ? Min - 360.0f : Min;
 
 	//UE_LOG(LogClass, Warning, TEXT("Left2 ------ %f / %f / %f"), StandardAngle, Min, Max);
 	//if (SpringArm)

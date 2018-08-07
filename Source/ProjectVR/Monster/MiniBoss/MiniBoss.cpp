@@ -77,6 +77,8 @@ AMiniBoss::AMiniBoss()
 	}
 
 	Tags.Add(TEXT("Monster"));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
