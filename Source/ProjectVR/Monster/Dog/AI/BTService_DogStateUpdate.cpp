@@ -56,7 +56,7 @@ void UBTService_DogStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				else if(DistanceWithLand < 3.0f)
 				{
 					RagdollDog->CurrentDogState = EDogState::Battle;
-					RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
 
 					if (!RagdollDog->bIsAttack)
 						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅

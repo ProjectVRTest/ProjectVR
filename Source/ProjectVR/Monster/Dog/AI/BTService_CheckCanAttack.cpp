@@ -178,6 +178,16 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
 				}
 			}
+			else
+			{
+				RagdollDog->CurrentDogState = EDogState::Battle;
+				RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+
+				if (!RagdollDog->bIsAttack)
+					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
+			}
 		}
 	}
 	
