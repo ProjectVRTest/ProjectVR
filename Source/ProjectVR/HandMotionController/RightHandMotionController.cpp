@@ -302,8 +302,7 @@ AActor * ARightHandMotionController::GetActorNearHand()
 
 	for (AActor* OverlappingActor : OverlappingActors)
 	{
-		if (OverlappingActor->ActorHasTag("DisregardForRightHand") || OverlappingActor->ActorHasTag("Character") ||
-			OverlappingActor->ActorHasTag("RightHand") || OverlappingActor->ActorHasTag("LeftHand"))
+		if (OverlappingActor->ActorHasTag("DisregardForRightHand"))
 		{
 			continue;
 		}
@@ -373,7 +372,7 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 		HandOpenState();
 		return;
 	}
-	else if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
+	else if (OtherActor->ActorHasTag("DisregardForRightHand"))
 	{
 		return;
 	}
@@ -386,7 +385,7 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 
 void ARightHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
+	if (OtherActor->ActorHasTag("DisregardForRightHand"))
 	{
 		return;
 	}

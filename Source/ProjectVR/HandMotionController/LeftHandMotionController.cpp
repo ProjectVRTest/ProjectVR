@@ -11,6 +11,11 @@
 #include "Equipment/PlayerShield.h"
 #include "Item/PotionBag.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "MyCharacter/MotionControllerCharacter.h"
+#include "HandMotionController/RightHandMotionController.h"
+
+
 // Sets default values
 ALeftHandMotionController::ALeftHandMotionController()
 {
@@ -193,8 +198,7 @@ AActor * ALeftHandMotionController::GetActorNearHand()
 
 	for (AActor* OverlappingActor : OverlappingActors) //배열에 담겨있는 액터들을 돌면서
 	{
-		if (OverlappingActor->ActorHasTag("DisregardForRightHand") || OverlappingActor->ActorHasTag("Character")
-			|| OverlappingActor->ActorHasTag("RightHand") || OverlappingActor->ActorHasTag("LeftHand")) //안에 담겨 있는 액터가 캐릭터, 오른손, 검, 방패이면 
+		if (OverlappingActor->ActorHasTag("DisregardForRightHand")) //안에 담겨 있는 액터가 캐릭터, 오른손, 검, 방패이면 
 		{
 			continue; //무시하고 다음번 배열로 속행한다.
 		}
@@ -213,9 +217,22 @@ AActor * ALeftHandMotionController::GetActorNearHand()
 
 void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
+	if (OtherActor->ActorHasTag("DisregardForRightHand") )
 	{
 		return;
+	}
+
+	if (OtherComp->ComponentHasTag("DogAttackCollision"))
+	{
+		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+		if (Character->RightHand->AttachDog)
+		{
+			if (GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
+			{
+				UGameplayStatics::ApplyDamage(OtherActor, 1.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
+			}
+		}
 	}
 
 	if (OtherActor->ActorHasTag("Door"))			// 문에서 오버랩 되면 실행
@@ -230,7 +247,7 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 void ALeftHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
 
-	if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
+	if (OtherActor->ActorHasTag("DisregardForRightHand"))
 	{
 		return;
 	}

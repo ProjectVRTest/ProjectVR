@@ -88,6 +88,10 @@ ADog::ADog()
 	bIsAttack = false;
 	OnLandFlag = false;
 
+	MaxHP = 1;
+	CurrentHP = MaxHP;
+	bIsDeath = false;
+
 	GetMesh()->SetSimulatePhysics(false);
 	GetMesh()->SetCollisionProfileName("Ragdoll");
 	GetCharacterMovement()->MaxWalkSpeed = 0.0f;
@@ -123,20 +127,29 @@ void ADog::Tick(float DeltaTime)
 	FFindFloorResult FloorDistance;;
 	GetCharacterMovement()->ComputeFloorDist(GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34, 0);
 
-	AI = Cast<ADogAIController>(GetController());
-
 	if (OnLandFlag)
 	{
+		AI = Cast<ADogAIController>(GetController());
+
 		if (AI->BBComponent->GetValueAsFloat("DistanceWithLand") < 3.0f)
 		{
-			// 땅에 붙으면 실행됨 -> 날라가는 액션이 추가되면 #1, #2만 남겨두고 나머지는 태스크 추가해서 실행할 것
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-R-Thigh", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-L-Thigh", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);
-			GetCapsuleComponent()->SetSimulatePhysics(false);		// #1
-			OnLandFlag = false;		// #2
+			if (CurrentHP > 0.0f)
+			{
+				// 땅에 붙으면 실행됨 -> 날라가는 액션이 추가되면 #1, #2만 남겨두고 나머지는 태스크 추가해서 실행할 것
+				GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", false, true);
+				GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
+				GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-R-Thigh", false, true);
+				GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-L-Thigh", false, true);
+				GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);
+				GetCapsuleComponent()->SetSimulatePhysics(false);		// #1
+				OnLandFlag = false;		// #2
+			}
+			else
+			{
+				CurrentDogState = EDogState::Death;
+				CurrentDogAnimState = EDogAnimState::Nothing;
+				CurrentDogJumpState = EDogJumpState::Nothing;
+			}
 		}
 	}
 
@@ -175,6 +188,10 @@ void ADog::Tick(float DeltaTime)
 
 		if (point >= 8 || bpunchDetach)
 		{
+			CurrentDogState = EDogState::Hurled;
+			CurrentDogAnimState = EDogAnimState::Fly;
+			CurrentDogJumpState = EDogJumpState::Nothing;
+
 			point = 0;
 			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// 뗌
 			AttachActor = nullptr;		// 개의 붙은 액터 초기화
@@ -239,18 +256,31 @@ void ADog::OnBodyOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherAct
 
 void ADog::OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("LeftHand"))
-	{
-		ALeftHandMotionController* LeftHand = Cast<ALeftHandMotionController>(OtherActor);
+	//if (OtherActor->ActorHasTag("LeftHand"))
+	//{
+	//	ALeftHandMotionController* LeftHand = Cast<ALeftHandMotionController>(OtherActor);
 
-		if (LeftHand)
-		{
-			// 왼손의 속도가 최소속도 이상일 때 떨어지게 핢
-			if (LeftHand->GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
-			{
-				bpunchDetach = true;
-			}
-		}
+	//	if (LeftHand)
+	//	{
+	//		// 왼손의 속도가 최소속도 이상일 때 떨어지게 핢
+	//		if (LeftHand->GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
+	//		{
+	//			bpunchDetach = true;
+	//		}
+	//	}
+	//}
+}
+
+float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	CurrentHP -= Damage;
+
+	if (CurrentHP < 0.0f)
+	{
+		bIsDeath = true;
+		bpunchDetach = true;
 	}
+
+	return Damage;
 }
 
