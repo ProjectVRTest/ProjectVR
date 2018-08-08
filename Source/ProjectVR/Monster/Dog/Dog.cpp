@@ -144,12 +144,6 @@ void ADog::Tick(float DeltaTime)
 				GetCapsuleComponent()->SetSimulatePhysics(false);		// #1
 				OnLandFlag = false;		// #2
 			}
-			else
-			{
-				CurrentDogState = EDogState::Death;
-				CurrentDogAnimState = EDogAnimState::Nothing;
-				CurrentDogJumpState = EDogJumpState::Nothing;
-			}
 		}
 	}
 
@@ -188,15 +182,15 @@ void ADog::Tick(float DeltaTime)
 
 		if (point >= 8 || bpunchDetach)
 		{
+			OnLandFlag = true;		// 바닥에 닿았을 때 한번만 실행
 			CurrentDogState = EDogState::Hurled;
-			CurrentDogAnimState = EDogAnimState::Fly;
-			CurrentDogJumpState = EDogJumpState::Nothing;
 
 			point = 0;
 			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// 뗌
 			AttachActor = nullptr;		// 개의 붙은 액터 초기화
 			bIsAttack = false;			// 공격상태 아님/
 			bpunchDetach = false;
+
 			// 캐릭터의 오른손의 붙어있는 액터를 초기화
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 			Character->RightHand->AttachDog = nullptr;
@@ -209,8 +203,6 @@ void ADog::Tick(float DeltaTime)
 			GetCapsuleComponent()->SetPhysicsAngularVelocity(Direction* 500.0f);
 			GetCapsuleComponent()->SetSimulatePhysics(true);
 			GetCapsuleComponent()->AddForce(Direction * 500.0f);
-			
-			OnLandFlag = true;		// 바닥에 닿았을 때 한번만 실행
 		}
 	}
 }
@@ -256,19 +248,6 @@ void ADog::OnBodyOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherAct
 
 void ADog::OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	//if (OtherActor->ActorHasTag("LeftHand"))
-	//{
-	//	ALeftHandMotionController* LeftHand = Cast<ALeftHandMotionController>(OtherActor);
-
-	//	if (LeftHand)
-	//	{
-	//		// 왼손의 속도가 최소속도 이상일 때 떨어지게 핢
-	//		if (LeftHand->GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
-	//		{
-	//			bpunchDetach = true;
-	//		}
-	//	}
-	//}
 }
 
 float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
@@ -279,6 +258,7 @@ float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControll
 	{
 		bIsDeath = true;
 		bpunchDetach = true;
+		CurrentDogState = EDogState::Death;
 	}
 
 	return Damage;

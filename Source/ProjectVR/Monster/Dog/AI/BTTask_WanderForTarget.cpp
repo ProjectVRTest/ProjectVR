@@ -33,11 +33,11 @@ EBTNodeResult::Type UBTTask_WanderForTarget::ExecuteTask(UBehaviorTreeComponent 
 
 				if (Rotcheck == 1)
 				{
-					time = 0.3f;
+					time = 0.5f;
 				}
 				else if (Rotcheck == 2)
 				{
-					time = -0.3f;
+					time = -0.5f;
 				}
 
 				FVector Vec1 = UKismetMathLibrary::Subtract_VectorVector(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
