@@ -233,17 +233,17 @@ void ARightHandMotionController::GrabActor()
 						PotionBag->PotionCount--;
 
 						UVRGameInstance* GI = Cast<UVRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-						
+
 						if (GI)
 						{
 							GI->PotionCountUpdate(PotionBag->PotionCount);
-						}						
+						}
 					}
 					else
 					{
 						HandNomalState();
 					}
-				}				
+				}
 			}
 			else
 			{
@@ -302,7 +302,8 @@ AActor * ARightHandMotionController::GetActorNearHand()
 
 	for (AActor* OverlappingActor : OverlappingActors)
 	{
-		if (OverlappingActor->ActorHasTag("DisregardForRightHand"))
+		if (OverlappingActor->ActorHasTag("DisregardForRightHand") || OverlappingActor->ActorHasTag("Character") ||
+			OverlappingActor->ActorHasTag("RightHand") || OverlappingActor->ActorHasTag("LeftHand"))
 		{
 			continue;
 		}
@@ -326,9 +327,9 @@ AActor * ARightHandMotionController::GetActorNearHand()
 				break;
 			}
 		}
-		
+
 	}
-	
+
 
 	return NearestOverlappingActor;
 }
@@ -372,7 +373,7 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 		HandOpenState();
 		return;
 	}
-	else if (OtherActor->ActorHasTag("DisregardForRightHand"))
+	else if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
 	{
 		return;
 	}
@@ -385,7 +386,7 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 
 void ARightHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->ActorHasTag("DisregardForRightHand"))
+	if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
 	{
 		return;
 	}

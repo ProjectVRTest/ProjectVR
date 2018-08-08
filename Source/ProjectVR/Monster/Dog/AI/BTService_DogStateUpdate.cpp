@@ -37,7 +37,7 @@ void UBTService_DogStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			switch (RagdollDog->CurrentDogState)
 			{
 			case EDogState::Idle:
-
+				UE_LOG(LogTemp, Log, TEXT("kore"));
 				break;
 			case EDogState::Chase:
 				if (Distance <= 400.0f)
@@ -71,24 +71,11 @@ void UBTService_DogStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				}
 				break;
 			case EDogState::Hurled:
-				if (RagdollDog->OnLandFlag)		// 던져지는데 플래그가 true라는 것은 던져지고 있는 상태
-				{
-					RagdollDog->CurrentDogAnimState = EDogAnimState::Fly;
-					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
-				}
-				else		// 던져지는데 플래그가 false라는 것은 땅에 닿음
-				{
-					RagdollDog->CurrentDogAnimState = EDogAnimState::StandUp;
-					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
-				}
+
 				
 				break;
 			case EDogState::Death:
-				if (RagdollDog->CurrentHP <= 0.0f)
-				{
-					RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
-					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
-				}
+
 				break;
 			case EDogState::Nothing:
 

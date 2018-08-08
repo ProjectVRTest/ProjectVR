@@ -11,11 +11,6 @@
 #include "Equipment/PlayerShield.h"
 #include "Item/PotionBag.h"
 
-#include "Kismet/GameplayStatics.h"
-#include "MyCharacter/MotionControllerCharacter.h"
-#include "HandMotionController/RightHandMotionController.h"
-
-
 // Sets default values
 ALeftHandMotionController::ALeftHandMotionController()
 {
@@ -61,7 +56,7 @@ ALeftHandMotionController::ALeftHandMotionController()
 	ShieldAttachScene->SetRelativeRotation(FRotator(0, 0, -90.0f)); //방패 씬컴포넌트의 각도와
 	ShieldAttachScene->SetRelativeLocation(FVector(-5.0f, 20.0f, 11.0f)); //위치를 조정한다.
 
-																	  //포션가방을 붙일 씬컴포넌트를 생성해서 PotionBagAttachScene에 저장한다.
+																		  //포션가방을 붙일 씬컴포넌트를 생성해서 PotionBagAttachScene에 저장한다.
 	PotionBagAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("PotionAttachScene"));
 	PotionBagAttachScene->SetupAttachment(HandMesh); //생성한 씬컴포넌트를 HandMesh에 붙인다.
 
@@ -91,8 +86,8 @@ void ALeftHandMotionController::BeginPlay()
 	SpawnActorOption.Owner = this; //스폰할 액터의 소유자를 this로 지정한다.
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; //스폰하는 액터가 콜리전에 상관없이 항상 스폰되도록 지정한다.
 
-	 //스폰할 액터를 Attach할때의 옵션을 지정하기위해 FAttachmentTransfromRules를 선언하고 
-	//붙일위치는 타겟으로, 붙일각도도 타겟으로, 크기는 월드크기에 맞게끔 붙여준다.
+																									   //스폰할 액터를 Attach할때의 옵션을 지정하기위해 FAttachmentTransfromRules를 선언하고 
+																									   //붙일위치는 타겟으로, 붙일각도도 타겟으로, 크기는 월드크기에 맞게끔 붙여준다.
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
 	//방패를 쉴드 씬 컴포넌트에 스폰시킨다.
@@ -198,7 +193,8 @@ AActor * ALeftHandMotionController::GetActorNearHand()
 
 	for (AActor* OverlappingActor : OverlappingActors) //배열에 담겨있는 액터들을 돌면서
 	{
-		if (OverlappingActor->ActorHasTag("DisregardForRightHand")) //안에 담겨 있는 액터가 캐릭터, 오른손, 검, 방패이면 
+		if (OverlappingActor->ActorHasTag("DisregardForRightHand") || OverlappingActor->ActorHasTag("Character")
+			|| OverlappingActor->ActorHasTag("RightHand") || OverlappingActor->ActorHasTag("LeftHand")) //안에 담겨 있는 액터가 캐릭터, 오른손, 검, 방패이면 
 		{
 			continue; //무시하고 다음번 배열로 속행한다.
 		}
@@ -217,22 +213,9 @@ AActor * ALeftHandMotionController::GetActorNearHand()
 
 void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("DisregardForRightHand") )
+	if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
 	{
 		return;
-	}
-
-	if (OtherComp->ComponentHasTag("DogAttackCollision"))
-	{
-		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-		if (Character->RightHand->AttachDog)
-		{
-			if (GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
-			{
-				UGameplayStatics::ApplyDamage(OtherActor, 1.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
-			}
-		}
 	}
 
 	if (OtherActor->ActorHasTag("Door"))			// 문에서 오버랩 되면 실행
@@ -247,7 +230,7 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 void ALeftHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
 
-	if (OtherActor->ActorHasTag("DisregardForRightHand"))
+	if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
 	{
 		return;
 	}
