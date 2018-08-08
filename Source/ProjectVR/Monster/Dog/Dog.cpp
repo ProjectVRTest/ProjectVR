@@ -35,7 +35,7 @@ ADog::ADog()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MonsterMesh(TEXT("SkeletalMesh'/Game/Assets/Monster/Dog/Mesh/MON_DOG_MESH.MON_DOG_MESH'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MonsterMesh(TEXT("SkeletalMesh'/Game/Assets/Monster/Dog/Mesh2/MON_DOG_MESH.MON_DOG_MESH'"));
 	if (MonsterMesh.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(MonsterMesh.Object);
@@ -46,7 +46,7 @@ ADog::ADog()
 		BehaviorTree = Monster_BehaviorTree.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>Monster_AnimBlueprint(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Dog/Blueprints/ABP_Dog.ABP_Dog'"));
+	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>Monster_AnimBlueprint(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Dog/Blueprints2/ABP_Dog.ABP_Dog'"));
 
 	if (Monster_AnimBlueprint.Succeeded())
 	{
