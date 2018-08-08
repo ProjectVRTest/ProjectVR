@@ -88,10 +88,15 @@ ADog::ADog()
 	bIsAttack = false;
 	OnLandFlag = false;
 
+	MaxHP = 1.0f;
+	CurrentHP = MaxHP;
+	bIsDeath = false;
+
 	GetMesh()->SetSimulatePhysics(false);
 	GetMesh()->SetCollisionProfileName("Ragdoll");
 	GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 	Tags.Add("Monster");
+	Tags.Add("Dog");
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
@@ -239,18 +244,20 @@ void ADog::OnBodyOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherAct
 
 void ADog::OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("LeftHand"))
-	{
-		ALeftHandMotionController* LeftHand = Cast<ALeftHandMotionController>(OtherActor);
+	
+}
 
-		if (LeftHand)
-		{
-			// 왼손의 속도가 최소속도 이상일 때 떨어지게 핢
-			if (LeftHand->GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
-			{
-				bpunchDetach = true;
-			}
-		}
+float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	CurrentHP -= Damage;
+
+	if (CurrentHP < 0.0f)
+	{
+		bIsDeath = true;
+		bpunchDetach = true;
+		UE_LOG(LogTemp, Log, TEXT("Death!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
 	}
+
+	return Damage;
 }
 

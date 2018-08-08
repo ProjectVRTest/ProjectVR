@@ -469,8 +469,6 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 			ADog* Dog = Cast<ADog>(OtherActor);
 			if (Dog)
 			{
-				UE_LOG(LogClass, Warning, TEXT("dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"));
-
 				RightController->AttachDog = Dog;
 				Dog->bIsAttack = true;
 				Dog->DogAttackCollision->SetActive(false);

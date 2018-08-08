@@ -11,6 +11,10 @@
 #include "Equipment/PlayerShield.h"
 #include "Item/PotionBag.h"
 
+#include "MyCharacter/MotionControllerCharacter.h"
+#include "HandMotionController/RightHandMotionController.h"
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 ALeftHandMotionController::ALeftHandMotionController()
 {
@@ -216,6 +220,21 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 	if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
 	{
 		return;
+	}
+
+	if (OtherActor->ActorHasTag("Dog"))
+	{
+		UE_LOG(LogTemp, Log, TEXT("%f"), GrabSphere->GetPhysicsLinearVelocity().Size());
+	
+		if (GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
+		{
+			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+			if (Character->RightHand->AttachDog)
+			{
+				UGameplayStatics::ApplyDamage(OtherActor, 10.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
+			}
+		}
 	}
 
 	if (OtherActor->ActorHasTag("Door"))			// 문에서 오버랩 되면 실행

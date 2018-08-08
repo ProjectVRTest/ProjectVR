@@ -27,6 +27,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HP")
+		float MaxHP;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HP")
+		float CurrentHP;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EDogState CurrentDogState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
@@ -53,6 +58,8 @@ public:
 	bool bIsAttack;
 	bool OnLandFlag;
 	bool bpunchDetach;
+	bool bIsDeath;
+
 	UFUNCTION()
 		void AttachVirtualHandWithHead();
 
@@ -68,4 +75,7 @@ public:
 
 	int point;
 	float prelinear, preangular;
+
+	UFUNCTION()
+		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// 데미지 받기
 };
