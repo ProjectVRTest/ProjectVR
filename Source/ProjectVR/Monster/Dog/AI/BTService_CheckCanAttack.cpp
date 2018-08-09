@@ -54,11 +54,15 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
 					//RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
 				}
 				else if (MonAngle < StandardAngle || MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
 					//RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
 				}
 				else
@@ -69,7 +73,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					if (!RagdollDog->bIsAttack)
 						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
 
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				}
 			}
 			else if (StandardAngle >= 360.0f - Range && StandardAngle >= 0.0f)		
@@ -77,10 +81,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle || MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
 				}
 				else
 				{
@@ -90,7 +98,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					if (!RagdollDog->bIsAttack)
 						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
 
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				}
 
 			}
@@ -99,10 +107,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
 				}
 				else
 				{
@@ -112,7 +124,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					if (!RagdollDog->bIsAttack)
 						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
 
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				}
 			}
 			else if (StandardAngle >= 180.0f - Range && StandardAngle <= 180.0f)	// 4
@@ -120,10 +132,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
 				}
 				else
 				{
@@ -133,7 +149,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					if (!RagdollDog->bIsAttack)
 						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
 
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				}
 			}
 			else if (StandardAngle < 360.0f - Range && StandardAngle > 180.0f + Range)	// 5
@@ -141,10 +157,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle || MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
 				}
 				else
 				{
@@ -154,7 +174,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					if (!RagdollDog->bIsAttack)
 						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
 
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				}
 			}
 			else if (StandardAngle > 0.0f + Range && StandardAngle < 180.0f - Range)	// 6
@@ -162,10 +182,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
 				}
 				else if (MonAngle < StandardAngle || MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
 				}
 				else
 				{
@@ -175,7 +199,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					if (!RagdollDog->bIsAttack)
 						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
 
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				}
 			}
 			else
@@ -186,7 +210,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				if (!RagdollDog->bIsAttack)
 					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
 
-				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 			}
 		}
 	}

@@ -37,48 +37,25 @@ void UBTService_DogStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			switch (RagdollDog->CurrentDogState)
 			{
 			case EDogState::Idle:
-				UE_LOG(LogTemp, Log, TEXT("kore"));
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 				break;
 			case EDogState::Chase:
-				if (Distance <= 400.0f)
-				{
-					RagdollDog->CurrentDogState = EDogState::Battle;
-
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0;
-				}
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+				break;
+			case EDogState::Circle:
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 				break;
 			case EDogState::Battle:
-				if (Distance > 400.0f)
-				{
-					RagdollDog->CurrentDogState = EDogState::Chase;
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
-				}
-				else if(DistanceWithLand < 3.0f)
-				{
-					RagdollDog->CurrentDogState = EDogState::Battle;
-					RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
-
-					if (!RagdollDog->bIsAttack)
-						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-																						//RagdollDog->CurrentDogState = EDogState::Battle;
-																						//RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
-
-																						//if(!RagdollDog->bIsAttack)
-																						//	RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-																						//RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550;
-				}
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 				break;
 			case EDogState::Hurled:
-
-				
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 				break;
 			case EDogState::Death:
-
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 				break;
 			case EDogState::Nothing:
-
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 				break;
 			default:
 				break;

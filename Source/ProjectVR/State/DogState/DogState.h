@@ -12,7 +12,8 @@ enum class EDogState : uint8
 	Battle = 2 UMETA(DisplayName = "Battle"),
 	Death = 3 UMETA(DisplayName = "Death"),
 	Hurled = 4 UMETA(DisplayName = "Hurled"),
-	Nothing = 5 UMETA(DisplayName = "Nothing")
+	Nothing = 5 UMETA(DisplayName = "Nothing"),
+	Circle = 6 UMETA(DisplayName = "Circle")
 };
 
 UENUM(BlueprintType)
