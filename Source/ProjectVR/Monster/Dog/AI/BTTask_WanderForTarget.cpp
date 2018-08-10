@@ -34,10 +34,12 @@ EBTNodeResult::Type UBTTask_WanderForTarget::ExecuteTask(UBehaviorTreeComponent 
 				if (Rotcheck == 1)
 				{
 					time = 0.3f;
+					//RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
 				}
 				else if (Rotcheck == 2)
 				{
 					time = -0.3f;
+					//RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
 				}
 
 				FVector Vec1 = UKismetMathLibrary::Subtract_VectorVector(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());

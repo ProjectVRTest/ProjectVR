@@ -28,7 +28,7 @@ APotion::APotion()
 	//Mesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));		// 크기 설정		-> 테스트용 포션메쉬 나오면 테스트해서 재수정
 	Mesh->SetCollisionProfileName(TEXT("NoCollision"));	
 	Tags.Add(FName(TEXT("Potion")));		// 생성한 포션을 'Potion'란 이름으로 태그를 줌
-	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 }
 
 // Called when the game starts or when spawned

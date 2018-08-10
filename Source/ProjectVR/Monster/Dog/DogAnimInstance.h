@@ -18,10 +18,12 @@ class PROJECTVR_API UDogAnimInstance : public UAnimInstance
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EDogState CurrentDogState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimState")
 		EDogAnimState CurrentDogAnimState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpState")
 		EDogJumpState CurrentDogJumpState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CircleState")
+		EDogCircleState CurrentDogCircleState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		FRotator LookAtRotator;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpData")

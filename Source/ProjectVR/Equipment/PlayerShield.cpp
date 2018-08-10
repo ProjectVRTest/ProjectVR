@@ -76,6 +76,7 @@ void APlayerShield::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//UE_LOG(LogTemp, Log, TEXT(" ** %f"), ShieldMesh->GetPhysicsLinearVelocity().Size());
 }
 
 void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭터에서 호출)

@@ -39,7 +39,7 @@ APotionBag::APotionBag()
 	PotionCount = 5; //포션의 갯수를 5개로 정함
 	PotionBagMesh->ComponentTags.Add(TEXT("PotionBagMesh"));
 	Tags.Add(FName("PotionBag"));
-	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 }
 
 // Called when the game starts or when spawned

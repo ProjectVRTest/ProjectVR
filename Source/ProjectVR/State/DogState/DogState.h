@@ -12,7 +12,8 @@ enum class EDogState : uint8
 	Battle = 2 UMETA(DisplayName = "Battle"),
 	Death = 3 UMETA(DisplayName = "Death"),
 	Hurled = 4 UMETA(DisplayName = "Hurled"),
-	Nothing = 5 UMETA(DisplayName = "Nothing")
+	Nothing = 5 UMETA(DisplayName = "Nothing"),
+	Circle = 6 UMETA(DisplayName = "Circle"),
 };
 
 UENUM(BlueprintType)
@@ -27,7 +28,8 @@ enum class EDogAnimState : uint8
 	Fly = 6 UMETA(DisplayName = "Fly"),
 	StandUp = 7 UMETA(DisplayName = "StandUp"),
 	Nothing = 8 UMETA(DisplayName = "Nothing"),
-	LeftSideWalk = 3 UMETA(DisplayName = "LeftSideWalk")
+	LeftSideWalk = 9 UMETA(DisplayName = "LeftSideWalk"),
+	SideWalk = 10 UMETA(DisplayName = "SideWalk")
 };
 
 UENUM(BlueprintType)
@@ -36,5 +38,13 @@ enum class EDogJumpState : uint8
 	JumpStart = 0 UMETA(DisplayName = "JumpStart"),
 	JumpRoof = 1 UMETA(DisplayName = "JumpRoof"),
 	JumpEnd = 2 UMETA(DisplayName = "JumpEnd"),
+	Nothing = 3 UMETA(DisplayName = "Nothing")
+};
+
+UENUM(BlueprintType)
+enum class EDogCircleState : uint8
+{
+	LeftCircle = 0 UMETA(DisplayName = "LeftCircle"),
+	RightCircle = 1 UMETA(DisplayName = "RightCircle"),
 	Nothing = 3 UMETA(DisplayName = "Nothing")
 };

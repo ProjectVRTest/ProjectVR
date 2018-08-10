@@ -38,11 +38,11 @@
 // Sets default values
 AMotionControllerCharacter::AMotionControllerCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	bUseControllerRotationYaw = true;
-	
+
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
 
@@ -84,7 +84,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	HeadBox->ComponentTags.Add(FName("Head"));
 
 	GetCharacterMovement()->MaxWalkSpeed = 450.0f;
-	
+
 	MaxHp = 100.0f;
 	CurrentHp = MaxHp;
 	MaxStamina = 100.0f;
@@ -97,15 +97,15 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	GrabState = E_HandState::Open;		// 나중에 무기 투명화 처리하면 그랩상태로 바꿔야함
 
 	Tags.Add(FName("Character"));
-	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
-	//Tags.Add(FName(TEXT("DisregardForRightHand")));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
 void AMotionControllerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	FActorSpawnParameters SpawnActorOption;
 	SpawnActorOption.Owner = this;
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -131,20 +131,6 @@ void AMotionControllerCharacter::BeginPlay()
 void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	float StandardAngle = Camera->GetComponentRotation().Yaw + 180.0f;
-
-	float Max = StandardAngle + 40.0f;
-	float Min = Max - 80.0f;
-
-	Max = Max >= 360.0f ? Max - 360.0f : Max;
-	Min = Min < 0.0f ? 360.0f + Min : Min;
-
-	Max += 180.0;
-	Min += 180.0;
-
-	Max = Max >= 360.0f ? Max - 360.0f : Max;
-	Min = Min >= 360.0f ? Min - 360.0f : Min;
 
 	//UE_LOG(LogClass, Warning, TEXT("Left2 ------ %f / %f / %f"), StandardAngle, Min, Max);
 	//if (SpringArm)
@@ -195,7 +181,7 @@ void AMotionControllerCharacter::SetupPlayerInputComponent(UInputComponent* Play
 
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AMotionControllerCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AMotionControllerCharacter::MoveRight);
-	
+
 	PlayerInputComponent->BindAction(TEXT("DashUp"), IE_Pressed, this, &AMotionControllerCharacter::DashUpStart);
 	PlayerInputComponent->BindAction(TEXT("DashUp"), IE_Released, this, &AMotionControllerCharacter::DashEnd);
 
@@ -239,7 +225,7 @@ void AMotionControllerCharacter::GrabRightOn()
 	GrabState = E_HandState::Grab;
 
 	RightHand->GrabActor();
-	
+
 	RightHand->Sword->ConvertOfOpacity(1.0);
 }
 
@@ -288,7 +274,7 @@ void AMotionControllerCharacter::DashUpStart()
 	GetCharacterMovement()->GroundFriction = 0;
 	DashVector = Camera->GetForwardVector()*3000.0f;
 	DashVector.Z = 0;
-	LaunchCharacter(DashVector,false,false);
+	LaunchCharacter(DashVector, false, false);
 }
 
 void AMotionControllerCharacter::DashDownStart()
@@ -418,7 +404,7 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 			UHitBloodyWidget* bloodyWidget = Cast<UHitBloodyWidget>(Widget->GetUserWidgetObject());		// UHitBloodyWidget함수를 사용할수 있게 함
 			if (bloodyWidget)
 			{
-				bloodyWidget->PlayAnimationByName("Bloody",0.0, 1,EUMGSequencePlayMode::Forward, 1.0f);		// 애니메이션 실행
+				bloodyWidget->PlayAnimationByName("Bloody", 0.0, 1, EUMGSequencePlayMode::Forward, 1.0f);		// 애니메이션 실행
 			}
 		}
 
@@ -433,7 +419,7 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 		InvincibleTimeOn = true;		// 피격되면 즉시 무적시간 활성화
 		GetWorld()->GetTimerManager().SetTimer(DamageTimerHandle, this, &AMotionControllerCharacter::DamageTimer, 0.01f, false, 1.5f);		// 1.5초 후 무적시간을 비활성화
 	}
-	
+
 	return Damage;
 }
 
@@ -452,9 +438,9 @@ bool AMotionControllerCharacter::PlayBloodyOverlay()
 	return false;
 }
 
-void AMotionControllerCharacter::DisableBloody()		
+void AMotionControllerCharacter::DisableBloody()
 {
-	if (Widget->bVisible)		
+	if (Widget->bVisible)
 		Widget->bVisible = false;		// 위젯을 보이지 않게 함
 }
 
@@ -477,14 +463,12 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 	{
 
 		ARightHandMotionController* RightController = Cast<ARightHandMotionController>(RightHand);
-		
+
 		if (!RightController->AttachDog)
 		{
 			ADog* Dog = Cast<ADog>(OtherActor);
 			if (Dog)
 			{
-				UE_LOG(LogClass, Warning, TEXT("dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd") );
-
 				RightController->AttachDog = Dog;
 				Dog->bIsAttack = true;
 				Dog->DogAttackCollision->SetActive(false);

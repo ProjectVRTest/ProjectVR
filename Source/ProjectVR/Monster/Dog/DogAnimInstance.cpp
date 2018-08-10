@@ -30,6 +30,7 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentDogState = RagdollDog->CurrentDogState;
 		CurrentDogAnimState = RagdollDog->CurrentDogAnimState;
 		CurrentDogJumpState = RagdollDog->CurrentDogJumpState;
+		CurrentDogCircleState = RagdollDog->CurrentDogCircleState;
 
 		CurrentFalling = RagdollDog->CurrentFalling;
 
@@ -38,6 +39,7 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			RagdollDog->CurrentDogState = EDogState::Battle;
 			RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
 			RagdollDog->CurrentDogJumpState = EDogJumpState::JumpRoof;
+			RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
 		}
 		//LookAtRotator = RagdollDog->LookAtRotator;
 
@@ -56,7 +58,7 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 				RagdollDog->CurrentDogState = EDogState::Chase;
 				RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
 				RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
-
+				RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
 			}
 		}
 		PreviousFalling = CurrentFalling;

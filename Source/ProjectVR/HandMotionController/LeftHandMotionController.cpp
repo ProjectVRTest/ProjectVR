@@ -11,6 +11,10 @@
 #include "Equipment/PlayerShield.h"
 #include "Item/PotionBag.h"
 
+#include "MyCharacter/MotionControllerCharacter.h"
+#include "HandMotionController/RightHandMotionController.h"
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 ALeftHandMotionController::ALeftHandMotionController()
 {
@@ -73,8 +77,8 @@ ALeftHandMotionController::ALeftHandMotionController()
 	}
 
 	Tags.Add(FName(TEXT("LeftHand"))); //왼손의 태그를 LeftHand로 정한다.
-	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
-	//Tags.Add(FName(TEXT("DisregardForRightHand")));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
@@ -86,8 +90,8 @@ void ALeftHandMotionController::BeginPlay()
 	SpawnActorOption.Owner = this; //스폰할 액터의 소유자를 this로 지정한다.
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; //스폰하는 액터가 콜리전에 상관없이 항상 스폰되도록 지정한다.
 
-	 //스폰할 액터를 Attach할때의 옵션을 지정하기위해 FAttachmentTransfromRules를 선언하고 
-	//붙일위치는 타겟으로, 붙일각도도 타겟으로, 크기는 월드크기에 맞게끔 붙여준다.
+																									   //스폰할 액터를 Attach할때의 옵션을 지정하기위해 FAttachmentTransfromRules를 선언하고 
+																									   //붙일위치는 타겟으로, 붙일각도도 타겟으로, 크기는 월드크기에 맞게끔 붙여준다.
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
 	//방패를 쉴드 씬 컴포넌트에 스폰시킨다.
@@ -111,6 +115,8 @@ void ALeftHandMotionController::BeginPlay()
 void ALeftHandMotionController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	//UE_LOG(LogTemp, Log, TEXT("%f"), GrabSphere->GetPhysicsLinearVelocity().Size());
 
 	//틱을 돌때마다 근처에 액터가 있는지, 붙은 액터가 있는지, 그립을 누른 상태인지 판별해서
 	//손의 애니메이션 상태를 업데이트 한다.
@@ -214,6 +220,21 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 	if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
 	{
 		return;
+	}
+
+	if (OtherActor->ActorHasTag("Dog"))
+	{
+		UE_LOG(LogTemp, Log, TEXT("%f"), GrabSphere->GetPhysicsLinearVelocity().Size());
+	
+		if (GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
+		{
+			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+			if (Character->RightHand->AttachDog)
+			{
+				UGameplayStatics::ApplyDamage(OtherActor, 10.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
+			}
+		}
 	}
 
 	if (OtherActor->ActorHasTag("Door"))			// 문에서 오버랩 되면 실행

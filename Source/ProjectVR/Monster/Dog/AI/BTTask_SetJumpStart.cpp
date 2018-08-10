@@ -7,6 +7,7 @@
 
 EBTNodeResult::Type UBTTask_SetJumpStart::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
+
 	ADogAIController* AI = Cast<ADogAIController>(OwnerComp.GetAIOwner());
 
 	if (AI)
@@ -20,7 +21,6 @@ EBTNodeResult::Type UBTTask_SetJumpStart::ExecuteTask(UBehaviorTreeComponent & O
 			{
 				if (Dog->CurrentDogJumpState == EDogJumpState::Nothing)
 				{
-					//UE_LOG(LogClass, Warning, TEXT("aSIAN GAME"));
 					Dog->bIsAttack = true;
 					Dog->CurrentDogJumpState = EDogJumpState::JumpStart;
 				}
@@ -28,4 +28,9 @@ EBTNodeResult::Type UBTTask_SetJumpStart::ExecuteTask(UBehaviorTreeComponent & O
 		}
 	}
 	return EBTNodeResult::Succeeded;
+}
+
+void UBTTask_SetJumpStart::InitializeFromAsset(UBehaviorTree & Asset)
+{
+	Super::InitializeFromAsset(Asset);
 }

@@ -113,8 +113,8 @@ ARightHandMotionController::ARightHandMotionController()
 	HandTouchActorFlag = true; //처음에는 오른손에 검이 붙여있으므로 true로 해준다
 	bisRightGrab = false;
 	Tags.Add(FName(TEXT("RightHand"))); //오른손에 태그를 달아준다.
-	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
-	//Tags.Add(FName(TEXT("DisregardForRightHand")));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
@@ -236,17 +236,17 @@ void ARightHandMotionController::GrabActor()
 						}
 
 						UVRGameInstance* GI = Cast<UVRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-						
+
 						if (GI)
 						{
 							GI->PotionCountUpdate(PotionBag->PotionCount);
-						}						
+						}
 					}
 					else
 					{
 						HandNomalState();
 					}
-				}				
+				}
 			}
 			else
 			{
@@ -335,9 +335,9 @@ AActor * ARightHandMotionController::GetActorNearHand()
 				break;
 			}
 		}
-		
+
 	}
-	
+
 
 	return NearestOverlappingActor;
 }
