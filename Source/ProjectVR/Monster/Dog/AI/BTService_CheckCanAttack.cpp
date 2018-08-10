@@ -52,18 +52,18 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			// 주위를 도는 경우의 수는 6가지, 개의 보는 각도랑 플레이어와 보는 각도 반전 -------------------------------------------------------------------- 주석 대기
 			if (StandardAngle <= Range && StandardAngle >= 0.0f)
 			{
-				//UE_LOG(LogTemp, Log, TEXT("1"));
+				UE_LOG(LogTemp, Log, TEXT("1"));
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
 				}
 				else if (MonAngle < StandardAngle || MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
 				}
 				else
 				{
@@ -77,18 +77,18 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			}
 			else if (StandardAngle >= 360.0f - Range && StandardAngle >= 0.0f)		
 			{
-				//UE_LOG(LogTemp, Log, TEXT("2"));
+				UE_LOG(LogTemp, Log, TEXT("2"));
 				if (MonAngle >= StandardAngle || MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
 				}
 				else
 				{
@@ -103,18 +103,18 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			}
 			else if (StandardAngle <= 180.0f + Range && StandardAngle >= 180.0f)	// 3
 			{
-				//UE_LOG(LogTemp, Log, TEXT("3"));
+				UE_LOG(LogTemp, Log, TEXT("3"));
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
 				}
 				else
 				{
@@ -128,44 +128,47 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			}
 			else if (StandardAngle >= 180.0f - Range && StandardAngle <= 180.0f)	// 4
 			{
-				//UE_LOG(LogTemp, Log, TEXT("4"));
+				
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
 				}
 				else
 				{
+					UE_LOG(LogTemp, Log, TEXT("FCYangPyeong"));
 					RagdollDog->CurrentDogState = EDogState::Battle;
 					RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
 
 					if (!RagdollDog->bIsAttack)
+					{
 						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
+						UE_LOG(LogTemp, Log, TEXT("FC Daejeon Citizen"));
+					}
 					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				}
 			}
 			else if (StandardAngle < 360.0f - Range && StandardAngle > 180.0f + Range)	// 5
 			{
-				//UE_LOG(LogTemp, Log, TEXT("5"));
+				UE_LOG(LogTemp, Log, TEXT("5"));
 				if (MonAngle >= StandardAngle || MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
 				}
 				else if (MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
 				}
 				else
 				{
@@ -179,18 +182,18 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			}
 			else if (StandardAngle > 0.0f + Range && StandardAngle < 180.0f - Range)	// 6
 			{
-				//UE_LOG(LogTemp, Log, TEXT("6"));
+				UE_LOG(LogTemp, Log, TEXT("6"));
 				if (MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
 				}
 				else if (MonAngle < StandardAngle || MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
 				}
 				else
 				{

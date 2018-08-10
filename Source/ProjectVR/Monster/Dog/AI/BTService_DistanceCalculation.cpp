@@ -43,7 +43,7 @@ void UBTService_DistanceCalculation::TickNode(UBehaviorTreeComponent & OwnerComp
 			else if (Distance <= 400.0f)
 			{
 				RagdollDog->CurrentDogState = EDogState::Battle;
-				RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
+				RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
 				RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
 				RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
 			}

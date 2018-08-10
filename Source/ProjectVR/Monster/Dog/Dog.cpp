@@ -157,6 +157,19 @@ void ADog::Tick(float DeltaTime)
 	if (CurrentDogAnimState == EDogAnimState::SideWalk)
 	{
 		UE_LOG(LogTemp, Log, TEXT("SideWalk"));
+
+		if (CurrentDogCircleState == EDogCircleState::LeftCircle)
+		{
+			UE_LOG(LogTemp, Log, TEXT("LeftCircle"));
+		}
+		else if (CurrentDogCircleState == EDogCircleState::Nothing)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Nothing"));
+		}
+		else if (CurrentDogCircleState == EDogCircleState::RightCircle)
+		{
+			UE_LOG(LogTemp, Log, TEXT("RightCircle"));
+		}
 	}
 	else if (CurrentDogAnimState == EDogAnimState::JumpAttack)
 	{
@@ -222,6 +235,7 @@ void ADog::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentDogState", (uint8)CurrentDogState);
 		AI->BBComponent->SetValueAsEnum("CurrentDogAnimState", (uint8)CurrentDogAnimState);
 		AI->BBComponent->SetValueAsEnum("CurrentDogJumpState", (uint8)CurrentDogJumpState);
+		AI->BBComponent->SetValueAsEnum("CurrentDogCircleState", (uint8)CurrentDogCircleState);
 		AI->BBComponent->SetValueAsFloat("DistanceWithLand", FloorDistance.FloorDist);
 
 		CurrentFalling = GetCharacterMovement()->IsFalling();
