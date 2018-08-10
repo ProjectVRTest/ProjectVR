@@ -20,8 +20,6 @@ void UBTService_NMStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 
 		if (NormalMonster)
 		{
-			
-
 			switch (NormalMonster->CurrentAnimState)
 			{
 			case ENormalMonsterAnimState::Wait:

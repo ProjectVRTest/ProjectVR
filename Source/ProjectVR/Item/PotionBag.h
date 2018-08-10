@@ -23,12 +23,28 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UStaticMeshComponent* PotionBagMesh; //포션가방 메쉬
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UCapsuleComponent* PotionBagCollision; //포션 컬리젼
+					
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shield")
+		class USceneComponent* PotionAttachScene;
 	
+	TArray<class APotion*> Potions;
+
+	UPROPERTY()
+		class APotion* Potion;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Potion")
 		int PotionCount; //포션의 갯수
+
+	class APotion* PotionPop();
+	void PotionPush(class APotion* Potion);
+
+	UFUNCTION()
+	void PotionBagOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 };

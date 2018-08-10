@@ -53,15 +53,15 @@ ALeftHandMotionController::ALeftHandMotionController()
 	ShieldAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("ShieldAttachScene")); //방패를 붙일 씬컴포넌트를 생성해서 ShieldAttachScene에 넣는다.
 	ShieldAttachScene->SetupAttachment(HandMesh);//생성한 씬컴포넌트를 HandMesh에 붙인다.
 
-	ShieldAttachScene->SetRelativeRotation(FRotator(0, 0, -90.0f)); //방패 씬컴포넌트의 각도와
-	ShieldAttachScene->SetRelativeLocation(FVector(-5.0f, 20.0f, 11.0f)); //위치를 조정한다.
-
+	ShieldAttachScene->SetRelativeLocation(FVector(-18.0f,-31.0f, 8.0f)); //위치를 조정한다.
+	ShieldAttachScene->SetRelativeRotation(FRotator(13.0f, 129.0f, -90.0f)); //방패 씬컴포넌트의 각도와
+	
 																	  //포션가방을 붙일 씬컴포넌트를 생성해서 PotionBagAttachScene에 저장한다.
 	PotionBagAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("PotionAttachScene"));
 	PotionBagAttachScene->SetupAttachment(HandMesh); //생성한 씬컴포넌트를 HandMesh에 붙인다.
 
-	PotionBagAttachScene->SetRelativeLocation(FVector(-8.0f, 0, -18.0f)); //위치를 조정한다.
-	PotionBagAttachScene->SetRelativeRotation(FRotator(0, 90.0f, 0));
+	PotionBagAttachScene->SetRelativeLocation(FVector(-13.0f, 0, 1.8f)); //위치를 조정한다.
+	PotionBagAttachScene->SetRelativeRotation(FRotator(0, 93.0f, 0));
 
 	//왼손의 애니메이션을 지정해주기 위해 에디터상에 있는 애니메이션블루프린트를 가져와서 ABP_Hand에 넣는다.
 	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>ABP_Hand(TEXT("AnimBlueprint'/Game/Blueprints/MyCharacter/Hand/ABP_LeftHand.ABP_LeftHand'"));
@@ -91,7 +91,7 @@ void ALeftHandMotionController::BeginPlay()
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
 	//방패를 쉴드 씬 컴포넌트에 스폰시킨다.
-	Shield = GetWorld()->SpawnActor<APlayerShield>(Shield->StaticClass(), ShieldAttachScene->GetComponentLocation(), ShieldAttachScene->GetComponentRotation(), SpawnActorOption);
+	Shield = GetWorld()->SpawnActor<APlayerShield>(Shield->StaticClass(),SpawnActorOption);
 	//방패를 AttachRules를 토대로 쉴드 씬 컴포넌트에 붙인다.
 	Shield->AttachToComponent(ShieldAttachScene, AttachRules);
 
@@ -103,7 +103,7 @@ void ALeftHandMotionController::BeginPlay()
 	if (HandMesh)
 	{
 		HandMesh->SetWorldScale3D(FVector(1.0f, 1.0f, -1.0f));
-		HandMesh->SetWorldRotation(FRotator(0, 100.0f, 30.0f));
+		//HandMesh->SetWorldRotation(FRotator(0, 100.0f, 30.0f));
 	}
 }
 

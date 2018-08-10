@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "LeftHandWidget.h"
 #include "Components/ProgressBar.h"
@@ -11,49 +11,65 @@
 #include "Components/HorizontalBoxSlot.h"
 #include "Components/SlateWrapperTypes.h"
 
+#include "MyCharacter/MotionControllerPC.h"
+#include "MyCharacter/MotionControllerCharacter.h"
+#include "TimerManager.h"
+
 void ULeftHandWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	PortionBox = Cast<UHorizontalBox>(GetWidgetFromName(TEXT("PotionBox")));				// À¯ÀúÀ§Á¬»óÀÇ 'PotionBox'·Î µÇ¾îÀÖ´Â º¯¼ö¸¦ Ã£¾Æ Ä³½ºÆ® ½ÃÅ²´Ù.(HorizonBox)
-	ForwardHP = Cast<UProgressBar>(GetWidgetFromName(TEXT("ForwardHPBar")));			// À¯ÀúÀ§Á¬»óÀÇ 'ForwardHPBar'·Î µÇ¾îÀÖ´Â º¯¼ö¸¦ Ã£¾Æ Ä³½ºÆ® ½ÃÅ²´Ù.(ProgressBar)
-	BackwardHP = Cast<UProgressBar>(GetWidgetFromName(TEXT("BackwardHPBar")));		// À¯ÀúÀ§Á¬»óÀÇ 'BackwardHPBar'·Î µÇ¾îÀÖ´Â º¯¼ö¸¦ Ã£¾Æ Ä³½ºÆ® ½ÃÅ²´Ù.(ProgressBar)
-	State = Cast<UProgressBar>(GetWidgetFromName(TEXT("StaminaBar")));						// À¯ÀúÀ§Á¬»óÀÇ 'StaminaBar'·Î µÇ¾îÀÖ´Â º¯¼ö¸¦ Ã£¾Æ Ä³½ºÆ® ½ÃÅ²´Ù.(ProgressBar)
-	ForwardHP->SetPercent(1);			// Ã¼·Â ¹Ù Full·Î ¼³Á¤
-	BackwardHP->SetPercent(1);		// Ã¼·Â ¹Ù Full·Î ¼³Á¤
-	State->SetPercent(1);					// ½ºÅ×¹Ì³Ê ¹Ù Full·Î ¼³Á¤
+	PortionBox = Cast<UHorizontalBox>(GetWidgetFromName(TEXT("PotionBox")));				// ìœ ì €ìœ„ì ¯ìƒì˜ 'PotionBox'ë¡œ ë˜ì–´ìˆëŠ” ë³€ìˆ˜ë¥¼ ì°¾ì•„ ìºìŠ¤íŠ¸ ì‹œí‚¨ë‹¤.(HorizonBox)
+	ForwardHP = Cast<UProgressBar>(GetWidgetFromName(TEXT("ForwardHPBar")));			// ìœ ì €ìœ„ì ¯ìƒì˜ 'ForwardHPBar'ë¡œ ë˜ì–´ìˆëŠ” ë³€ìˆ˜ë¥¼ ì°¾ì•„ ìºìŠ¤íŠ¸ ì‹œí‚¨ë‹¤.(ProgressBar)
+	BackwardHP = Cast<UProgressBar>(GetWidgetFromName(TEXT("BackwardHPBar")));		// ìœ ì €ìœ„ì ¯ìƒì˜ 'BackwardHPBar'ë¡œ ë˜ì–´ìˆëŠ” ë³€ìˆ˜ë¥¼ ì°¾ì•„ ìºìŠ¤íŠ¸ ì‹œí‚¨ë‹¤.(ProgressBar)
+	State = Cast<UProgressBar>(GetWidgetFromName(TEXT("StaminaBar")));						// ìœ ì €ìœ„ì ¯ìƒì˜ 'StaminaBar'ë¡œ ë˜ì–´ìˆëŠ” ë³€ìˆ˜ë¥¼ ì°¾ì•„ ìºìŠ¤íŠ¸ ì‹œí‚¨ë‹¤.(ProgressBar)
+	ForwardHP->SetPercent(1);			// ì²´ë ¥ ë°” Fullë¡œ ì„¤ì •
+	BackwardHP->SetPercent(1);		// ì²´ë ¥ ë°” Fullë¡œ ì„¤ì •
+	State->SetPercent(1);					// ìŠ¤í…Œë¯¸ë„ˆ ë°” Fullë¡œ ì„¤ì •
 
-	PotionArray.Shrink();		// ¹è¿­¿¡ Ãß°¡ ÈÄ ¸Ş¸ğ¸® ÃÖÀûÈ­
+	PotionArray.Shrink();		// ë°°ì—´ì— ì¶”ê°€ í›„ ë©”ëª¨ë¦¬ ìµœì í™”
 				
 	ChangOfHP = 0.0f;
 	ChangOfStamina = 0.0f;
 	Damage = 0.0f;
 
-	AssignAnimations();		// ¾Ö´Ï¸ŞÀÌ¼ÇÀ» Ã£À½
+	PC = Cast<AMotionControllerPC>(GetOwningPlayer());
 
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ULeftHandWidget::AutoGainStamina, 0.05f, false);		// ÀÚµ¿À¸·Î ½ºÅ×¹Ì³Ê Ã¤¿ì±â
+	if (PC)
+	{
+		MyCharacter = Cast<AMotionControllerCharacter>(PC->GetPawn());
+
+		if (MyCharacter)
+		{
+			MaxHP = MyCharacter->MaxHp; 
+		}
+	}
+
+	AssignAnimations();		// ì• ë‹ˆë©”ì´ì…˜ì„ ì°¾ìŒ
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ULeftHandWidget::AutoGainStamina, 0.05f, false);		// ìë™ìœ¼ë¡œ ìŠ¤í…Œë¯¸ë„ˆ ì±„ìš°ê¸°
 }
 
 void ULeftHandWidget::AssignAnimations()
 {
 	UProperty* prop = GetClass()->PropertyLink;
 	
-	//	Å¬·¡½ºÀÇ ¸ğµç ¼Ó¼ºÀ» »ìÆìº¸°í À§Á¬ ¾Ö´Ï¸ŞÀÌ¼Ç Ã£À½
+	//	í´ë˜ìŠ¤ì˜ ëª¨ë“  ì†ì„±ì„ ì‚´í´ë³´ê³  ìœ„ì ¯ ì• ë‹ˆë©”ì´ì…˜ ì°¾ìŒ
 	while (prop != nullptr)
 	{
-		// Å¬·¡½º¸¦ Ã£À½
+		// í´ë˜ìŠ¤ë¥¼ ì°¾ìŒ
 		if (prop->GetClass() == UObjectProperty::StaticClass())
 		{
 			UObjectProperty* objectProp = Cast<UObjectProperty>(prop);
 
-			// ¾Ö´Ï¸ŞÀÌ¼Ç Å¬·¡½º¸¦ Ã£À½
+			// ì• ë‹ˆë©”ì´ì…˜ í´ë˜ìŠ¤ë¥¼ ì°¾ìŒ
 			if (objectProp->PropertyClass == UWidgetAnimation::StaticClass())
 			{
-				UObject* object = objectProp->GetObjectPropertyValue_InContainer(this);		// ÇöÀç objectProp¿¡¼­ ¿ÀºêÁ§Æ®¸¦ object¿¡ ÀúÀåÇÑ´Ù. ÀÌ object´Â UWidgetAnimation Å¬·¡½º
+				UObject* object = objectProp->GetObjectPropertyValue_InContainer(this);		// í˜„ì¬ objectPropì—ì„œ ì˜¤ë¸Œì íŠ¸ë¥¼ objectì— ì €ì¥í•œë‹¤. ì´ objectëŠ” UWidgetAnimation í´ë˜ìŠ¤
 
-				WidgetAnim = Cast<UWidgetAnimation>(object);		// object Ä³½ºÆ®
+				WidgetAnim = Cast<UWidgetAnimation>(object);		// object ìºìŠ¤íŠ¸
 			}
 		}
-		prop = prop->PropertyLinkNext;		// ´ÙÀ½ ¼Ó¼ºÀ» Ã£¾Æº½
+		prop = prop->PropertyLinkNext;		// ë‹¤ìŒ ì†ì„±ì„ ì°¾ì•„ë´„
 	}
 }
 
@@ -61,53 +77,59 @@ void ULeftHandWidget::NativeTick(const FGeometry & MyGeometry, float InDeltaTime
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	// °¡»ó°ú ÇöÀç º¯¼ö°¡ Á¸ÀçÇÏ¿©, ¸ÕÀú °¡»óº¯¼ö¸¦ Áõ°¨½ÃÅ°°í ÇöÀçº¯¼ö¸¦ Áõ°¨º¯È­·®¿¡ ¸ÂÃç °¡»óº¯¼ö±îÁö º¯È­½ÃÅ²´Ù.
+	// ê°€ìƒê³¼ í˜„ì¬ ë³€ìˆ˜ê°€ ì¡´ì¬í•˜ì—¬, ë¨¼ì € ê°€ìƒë³€ìˆ˜ë¥¼ ì¦ê°ì‹œí‚¤ê³  í˜„ì¬ë³€ìˆ˜ë¥¼ ì¦ê°ë³€í™”ëŸ‰ì— ë§ì¶° ê°€ìƒë³€ìˆ˜ê¹Œì§€ ë³€í™”ì‹œí‚¨ë‹¤.
 
-	// ½ºÅ×¹Ì³Ê Áõ°¨
-	if (CurrentStamina != VirtualStamina)				// ÇöÀç¿Í °¡»ó½ºÅ×¹Ì³Ê°¡ ´Ù¸¦ ¶§ ½ÇÇà
+	// ìŠ¤í…Œë¯¸ë„ˆ ì¦ê°
+	if (CurrentStamina != VirtualStamina)				// í˜„ì¬ì™€ ê°€ìƒìŠ¤í…Œë¯¸ë„ˆê°€ ë‹¤ë¥¼ ë•Œ ì‹¤í–‰
 	{
-		ChangOfStamina = InDeltaTime * 2.0f;		// ½ºÅ×¹Ì³ÊÁõ°¨ º¯È­·®À» ¼³Á¤
-		if (CurrentStamina < VirtualStamina)			// ½ºÅ×¹Ì³Ê Áõ°¡
+		ChangOfStamina = InDeltaTime * 2.0f;		// ìŠ¤í…Œë¯¸ë„ˆì¦ê° ë³€í™”ëŸ‰ì„ ì„¤ì •
+		if (CurrentStamina < VirtualStamina)			// ìŠ¤í…Œë¯¸ë„ˆ ì¦ê°€
 		{
-			CurrentStamina += ChangOfStamina;	// ÇöÀç ½ºÅ×¹Ì³Ê += º¯È­·®
-			State->SetPercent(CurrentStamina);		// ¼³Á¤
-			if (CurrentStamina > VirtualStamina)		// ÇöÀç½ºÅ×¹Ì³Ê¿Í °¡»ó½ºÅ×¹Ì³Ê¸¦ ¸ÂÃß±â
-				CurrentStamina = VirtualStamina;
+			CurrentStamina += ChangOfStamina;	// í˜„ì¬ ìŠ¤í…Œë¯¸ë„ˆ += ë³€í™”ëŸ‰
+			State->SetPercent(CurrentStamina);		// ì„¤ì •
+			if (CurrentStamina > VirtualStamina)
+			{
+				CurrentStamina = VirtualStamina;   // í˜„ì¬ìŠ¤í…Œë¯¸ë„ˆì™€ ê°€ìƒìŠ¤í…Œë¯¸ë„ˆë¥¼ ë§ì¶”ê¸°
+			}				
 		}
-		else if (CurrentStamina > VirtualStamina)	// ½ºÅ×¹Ì³Ê °¨¼Ò
+		else if (CurrentStamina > VirtualStamina)	// ìŠ¤í…Œë¯¸ë„ˆ ê°ì†Œ
 		{
-			CurrentStamina -= ChangOfStamina;		// ÇöÀç ½ºÅ×¹Ì³Ê -= º¯È­·®
-			State->SetPercent(CurrentStamina);		// ¼³Á¤
-			if (CurrentStamina < VirtualStamina)		// ÇöÀç½ºÅ×¹Ì³Ê¿Í °¡»ó½ºÅ×¹Ì³Ê¸¦ ¸ÂÃß±â
-				CurrentStamina = VirtualStamina;
+			CurrentStamina -= ChangOfStamina;		// í˜„ì¬ ìŠ¤í…Œë¯¸ë„ˆ -= ë³€í™”ëŸ‰
+			State->SetPercent(CurrentStamina);		// ì„¤ì •
+			if (CurrentStamina < VirtualStamina)
+			{
+				CurrentStamina = VirtualStamina; // í˜„ì¬ìŠ¤í…Œë¯¸ë„ˆì™€ ê°€ìƒìŠ¤í…Œë¯¸ë„ˆë¥¼ ë§ì¶”ê¸°
+			}				
 		}
-		else		// Æò½Ã
-			ChangOfStamina = 0.0f;		// ½ºÅ×¹Ì³Ê º¯È­·® 0.0
+		else
+		{
+			ChangOfStamina = 0.0f;		// ìŠ¤í…Œë¯¸ë„ˆ ë³€í™”ëŸ‰ 0.0
+		}			
 	}
 
-	// Ã¼·Â Áõ°¨
-	if (CurrentHP != VirtualHP)			// ÇöÀç¿Í °¡»ó HP°¡ ´Ù¸¦ ¶§ ½ÇÇà
+	// ì²´ë ¥ ì¦ê°
+	if (CurrentHP != VirtualHP)			// í˜„ì¬ì™€ ê°€ìƒ HPê°€ ë‹¤ë¥¼ ë•Œ ì‹¤í–‰
 	{
-		ChangOfHP = InDeltaTime * 0.5f;		// HPÁõ°¨ º¯È­·®À» ¼³Á¤
-		if (CurrentHP < VirtualHP)				// HP Áõ°¡
+		ChangOfHP = InDeltaTime * 0.5f;		// HPì¦ê° ë³€í™”ëŸ‰ì„ ì„¤ì •
+		if (CurrentHP < VirtualHP)				// HP ì¦ê°€
 		{
-			CurrentHP += ChangOfHP;					// ÇöÀç HP += º¯È­·®
-			BackwardHP->SetPercent(CurrentHP);	// ¼³Á¤
-			ForwardHP->SetPercent(CurrentHP);		// ¼³Á¤
-			if (CurrentHP > VirtualHP)					// ÇöÀçHP¿Í °¡»óHP¸¦ ¸ÂÃß±â
+			CurrentHP += ChangOfHP;					// í˜„ì¬ HP += ë³€í™”ëŸ‰
+			BackwardHP->SetPercent(CurrentHP);	// ì„¤ì •
+			ForwardHP->SetPercent(CurrentHP);		// ì„¤ì •
+			if (CurrentHP > VirtualHP)					// í˜„ì¬HPì™€ ê°€ìƒHPë¥¼ ë§ì¶”ê¸°
 				CurrentHP = VirtualHP;
 		}
-		else if (CurrentHP > VirtualHP)					// HP °¨¼Ò(Forward HP¹Ù´Â °ø°İÀ» ¹Ş°í ÀÌ¹Ì ½ÇÇàµÈ »óÅÂ)
+		else if (CurrentHP > VirtualHP)					// HP ê°ì†Œ(Forward HPë°”ëŠ” ê³µê²©ì„ ë°›ê³  ì´ë¯¸ ì‹¤í–‰ëœ ìƒíƒœ)
 		{
-			CurrentHP -= ChangOfHP;					// ÇöÀç HP -= º¯È­·®
-			BackwardHP->SetPercent(CurrentHP);	// ¼³Á¤
-			if (CurrentHP < VirtualHP)					// ÇöÀçHP¿Í °¡»óHP¸¦ ¸ÂÃß±â
+			CurrentHP -= ChangOfHP;					// í˜„ì¬ HP -= ë³€í™”ëŸ‰
+			BackwardHP->SetPercent(CurrentHP);	// ì„¤ì •
+			if (CurrentHP < VirtualHP)					// í˜„ì¬HPì™€ ê°€ìƒHPë¥¼ ë§ì¶”ê¸°
 				CurrentHP = VirtualHP;
 		}
-		else				// Æò½Ã
-			ChangOfHP = 0.0f;			// ½ºÅ×¹Ì³Ê º¯È­·® 0.0
+		else				// í‰ì‹œ
+			ChangOfHP = 0.0f;			// ìŠ¤í…Œë¯¸ë„ˆ ë³€í™”ëŸ‰ 0.0
 	}
-	else		// Ã¼·Â°¨¼Ò°¡ ÀÏ¾î³ªÁö ¾ÊÀ» ¶§ ¾Ö´Ï¸ŞÀÌ¼Ç Á¤Áö
+	else		// ì²´ë ¥ê°ì†Œê°€ ì¼ì–´ë‚˜ì§€ ì•Šì„ ë•Œ ì• ë‹ˆë©”ì´ì…˜ ì •ì§€
 	{
 		if (ULeftHandWidget::IsPlayingAnimation())
 		{
@@ -120,7 +142,7 @@ void ULeftHandWidget::StartAnimations()
 {
 	if (WidgetAnim)
 	{
-		ULeftHandWidget::PlayAnimation(WidgetAnim, 0.0f, 0);		// ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+		ULeftHandWidget::PlayAnimation(WidgetAnim, 0.0f, 0);		// ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
 	}		
 }
 
@@ -128,62 +150,62 @@ void ULeftHandWidget::StopAnimations()
 {
 	if (WidgetAnim)
 	{
-		ULeftHandWidget::StopAnimation(WidgetAnim);				// ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á
+		ULeftHandWidget::StopAnimation(WidgetAnim);				// ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ
 	}		
 }
 
 void ULeftHandWidget::ReceiveDamage(float _damage)
 {
-	VirtualHP -= _damage/100;			// µ¥¹ÌÁö¸¦ ¾ò¾î °¡»óÃ¼·ÂÀ» °¨¼Ò½ÃÅ²´Ù.
+	VirtualHP -= _damage/100;			// ë°ë¯¸ì§€ë¥¼ ì–»ì–´ ê°€ìƒì²´ë ¥ì„ ê°ì†Œì‹œí‚¨ë‹¤.
 
-	ForwardHP->SetPercent(VirtualHP);		// °¡»óHP¼³Á¤
-	StartAnimations();			// Ã¼·Â°¨¼Ò°¡ ½ÃÀÛ -> ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ
+	ForwardHP->SetPercent(VirtualHP);		// ê°€ìƒHPì„¤ì •
+	StartAnimations();			// ì²´ë ¥ê°ì†Œê°€ ì‹œì‘ -> ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘
 }
 
 void ULeftHandWidget::GainHP(float _gainHP)
 {
-	VirtualHP += _gainHP/100;		// Ã¼·Â Áõ°¡
+	VirtualHP += _gainHP/100;		// ì²´ë ¥ ì¦ê°€
 
 	if (VirtualHP >= 1.0f)
 		VirtualHP = 1.0f;
 
-	InvisiblePotion();		// Æ÷¼Ç ÀÌ¹ÌÁö pop
+	InvisiblePotion();		// í¬ì…˜ ì´ë¯¸ì§€ pop
 }
 
 void ULeftHandWidget::UseStamina(float _useValue)
 {
-	VirtualStamina -= _useValue/100;		// ½ºÅ×¹Ì³Ê °¨¼Ò
-	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);			// ½ºÅ×¹Ì³Ê »ç¿ë µ¿ÀÛÀº Àá½Ã ½ºÅ×¹Ì³Ê È¸º¹À» ¸ØÃã
+	VirtualStamina -= _useValue/100;		// ìŠ¤í…Œë¯¸ë„ˆ ê°ì†Œ
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);			// ìŠ¤í…Œë¯¸ë„ˆ ì‚¬ìš© ë™ì‘ì€ ì ì‹œ ìŠ¤í…Œë¯¸ë„ˆ íšŒë³µì„ ë©ˆì¶¤
 
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ULeftHandWidget::AutoGainStamina, 3.0f, false);		// ±×¸®°í ¹Ù·Î 3ÃÊÈÄ ¿¹¾à(½ºÅ×¹Ì³Ê ÀÚµ¿ È¸º¹) 
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ULeftHandWidget::AutoGainStamina, 3.0f, false);		// ê·¸ë¦¬ê³  ë°”ë¡œ 3ì´ˆí›„ ì˜ˆì•½(ìŠ¤í…Œë¯¸ë„ˆ ìë™ íšŒë³µ) 
 }
 
 void ULeftHandWidget::GainStamina(float _gainValue)
 {
-	VirtualStamina += _gainValue/100;			// ½ºÅ×¹Ì³Ê Áõ°¡
+	VirtualStamina += _gainValue/100;			// ìŠ¤í…Œë¯¸ë„ˆ ì¦ê°€
 }
 
 void ULeftHandWidget::InvisiblePotion()
 {
 	if (PotionArray.IsValidIndex(0))
 	{
-		PotionArray.Pop()->SetVisibility(ESlateVisibility::Hidden);			// Æ÷¼Ç ÀÌ¹ÌÁö pop
+		PotionArray.Pop()->SetVisibility(ESlateVisibility::Hidden);			// í¬ì…˜ ì´ë¯¸ì§€ pop
 	}		
 }
 
 void ULeftHandWidget::AutoGainStamina()
 {
-	if (CurrentStamina < 1.0f)			// ½ºÅ×¹Ì³Ê°¡ FullÀÎ »óÅÂ°¡ ¾Æ´Ò ¶§¸¸ ½ÇÇà
+	if (CurrentStamina < 1.0f)			// ìŠ¤í…Œë¯¸ë„ˆê°€ Fullì¸ ìƒíƒœê°€ ì•„ë‹ ë•Œë§Œ ì‹¤í–‰
 	{
-		GainStamina(0.05);				// ¼öÄ¡¸¸Å­ ½ºÅ×¹Ì³Ê Áõ°¡
+		GainStamina(0.05);				// ìˆ˜ì¹˜ë§Œí¼ ìŠ¤í…Œë¯¸ë„ˆ ì¦ê°€
 
 		if (VirtualStamina > 1.0f)
 		{
-			// ´Ù Â÷°Ô µÇ¸é ½ºÅ×¹Ì³Ê¸¦ Full°ú ¸ÂÃçÁÜ
+			// ë‹¤ ì°¨ê²Œ ë˜ë©´ ìŠ¤í…Œë¯¸ë„ˆë¥¼ Fullê³¼ ë§ì¶°ì¤Œ
 			VirtualStamina = 1.0f;
 		}	
 
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ULeftHandWidget::AutoGainStamina, 0.01f, false);			// °è¼Ó ½ºÅ×¹Ì³Ê Áõ°¡
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ULeftHandWidget::AutoGainStamina, 0.01f, false);			// ê³„ì† ìŠ¤í…Œë¯¸ë„ˆ ì¦ê°€
 	}
 	// GetWorld()->GetTimerManager().ClearTimer(th);
 }

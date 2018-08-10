@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -14,61 +14,67 @@ class PROJECTVR_API ULeftHandWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	virtual void NativeConstruct() override;		// »ı¼ºÀÚ
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;		// Æ½
+	virtual void NativeConstruct() override;		// ìƒì„±ì
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;		// í‹±
 
-	float ChangOfHP;				// HP Áõ°¨ º¯È­·®
-	float ChangOfStamina;		// ½ºÅ×¹Ì³Ê Áõ°¨ º¯È­·®
-	float Damage;					// µ¥¹ÌÁö
+	float ChangOfHP;				// HP ì¦ê° ë³€í™”ëŸ‰
+	float ChangOfStamina;		// ìŠ¤í…Œë¯¸ë„ˆ ì¦ê° ë³€í™”ëŸ‰
+	float Damage;					// ë°ë¯¸ì§€
 
-	// ÇÃ·¹ÀÌ¾î Ã¼·ÂÀ¸·Î ¿¬°á ÇØ¾ßÇÔ//
+	// í”Œë ˆì´ì–´ ì²´ë ¥ìœ¼ë¡œ ì—°ê²° í•´ì•¼í•¨//
 	float CurrentHP = 1.0f;
 	float VirtualHP = 1.0f;
 	float MaxHP = 1.0f;
-	// ÇÃ·¹ÀÌ¾î ½ºÅ×¹Ì³Ê·Î ¿¬°á ÇØ¾ßÇÔ//
+
+	// í”Œë ˆì´ì–´ ìŠ¤í…Œë¯¸ë„ˆë¡œ ì—°ê²° í•´ì•¼í•¨//
 	float CurrentStamina = 1.0f;
 	float VirtualStamina = 1.0f;
 	float MaxStamina = 1.0f;
 
-	/* Ã¼·Â/½ºÅ×¹Ì³Ê °ü·Ã */
+	/* ì²´ë ¥/ìŠ¤í…Œë¯¸ë„ˆ ê´€ë ¨ */
 	UPROPERTY(BlueprintReadWrite, Category = "Data")
-		class UProgressBar* ForwardHP;								// HP¹Ù 1(¾Õ)
+		class UProgressBar* ForwardHP;								// HPë°” 1(ì•)
 	UPROPERTY(BlueprintReadWrite, Category = "Data")
-		class UProgressBar* BackwardHP;								// HP¹Ù 2(ÀÜ»ó)
+		class UProgressBar* BackwardHP;								// HPë°” 2(ì”ìƒ)
 	UPROPERTY(BlueprintReadWrite, Category = "Data")
-		class UProgressBar* State;										// ½ºÅ×¹Ì³Ê¹Ù
+		class UProgressBar* State;										// ìŠ¤í…Œë¯¸ë„ˆë°”
 
-	/* Æ÷¼Ç°ü·Ã */
+	/* í¬ì…˜ê´€ë ¨ */
 	UPROPERTY(BlueprintReadWrite, Category = "Data")
-		class UHorizontalBox* PortionBox;								// Æ÷¼Ç ÀÌ¹ÌÁö¸¦ ³ÖÀ» Horizontal¹Ú½º
+		class UHorizontalBox* PortionBox;								// í¬ì…˜ ì´ë¯¸ì§€ë¥¼ ë„£ì„ Horizontalë°•ìŠ¤
 	UPROPERTY(BlueprintReadWrite, Category = "Data")
-		TArray<class UImage*> PotionArray;								// Æ÷¼ÇÀÌ¹ÌÁö ¹è¿­
+		TArray<class UImage*> PotionArray;								// í¬ì…˜ì´ë¯¸ì§€ ë°°ì—´
 	UPROPERTY(BlueprintReadWrite, Category = "Data")
-		int Arraysize = 5;													// Æ÷¼Ç ÀÌ¹ÌÁö °¹¼ö
+		int Arraysize = 5;													// í¬ì…˜ ì´ë¯¸ì§€ ê°¯ìˆ˜
 
-	// ¾Ö´Ï¸ŞÀÌ¼Ç °ü·Ã
+	// ì• ë‹ˆë©”ì´ì…˜ ê´€ë ¨
 	UPROPERTY(BlueprintReadWrite, Category = "Data")
-		class UWidgetAnimation* WidgetAnim;						// À§Á¬ ¾Ö´Ï¸ŞÀÌ¼Ç(ÇÇ°İ½Ã HP¹Ù Èçµé°Å¸²)
+		class UWidgetAnimation* WidgetAnim;						// ìœ„ì ¯ ì• ë‹ˆë©”ì´ì…˜(í”¼ê²©ì‹œ HPë°” í”ë“¤ê±°ë¦¼)
 
 	UPROPERTY()
-		FTimerHandle TimerHandle;			// Å¸ÀÌ¸ÓÇÚµé
+		FTimerHandle TimerHandle;			// íƒ€ì´ë¨¸í•¸ë“¤
+
+	UPROPERTY()
+		class AMotionControllerPC* PC; //í”Œë ˆì´ì–´ ì»¨íŠ¸ë¡¤ëŸ¬
+	UPROPERTY()
+		class AMotionControllerCharacter* MyCharacter; //í”Œë ˆì´ì–´ ìºë¦­í„°
 
 	UFUNCTION()
-		void AssignAnimations();			// À§Á¬¾Ö´Ï¸ŞÀÌ¼Ç Ã£±â
+		void AssignAnimations();			// ìœ„ì ¯ì• ë‹ˆë©”ì´ì…˜ ì°¾ê¸°
 	UFUNCTION()
-		void StartAnimations();			// ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+		void StartAnimations();			// ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
 	UFUNCTION()
-		void StopAnimations();			// ¾Ö´Ï¸ŞÀÌ¼Ç Á¤Áö
+		void StopAnimations();			// ì• ë‹ˆë©”ì´ì…˜ ì •ì§€
 	UFUNCTION()
-		void ReceiveDamage(float _damage);		// µ¥¹ÌÁö¸¦ ¹ŞÀ» ¶§ °¡»óHP°¨¼Ò¿Í ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+		void ReceiveDamage(float _damage);		// ë°ë¯¸ì§€ë¥¼ ë°›ì„ ë•Œ ê°€ìƒHPê°ì†Œì™€ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
 	UFUNCTION()
-		void GainHP(float _damage);				// HP¸¦ ¾ò´Â ÇÔ¼ö
+		void GainHP(float _damage);				// HPë¥¼ ì–»ëŠ” í•¨ìˆ˜
 	UFUNCTION()
-		void UseStamina(float _useValue);			// ½ºÅ×¹Ì³Ê¸¦ »ç¿ëÇÏ´Â ÇÔ¼ö
+		void UseStamina(float _useValue);			// ìŠ¤í…Œë¯¸ë„ˆë¥¼ ì‚¬ìš©í•˜ëŠ” í•¨ìˆ˜
 	UFUNCTION()
-		void GainStamina(float _useValue);		// ½ºÅ×¹Ì³Ê¸¦ ¾ò´Â ÇÔ¼ö
+		void GainStamina(float _useValue);		// ìŠ¤í…Œë¯¸ë„ˆë¥¼ ì–»ëŠ” í•¨ìˆ˜
 	UFUNCTION()
-		void InvisiblePotion();							// Æ÷¼Ç ÀÌ¹ÌÁö popÇÏ´Â ÇÔ¼ö
+		void InvisiblePotion();							// í¬ì…˜ ì´ë¯¸ì§€ popí•˜ëŠ” í•¨ìˆ˜
 	UFUNCTION()
-		void AutoGainStamina();						// ÀÚµ¿ÀûÀ¸·Î ½ºÅ×¹Ì³Ê°¡ Ã¤¿öÁö´Â ÇÔ¼ö
+		void AutoGainStamina();						// ìë™ì ìœ¼ë¡œ ìŠ¤í…Œë¯¸ë„ˆê°€ ì±„ì›Œì§€ëŠ” í•¨ìˆ˜
 };

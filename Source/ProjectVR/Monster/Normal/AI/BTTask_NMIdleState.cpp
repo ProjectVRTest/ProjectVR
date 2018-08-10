@@ -29,7 +29,7 @@ void UBTTask_NMIdleState::PatrolStart()
 {
 	if (NormalMonster)
 	{		
-		UE_LOG(LogClass, Warning, TEXT("PatrolStart"));
+	//	UE_LOG(LogClass, Warning, TEXT("PatrolStart"));
 		NormalMonster->CurrentState = ENormalMonsterState::Patrol;
 		NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Walk;
 	}

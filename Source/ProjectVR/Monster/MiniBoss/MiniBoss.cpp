@@ -13,13 +13,14 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Animation/AnimBlueprint.h"
+#include "Weapon/MiniBossWeapon.h"
 // Sets default values
 AMiniBoss::AMiniBoss()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MiniBoss_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/Monster/MiniBoss/Mesh/mutant.mutant'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MiniBoss_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/Monster/MiniBoss/Mesh/MB_SK_Mesh.MB_SK_Mesh'"));
 
 	if (MiniBoss_SK_Mesh.Succeeded())
 	{
@@ -50,7 +51,7 @@ AMiniBoss::AMiniBoss()
 
 	Target = nullptr;
 
-	static ConstructorHelpers::FObjectFinder<UAnimMontage>Reaction_Montage(TEXT("AnimMontage'/Game/Blueprints/Monster/MiniBoss/Animation/ReactionMontage.ReactionMontage'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>Reaction_Montage(TEXT("AnimMontage'/Game/Blueprints/Monster/MiniBoss/Animation/Mutant/ReactionMontage.ReactionMontage'"));
 
 	if (Reaction_Montage.Succeeded())
 	{
@@ -68,7 +69,7 @@ AMiniBoss::AMiniBoss()
 
 	AIControllerClass = AMiniBossAIController::StaticClass();
 	
-	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>ABP_MiniBos(TEXT("AnimBlueprint'/Game/Blueprints/Monster/MiniBoss/Blueprints/ABP_AnimInstance.ABP_AnimInstance'"));
+	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>ABP_MiniBos(TEXT("AnimBlueprint'/Game/Blueprints/Monster/MiniBoss/Blueprints/ABP_MiniBoss.ABP_MiniBoss'"));
 
 	if (ABP_MiniBos.Succeeded())
 	{

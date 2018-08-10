@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MiniBossAnimInstance.h"
 #include "Monster/MiniBoss/MiniBoss.h"
@@ -9,6 +9,16 @@
 #include "Camera/CameraComponent.h"
 
 #include "MyTargetPoint.h"
+#include "TimerManager.h"
+
+void UMiniBossAnimInstance::NativeBeginPlay()
+{
+	Super::NativeBeginPlay();
+
+	UE_LOG(LogClass, Warning, TEXT("애니메이션 시작"));
+
+	
+}
 
 void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
@@ -22,6 +32,9 @@ void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentAnimState = Miniboss->CurrentAnimState;
 		CurrentJumpState = Miniboss->CurrentJumpState;
 		CurrentAttackState = Miniboss->CurrentAttackState;
+
+		Direction = CalculateDirection(Miniboss->GetCharacterMovement()->Velocity, Miniboss->GetActorRotation());
+		Speed = Miniboss->GetCharacterMovement()->Velocity.Size();
 	}
 }
 

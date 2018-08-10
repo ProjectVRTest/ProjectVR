@@ -86,7 +86,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 	
 	MaxHp = 100.0f;
-	CurrentHp = 100.0f;
+	CurrentHp = MaxHp;
 	MaxStamina = 100.0f;
 	CurrentStamina = MaxStamina;
 

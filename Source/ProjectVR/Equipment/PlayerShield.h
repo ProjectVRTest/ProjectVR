@@ -24,8 +24,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class USceneComponent* ShieldScene;				// 씬 컴포넌트
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UStaticMeshComponent* ShieldMesh;			// 메쉬에 방패를 붙일 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UWidgetComponent* CharacterStateWidget;		// 캐릭터 상태 위젯 ( 물약 / 체력 / 스테미너 ) 컴포넌트

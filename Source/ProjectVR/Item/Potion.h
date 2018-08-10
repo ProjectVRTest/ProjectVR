@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -31,10 +31,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FItemDataTable DataTable;
+	bool BagInputFlag;
+	bool BagInputCompleteFlag;
 
 	FTokenCompleteSignature TokenCompleteDelegate;
 
-	//¼ÕÀÌ ´Ù¸¥ ¾×ÅÍ¿¡ ¿À¹ö·¦ µÉ¶§ È£Ãâ µÇ´Â ÇÔ¼ö
+	//ì†ì´ ë‹¤ë¥¸ ì•¡í„°ì— ì˜¤ë²„ë© ë ë•Œ í˜¸ì¶œ ë˜ëŠ” í•¨ìˆ˜
 	UFUNCTION()
 		void OnPotionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 

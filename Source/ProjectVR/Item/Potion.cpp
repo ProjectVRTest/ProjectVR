@@ -1,13 +1,17 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Potion.h"
-#include "Components/StaticMeshComponent.h"			// Æ÷¼Ç ½ºÅÂÆ½ ¸Ş½¬
-#include "UObject/ConstructorHelpers.h"					// ÄÜÅÙÃ÷ ºê¶ó¿ìÀú·ÎºÎÅÍ Æ÷¼ÇÀÇ ¸ğ¾çÀ» °¡Á®¿Ã ¶§ »ç¿ë
+#include "Components/StaticMeshComponent.h"			// í¬ì…˜ ìŠ¤íƒœí‹± ë©”ì‰¬
+#include "UObject/ConstructorHelpers.h"					// ì½˜í…ì¸  ë¸Œë¼ìš°ì €ë¡œë¶€í„° í¬ì…˜ì˜ ëª¨ì–‘ì„ ê°€ì ¸ì˜¬ ë•Œ ì‚¬ìš©
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Item/Table/ItemDataSingleton.h"
 #include "Engine/StreamableManager.h"
 #include "Engine/StaticMesh.h"
 
+#include "kismet/GameplayStatics.h"
+#include "MyCharacter/MotionControllerPC.h"
+#include "HandMotionController/LeftHandMotionController.h"
+#include "Item/PotionBag.h"
 
 // Sets default values
 APotion::APotion()
@@ -18,13 +22,12 @@ APotion::APotion()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PotionMesh"));
 	SetRootComponent(Mesh);	
 
-	Mesh->SetSimulatePhysics(false);
-	Mesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));		// Å©±â ¼³Á¤		-> Å×½ºÆ®¿ë Æ÷¼Ç¸Ş½¬ ³ª¿À¸é Å×½ºÆ®ÇØ¼­ Àç¼öÁ¤
-	Mesh->SetCollisionProfileName(TEXT("OverlapAll"));		// Ç×»ó ¿À¹ö·¦µÇ°Ô ¼³Á¤
+	BagInputFlag = false;
+	BagInputCompleteFlag = false;
 
-
-															// Æ÷¼Ç ÅÂ±×
-	Tags.Add(FName(TEXT("Potion")));		// »ı¼ºÇÑ Æ÷¼ÇÀ» 'Potion'¶õ ÀÌ¸§À¸·Î ÅÂ±×¸¦ ÁÜ
+	//Mesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));		// í¬ê¸° ì„¤ì •		-> í…ŒìŠ¤íŠ¸ìš© í¬ì…˜ë©”ì‰¬ ë‚˜ì˜¤ë©´ í…ŒìŠ¤íŠ¸í•´ì„œ ì¬ìˆ˜ì •
+	Mesh->SetCollisionProfileName(TEXT("NoCollision"));	
+	Tags.Add(FName(TEXT("Potion")));		// ìƒì„±í•œ í¬ì…˜ì„ 'Potion'ë€ ì´ë¦„ìœ¼ë¡œ íƒœê·¸ë¥¼ ì¤Œ
 	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
 }
 
@@ -35,15 +38,15 @@ void APotion::BeginPlay()
 
 	Mesh->OnComponentBeginOverlap.AddDynamic(this, &APotion::OnPotionBeginOverlap);
 	
-	if (AItemDataSingleton::GetInstatnce()->DataTable) //½Ì±ÛÅæ °´Ã¼¿¡ µ¥ÀÌÅÍ Å×ÀÌºíÀÌ ÀÖ´ÂÁö ¿ì¼± È®ÀÎÇÑ´Ù.
+	if (AItemDataSingleton::GetInstatnce()->DataTable) //ì‹±ê¸€í†¤ ê°ì²´ì— ë°ì´í„° í…Œì´ë¸”ì´ ìˆëŠ”ì§€ ìš°ì„  í™•ì¸í•œë‹¤.
 	{
-		//ÀÖÀ¸¸é Ã¹¹øÂ°¿¡ ÀÖ´Â ÀÎµ¦½º¿¡ ÇØ´çÇÏ´Â µ¥ÀÌÅÍÅ×ÀÌºíÀÇ Çà°ªÀ» °¡Á®¿Í¼­ DataTable¿¡ ÀúÀåÇÑ´Ù.
+		//ìˆìœ¼ë©´ ì²«ë²ˆì§¸ì— ìˆëŠ” ì¸ë±ìŠ¤ì— í•´ë‹¹í•˜ëŠ” ë°ì´í„°í…Œì´ë¸”ì˜ í–‰ê°’ì„ ê°€ì ¸ì™€ì„œ DataTableì— ì €ì¥í•œë‹¤.
 		DataTable = AItemDataSingleton::GetInstatnce()->GetItemData(1);
 
-		//¸Ş½¬¸¦ ·ÎµùÇÏ±â À§ÇØ º¯¼ö¸¦ ¼±¾ğÇÑ´Ù.
+		//ë©”ì‰¬ë¥¼ ë¡œë”©í•˜ê¸° ìœ„í•´ ë³€ìˆ˜ë¥¼ ì„ ì–¸í•œë‹¤.
 		FStreamableManager AssetLoader;
 
-		//¹°¾àÀÇ Mesh¸¦ ¾Õ¿¡¼­ ÀúÀåÇØµĞ DataTableÀÇ ItemMesh¸¦ ÀÌ¿ëÇØ¼­ ¼³Á¤ÇØÁØ´Ù.
+		//ë¬¼ì•½ì˜ Meshë¥¼ ì•ì—ì„œ ì €ì¥í•´ë‘” DataTableì˜ ItemMeshë¥¼ ì´ìš©í•´ì„œ ì„¤ì •í•´ì¤€ë‹¤.
 		Mesh->SetStaticMesh(AssetLoader.LoadSynchronous<UStaticMesh>(DataTable.ItemMesh));
 	}
 }
@@ -53,19 +56,32 @@ void APotion::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (BagInputCompleteFlag)
+	{
+		Destroy(this);
+	}
 }
 
 void APotion::OnPotionBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag(TEXT("Land")))
+	AMotionControllerPC* PC = Cast<AMotionControllerPC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	
+	if (PC)
 	{
-		Destroy(this);
-	}
+		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(PC->GetPawn());
+		if (MyCharacter)
+		{
+			if (OtherActor->ActorHasTag(TEXT("Land")))
+			{
+				Destroy(this);
+			}
 
-	if (OtherComp->ComponentHasTag("Head"))
-	{
-		Destroy(this);
-		TokenCompleteDelegate.ExecuteIfBound();
-	}
+			if (OtherComp->ComponentHasTag("Head"))
+			{
+				Destroy(this);
+				TokenCompleteDelegate.ExecuteIfBound();
+			}
+		}
+	}		
 }
 

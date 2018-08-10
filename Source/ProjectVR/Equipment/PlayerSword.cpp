@@ -24,15 +24,15 @@ APlayerSword::APlayerSword()
 	/* 스태틱 매쉬 컴포넌트 생성 */
 	SwordMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwordMesh"));
 	SetRootComponent(SwordMesh);
-	SwordMesh->SetCollisionProfileName(TEXT("NoCollision"));		// 메쉬의 콜리전 상태값을 NoCollision으로 줌.
+	SwordMesh->SetCollisionProfileName(TEXT("OverlapAll"));		// 메쉬의 콜리전 상태값을 NoCollision으로 줌.
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/Equipment/Mesh/sword_high.sword_high'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/Equipment/Sword/Mesh/sword.sword'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (SM_Sword.Succeeded())		// 검 메쉬를 찾았을 경우 실행
 	{
 		SwordMesh->SetStaticMesh(SM_Sword.Object);			// 스태틱 메쉬에 검 모양 설정
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> SwordMaterial(TEXT("Material'/Game/Assets/Equipment/Texture/SwordMaterial.SwordMaterial'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> SwordMaterial(TEXT("Material'/Game/Assets/Equipment/Sword/Materials/SwordMaterial.SwordMaterial'"));
 	if (SwordMaterial.Succeeded())
 	{
 		SwordMesh->SetMaterial(0, SwordMaterial.Object);
@@ -41,6 +41,7 @@ APlayerSword::APlayerSword()
 	/* 콜리전 컴포넌트 생성 */
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));			
 	SwordCollision->SetupAttachment(SwordMesh);		// 콜리전을 검 메쉬에 붙임
+	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 
 	// 콜리전 위치 및 방향, 크기 설정
 	SwordCollision->SetRelativeLocation(FVector(0.0f, 450.0f, 0.0f));
@@ -64,7 +65,7 @@ void APlayerSword::BeginPlay()
 	Super::BeginPlay();
 	
 	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// 머테리얼 콜렉션 찾기
-		TEXT("MaterialParameterCollection'/Game/Assets/Equipment/Texture/EquipmentMaterialCollection.EquipmentMaterialCollection'"), NULL, LOAD_None, NULL));
+		TEXT("MaterialParameterCollection'/Game/Assets/Equipment/EquipmentMaterialCollection.EquipmentMaterialCollection'"), NULL, LOAD_None, NULL));
 
 	if (Collection)
 	{
@@ -73,9 +74,9 @@ void APlayerSword::BeginPlay()
 		CollectionInstance->SetScalarParameterValue(FName("Opacity_Sword"), 0.75);		// 'Opacity_Sword'값을 가진 파라미터 값을 세팅
 	}
 
-	if (SwordMesh)	
+	if (SwordCollision)
 	{
-		SwordMesh->OnComponentBeginOverlap.AddDynamic(this, &APlayerSword::OnSwordOverlap);		// 오버랩 이벤트를 발생시킬 수 있도록 설정
+		SwordCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerSword::OnSwordOverlap);
 	}
 }
 
@@ -85,6 +86,11 @@ void APlayerSword::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	Timer += DeltaTime;		// 타이머
+	if (SwordMesh->GetPhysicsLinearVelocity().Size() > 200)
+	{
+		UE_LOG(LogClass, Warning, TEXT("%0.1f"), SwordMesh->GetPhysicsLinearVelocity().Size());
+	}
+	
 }
 
 void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
@@ -92,18 +98,23 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 {
 	if (OtherActor->ActorHasTag("Monster"))		// 오버랩된 액터가 'Monster'라는 태그를 가지고 있으면 실행
 	{
-		UE_LOG(LogClass, Warning, TEXT("22222222222222222"));
 		if (Timer >= 0.5f)			// 타이머가 0.5 이상의 수를 가지고 있을 때 실행 (조건1)
 		{
 			if (SwordMesh->GetPhysicsLinearVelocity().Size() >= 200.0f)		// 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
 			{
+				UE_LOG(LogClass, Warning, TEXT("데미지 판정 진입"));
 				Timer = 0.0f;		// 공격 판정이 일어났을 때 타이머 0으로
 
-				if (SwordMesh->GetPhysicsLinearVelocity().Size() <= 500)		// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
+				if (SwordMesh->GetPhysicsLinearVelocity().Size() <= 500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
+				{					
+					UE_LOG(LogClass, Warning, TEXT("몬스터 일반 데미지 입힘"));
 					Damage = 10.0f;
-				else			// 선속도의 크기가 500초과일 때 데미지 15 (조건4)
+				}
+				else // 선속도의 크기가 500초과일 때 데미지 15 (조건4)
+				{
+					UE_LOG(LogClass, Warning, TEXT("몬스터 크리티컬 데미지 입힘"));
 					Damage = 15.0f;
-
+				}
 				//AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(GetOwner());
 				//ULeftHandWidget* MyStateUI = Cast<ULeftHandWidget>(MyCharacter->LeftHand->Shield->CharacterStateWidget);
 				// 이하 캐릭터 스테미너 감소
@@ -119,7 +130,7 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 void APlayerSword::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭터에서 호출)
 {
 	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// 머테리얼 콜렉션 찾기
-		TEXT("MaterialParameterCollection'/Game/Assets/Equipment/Texture/EquipmentMaterialCollection.EquipmentMaterialCollection'"), NULL, LOAD_None, NULL));
+		TEXT("MaterialParameterCollection'/Game/Assets/Equipment/EquipmentMaterialCollection.EquipmentMaterialCollection'"), NULL, LOAD_None, NULL));
 
 	if (Collection)
 	{

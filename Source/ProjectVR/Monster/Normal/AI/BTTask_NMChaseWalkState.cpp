@@ -5,26 +5,21 @@
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "AI/Navigation/NavigationSystem.h"
 
+#include "Camera/CameraComponent.h"
+
 EBTNodeResult::Type UBTTask_NMChaseWalkState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
-	ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(OwnerComp.GetAIOwner());
+	AI = Cast<ANormalMonsterAIController>(OwnerComp.GetAIOwner());
 
 	if (AI)
 	{
-		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(AI->BBComponent->GetValueAsObject("Player"));
+		MyCharacter = Cast<AMotionControllerCharacter>(AI->BBComponent->GetValueAsObject("Player"));
 		
 		if (MyCharacter)
 		{
-			UE_LOG(LogClass, Warning, TEXT("Walk"));
-			AI->MoveToActor(MyCharacter,300.0f);
-			
-			FVector MovePoint =UNavigationSystem::GetRandomPointInNavigableRadius(GetWorld(), MyCharacter->GetActorLocation(), 300.0f);
-
+			FVector MovePoint = UNavigationSystem::GetRandomPointInNavigableRadius(GetWorld(), MyCharacter->Camera->GetComponentLocation(), 300.0f);
 			AI->BBComponent->SetValueAsVector("MovePoint", MovePoint);
-			AI->MoveToLocation(MovePoint, 300.0f);
-
 		}
 	}
-
-	return EBTNodeResult::InProgress;
+	return EBTNodeResult::Succeeded;
 }

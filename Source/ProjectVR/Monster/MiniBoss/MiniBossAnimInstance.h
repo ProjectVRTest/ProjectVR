@@ -26,6 +26,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		FRotator LookAtRotator;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Velocity")
+		float Speed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Velocity")
+		float Direction;
+
+	FTimerHandle AnimationChangeTimer;
+	bool IdleAnimationChangeFlag;
+
+	UFUNCTION()
+		virtual void NativeBeginPlay() override;
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 	UFUNCTION(BlueprintCallable, Category = "AI")

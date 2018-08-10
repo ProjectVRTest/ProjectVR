@@ -111,7 +111,7 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 
 		if (AI)
 		{
-			switch (CurrentState)
+			/*switch (CurrentState)
 			{
 			case ENormalMonsterState::Idle:
 				AI->BBComponent->SetValueAsObject("Player", Pawn);
@@ -123,7 +123,7 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 				CurrentState = ENormalMonsterState::Chase;
 				CurrentAnimState = ENormalMonsterAnimState::Walk;
 				break;
-			}
+			}*/
 		}
 	}
 }

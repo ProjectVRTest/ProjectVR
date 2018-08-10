@@ -51,7 +51,7 @@ ARightHandMotionController::ARightHandMotionController()
 		HandMesh->SetSkeletalMesh(SK_RightHand.Object);
 	}
 
-	HandMesh->SetRelativeRotation(FRotator(0, 0, 90.0f)); //넣어준 스켈레탈 메쉬가 정면을 보도록 Roll방향으로 90도 돌린다.
+	HandMesh->SetRelativeRotation(FRotator(-22.0f, 0, 90.0f)); //넣어준 스켈레탈 메쉬가 정면을 보도록 Roll방향으로 90도 돌린다.
 	HandMesh->bGenerateOverlapEvents = true; //오버랩 이벤트가 발생할 수 있도록 켜준다.
 	HandMesh->SetCollisionProfileName(FName("OverlapAll")); //콜리전 프리셋을 OverlapOnlyPawn으로 바꿔서 Pawn은 오버랩되고 나머지는 블록되게 바꿔준다. 
 
@@ -91,7 +91,7 @@ ARightHandMotionController::ARightHandMotionController()
 	// 포션생성 위치
 	PotionPosition = CreateDefaultSubobject<USceneComponent>(TEXT("PotionPosition"));
 	PotionPosition->SetupAttachment(HandMesh);
-	PotionPosition->SetRelativeLocation(FVector(-18.0f, 0.0f, -16.0f));
+	PotionPosition->SetRelativeLocation(FVector(10.925035f, -1.5f, -2.5f));
 	PotionPosition->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 
 	// 포션생성 위치
@@ -104,7 +104,9 @@ ARightHandMotionController::ARightHandMotionController()
 	SwordAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponScene"));
 	SwordAttachScene->SetupAttachment(HandMesh);// 생성한 검 씬컴포넌트를 HandMesh에 붙인다.
 												//붙일 검의 방향을 조절해주기위해
-	SwordAttachScene->SetRelativeRotation(FRotator(0, 0, 180)); //롤 방향으로 180도 돌리고
+
+	SwordAttachScene->SetRelativeRotation(FRotator(0, 0, 180));
+	//SwordAttachScene->SetRelativeRotation(FRotator(0, 61.0f, 180.0f)); //롤 방향으로 180도 돌리고
 	SwordAttachScene->SetRelativeLocation(FVector(10, 0, 0)); //x축으로 10만큼 이동시킨다.
 
 	VisibleSwordFlag = true; //초기에는 검을 보여준다.		///////////////////////////////////////////////////////////////////////////////////
@@ -130,6 +132,7 @@ void ARightHandMotionController::BeginPlay()
 																									  //위치와 각도는 붙이는 타겟에 맞게끔 하고
 																									  //스케일은 스폰하는 월드에 맞게끔 계산하여 정한다.
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+	
 
 	//현재 월드에 검을 스폰시킨다.
 	Sword = GetWorld()->SpawnActor<APlayerSword>(Sword->StaticClass(), SwordAttachScene->GetComponentLocation(), SwordAttachScene->GetComponentRotation(), SpawnActorOption);
@@ -144,6 +147,7 @@ void ARightHandMotionController::BeginPlay()
 	{
 		//HandMesh->SetWorldRotation(FRotator(-60.0f,0,90.0f));
 	}
+
 }
 
 // Called every frame
@@ -202,7 +206,7 @@ void ARightHandMotionController::GrabActor()
 
 				if (PotionBag)
 				{
-					if (PotionBag->PotionCount > 0)
+					if (PotionBag->Potions.Num()>0)
 					{
 						FActorSpawnParameters SpawnActorOption; //액터를 스폰할때 쓰일 구조체 변수
 						SpawnActorOption.Owner = this; //스폰할 액터의 주인을 현재 클래스로 정한다.
@@ -215,22 +219,21 @@ void ARightHandMotionController::GrabActor()
 																														  //스케일은 스폰하는 월드에 맞게끔 계산하여 정한다.
 						FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
+						Potion=PotionBag->PotionPop();
 						//현재 월드에 검을 스폰시킨다.
-						Potion = GetWorld()->SpawnActor<APotion>(Potion->StaticClass(), MotionController->GetComponentLocation(),
-							MotionController->GetComponentRotation(), SpawnActorOption);
+						//Potion = GetWorld()->SpawnActor<APotion>(Potion->StaticClass(), PotionPosition->GetComponentLocation(),	PotionPosition->GetComponentRotation(), SpawnActorOption);
 
 						if (Potion)
 						{
 							// 손에 붙임
 							AttachedActor = Potion;
-							Potion->Mesh->SetSimulatePhysics(false);
-							Potion->SetActorRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+							//Potion->Mesh->SetSimulatePhysics(true);
+							//Potion->SetActorRelativeScale3D(FVector(0.22f, 0.15f, 0.15f));
+							Potion->Mesh->SetCollisionProfileName(TEXT("OverlapAll"));
+							Potion->SetActorRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 							Potion->AttachToComponent(PotionPosition, AttachRules);//스폰한 검을 SwordAttachScene에 붙인다.
-
 							Potion->TokenCompleteDelegate.BindUObject(this, &ARightHandMotionController::HandNomalState);
 						}
-
-						PotionBag->PotionCount--;
 
 						UVRGameInstance* GI = Cast<UVRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 						
@@ -278,10 +281,15 @@ void ARightHandMotionController::ReleaseActor()
 		else if (AttachedActor->GetRootComponent()->GetAttachParent() == PotionPosition)
 		{
 			// 잡은 액터가 포션일 때 실행
-			if (AttachedActor->ActorHasTag("Potion"))
+			if (AttachedActor->ActorHasTag("Potion")) 
 			{
-				AttachedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);			// 잡은 물체와 뗀다
-				Cast<APotion>(AttachedActor)->Mesh->SetSimulatePhysics(true);				// 포션을 잡은 상태에서 푼다면 포션은 중력값이 있어야한다.
+				APotion* AttachPotion = Cast<APotion>(AttachedActor);
+				if (AttachPotion)
+				{
+					AttachPotion->BagInputFlag = true;
+					AttachPotion->Mesh->SetSimulatePhysics(true);
+					AttachedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);			// 잡은 물체와 뗀다					
+				}								
 			}
 		}
 		AttachedActor = nullptr;			// 현재 잡은 것이 없다.

@@ -14,24 +14,21 @@ APlayerShield::APlayerShield()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	/* 씬 컴포넌트 생성 */
-	ShieldScene = CreateDefaultSubobject<USceneComponent>(TEXT("ShieldScene"));
-	SetRootComponent(ShieldScene);	
-
+	
 	/* 스태틱 매쉬 컴포넌트 생성 */
 	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));
-
 	ShieldMesh->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));			// 캐릭터와의 충돌을 피하기위해서 Pawn(캐릭터)만 Overlap되도록 설정
-	ShieldMesh->SetupAttachment(ShieldScene);		// 생성한 스태틱 매쉬를 씬 컴포넌트에 붙임
+	SetRootComponent(ShieldMesh);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shield(TEXT("StaticMesh'/Game/Assets/Equipment/Mesh/shield_low.shield_low'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
+	ShieldMesh->SetRelativeScale3D(FVector(-0.9f, 0.8f, 0.8f));
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shield(TEXT("StaticMesh'/Game/Assets/Equipment/Shield/Mesh/StaticMesh.StaticMesh'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (SM_Shield.Succeeded())		// 방패 메쉬를 찾았을 경우 실행
 	{
 		ShieldMesh->SetStaticMesh(SM_Shield.Object);		// 스태틱 메쉬에 방패 모양 설정
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> ShieldMaterial(TEXT("Material'/Game/Assets/Equipment/Texture/ShieldMaterial.ShieldMaterial'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> ShieldMaterial(TEXT("Material'/Game/Assets/Equipment/Shield/Materials/ShieldMaterial.ShieldMaterial'"));
 	if (ShieldMaterial.Succeeded())
 	{
 		ShieldMesh->SetMaterial(0, ShieldMaterial.Object);
@@ -63,7 +60,7 @@ void APlayerShield::BeginPlay()
 	Super::BeginPlay();
 	
 	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// 머테리얼 콜렉션 찾기
-		TEXT("Material'/Game/Assets/Equipment/Texture/SwordMaterial.SwordMaterial'"), NULL, LOAD_None, NULL));
+		TEXT("Material'/Game/Assets/Equipment/Shield/Materials/ShieldMaterial.ShieldMaterial'"), NULL, LOAD_None, NULL));
 
 	if (Collection)
 	{
@@ -84,7 +81,7 @@ void APlayerShield::Tick(float DeltaTime)
 void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭터에서 호출)
 {
 	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// 머테리얼 콜렉션 찾기
-		TEXT("Material'/Game/Assets/Equipment/Texture/SwordMaterial.SwordMaterial'"), NULL, LOAD_None, NULL));	
+		TEXT("Material'/Game/Assets/Equipment/Shield/Materials/ShieldMaterial.ShieldMaterial'"), NULL, LOAD_None, NULL));	
 
 	if (Collection)
 	{

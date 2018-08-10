@@ -14,8 +14,7 @@ class PROJECTVR_API UBTTask_NMChaseWalkState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 public:
+	class ANormalMonsterAIController* AI;
+	class AMotionControllerCharacter* MyCharacter;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
-	
-	
-	
 };
