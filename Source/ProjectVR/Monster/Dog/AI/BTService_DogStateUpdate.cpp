@@ -8,6 +8,7 @@
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Monster/Dog/Dog.h"
 #include "Monster/Dog/DogAIController.h"
+#include "Camera/CameraComponent.h"
 
 void UBTService_DogStateUpdate::InitializeFromAsset(UBehaviorTree & Asset)
 {
@@ -26,10 +27,10 @@ void UBTService_DogStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 		AActor* Player = Cast<AActor>(AI->BBComponent->GetValueAsObject(TEXT("Player")));
 		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
 		ADog* RagdollDog = Cast<ADog>(AI->GetPawn());
-
+		
 		if (RagdollDog && MyCharacter)
 		{
-			Distance = FVector::Distance(RagdollDog->GetActorLocation(), Player->GetActorLocation());
+			Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
 
 			DistanceWithLand = AI->BBComponent->GetValueAsFloat("DistanceWithLand");
 			//UE_LOG(LogClass, Warning, TEXT("%f"), Distance);
@@ -42,11 +43,16 @@ void UBTService_DogStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			case EDogState::Chase:
 				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				break;
-			case EDogState::Circle:
-				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
-				break;
 			case EDogState::Battle:
-				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+
+				if (Distance > 400.0f)
+				{
+					RagdollDog->CurrentDogState = EDogState::Chase;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
+					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+				}
 				break;
 			case EDogState::Hurled:
 				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;

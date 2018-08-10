@@ -38,6 +38,8 @@ public:
 		EDogAnimState CurrentDogAnimState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EDogJumpState CurrentDogJumpState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EDogCircleState CurrentDogCircleState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;

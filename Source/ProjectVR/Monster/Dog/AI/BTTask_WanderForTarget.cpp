@@ -33,12 +33,12 @@ EBTNodeResult::Type UBTTask_WanderForTarget::ExecuteTask(UBehaviorTreeComponent 
 
 				if (Rotcheck == 1)
 				{
-					time = 0.5f;
+					time = 0.3f;
 					//RagdollDog->CurrentDogAnimState = EDogAnimState::RightSideWalk;
 				}
 				else if (Rotcheck == 2)
 				{
-					time = -0.5f;
+					time = -0.3f;
 					//RagdollDog->CurrentDogAnimState = EDogAnimState::LeftSideWalk;
 				}
 

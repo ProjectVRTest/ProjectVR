@@ -109,6 +109,7 @@ void ADog::BeginPlay()
 	CurrentDogState = EDogState::Idle;
 	CurrentDogAnimState = EDogAnimState::Idle;
 	CurrentDogJumpState = EDogJumpState::Nothing;
+	CurrentDogCircleState = EDogCircleState::Nothing;
 
 	if (PawnSensing)
 	{
@@ -123,6 +124,77 @@ void ADog::BeginPlay()
 void ADog::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	/*if (CurrentDogState == EDogState::Battle)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Battle"));
+	}
+	else if (CurrentDogState == EDogState::Chase)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Chase  %f"), GetCharacterMovement()->MaxWalkSpeed);
+	}
+	else if (CurrentDogState == EDogState::Circle)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Circle"));
+	}
+	else if (CurrentDogState == EDogState::Death)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Death"));
+	}
+	else if (CurrentDogState == EDogState::Hurled)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Hurled"));
+	}
+	else if (CurrentDogState == EDogState::Idle)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Idle"));
+	}
+	else if (CurrentDogState == EDogState::Nothing)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Nothing"));
+	}*/
+
+	if (CurrentDogAnimState == EDogAnimState::SideWalk)
+	{
+		UE_LOG(LogTemp, Log, TEXT("SideWalk"));
+	}
+	else if (CurrentDogAnimState == EDogAnimState::JumpAttack)
+	{
+		UE_LOG(LogTemp, Log, TEXT("JumpAttack"));
+
+		if (CurrentDogJumpState == EDogJumpState::JumpStart)
+		{
+			UE_LOG(LogTemp, Log, TEXT("JumpStart"));
+		}
+		else if (CurrentDogJumpState == EDogJumpState::Nothing)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Nothing"));
+		}
+		else if (CurrentDogJumpState == EDogJumpState::JumpEnd)
+		{
+			UE_LOG(LogTemp, Log, TEXT("JumpEnd"));
+		}
+		else if (CurrentDogJumpState == EDogJumpState::JumpRoof)
+		{
+			UE_LOG(LogTemp, Log, TEXT("JumpRoof"));
+		}
+	}
+	else if(CurrentDogAnimState == EDogAnimState::Nothing)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Nothing"));
+	}
+	else if (CurrentDogAnimState == EDogAnimState::Idle)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Idle"));
+	}
+	else if (CurrentDogAnimState == EDogAnimState::Run)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Run"));
+	}
+	
+	
+	
+
 	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, GetCapsuleComponent()->GetComponentRotation().Yaw, 0.0f));
 
 	FFindFloorResult FloorDistance;;
@@ -225,7 +297,7 @@ void ADog::OnSeePlayer(APawn * Pawn)
 			CurrentDogState = EDogState::Chase;
 			CurrentDogAnimState = EDogAnimState::Run;
 			CurrentDogJumpState = EDogJumpState::Nothing;
-
+			CurrentDogCircleState = EDogCircleState::Nothing;
 			AI->BBComponent->SetValueAsObject("Player", Pawn);
 			GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 
