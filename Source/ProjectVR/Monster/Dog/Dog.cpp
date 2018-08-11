@@ -91,6 +91,7 @@ ADog::ADog()
 	MaxHP = 1.0f;
 	CurrentHP = MaxHP;
 	bIsDeath = false;
+	bIsDetach = false;
 
 	GetMesh()->SetSimulatePhysics(false);
 	GetMesh()->SetCollisionProfileName("Ragdoll");
@@ -154,7 +155,15 @@ void ADog::Tick(float DeltaTime)
 		UE_LOG(LogTemp, Log, TEXT("Nothing"));
 	}*/
 
-	if (CurrentDogAnimState == EDogAnimState::SideWalk)
+	if (CurrentDogAnimState == EDogAnimState::Idle)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Idle"));
+	}
+	else if (CurrentDogAnimState == EDogAnimState::Run)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Run"));
+	}
+	/*if (CurrentDogAnimState == EDogAnimState::SideWalk)
 	{
 		UE_LOG(LogTemp, Log, TEXT("SideWalk"));
 
@@ -203,7 +212,7 @@ void ADog::Tick(float DeltaTime)
 	else if (CurrentDogAnimState == EDogAnimState::Run)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Run"));
-	}
+	}*/
 	
 	
 	
@@ -227,6 +236,7 @@ void ADog::Tick(float DeltaTime)
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);
 			GetCapsuleComponent()->SetSimulatePhysics(false);		// #1
 			OnLandFlag = false;		// #2
+			AI->BBComponent->SetValueAsBool("OnLandFlag", !OnLandFlag);
 		}
 	}
 
@@ -257,7 +267,7 @@ void ADog::Tick(float DeltaTime)
 		}
 		else
 		{
-			if (prelinear < 300 && preangular < 400)		// 전 속도의 최소한계 - GetPhysicsVelocity는 역으로 이동하면 값이 작아짐 -> 전과 비교를해서 낙차가 작으면 포인트 감소
+			if (point > 0 && prelinear < 300 && preangular < 400)		// 전 속도의 최소한계 - GetPhysicsVelocity는 역으로 이동하면 값이 작아짐 -> 전과 비교를해서 낙차가 작으면 포인트 감소
 				point--;
 		}
 
@@ -266,11 +276,18 @@ void ADog::Tick(float DeltaTime)
 
 		if (point >= 8 || bpunchDetach)
 		{
+			CurrentDogState = EDogState::Hurled;
+			CurrentDogAnimState = EDogAnimState::Nothing;
+			CurrentDogJumpState = EDogJumpState::Nothing;
+			CurrentDogCircleState = EDogCircleState::Nothing;
+
 			point = 0;
 			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// 뗌
 			AttachActor = nullptr;		// 개의 붙은 액터 초기화
 			bIsAttack = false;			// 공격상태 아님/
 			bpunchDetach = false;
+			bIsDetach = true;
+
 			// 캐릭터의 오른손의 붙어있는 액터를 초기화
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 			Character->RightHand->AttachDog = nullptr;
@@ -305,7 +322,7 @@ void ADog::OnSeePlayer(APawn * Pawn)
 	{
 		ADogAIController* AI = Cast<ADogAIController>(GetController());
 
-		if (AI && !AI->BBComponent->GetValueAsObject("Player"))
+		if ( AI && !AI->BBComponent->GetValueAsObject("Player"))
 		{
 			Target = Pawn;
 			CurrentDogState = EDogState::Chase;
@@ -314,7 +331,6 @@ void ADog::OnSeePlayer(APawn * Pawn)
 			CurrentDogCircleState = EDogCircleState::Nothing;
 			AI->BBComponent->SetValueAsObject("Player", Pawn);
 			GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-
 		}
 	}
 }
@@ -342,6 +358,8 @@ float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControll
 		bIsDeath = true;
 		bpunchDetach = true;
 		UE_LOG(LogTemp, Log, TEXT("Death!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
+
+		AI->BBComponent->SetValueAsBool("DeathFlag", bIsDeath);
 	}
 
 	return Damage;

@@ -34,13 +34,13 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		CurrentFalling = RagdollDog->CurrentFalling;
 
-		if (RagdollDog->AttachActor)
+		/*if (RagdollDog->AttachActor)
 		{
 			RagdollDog->CurrentDogState = EDogState::Battle;
 			RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
 			RagdollDog->CurrentDogJumpState = EDogJumpState::JumpRoof;
 			RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
-		}
+		}*/
 		//LookAtRotator = RagdollDog->LookAtRotator;
 
 		if (CurrentFalling && PreviousFalling)
@@ -52,13 +52,44 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		{
 			RagdollDog->GetCharacterMovement()->ComputeFloorDist(RagdollDog->GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34, 0);
 
-			if (FloorDistance.FloorDist < 200.0f)
+			if (FloorDistance.FloorDist < 3.0f)
 			{
-				//UE_LOG(LogClass, Warning, TEXT("Zennaro KaTuSSo"));
-				RagdollDog->CurrentDogState = EDogState::Chase;
-				RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
-				RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
-				RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+				if (RagdollDog->bIsDeath)
+				{
+					RagdollDog->CurrentDogState = EDogState::Death;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
+					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+				}
+				else if(RagdollDog->bIsDetach)
+				{
+					RagdollDog->CurrentDogState = EDogState::Hurled;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::StandUp;
+					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+
+					RagdollDog->bIsDetach = false;
+				}
+				else if (!RagdollDog->AttachActor)
+				{
+					AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(RagdollDog->Target);
+					Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+
+					if (Distance > 400.0f)
+					{
+						RagdollDog->CurrentDogState = EDogState::Chase;
+						RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
+						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
+						RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+					}
+					else if (Distance <= 400.0f)
+					{
+						RagdollDog->CurrentDogState = EDogState::Battle;
+						RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
+						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
+						RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+					}
+				}
 			}
 		}
 		PreviousFalling = CurrentFalling;
@@ -84,7 +115,6 @@ void UDogAnimInstance::AnimNotify_JumpStart(UAnimNotify * Notify)
 				GoalVector,
 				0,
 				0.5f);
-			UE_LOG(LogClass, Warning, TEXT("X : %f Y : %f Z :%f"), LaunchVector.X, LaunchVector.Y, LaunchVector.Z);
 			RagdollDog->LaunchCharacter(LaunchVector, true, true);
 		}
 	}

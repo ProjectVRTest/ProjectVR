@@ -102,6 +102,8 @@ void ALeftHandMotionController::BeginPlay()
 	PotionBag = GetWorld()->SpawnActor<APotionBag>(PotionBag->StaticClass(), PotionBagAttachScene->GetComponentLocation(), PotionBagAttachScene->GetComponentRotation(), SpawnActorOption);
 	PotionBag->AttachToComponent(PotionBagAttachScene, AttachRules);
 
+	GrabSphere->OnComponentBeginOverlap.AddDynamic(this, &ALeftHandMotionController::OnComponentBeginOverlap);
+
 	//기본 메쉬가 오른쪽으로 돌아가 잇으므로
 	//왼손으로 표현하기 위해 크기와 각도를 조정해준다.
 	if (HandMesh)
@@ -197,8 +199,7 @@ AActor * ALeftHandMotionController::GetActorNearHand()
 
 	for (AActor* OverlappingActor : OverlappingActors) //배열에 담겨있는 액터들을 돌면서
 	{
-		if (OverlappingActor->ActorHasTag("DisregardForRightHand") || OverlappingActor->ActorHasTag("Character")
-			|| OverlappingActor->ActorHasTag("RightHand") || OverlappingActor->ActorHasTag("LeftHand")) //안에 담겨 있는 액터가 캐릭터, 오른손, 검, 방패이면 
+		if (OverlappingActor->ActorHasTag("DisregardForRightHand") || OverlappingActor->ActorHasTag("DisregardForLeftHand")) //안에 담겨 있는 액터가 캐릭터, 오른손, 검, 방패이면 
 		{
 			continue; //무시하고 다음번 배열로 속행한다.
 		}
@@ -217,15 +218,8 @@ AActor * ALeftHandMotionController::GetActorNearHand()
 
 void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
-	{
-		return;
-	}
-
 	if (OtherActor->ActorHasTag("Dog"))
 	{
-		UE_LOG(LogTemp, Log, TEXT("%f"), GrabSphere->GetPhysicsLinearVelocity().Size());
-	
 		if (GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
 		{
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -244,20 +238,24 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 		HandTouchActorFlag = true;					// 손에서 물체와 부딪혔다.
 		return;
 	}
+
+	if (OtherActor->ActorHasTag("DisregardForLeftHand"))
+	{
+		return;
+	}
 }
 
 void ALeftHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-
-	if (OtherActor->ActorHasTag("DisregardForRightHand") || OtherActor->ActorHasTag("Character") || OtherActor->ActorHasTag("RightHand") || OtherActor->ActorHasTag("LeftHand"))
-	{
-		return;
-	}
 	if (OtherActor->ActorHasTag("Door"))			// 문에서 오버랩 엔드 되면 실행
 	{
 		VisibleShieldFlag = true;					// 방패를 볼 수 있다.
 		HandTouchActorFlag = false;					// 손에서 물체와 부딪히지 않았다.
 		Shield->SetActorHiddenInGame(false);		// 방패를 숨기지 않는다.(보이게 한다)
+		return;
+	}
+	if (OtherActor->ActorHasTag("DisregardForLeftHand"))
+	{
 		return;
 	}
 }
