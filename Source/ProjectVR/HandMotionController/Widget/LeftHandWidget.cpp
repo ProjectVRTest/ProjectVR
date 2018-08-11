@@ -40,7 +40,15 @@ void ULeftHandWidget::NativeConstruct()
 
 		if (MyCharacter)
 		{
-			MaxHP = MyCharacter->MaxHp; 
+			/*MaxHP = MyCharacter->CurrentHp / MyCharacter->MaxHp;
+			CurrentHP = MaxHP;
+
+			MaxStamina = MyCharacter->CurrentStamina / MyCharacter->MaxStamina;
+			CurrentStamina = MaxStamina;
+
+			VirtualHP = CurrentHP;
+			VirtualStamina = CurrentStamina;
+			UE_LOG(LogTemp, Log, TEXT("Success!!!!!!!!!!!!!!!!!!!!!!!!  %f / %f"), CurrentHP, MaxHP);*/
 		}
 	}
 
@@ -77,6 +85,16 @@ void ULeftHandWidget::NativeTick(const FGeometry & MyGeometry, float InDeltaTime
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
+	VirtualHP = MyCharacter->CurrentHp / MyCharacter->MaxHp;
+
+	if (VirtualHP >= 1.0f)
+		VirtualHP = 1.0f;
+
+	VirtualStamina = MyCharacter->CurrentStamina / MyCharacter->MaxStamina;
+	
+	ForwardHP->SetPercent(VirtualHP);
+
+	UE_LOG(LogTemp, Log, TEXT("%f --------------- %f"), VirtualHP, CurrentHP);
 	// 가상과 현재 변수가 존재하여, 먼저 가상변수를 증감시키고 현재변수를 증감변화량에 맞춰 가상변수까지 변화시킨다.
 
 	// 스테미너 증감
@@ -106,6 +124,7 @@ void ULeftHandWidget::NativeTick(const FGeometry & MyGeometry, float InDeltaTime
 			ChangOfStamina = 0.0f;		// 스테미너 변화량 0.0
 		}			
 	}
+
 
 	// 체력 증감
 	if (CurrentHP != VirtualHP)			// 현재와 가상 HP가 다를 때 실행

@@ -131,7 +131,16 @@ void AMotionControllerCharacter::BeginPlay()
 void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//UE_LOG(LogClass, Warning, TEXT("\n Player pitch : %f \nYaw : %f \n Roll : %f\n "), GetActorRotation().Pitch, GetActorRotation().Yaw, GetActorRotation().Roll);
+
+	if (CurrentHp > 100.0f)
+	{
+		CurrentHp = 100.0f;
+	}
+	if (CurrentStamina > 100.0f)
+	{
+		CurrentStamina = 100.0f;
+	}
+
 	//UE_LOG(LogClass, Warning, TEXT("Left2 ------ %f / %f / %f"), StandardAngle, Min, Max);
 	//if (SpringArm)
 	//{
@@ -198,6 +207,7 @@ void AMotionControllerCharacter::SetupPlayerInputComponent(UInputComponent* Play
 // 오파시티값이 있어도 항상 그랩상태로 있는다고 가정할 때
 void AMotionControllerCharacter::GrabLeftOn()
 {
+	
 	// 왼손으로 할수 있는것은 아무것도 없으므로 LeftHand->GrabActor();를 빼는거 고려해야함, 그런데 문을 두손으로 연다고하면 조건문 줘서 문이 아닐때는 걸러줘야함
 
 	GrabState = E_HandState::Grab;
@@ -427,6 +437,7 @@ void AMotionControllerCharacter::DamageTimer()
 {
 	InvincibleTimeOn = false;			// 무적시간 비활성화
 }
+
 
 bool AMotionControllerCharacter::PlayBloodyOverlay()
 {

@@ -1,12 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "BTTask_SetChase.h"
-
+#include "BTTask_SetDeath.h"
 #include "Monster/Dog/Dog.h"
 #include "Monster/Dog/DogAIController.h"
-#include "GameFramework/CharacterMovementComponent.h"
 
-EBTNodeResult::Type UBTTask_SetChase::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
+EBTNodeResult::Type UBTTask_SetDeath::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
 	ADogAIController* AI = Cast<ADogAIController>(OwnerComp.GetAIOwner());
 
@@ -16,8 +14,8 @@ EBTNodeResult::Type UBTTask_SetChase::ExecuteTask(UBehaviorTreeComponent & Owner
 
 		if (Dog)
 		{
-			Dog->CurrentDogState = EDogState::Chase;
-			Dog->CurrentDogAnimState = EDogAnimState::Run;
+			Dog->CurrentDogState = EDogState::Death;
+			Dog->CurrentDogAnimState = EDogAnimState::Nothing;
 			Dog->CurrentDogJumpState = EDogJumpState::Nothing;
 			Dog->CurrentDogCircleState = EDogCircleState::Nothing;
 		}

@@ -63,6 +63,7 @@ public:
 	FTimerHandle HitBloodyTimerHandle;
 	FTimerHandle SetIdleTimerHandle;
 
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HP")
 		float MaxHp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HP")

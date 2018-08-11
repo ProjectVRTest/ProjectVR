@@ -16,6 +16,8 @@ class PROJECTVR_API UDogAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 	
 public:
+	float Distance;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EDogState CurrentDogState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimState")
