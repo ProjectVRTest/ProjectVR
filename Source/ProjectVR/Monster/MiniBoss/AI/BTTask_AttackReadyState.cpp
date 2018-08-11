@@ -20,18 +20,18 @@ EBTNodeResult::Type UBTTask_AttackReadyState::ExecuteTask(UBehaviorTreeComponent
 
 			if (RandomAttack <= 4)
 			{
-				MiniBoss->CurrentAttackState = EMonsterAttackState::ParryingAttack;
-				MiniBoss->CurrentAnimState = EMonsterAnimState::Wait;
+				MiniBoss->CurrentAttackState = EMiniBossAttackState::ParryingAttack;
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::Wait;
 			}
 			else if (RandomAttack > 4 && RandomAttack < 8)
 			{
-				MiniBoss->CurrentAttackState = EMonsterAttackState::DefaultAttack;
-				MiniBoss->CurrentAnimState = EMonsterAnimState::Wait;
+				MiniBoss->CurrentAttackState = EMiniBossAttackState::DefaultAttack;
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::Wait;
 			}
 			else
 			{
-				MiniBoss->CurrentAttackState = EMonsterAttackState::ParryingAttack;
-				MiniBoss->CurrentAnimState = EMonsterAnimState::Wait;
+				MiniBoss->CurrentAttackState = EMiniBossAttackState::ParryingAttack;
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::Wait;
 			}
 
 		}

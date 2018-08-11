@@ -40,7 +40,7 @@ void UBTTask_JumpAttackState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8
 
 		if (CurrentFalling == true && PreviousFalling == true)
 		{
-			MiniBoss->CurrentJumpState = EMonsterJumpState::JumpLoop;
+			MiniBoss->CurrentJumpState = EMiniBossJumpState::JumpLoop;
 		}
 
 		if (CurrentFalling == false && PreviousFalling == true)
@@ -49,7 +49,7 @@ void UBTTask_JumpAttackState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8
 
 			if (FloorDistance.FloorDist < 250.0f)
 			{
-				MiniBoss->CurrentJumpState = EMonsterJumpState::JumpLand;
+				MiniBoss->CurrentJumpState = EMiniBossJumpState::JumpLand;
 				MiniBoss->JumpRunCheckFlag = true;
 				FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 			}

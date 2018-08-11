@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "State/MiniBossState/MonsterState.h"
+#include "State/MiniBossState/MiniBossState.h"
 #include "MiniBoss.generated.h"
 
 UCLASS()
@@ -28,13 +28,13 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EMonsterState CurrentState;
+		EMiniBossState CurrentState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EMonsterAnimState CurrentAnimState;
+		EMiniBossAnimState CurrentAnimState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EMonsterJumpState CurrentJumpState;
+		EMiniBossJumpState CurrentJumpState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EMonsterAttackState CurrentAttackState;
+		EMiniBossAttackState CurrentAttackState;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;
@@ -61,6 +61,8 @@ public:
 		float CurrentHP; //현재 HP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class AMiniBossWeapon* Sword;
+	float Yaw;
+	bool WalkStopFlag;
 
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn); //캐릭터를 감지하면 실행해줄 함수

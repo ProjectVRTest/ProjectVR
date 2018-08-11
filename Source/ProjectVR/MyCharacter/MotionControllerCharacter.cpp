@@ -124,14 +124,14 @@ void AMotionControllerCharacter::BeginPlay()
 		HeadBox->OnComponentBeginOverlap.AddDynamic(this, &AMotionControllerCharacter::OnHeadOverlap);		// 오버랩 이벤트를 발생시킬 수 있도록 설정
 	}
 
-	//AttackPointSet();
+	AttackPointSet();
 }
 
 // Called every frame
 void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	//UE_LOG(LogClass, Warning, TEXT("\n Player pitch : %f \nYaw : %f \n Roll : %f\n "), GetActorRotation().Pitch, GetActorRotation().Yaw, GetActorRotation().Roll);
 	//UE_LOG(LogClass, Warning, TEXT("Left2 ------ %f / %f / %f"), StandardAngle, Min, Max);
 	//if (SpringArm)
 	//{
@@ -309,81 +309,81 @@ void AMotionControllerCharacter::DashEnd()
 	GetCharacterMovement()->GroundFriction = 8.0f;
 }
 
-//void AMotionControllerCharacter::AttackPointSet()
-//{
-//	AMyTargetPoint* AttackPoint;
-//	FAttachmentTransformRules AttachRules(EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false);
-//	FVector CalculatePoint;
-//	FVector InitPoint =	Camera->GetComponentLocation();
-//	FVector Point;
-//
-//	CalculatePoint = InitPoint;
-//	CalculatePoint.X = InitPoint.X + 200.0f;
-//	Point = CalculatePoint;
-//	Point.Z = Point.Z - 248.0f;
-//
-//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-//	AttackPoints.Add(AttackPoint);
-//	AttackPoint->AttachToComponent(Camera, AttachRules);
-//
-//	CalculatePoint.X = InitPoint.X - 200.0f;
-//	Point = CalculatePoint;
-//	Point.Z = Point.Z - 248.0f;
-//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-//	AttackPoints.Add(AttackPoint);
-//	AttackPoint->AttachToComponent(Camera, AttachRules);
-//
-//	CalculatePoint = InitPoint;
-//	CalculatePoint.Y = InitPoint.Y - 200.0f;
-//	Point = CalculatePoint;
-//	Point.Z = Point.Z - 248.0f;
-//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-//	AttackPoints.Add(AttackPoint);
-//	AttackPoint->AttachToComponent(Camera, AttachRules);
-//
-//	CalculatePoint.Y = InitPoint.Y + 200.0f;
-//	Point = CalculatePoint;
-//	Point.Z = Point.Z - 248.0f;
-//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-//	AttackPoints.Add(AttackPoint);
-//	AttackPoint->AttachToComponent(Camera, AttachRules);
-//
-//	CalculatePoint = InitPoint;
-//	CalculatePoint.X = InitPoint.X + 200.0f;
-//	CalculatePoint.Y = InitPoint.Y - 200.0f;
-//	Point = CalculatePoint;
-//	Point.Z = Point.Z - 248.0f;
-//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-//	AttackPoints.Add(AttackPoint);
-//	AttackPoint->AttachToComponent(Camera, AttachRules);
-//
-//	CalculatePoint = InitPoint;
-//	CalculatePoint.X = InitPoint.X + 200.0f;
-//	CalculatePoint.Y = InitPoint.Y + 200.0f;
-//	Point = CalculatePoint;
-//	Point.Z = Point.Z - 248.0f;
-//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-//	AttackPoints.Add(AttackPoint);
-//	AttackPoint->AttachToComponent(Camera, AttachRules);
-//
-//	CalculatePoint = InitPoint;
-//	CalculatePoint.X = InitPoint.X - 200.0f;
-//	CalculatePoint.Y = InitPoint.Y - 200.0f;
-//	Point = CalculatePoint;
-//	Point.Z = Point.Z - 248.0f;
-//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-//	AttackPoints.Add(AttackPoint);
-//	AttackPoint->AttachToComponent(Camera, AttachRules);
-//
-//	CalculatePoint = InitPoint;
-//	CalculatePoint.X = InitPoint.X - 200.0f;
-//	CalculatePoint.Y = InitPoint.Y + 200.0f;
-//	Point = CalculatePoint;
-//	Point.Z = Point.Z - 248.0f;
-//	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-//	AttackPoints.Add(AttackPoint);
-//	AttackPoint->AttachToComponent(Camera, AttachRules);
-//}
+void AMotionControllerCharacter::AttackPointSet()
+{
+	AMyTargetPoint* AttackPoint;
+	FAttachmentTransformRules AttachRules(EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false);
+	FVector CalculatePoint;
+	FVector InitPoint =	Camera->GetComponentLocation();
+	FVector Point;
+
+	CalculatePoint = InitPoint;
+	CalculatePoint.X = InitPoint.X + 200.0f;
+	Point = CalculatePoint;
+	Point.Z = Point.Z - 248.0f;
+
+	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+	AttackPoints.Add(AttackPoint);
+	AttackPoint->AttachToComponent(Camera, AttachRules);
+
+	CalculatePoint.X = InitPoint.X - 200.0f;
+	Point = CalculatePoint;
+	Point.Z = Point.Z - 248.0f;
+	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+	AttackPoints.Add(AttackPoint);
+	AttackPoint->AttachToComponent(Camera, AttachRules);
+
+	CalculatePoint = InitPoint;
+	CalculatePoint.Y = InitPoint.Y - 200.0f;
+	Point = CalculatePoint;
+	Point.Z = Point.Z - 248.0f;
+	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+	AttackPoints.Add(AttackPoint);
+	AttackPoint->AttachToComponent(Camera, AttachRules);
+
+	CalculatePoint.Y = InitPoint.Y + 200.0f;
+	Point = CalculatePoint;
+	Point.Z = Point.Z - 248.0f;
+	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+	AttackPoints.Add(AttackPoint);
+	AttackPoint->AttachToComponent(Camera, AttachRules);
+
+	CalculatePoint = InitPoint;
+	CalculatePoint.X = InitPoint.X + 200.0f;
+	CalculatePoint.Y = InitPoint.Y - 200.0f;
+	Point = CalculatePoint;
+	Point.Z = Point.Z - 248.0f;
+	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+	AttackPoints.Add(AttackPoint);
+	AttackPoint->AttachToComponent(Camera, AttachRules);
+
+	CalculatePoint = InitPoint;
+	CalculatePoint.X = InitPoint.X + 200.0f;
+	CalculatePoint.Y = InitPoint.Y + 200.0f;
+	Point = CalculatePoint;
+	Point.Z = Point.Z - 248.0f;
+	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+	AttackPoints.Add(AttackPoint);
+	AttackPoint->AttachToComponent(Camera, AttachRules);
+
+	CalculatePoint = InitPoint;
+	CalculatePoint.X = InitPoint.X - 200.0f;
+	CalculatePoint.Y = InitPoint.Y - 200.0f;
+	Point = CalculatePoint;
+	Point.Z = Point.Z - 248.0f;
+	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+	AttackPoints.Add(AttackPoint);
+	AttackPoint->AttachToComponent(Camera, AttachRules);
+
+	CalculatePoint = InitPoint;
+	CalculatePoint.X = InitPoint.X - 200.0f;
+	CalculatePoint.Y = InitPoint.Y + 200.0f;
+	Point = CalculatePoint;
+	Point.Z = Point.Z - 248.0f;
+	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+	AttackPoints.Add(AttackPoint);
+	AttackPoint->AttachToComponent(Camera, AttachRules);
+}
 
 void AMotionControllerCharacter::SetAllowBreathe()
 {

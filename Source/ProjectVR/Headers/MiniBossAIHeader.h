@@ -9,3 +9,6 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "TimerManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "kismet/KismetMathLibrary.h"
+#include "MyCharacter/MotionControllerCharacter.h"
+#include "Camera/CameraComponent.h"

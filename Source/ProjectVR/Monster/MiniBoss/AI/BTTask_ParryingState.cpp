@@ -18,10 +18,10 @@ EBTNodeResult::Type UBTTask_ParryingState::ExecuteTask(UBehaviorTreeComponent & 
 		if (MiniBoss)
 		{
 			MiniBoss->IsParrying = false;
-			MiniBoss->CurrentAnimState = EMonsterAnimState::Run;
-			MiniBoss->CurrentAttackState = EMonsterAttackState::Idle;
-			MiniBoss->CurrentJumpState = EMonsterJumpState::Idle;
-			MiniBoss->CurrentState = EMonsterState::Chase;			
+			MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+			MiniBoss->CurrentAttackState = EMiniBossAttackState::Idle;
+			MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
+			MiniBoss->CurrentState = EMiniBossState::Chase;			
 		}
 	}
 	return EBTNodeResult::Succeeded;

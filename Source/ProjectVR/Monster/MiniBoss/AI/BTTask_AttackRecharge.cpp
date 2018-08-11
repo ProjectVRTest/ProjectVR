@@ -14,7 +14,7 @@ EBTNodeResult::Type UBTTask_AttackRecharge::ExecuteTask(UBehaviorTreeComponent &
 
 		if (MiniBoss)
 		{
-			MiniBoss->CurrentAnimState = EMonsterAnimState::Wait;
+			MiniBoss->CurrentAnimState = EMiniBossAnimState::Wait;
 		}
 	}
 	return EBTNodeResult::Succeeded;

@@ -49,7 +49,7 @@ APlayerSword::APlayerSword()
 	SwordCollision->SetRelativeScale3D(FVector(1.0f, 1.0f, 8.0f));
 
 	// 검 메쉬의 크기 설정
-	SwordMesh->SetRelativeScale3D(FVector(0.25f, 0.25f, 0.25f));
+	//SwordMesh->SetRelativeScale3D(FVector(0.25f, 0.25f, 0.25f));
 
 
 	Timer = 0.0f;		// 타이머 초기화
@@ -88,7 +88,7 @@ void APlayerSword::Tick(float DeltaTime)
 	Timer += DeltaTime;		// 타이머
 	if (SwordMesh->GetPhysicsLinearVelocity().Size() > 200)
 	{
-		UE_LOG(LogClass, Warning, TEXT("%0.1f"), SwordMesh->GetPhysicsLinearVelocity().Size());
+		//UE_LOG(LogClass, Warning, TEXT("%0.1f"), SwordMesh->GetPhysicsLinearVelocity().Size());
 	}
 	
 }

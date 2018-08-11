@@ -15,8 +15,8 @@ EBTNodeResult::Type UBTTask_RoarState::ExecuteTask(UBehaviorTreeComponent & Owne
 
 		if (MiniBoss)
 		{
-			MiniBoss->CurrentState = EMonsterState::Chase;
-			MiniBoss->CurrentAnimState = EMonsterAnimState::Run;
+			MiniBoss->CurrentState = EMiniBossState::Chase;
+			MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
 			return EBTNodeResult::Succeeded;
 		}
 		else

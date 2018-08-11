@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Dog.h"
 
@@ -117,7 +117,7 @@ void ADog::BeginPlay()
 	}
 
 	GetMesh()->OnComponentBeginOverlap.AddDynamic(this, &ADog::OnBodyOverlap);
-	DogAttackCollision->OnComponentBeginOverlap.AddDynamic(this, &ADog::OnHeadOverlap);		// ¿À¹ö·¦ ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ³ ¼ö ÀÖµµ·Ï ¼³Á¤
+	DogAttackCollision->OnComponentBeginOverlap.AddDynamic(this, &ADog::OnHeadOverlap);		// ì˜¤ë²„ë© ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¬ ìˆ˜ ìˆë„ë¡ ì„¤ì •
 }
 
 // Called every frame
@@ -154,7 +154,7 @@ void ADog::Tick(float DeltaTime)
 		UE_LOG(LogTemp, Log, TEXT("Nothing"));
 	}*/
 
-	if (CurrentDogAnimState == EDogAnimState::SideWalk)
+	/*if (CurrentDogAnimState == EDogAnimState::SideWalk)
 	{
 		UE_LOG(LogTemp, Log, TEXT("SideWalk"));
 
@@ -203,10 +203,7 @@ void ADog::Tick(float DeltaTime)
 	else if (CurrentDogAnimState == EDogAnimState::Run)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Run"));
-	}
-	
-	
-	
+	}*/	
 
 	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, GetCapsuleComponent()->GetComponentRotation().Yaw, 0.0f));
 
@@ -219,7 +216,7 @@ void ADog::Tick(float DeltaTime)
 	{
 		if (AI->BBComponent->GetValueAsFloat("DistanceWithLand") < 3.0f)
 		{
-			// ¶¥¿¡ ºÙÀ¸¸é ½ÇÇàµÊ -> ³¯¶ó°¡´Â ¾×¼ÇÀÌ Ãß°¡µÇ¸é #1, #2¸¸ ³²°ÜµÎ°í ³ª¸ÓÁö´Â ÅÂ½ºÅ© Ãß°¡ÇØ¼­ ½ÇÇàÇÒ °Í
+			// ë•…ì— ë¶™ìœ¼ë©´ ì‹¤í–‰ë¨ -> ë‚ ë¼ê°€ëŠ” ì•¡ì…˜ì´ ì¶”ê°€ë˜ë©´ #1, #2ë§Œ ë‚¨ê²¨ë‘ê³  ë‚˜ë¨¸ì§€ëŠ” íƒœìŠ¤í¬ ì¶”ê°€í•´ì„œ ì‹¤í–‰í•  ê²ƒ
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", false, true);
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-R-Thigh", false, true);
@@ -243,21 +240,21 @@ void ADog::Tick(float DeltaTime)
 
 	if (AttachActor)
 	{
-		// À§Ä¡ °¢µµ Á¶Á¤
+		// ìœ„ì¹˜ ê°ë„ ì¡°ì •
 		SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 		SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 
 		FVector ForceVector = GetMesh()->GetPhysicsAngularVelocity();
 		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
-		// Æ÷ÀÎÆ® ½ÄÀ¸·Î ÀÏÁ¤ È½¼ö ´©ÀûµÇ¸é °³°¡ ¶³¾îÁü 8ÀÌ Àû´çÇÔ - °¢µµ¸¸ Æ²¸é ¶³¾îÁö´Â°Í ¹æÁö
+		// í¬ì¸íŠ¸ ì‹ìœ¼ë¡œ ì¼ì • íšŸìˆ˜ ëˆ„ì ë˜ë©´ ê°œê°€ ë–¨ì–´ì§ 8ì´ ì ë‹¹í•¨ - ê°ë„ë§Œ í‹€ë©´ ë–¨ì–´ì§€ëŠ”ê²ƒ ë°©ì§€
 		if (GetMesh()->GetPhysicsLinearVelocity().Size() >= 300.0f && GetMesh()->GetPhysicsAngularVelocity().Size() >= 400.0f)
 		{
 			point++;
 		}
 		else
 		{
-			if (prelinear < 300 && preangular < 400)		// Àü ¼ÓµµÀÇ ÃÖ¼ÒÇÑ°è - GetPhysicsVelocity´Â ¿ªÀ¸·Î ÀÌµ¿ÇÏ¸é °ªÀÌ ÀÛ¾ÆÁü -> Àü°ú ºñ±³¸¦ÇØ¼­ ³«Â÷°¡ ÀÛÀ¸¸é Æ÷ÀÎÆ® °¨¼Ò
+			if (prelinear < 300 && preangular < 400)		// ì „ ì†ë„ì˜ ìµœì†Œí•œê³„ - GetPhysicsVelocityëŠ” ì—­ìœ¼ë¡œ ì´ë™í•˜ë©´ ê°’ì´ ì‘ì•„ì§ -> ì „ê³¼ ë¹„êµë¥¼í•´ì„œ ë‚™ì°¨ê°€ ì‘ìœ¼ë©´ í¬ì¸íŠ¸ ê°ì†Œ
 				point--;
 		}
 
@@ -267,24 +264,24 @@ void ADog::Tick(float DeltaTime)
 		if (point >= 8 || bpunchDetach)
 		{
 			point = 0;
-			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// ¶À
-			AttachActor = nullptr;		// °³ÀÇ ºÙÀº ¾×ÅÍ ÃÊ±âÈ­
-			bIsAttack = false;			// °ø°İ»óÅÂ ¾Æ´Ô/
+			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// ë—Œ
+			AttachActor = nullptr;		// ê°œì˜ ë¶™ì€ ì•¡í„° ì´ˆê¸°í™”
+			bIsAttack = false;			// ê³µê²©ìƒíƒœ ì•„ë‹˜/
 			bpunchDetach = false;
-			// Ä³¸¯ÅÍÀÇ ¿À¸¥¼ÕÀÇ ºÙ¾îÀÖ´Â ¾×ÅÍ¸¦ ÃÊ±âÈ­
+			// ìºë¦­í„°ì˜ ì˜¤ë¥¸ì†ì˜ ë¶™ì–´ìˆëŠ” ì•¡í„°ë¥¼ ì´ˆê¸°í™”
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 			Character->RightHand->AttachDog = nullptr;
 
-			// ³¯¶ó°¡´Â ¹æÇâ
+			// ë‚ ë¼ê°€ëŠ” ë°©í–¥
 			FVector Direction = Character->Camera->GetUpVector() + Character->Camera->GetForwardVector();
 
-			// ³¯¶ó°¡´Â ÈûÀ» Á¶Àı
+			// ë‚ ë¼ê°€ëŠ” í˜ì„ ì¡°ì ˆ
 			GetCapsuleComponent()->SetPhysicsLinearVelocity(Direction* 500.0f);
 			GetCapsuleComponent()->SetPhysicsAngularVelocity(Direction* 500.0f);
 			GetCapsuleComponent()->SetSimulatePhysics(true);
 			GetCapsuleComponent()->AddForce(Direction * 500.0f);
 
-			OnLandFlag = true;		// ¹Ù´Ú¿¡ ´ê¾ÒÀ» ¶§ ÇÑ¹ø¸¸ ½ÇÇà
+			OnLandFlag = true;		// ë°”ë‹¥ì— ë‹¿ì•˜ì„ ë•Œ í•œë²ˆë§Œ ì‹¤í–‰
 		}
 	}
 }

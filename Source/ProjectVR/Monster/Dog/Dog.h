@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -69,15 +69,15 @@ public:
 
 	UFUNCTION()
 		void OnBodyOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
-			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// ¿À¹ö·¦ÀÌº¥Æ®·Î µ¥¹ÌÁö¸¦ Àü´ŞÇÏ±âÀ§ÇÑ ÇÔ¼ö
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// ì˜¤ë²„ë©ì´ë²¤íŠ¸ë¡œ ë°ë¯¸ì§€ë¥¼ ì „ë‹¬í•˜ê¸°ìœ„í•œ í•¨ìˆ˜
 
 	UFUNCTION()
 		void OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
-			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// ¿À¹ö·¦ÀÌº¥Æ®·Î µ¥¹ÌÁö¸¦ Àü´ŞÇÏ±âÀ§ÇÑ ÇÔ¼ö
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// ì˜¤ë²„ë©ì´ë²¤íŠ¸ë¡œ ë°ë¯¸ì§€ë¥¼ ì „ë‹¬í•˜ê¸°ìœ„í•œ í•¨ìˆ˜
 
 	int point;
 	float prelinear, preangular;
 
 	UFUNCTION()
-		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// µ¥¹ÌÁö ¹Ş±â
+		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// ë°ë¯¸ì§€ ë°›ê¸°
 };

@@ -15,11 +15,11 @@ EBTNodeResult::Type UBTTask_JumpStart::ExecuteTask(UBehaviorTreeComponent & Owne
 
 		if (MiniBoss)
 		{
-			if (MiniBoss->CurrentAnimState == EMonsterAnimState::JumpAttack)
+			if (MiniBoss->CurrentAnimState == EMiniBossAnimState::JumpAttack)
 			{
-				if (MiniBoss->CurrentJumpState == EMonsterJumpState::Idle)
+				if (MiniBoss->CurrentJumpState == EMiniBossJumpState::Idle)
 				{
-					MiniBoss->CurrentJumpState = EMonsterJumpState::JumpStart;
+					MiniBoss->CurrentJumpState = EMiniBossJumpState::JumpStart;
 				}
 			}
 		}

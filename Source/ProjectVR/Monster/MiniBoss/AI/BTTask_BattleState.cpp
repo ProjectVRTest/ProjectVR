@@ -16,14 +16,14 @@ EBTNodeResult::Type UBTTask_BattleState::ExecuteTask(UBehaviorTreeComponent & Ow
 		{
 			switch (MiniBoss->CurrentAttackState)
 			{
-			case EMonsterAttackState::Idle:
+			case EMiniBossAttackState::Idle:
 				break;
-			case EMonsterAttackState::DefaultAttack:
-				MiniBoss->CurrentAnimState = EMonsterAnimState::Attack;
+			case EMiniBossAttackState::DefaultAttack:
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
 				break;
-			case EMonsterAttackState::ParryingAttack:
-				MiniBoss->CurrentState = EMonsterState::Battle;
-				MiniBoss->CurrentAnimState = EMonsterAnimState::Attack;
+			case EMiniBossAttackState::ParryingAttack:
+				MiniBoss->CurrentState = EMiniBossState::Battle;
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
 				break;
 			}
 

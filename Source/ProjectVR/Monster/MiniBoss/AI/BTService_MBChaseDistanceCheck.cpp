@@ -13,23 +13,30 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 
 	if (AI)
 	{
+		FRotator LookAt;
 		Distance = AI->BBComponent->GetValueAsFloat(DistanceBlackBoardKey);
-
+		AActor* Player = Cast<AActor>(AI->BBComponent->GetValueAsObject(TEXT("Player")));
+		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
 		AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
 
+		LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation() , MyCharacter->GetActorLocation());
+		
+		//UE_LOG(LogClass, Warning, TEXT("\nCaculate Rotator pitch : %f \nYaw : %f \n Roll : %f\n"),LookAt.Pitch,LookAt.Yaw,LookAt.Roll);
 		if (MiniBoss)
 		{
 			if (Distance > 1000.0f)
 			{
-				UE_LOG(LogClass, Warning, TEXT("점프 애드 범위 진입"));
+				//UE_LOG(LogClass, Warning, TEXT("점프 애드 범위 진입"));
 			}
-			else if(Distance <1000.0f && Distance >400.0f)
+			else if(Distance <1000.0f && Distance >500.0f)
 			{
-				UE_LOG(LogClass, Warning, TEXT("대쉬 애드 범위 진입"));
+				//UE_LOG(LogClass, Warning, TEXT("대쉬 애드 범위 진입"));
 			}
-			else if (Distance < 300.0f)
-			{
-				UE_LOG(LogClass, Warning, TEXT("대치 접근 범위 진입"));
+			else if (Distance < 500.0f)
+			{			
+				MiniBoss->WalkStopFlag = true;
+				MiniBoss->CurrentState = EMiniBossState::Battle;
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
 			}
 		}
 	}

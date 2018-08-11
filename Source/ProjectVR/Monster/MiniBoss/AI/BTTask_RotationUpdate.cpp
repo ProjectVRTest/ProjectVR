@@ -44,13 +44,13 @@ void UBTTask_RotationUpdate::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 
 				LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->GetActorLocation());
 				CurrentRot = FMath::Lerp(MiniBoss->GetActorRotation(), LookAt, 0.1f);
 
-				MiniBoss->CurrentAnimState = EMonsterAnimState::Wait;
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::Wait;
 				MiniBoss->SetActorRotation(CurrentRot);
 
 				if (UKismetMathLibrary::EqualEqual_RotatorRotator(CurrentRot, LookAt, 10.0f))
 				{
-					MiniBoss->CurrentState = EMonsterState::Battle;
-					MiniBoss->CurrentAnimState = EMonsterAnimState::AttackReady;
+					MiniBoss->CurrentState = EMiniBossState::Battle;
+					MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;
 				}
 			}
 		}

@@ -41,10 +41,10 @@ void UBTService_DogStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 				break;
 			case EDogState::Chase:
-				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 200.0f;
 				break;
 			case EDogState::Battle:
-				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 200.0f;
 
 				if (Distance > 400.0f)
 				{

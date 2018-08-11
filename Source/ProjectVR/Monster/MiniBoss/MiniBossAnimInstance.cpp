@@ -3,6 +3,7 @@
 #include "MiniBossAnimInstance.h"
 #include "Monster/MiniBoss/MiniBoss.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "MyCharacter/MotionControllerCharacter.h"
@@ -10,6 +11,8 @@
 
 #include "MyTargetPoint.h"
 #include "TimerManager.h"
+#include "MyCharacter/MotionControllerPC.h"
+#include "MyCharacter/MotionControllerPC.h"
 
 void UMiniBossAnimInstance::NativeBeginPlay()
 {
@@ -17,24 +20,54 @@ void UMiniBossAnimInstance::NativeBeginPlay()
 
 	UE_LOG(LogClass, Warning, TEXT("애니메이션 시작"));
 
-	
 }
 
 void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	AMiniBoss* Miniboss = Cast<AMiniBoss>(TryGetPawnOwner());
-
-	if (Miniboss && Miniboss->IsValidLowLevelFast())
+	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
+	FVector Velocity;
+	FRotator TestRotator;
+	if (MiniBoss && MiniBoss->IsValidLowLevelFast())
 	{
-		CurrentState = Miniboss->CurrentState;
-		CurrentAnimState = Miniboss->CurrentAnimState;
-		CurrentJumpState = Miniboss->CurrentJumpState;
-		CurrentAttackState = Miniboss->CurrentAttackState;
+		CurrentState = MiniBoss->CurrentState;
+		CurrentAnimState = MiniBoss->CurrentAnimState;
+		CurrentJumpState = MiniBoss->CurrentJumpState;
+		CurrentAttackState = MiniBoss->CurrentAttackState;
+		WalkStopFlag = MiniBoss->WalkStopFlag;
+		Yaw = MiniBoss->Yaw;
+		AMotionControllerPC* PC = Cast<AMotionControllerPC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));		
 
-		Direction = CalculateDirection(Miniboss->GetCharacterMovement()->Velocity, Miniboss->GetActorRotation());
-		Speed = Miniboss->GetCharacterMovement()->Velocity.Size();
+		if (PC)
+		{
+			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(PC->GetPawn());
+
+			if (MyCharacter)
+			{
+				FRotator LookAt, CurrentRot;
+
+				/*LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->GetActorLocation());
+				CurrentRot = FMath::Lerp(MiniBoss->GetActorRotation(), LookAt, DeltaSeconds);
+
+				MiniBoss->SetActorRotation(CurrentRot);*/		
+
+				//Velocity = MiniBoss->GetCharacterMovement()->Velocity;
+				//TestRotator = MiniBoss->GetActorRotation();
+
+				//FVector NormalVector = UKismetMathLibrary::Normal(Velocity);
+				//FRotator XNormalRotator=UKismetMathLibrary::MakeRotFromX(NormalVector);
+				//FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(TestRotator, XNormalRotator);
+				//Yaw = CompleteRotator.Yaw;
+
+				//UE_LOG(LogClass, Warning, TEXT("Yaw : %f"), Yaw);
+			}
+		}
+
+		Direction = CalculateDirection(MiniBoss->GetCharacterMovement()->Velocity, MiniBoss->GetActorRotation());
+		Speed = MiniBoss->GetCharacterMovement()->Velocity.Size();
+		
+		//UE_LOG(LogClass, Warning, TEXT("Direction : %0.1f\n Speed : %0.1f\n"), Direction, Speed);
 	}
 }
 
@@ -65,7 +98,7 @@ void UMiniBossAnimInstance::AnimNotify_JumpAttackEnd(UAnimNotify * Notify)
 
 	if (Miniboss)
 	{
-		Miniboss->CurrentJumpState = EMonsterJumpState::Idle;
-		Miniboss->CurrentAnimState = EMonsterAnimState::Run;
+		Miniboss->CurrentJumpState = EMiniBossJumpState::Idle;
+		Miniboss->CurrentAnimState = EMiniBossAnimState::Wait;
 	}
 }

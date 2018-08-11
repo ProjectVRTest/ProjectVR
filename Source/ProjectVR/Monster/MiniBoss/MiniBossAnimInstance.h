@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "State/MiniBossState/MonsterState.h"
+#include "State/MiniBossState/MiniBossState.h"
 #include "MiniBossAnimInstance.generated.h"
 
 /**
@@ -16,13 +16,13 @@ class PROJECTVR_API UMiniBossAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		EMonsterState CurrentState;
+		EMiniBossState CurrentState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		EMonsterAnimState CurrentAnimState;
+		EMiniBossAnimState CurrentAnimState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		EMonsterJumpState CurrentJumpState;
+		EMiniBossJumpState CurrentJumpState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		EMonsterAttackState CurrentAttackState;
+		EMiniBossAttackState CurrentAttackState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		FRotator LookAtRotator;
 
@@ -30,9 +30,14 @@ public:
 		float Speed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Velocity")
 		float Direction;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Yaw")
+		float Yaw;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Walk")
+		bool WalkStopFlag;
 
 	FTimerHandle AnimationChangeTimer;
 	bool IdleAnimationChangeFlag;
+	
 
 	UFUNCTION()
 		virtual void NativeBeginPlay() override;

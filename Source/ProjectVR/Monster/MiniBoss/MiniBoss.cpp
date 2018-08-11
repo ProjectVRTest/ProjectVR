@@ -30,10 +30,10 @@ AMiniBoss::AMiniBoss()
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -88.0f));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
 
-	CurrentState = EMonsterState::Idle;
-	CurrentAnimState = EMonsterAnimState::Wait;
-	CurrentJumpState = EMonsterJumpState::Idle;
-	CurrentAttackState = EMonsterAttackState::Idle;
+	CurrentState = EMiniBossState::Idle;
+	CurrentAnimState = EMiniBossAnimState::Wait;
+	CurrentJumpState = EMiniBossJumpState::Idle;
+	CurrentAttackState = EMiniBossAttackState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
@@ -76,7 +76,7 @@ AMiniBoss::AMiniBoss()
 		GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 		GetMesh()->SetAnimInstanceClass(ABP_MiniBos.Object->GeneratedClass);
 	}
-
+	GetCharacterMovement()->MaxAcceleration = 200.0f;
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
@@ -97,7 +97,8 @@ void AMiniBoss::BeginPlay()
 void AMiniBoss::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	//GLog->Log(FString::Printf(TEXT("Velocity : %0.1f"), GetCharacterMovement()->Velocity.Size()));
+	//UE_LOG(LogClass, Warning, TEXT("\n Monster pitch : %f \nYaw : %f \n Roll : %f\n "), GetActorRotation().Pitch, GetActorRotation().Yaw, GetActorRotation().Roll);
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
 	if (AI)
 	{
@@ -127,19 +128,19 @@ void AMiniBoss::OnSeeCharacter(APawn * Pawn)
 		{
 			switch (CurrentState)
 			{
-			case EMonsterState::Idle:
+			case EMiniBossState::Idle:
 				AI->BBComponent->SetValueAsObject("Player", Pawn);
 				Target = Pawn;
-				CurrentState = EMonsterState::Idle;
-				CurrentAnimState = EMonsterAnimState::Roar;
+				CurrentState = EMiniBossState::Chase;
+				CurrentAnimState = EMiniBossAnimState::Walk;
 				break;
-			case EMonsterState::Chase:
+			case EMiniBossState::Chase:
 				break;
-			case EMonsterState::Battle:
+			case EMiniBossState::Battle:
 				break;
-			case EMonsterState::Patrol:
+			case EMiniBossState::Patrol:
 				break;
-			case EMonsterState::Dead:
+			case EMiniBossState::Dead:
 				break;
 			}
 		}
@@ -157,13 +158,13 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 	if (CurrentHP < 0)
 	{
 		CurrentHP = 0;
-		CurrentState = EMonsterState::Dead;
+		CurrentState = EMiniBossState::Dead;
 	}
 
 	if (ParryingFlag)
 	{
 		IsParrying = true;
-		CurrentAnimState = EMonsterAnimState::Parrying;
+		CurrentAnimState = EMiniBossAnimState::Parrying;
 	}
 	else
 	{

@@ -20,9 +20,9 @@ APlayerShield::APlayerShield()
 	ShieldMesh->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));			// 캐릭터와의 충돌을 피하기위해서 Pawn(캐릭터)만 Overlap되도록 설정
 	SetRootComponent(ShieldMesh);
 
-	ShieldMesh->SetRelativeScale3D(FVector(-0.9f, 0.8f, 0.8f));
+	ShieldMesh->SetRelativeScale3D(FVector(-1.0f, 1.0f, 1.0f));
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shield(TEXT("StaticMesh'/Game/Assets/Equipment/Shield/Mesh/StaticMesh.StaticMesh'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shield(TEXT("StaticMesh'/Game/Assets/Equipment/Shield/Mesh/SM_Shield.SM_Shield'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (SM_Shield.Succeeded())		// 방패 메쉬를 찾았을 경우 실행
 	{
 		ShieldMesh->SetStaticMesh(SM_Shield.Object);		// 스태틱 메쉬에 방패 모양 설정

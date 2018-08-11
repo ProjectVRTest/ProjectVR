@@ -119,7 +119,7 @@ public:
 	UFUNCTION()
 		void DashEnd();
 
-	//void AttackPointSet();
+	void AttackPointSet();
 		
 	UFUNCTION()
 		void SetAllowBreathe();

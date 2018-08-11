@@ -27,16 +27,16 @@ EBTNodeResult::Type UBTTask_JumpReadyState::ExecuteTask(UBehaviorTreeComponent &
 
 			if (jumpRunValue <= 3)
 			{
-				MiniBoss->CurrentAnimState = EMonsterAnimState::JumpAttack;
-				MiniBoss->CurrentJumpState = EMonsterJumpState::JumpStart;
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::JumpAttack;
+				MiniBoss->CurrentJumpState = EMiniBossJumpState::JumpStart;
 			}
 			else
 			{
-				MiniBoss->CurrentAnimState = EMonsterAnimState::Run;
-				MiniBoss->CurrentJumpState = EMonsterJumpState::Idle;
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+				MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
 			}
 
-			if (MiniBoss->CurrentAnimState == EMonsterAnimState::Run)
+			if (MiniBoss->CurrentAnimState == EMiniBossAnimState::Walk)
 			{
 				GetWorld()->GetTimerManager().SetTimer(RunTimer, this, &UBTTask_JumpReadyState::JumpRunCheck, 5.0f, false);
 			}			
