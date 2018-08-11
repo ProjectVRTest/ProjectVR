@@ -155,14 +155,7 @@ void ADog::Tick(float DeltaTime)
 		UE_LOG(LogTemp, Log, TEXT("Nothing"));
 	}*/
 
-	if (CurrentDogAnimState == EDogAnimState::Idle)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Idle"));
-	}
-	else if (CurrentDogAnimState == EDogAnimState::Run)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Run"));
-	}
+	
 	/*if (CurrentDogAnimState == EDogAnimState::SideWalk)
 	{
 		UE_LOG(LogTemp, Log, TEXT("SideWalk"));

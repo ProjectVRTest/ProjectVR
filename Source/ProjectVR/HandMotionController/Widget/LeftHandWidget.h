@@ -30,6 +30,8 @@ public:
 	float CurrentStamina = 1.0f;
 	float VirtualStamina = 1.0f;
 	float MaxStamina = 1.0f;
+	float PreStamina;
+
 
 	/* 체력/스테미너 관련 */
 	UPROPERTY(BlueprintReadWrite, Category = "Data")

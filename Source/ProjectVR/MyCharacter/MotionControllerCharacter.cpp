@@ -132,6 +132,11 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (CurrentHp > 100.0f)
+	{
+		CurrentHp = 100.0f;
+	}
+
 	//UE_LOG(LogClass, Warning, TEXT("Left2 ------ %f / %f / %f"), StandardAngle, Min, Max);
 	//if (SpringArm)
 	//{
@@ -198,6 +203,8 @@ void AMotionControllerCharacter::SetupPlayerInputComponent(UInputComponent* Play
 // 오파시티값이 있어도 항상 그랩상태로 있는다고 가정할 때
 void AMotionControllerCharacter::GrabLeftOn()
 {
+	GetWorld()->GetTimerManager().SetTimer(Test, this, &AMotionControllerCharacter::DamageTest, 0.01f, false, 0.5f);		// 1.5초 후 무적시간을 비활성화
+
 	// 왼손으로 할수 있는것은 아무것도 없으므로 LeftHand->GrabActor();를 빼는거 고려해야함, 그런데 문을 두손으로 연다고하면 조건문 줘서 문이 아닐때는 걸러줘야함
 
 	GrabState = E_HandState::Grab;
@@ -222,6 +229,8 @@ void AMotionControllerCharacter::GrabLeftOff()
 
 void AMotionControllerCharacter::GrabRightOn()
 {
+	GetWorld()->GetTimerManager().SetTimer(Test2, this, &AMotionControllerCharacter::DamageTest2, 0.01f, false, 0.5f);		// 1.5초 후 무적시간을 비활성화
+
 	GrabState = E_HandState::Grab;
 
 	RightHand->GrabActor();
@@ -426,6 +435,16 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 void AMotionControllerCharacter::DamageTimer()
 {
 	InvincibleTimeOn = false;			// 무적시간 비활성화
+}
+
+void AMotionControllerCharacter::DamageTest()
+{
+	CurrentHp /= 2.0f;
+}
+
+void AMotionControllerCharacter::DamageTest2()
+{
+	CurrentHp *= 2.0f;
 }
 
 bool AMotionControllerCharacter::PlayBloodyOverlay()
