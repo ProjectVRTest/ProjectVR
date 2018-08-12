@@ -60,8 +60,9 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 					RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
 					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+					return;
 				}
-				else if(RagdollDog->bIsDetach)
+				else if (RagdollDog->bIsDetach)
 				{
 					RagdollDog->CurrentDogState = EDogState::Hurled;
 					RagdollDog->CurrentDogAnimState = EDogAnimState::StandUp;
@@ -69,28 +70,11 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
 
 					RagdollDog->bIsDetach = false;
-				}
-				else if (!RagdollDog->AttachActor)
-				{
-					AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(RagdollDog->Target);
-					Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
-
-					if (Distance > 400.0f)
-					{
-						RagdollDog->CurrentDogState = EDogState::Chase;
-						RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
-						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
-						RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
-					}
-					else if (Distance <= 400.0f)
-					{
-						RagdollDog->CurrentDogState = EDogState::Battle;
-						RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
-						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
-						RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
-					}
+					return;
 				}
 			}
+			
+			RagdollDog->Landing = true;
 		}
 		PreviousFalling = CurrentFalling;
 	}
@@ -106,6 +90,7 @@ void UDogAnimInstance::AnimNotify_JumpStart(UAnimNotify * Notify)
 
 		if (Target)
 		{
+			RagdollDog->bIsAttack = true;
 			RagdollDog->DogAttackCollision->SetActive(true);
 			FVector LaunchVector;
 			FVector GoalVector = Target->Camera->GetComponentLocation();

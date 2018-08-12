@@ -62,6 +62,8 @@ public:
 	bool bpunchDetach;
 	bool bIsDeath;
 	bool bIsDetach;
+	bool bOnLand;
+	bool Landing;
 
 	UFUNCTION()
 		void AttachVirtualHandWithHead();

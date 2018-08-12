@@ -94,7 +94,6 @@ void ULeftHandWidget::NativeTick(const FGeometry & MyGeometry, float InDeltaTime
 	
 	ForwardHP->SetPercent(VirtualHP);
 
-	UE_LOG(LogTemp, Log, TEXT("%f --------------- %f"), VirtualHP, CurrentHP);
 	// 가상과 현재 변수가 존재하여, 먼저 가상변수를 증감시키고 현재변수를 증감변화량에 맞춰 가상변수까지 변화시킨다.
 
 	// 스테미너 증감

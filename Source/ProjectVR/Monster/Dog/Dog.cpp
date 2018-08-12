@@ -86,7 +86,9 @@ ADog::ADog()
 	PawnSensing->SensingInterval = 0.1f;
 
 	bIsAttack = false;
-	OnLandFlag = false;
+	OnLandFlag = false;		// 물었다 떨어지고 나서 땅에 붙을때 실행되는 것들을 정의
+	bOnLand = true;			// 땅에 있는지
+	Landing = false;		// 착지인지아닌지
 
 	MaxHP = 1.0f;
 	CurrentHP = MaxHP;
@@ -125,95 +127,18 @@ void ADog::BeginPlay()
 void ADog::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	/*if (CurrentDogState == EDogState::Battle)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Battle"));
-	}
-	else if (CurrentDogState == EDogState::Chase)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Chase  %f"), GetCharacterMovement()->MaxWalkSpeed);
-	}
-	else if (CurrentDogState == EDogState::Circle)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Circle"));
-	}
-	else if (CurrentDogState == EDogState::Death)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Death"));
-	}
-	else if (CurrentDogState == EDogState::Hurled)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Hurled"));
-	}
-	else if (CurrentDogState == EDogState::Idle)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Idle"));
-	}
-	else if (CurrentDogState == EDogState::Nothing)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Nothing"));
-	}*/
-
-	
-	/*if (CurrentDogAnimState == EDogAnimState::SideWalk)
-	{
-		UE_LOG(LogTemp, Log, TEXT("SideWalk"));
-
-		if (CurrentDogCircleState == EDogCircleState::LeftCircle)
-		{
-			UE_LOG(LogTemp, Log, TEXT("LeftCircle"));
-		}
-		else if (CurrentDogCircleState == EDogCircleState::Nothing)
-		{
-			UE_LOG(LogTemp, Log, TEXT("Nothing"));
-		}
-		else if (CurrentDogCircleState == EDogCircleState::RightCircle)
-		{
-			UE_LOG(LogTemp, Log, TEXT("RightCircle"));
-		}
-	}
-	else if (CurrentDogAnimState == EDogAnimState::JumpAttack)
-	{
-		UE_LOG(LogTemp, Log, TEXT("JumpAttack"));
-
-		if (CurrentDogJumpState == EDogJumpState::JumpStart)
-		{
-			UE_LOG(LogTemp, Log, TEXT("JumpStart"));
-		}
-		else if (CurrentDogJumpState == EDogJumpState::Nothing)
-		{
-			UE_LOG(LogTemp, Log, TEXT("Nothing"));
-		}
-		else if (CurrentDogJumpState == EDogJumpState::JumpEnd)
-		{
-			UE_LOG(LogTemp, Log, TEXT("JumpEnd"));
-		}
-		else if (CurrentDogJumpState == EDogJumpState::JumpRoof)
-		{
-			UE_LOG(LogTemp, Log, TEXT("JumpRoof"));
-		}
-	}
-	else if(CurrentDogAnimState == EDogAnimState::Nothing)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Nothing"));
-	}
-	else if (CurrentDogAnimState == EDogAnimState::Idle)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Idle"));
-	}
-	else if (CurrentDogAnimState == EDogAnimState::Run)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Run"));
-	}*/
-	
-	
-	
-
 	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, GetCapsuleComponent()->GetComponentRotation().Yaw, 0.0f));
 
 	FFindFloorResult FloorDistance;;
 	GetCharacterMovement()->ComputeFloorDist(GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34, 0);
+	if (FloorDistance.FloorDist < 3.0f)
+	{
+		bOnLand = true;
+	}
+	else
+	{
+		bOnLand = false;
+	}
 
 	AI = Cast<ADogAIController>(GetController());
 
@@ -229,7 +154,6 @@ void ADog::Tick(float DeltaTime)
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);
 			GetCapsuleComponent()->SetSimulatePhysics(false);		// #1
 			OnLandFlag = false;		// #2
-			AI->BBComponent->SetValueAsBool("OnLandFlag", !OnLandFlag);
 		}
 	}
 
@@ -240,7 +164,10 @@ void ADog::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentDogJumpState", (uint8)CurrentDogJumpState);
 		AI->BBComponent->SetValueAsEnum("CurrentDogCircleState", (uint8)CurrentDogCircleState);
 		AI->BBComponent->SetValueAsFloat("DistanceWithLand", FloorDistance.FloorDist);
-
+		AI->BBComponent->SetValueAsBool("bIsAttack", bIsAttack);
+		AI->BBComponent->SetValueAsBool("bHasAttachActor", AttachActor);
+		AI->BBComponent->SetValueAsBool("bOnLand", bOnLand);
+		AI->BBComponent->SetValueAsBool("Landing", Landing);
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 	}
 

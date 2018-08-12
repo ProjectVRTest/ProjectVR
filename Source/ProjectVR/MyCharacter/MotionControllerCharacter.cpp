@@ -481,7 +481,6 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 			if (Dog)
 			{
 				RightController->AttachDog = Dog;
-				Dog->bIsAttack = true;
 				Dog->DogAttackCollision->SetActive(false);
 
 				// KeepRelative : 손의 각도가 같으면 붙는 각도도 일정함

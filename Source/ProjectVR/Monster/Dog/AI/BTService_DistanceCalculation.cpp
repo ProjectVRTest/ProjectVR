@@ -30,7 +30,7 @@ void UBTService_DistanceCalculation::TickNode(UBehaviorTreeComponent & OwnerComp
 		
 		if (RagdollDog && MyCharacter)
 		{
-			
+
 			Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
 
 			if (Distance > 400.0f)
