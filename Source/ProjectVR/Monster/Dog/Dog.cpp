@@ -129,6 +129,15 @@ void ADog::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, GetCapsuleComponent()->GetComponentRotation().Yaw, 0.0f));
 
+	if (CurrentDogAnimState == EDogAnimState::SideWalk)
+	{
+		UE_LOG(LogTemp, Log, TEXT("SideWalk1"));
+	}
+	else if (CurrentDogAnimState == EDogAnimState::Nothing)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Nothing1"));
+	}
+
 	FFindFloorResult FloorDistance;;
 	GetCharacterMovement()->ComputeFloorDist(GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34, 0);
 	if (FloorDistance.FloorDist < 3.0f)
