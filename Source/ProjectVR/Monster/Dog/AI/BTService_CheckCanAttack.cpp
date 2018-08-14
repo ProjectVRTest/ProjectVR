@@ -14,7 +14,7 @@ void UBTService_CheckCanAttack::InitializeFromAsset(UBehaviorTree & Asset)
 {
 	Super::InitializeFromAsset(Asset);
 
-	Range = 10.0f;
+	Range = 30.0f;
 }
 
 void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
@@ -28,7 +28,6 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
 		ADog* RagdollDog = Cast<ADog>(AI->GetPawn());
 
-		UE_LOG(LogTemp, Log, TEXT("Gerard Pique"));
 
 		if (RagdollDog->Landing || RagdollDog->AttachActor || RagdollDog->bIsAttack)
 			return;
@@ -55,156 +54,246 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			// 주위를 도는 경우의 수는 6가지, 개의 보는 각도랑 플레이어와 보는 각도 반전 -------------------------------------------------------------------- 주석 대기
 			if (StandardAngle <= Range && StandardAngle >= 0.0f)
 			{
-				UE_LOG(LogTemp, Log, TEXT("1"));
-				if (MonAngle >= StandardAngle && MonAngle < Min)
+				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->bIsLeftWander = true;
+					RagdollDog->bIsRightWander = false;
+
+					if (MonAngle < StandardAngle || MonAngle > Max)
+					{
+						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsRightWander = true;
+					}
 				}
-				else if (MonAngle < StandardAngle || MonAngle > Max)
+				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle || MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-				}
-				else
-				{
-					RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+					RagdollDog->bIsLeftWander = false;
+					RagdollDog->bIsRightWander = true;
 
-					if (!RagdollDog->bIsAttack)
-						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+					if (MonAngle >= StandardAngle && MonAngle < Min)
+					{
+						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsRightWander = false;
+					}
 				}
+				//else
+				//{
+				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+
+				//	if (!RagdollDog->bIsAttack)
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+
+				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+				//}
 			}
 			else if (StandardAngle >= 360.0f - Range && StandardAngle >= 0.0f)		
 			{
-				UE_LOG(LogTemp, Log, TEXT("2"));
-				if (MonAngle >= StandardAngle || MonAngle < Min)
+				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle || MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->bIsLeftWander = true;
+					RagdollDog->bIsRightWander = false;
+
+					if (MonAngle < StandardAngle && MonAngle > Max)
+					{
+						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsRightWander = true;
+					}
 				}
-				else if (MonAngle < StandardAngle && MonAngle > Max)
+				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-				}
-				else
-				{
-					RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+					RagdollDog->bIsLeftWander = false;
+					RagdollDog->bIsRightWander = true;
 
-					if (!RagdollDog->bIsAttack)
-						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+					if (MonAngle >= StandardAngle || MonAngle < Min)
+					{
+						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsRightWander = false;
+					}
 				}
+				//else
+				//{
+				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+
+				//	if (!RagdollDog->bIsAttack)
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+
+				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+				//}
 
 			}
 			else if (StandardAngle <= 180.0f + Range && StandardAngle >= 180.0f)	// 3
 			{
-				UE_LOG(LogTemp, Log, TEXT("3"));
-				if (MonAngle >= StandardAngle && MonAngle < Min)
+				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->bIsLeftWander = true;
+					RagdollDog->bIsRightWander = false;
+
+					if (MonAngle < StandardAngle && MonAngle > Max)
+					{
+						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsRightWander = true;
+					}
 				}
-				else if (MonAngle < StandardAngle && MonAngle > Max)
+				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-				}
-				else
-				{
-					RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+					RagdollDog->bIsLeftWander = false;
+					RagdollDog->bIsRightWander = true;
 
-					if (!RagdollDog->bIsAttack)
-						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+					if (MonAngle >= StandardAngle && MonAngle < Min)
+					{
+						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsRightWander = false;
+					}
 				}
+				//else
+				//{
+				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+
+				//	if (!RagdollDog->bIsAttack)
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+
+				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+				//}
 			}
 			else if (StandardAngle >= 180.0f - Range && StandardAngle <= 180.0f)	// 4
 			{
-				UE_LOG(LogTemp, Log, TEXT("4"));
-				if (MonAngle >= StandardAngle && MonAngle < Min)
+				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->bIsLeftWander = true;
+					RagdollDog->bIsRightWander = false;
+
+					if (MonAngle < StandardAngle && MonAngle > Max)
+					{
+						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsRightWander = true;
+					}
 				}
-				else if (MonAngle < StandardAngle && MonAngle > Max)
+				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-				}
-				else
-				{
-					RagdollDog->CurrentDogState = EDogState::Battle;
-					RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+					RagdollDog->bIsLeftWander = false;
+					RagdollDog->bIsRightWander = true;
 
-					if (!RagdollDog->bIsAttack)
+					if (MonAngle >= StandardAngle && MonAngle < Min)
 					{
-						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsRightWander = false;
 					}
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				}
+				//else
+				//{
+				//	RagdollDog->CurrentDogState = EDogState::Battle;
+				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+
+				//	if (!RagdollDog->bIsAttack)
+				//	{
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+				//	}
+				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+				//}
 			}
 			else if (StandardAngle < 360.0f - Range && StandardAngle > 180.0f + Range)	// 5
 			{
-				UE_LOG(LogTemp, Log, TEXT("5"));
-				if (MonAngle >= StandardAngle || MonAngle < Min)
+				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle || MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->bIsLeftWander = true;
+					RagdollDog->bIsRightWander = false;
+
+					if (MonAngle < StandardAngle && MonAngle > Max)
+					{
+						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsRightWander = true;
+					}
 				}
-				else if (MonAngle < StandardAngle && MonAngle > Max)
+				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-				}
-				else
-				{
-					RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+					RagdollDog->bIsLeftWander = false;
+					RagdollDog->bIsRightWander = true;
 
-					if (!RagdollDog->bIsAttack)
-						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+					if (MonAngle >= StandardAngle || MonAngle < Min)
+					{
+						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsRightWander = false;
+					}
 				}
+				//else
+				//{
+				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+
+				//	if (!RagdollDog->bIsAttack)
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+
+				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+				//}
 			}
 			else if (StandardAngle > 0.0f + Range && StandardAngle < 180.0f - Range)	// 6
 			{
-				UE_LOG(LogTemp, Log, TEXT("6           %f / %f / %f"), MonAngle, Min, Max);
-				if (MonAngle >= StandardAngle && MonAngle < Min)
+				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle && MonAngle < Min)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+					RagdollDog->bIsLeftWander = true;
+					RagdollDog->bIsRightWander = false;
+
+					if (MonAngle < StandardAngle || MonAngle > Max)
+					{
+						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsRightWander = true;
+					}
 				}
-				else if (MonAngle < StandardAngle || MonAngle > Max)
+				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle || MonAngle > Max)
 				{
 					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
 					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-				}
-				else
-				{
-					RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+					RagdollDog->bIsLeftWander = false;
+					RagdollDog->bIsRightWander = true;
 
-					if (!RagdollDog->bIsAttack)
-						RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+					if (MonAngle >= StandardAngle && MonAngle < Min)
+					{
+						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsRightWander = false;
+					}
 				}
+				//else
+				//{
+				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+
+				//	if (!RagdollDog->bIsAttack)
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+
+				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+				//}
 			}
 		}
 	}

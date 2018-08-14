@@ -141,6 +141,19 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 		CurrentStamina = 100.0f;
 	}
 
+	if (DogArray.Num() > 0)
+	{
+		DogArray.Shrink();	// 메모리 최적화
+		AActor** FindDog = DogArray.GetData();
+		UE_LOG(LogTemp, Log, TEXT("-----------------------------------------------^"));
+		for (int i = 0; i < DogArray.Num(); i++)
+		{
+			UE_LOG(LogTemp, Log, TEXT("%s"), *FindDog[i]->GetName());
+		}
+		UE_LOG(LogTemp, Log, TEXT("-----------------------------------------------v"));
+	}
+	
+
 	//UE_LOG(LogClass, Warning, TEXT("Left2 ------ %f / %f / %f"), StandardAngle, Min, Max);
 	//if (SpringArm)
 	//{

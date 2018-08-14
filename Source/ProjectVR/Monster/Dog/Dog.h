@@ -65,6 +65,9 @@ public:
 	bool bOnLand;
 	bool Landing;
 
+	bool bIsLeftWander;
+	bool bIsRightWander;
+
 	UFUNCTION()
 		void AttachVirtualHandWithHead();
 
@@ -83,4 +86,6 @@ public:
 
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// 데미지 받기
+
+	bool once;
 };
