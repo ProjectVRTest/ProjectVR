@@ -30,7 +30,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 		UE_LOG(LogTemp, Log, TEXT("Gerard Pique"));
 
-		if (RagdollDog->Landing)
+		if (RagdollDog->Landing || RagdollDog->AttachActor || RagdollDog->bIsAttack)
 			return;
 
 		if (RagdollDog && MyCharacter)
@@ -51,15 +51,6 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			// 0~360도 범위 -> 360도 초과시 0도부터 시작
 			Max = Max >= 360.0f ? Max - 360.0f : Max;
 			Min = Min >= 360.0f ? Min - 360.0f : Min;
-
-			if (RagdollDog->CurrentDogAnimState == EDogAnimState::SideWalk)
-			{
-				UE_LOG(LogTemp, Log, TEXT("SideWalk"));
-			}
-			else if (RagdollDog->CurrentDogAnimState == EDogAnimState::Nothing)
-			{
-				UE_LOG(LogTemp, Log, TEXT("Nothing"));
-			}
 
 			// 주위를 도는 경우의 수는 6가지, 개의 보는 각도랑 플레이어와 보는 각도 반전 -------------------------------------------------------------------- 주석 대기
 			if (StandardAngle <= Range && StandardAngle >= 0.0f)

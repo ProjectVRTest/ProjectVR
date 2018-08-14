@@ -177,6 +177,7 @@ void ADog::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsBool("bHasAttachActor", AttachActor);
 		AI->BBComponent->SetValueAsBool("bOnLand", bOnLand);
 		AI->BBComponent->SetValueAsBool("Landing", Landing);
+		AI->BBComponent->SetValueAsBool("DeathFlag", bIsDeath);
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 	}
 
@@ -185,6 +186,8 @@ void ADog::Tick(float DeltaTime)
 		// 위치 각도 조정
 		SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 		SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+
+		bOnLand = false;		// 팔에 붙어있으니까 땅에 없음
 
 		FVector ForceVector = GetMesh()->GetPhysicsAngularVelocity();
 		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -287,8 +290,6 @@ float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControll
 		bIsDeath = true;
 		bpunchDetach = true;
 		UE_LOG(LogTemp, Log, TEXT("Death!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
-
-		AI->BBComponent->SetValueAsBool("DeathFlag", bIsDeath);
 	}
 
 	return Damage;

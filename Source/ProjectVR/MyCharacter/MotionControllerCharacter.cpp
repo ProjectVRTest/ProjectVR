@@ -495,8 +495,12 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 
 				Dog->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 				Dog->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
-				//Dog->GetCharacterMovement()->DisableMovement();
-				//Dog->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
+
+				Dog->CurrentDogState = EDogState::Battle;
+				Dog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+				Dog->CurrentDogJumpState = EDogJumpState::JumpRoof;
+				Dog->CurrentDogCircleState = EDogCircleState::Nothing;
+
 				Dog->AttachActor = this;
 			}
 		}

@@ -34,15 +34,6 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		CurrentFalling = RagdollDog->CurrentFalling;
 
-		/*if (RagdollDog->AttachActor)
-		{
-			RagdollDog->CurrentDogState = EDogState::Battle;
-			RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
-			RagdollDog->CurrentDogJumpState = EDogJumpState::JumpRoof;
-			RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
-		}*/
-		//LookAtRotator = RagdollDog->LookAtRotator;
-
 		if (CurrentFalling && PreviousFalling)
 		{
 			RagdollDog->CurrentDogJumpState = EDogJumpState::JumpRoof;
@@ -54,12 +45,16 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 			if (FloorDistance.FloorDist < 3.0f)
 			{
+				RagdollDog->bOnLand = true;		// ¶¥¿¡ ÀÖÀ½
+
 				if (RagdollDog->bIsDeath)
 				{
 					RagdollDog->CurrentDogState = EDogState::Death;
 					RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
 					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
 					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+
+					PreviousFalling = CurrentFalling;
 					return;
 				}
 				else if (RagdollDog->bIsDetach)
@@ -70,11 +65,14 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
 
 					RagdollDog->bIsDetach = false;
+
+					PreviousFalling = CurrentFalling;
 					return;
 				}
+				RagdollDog->Landing = true;
 			}
 			
-			RagdollDog->Landing = true;
+			
 		}
 		PreviousFalling = CurrentFalling;
 	}
@@ -101,6 +99,7 @@ void UDogAnimInstance::AnimNotify_JumpStart(UAnimNotify * Notify)
 				0,
 				0.5f);
 			RagdollDog->LaunchCharacter(LaunchVector, true, true);
+			RagdollDog->bOnLand = false;		// ¶¥¿¡ ¾øÀ½
 		}
 	}
 }
