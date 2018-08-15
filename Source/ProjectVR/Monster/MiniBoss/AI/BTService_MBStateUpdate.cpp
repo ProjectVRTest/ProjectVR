@@ -17,16 +17,36 @@ void UBTService_MBStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 
 		if (MiniBoss && Player)
 		{
-			switch (MiniBoss->CurrentAnimState)
+			switch (MiniBoss->CurrentState)
 			{
-			case EMiniBossAnimState::Wait:	
+			case EMiniBossState::Idle:
 				break;
-			case EMiniBossAnimState::Walk:
-				MiniBoss->GetCharacterMovement()->MaxWalkSpeed = 200.0f;
+			case EMiniBossState::Chase:
+				switch (MiniBoss->CurrentAnimState)
+				{
+				case EMiniBossAnimState::Wait:
+					break;
+				case EMiniBossAnimState::Walk:
+					MiniBoss->GetCharacterMovement()->MaxWalkSpeed = 160.0f;
+					break;
+				case EMiniBossAnimState::Attack:
+					break;
+				}
 				break;
-			case EMiniBossAnimState::Attack:
+			case EMiniBossState::Battle:
+				switch (MiniBoss->CurrentAnimState)
+				{
+				case EMiniBossAnimState::Wait:
+					break;
+				case EMiniBossAnimState::Walk:
+					MiniBoss->GetCharacterMovement()->MaxWalkSpeed =100.0f;
+					break;
+				case EMiniBossAnimState::Attack:
+					break;
+				}
 				break;
 			}
+			
 
 			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
 

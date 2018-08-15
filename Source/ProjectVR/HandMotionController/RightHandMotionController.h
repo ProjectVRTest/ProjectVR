@@ -51,6 +51,8 @@ public:
 	//오른손의 상태
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		E_HandState HandState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		EHandFormState HandFormState;
 
 	//모션컨트롤러 열거형 변수 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Hand")

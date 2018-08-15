@@ -28,12 +28,6 @@ APlayerShield::APlayerShield()
 		ShieldMesh->SetStaticMesh(SM_Shield.Object);		// 스태틱 메쉬에 방패 모양 설정
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> ShieldMaterial(TEXT("Material'/Game/Assets/Equipment/Shield/Materials/ShieldMaterial.ShieldMaterial'"));
-	if (ShieldMaterial.Succeeded())
-	{
-		ShieldMesh->SetMaterial(0, ShieldMaterial.Object);
-	}
-
 	/* 위젯 컴포넌트 생성 */
 	CharacterStateWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("StateInfoWidget"));	
 	CharacterStateWidget->SetupAttachment(ShieldMesh);			// 위젯을 방패 메쉬에 붙임
@@ -59,16 +53,6 @@ void APlayerShield::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// 머테리얼 콜렉션 찾기
-		TEXT("Material'/Game/Assets/Equipment/Shield/Materials/ShieldMaterial.ShieldMaterial'"), NULL, LOAD_None, NULL));
-
-	if (Collection)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("dd %s"), *Collection->GetName());
-		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// 찾은 콜렉션을 콜렉션인스턴스에 저장
-		CollectionInstance->SetScalarParameterValue(FName("Opacity_Shield"), 0.75f);		// 'Opacity_Sword'값을 가진 파라미터 값을 세팅
-	}
-
 }
 
 // Called every frame
@@ -81,14 +65,19 @@ void APlayerShield::Tick(float DeltaTime)
 
 void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭터에서 호출)
 {
-	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// 머테리얼 콜렉션 찾기
-		TEXT("Material'/Game/Assets/Equipment/Shield/Materials/ShieldMaterial.ShieldMaterial'"), NULL, LOAD_None, NULL));	
-
-	if (Collection)
+	if (ShieldMesh)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("dd %s"), *Collection->GetName());
-		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// 찾은 콜렉션을 콜렉션인스턴스에 저장
-		CollectionInstance->SetScalarParameterValue(FName("Opacity_Shield"), opacity);		// 'Opacity_Sword'값을 가진 파라미터 값을 세팅
+		ShieldMesh->SetScalarParameterValueOnMaterials(FName(TEXT("Min")), opacity);
+		ShieldMesh->SetScalarParameterValueOnMaterials(FName(TEXT("Max")), opacity);
 	}
+	//static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// 머테리얼 콜렉션 찾기
+	//	TEXT("Material'/Game/Assets/Equipment/Shield/Materials/ShieldMaterial.ShieldMaterial'"), NULL, LOAD_None, NULL));	
+
+	//if (Collection)
+	//{
+	//	//UE_LOG(LogTemp, Warning, TEXT("dd %s"), *Collection->GetName());
+	//	CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// 찾은 콜렉션을 콜렉션인스턴스에 저장
+	//	CollectionInstance->SetScalarParameterValue(FName("Opacity_Shield"), opacity);		// 'Opacity_Sword'값을 가진 파라미터 값을 세팅
+	//}
 }
 

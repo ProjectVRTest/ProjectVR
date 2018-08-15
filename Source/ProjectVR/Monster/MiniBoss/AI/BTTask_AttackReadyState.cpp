@@ -6,35 +6,32 @@
 #include "Monster/MiniBoss/MiniBoss.h"
 
 
+void UBTTask_AttackReadyState::InitializeFromAsset(UBehaviorTree & Asset)
+{
+	Super::InitializeFromAsset(Asset);
+
+	bNotifyTick = true;
+}
+
 EBTNodeResult::Type UBTTask_AttackReadyState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
-	AMiniBossAIController* AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
+	AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
 
 	if (AI)
 	{
-		AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
+		MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
 
-		if (MiniBoss)
-		{
-			int RandomAttack = FMath::RandRange(1, 10);
-
-			if (RandomAttack <= 4)
-			{
-				MiniBoss->CurrentAttackState = EMiniBossAttackState::ParryingAttack;
-				MiniBoss->CurrentAnimState = EMiniBossAnimState::Wait;
-			}
-			else if (RandomAttack > 4 && RandomAttack < 8)
-			{
-				MiniBoss->CurrentAttackState = EMiniBossAttackState::DefaultAttack;
-				MiniBoss->CurrentAnimState = EMiniBossAnimState::Wait;
-			}
-			else
-			{
-				MiniBoss->CurrentAttackState = EMiniBossAttackState::ParryingAttack;
-				MiniBoss->CurrentAnimState = EMiniBossAnimState::Wait;
-			}
-
-		}
 	}
-	return EBTNodeResult::Succeeded;
+	return EBTNodeResult::InProgress;
+}
+
+void UBTTask_AttackReadyState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
+{
+	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+
+	if (MiniBoss)
+	{
+		MiniBoss->AddMovementInput(MiniBoss->GetActorForwardVector(), -1.0f);
+		//MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+	}
 }

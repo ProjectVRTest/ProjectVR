@@ -233,14 +233,14 @@ void AMotionControllerCharacter::GrabLeftOn()
 
 	// 처음에 그랩상태를 State::Grab으로 세팅해야함, GrabActor()함수에서 반환값 bool로 변환해야함 -> 아직 확실하지 않으므로 장비로 테스트
 	// if(잡힌게 없으면) 
-	LeftHand->Shield->ConvertOfOpacity(1.0);
+	LeftHand->Shield->ConvertOfOpacity(0);
 }
 
 void AMotionControllerCharacter::GrabLeftOff()
 {
 	GrabState = E_HandState::Open;
 	LeftHand->ReleaseActor();
-	LeftHand->Shield->ConvertOfOpacity(0.75);
+	LeftHand->Shield->ConvertOfOpacity(0.5f);
 }
 
 void AMotionControllerCharacter::GrabRightOn()
@@ -249,7 +249,7 @@ void AMotionControllerCharacter::GrabRightOn()
 
 	RightHand->GrabActor();
 
-	RightHand->Sword->ConvertOfOpacity(1.0);
+	RightHand->Sword->ConvertOfOpacity(0);
 }
 
 void AMotionControllerCharacter::GrabRightOff()
@@ -258,7 +258,7 @@ void AMotionControllerCharacter::GrabRightOff()
 
 	RightHand->ReleaseActor();
 
-	RightHand->Sword->ConvertOfOpacity(0.75);
+	RightHand->Sword->ConvertOfOpacity(0.5f);
 }
 
 void AMotionControllerCharacter::MoveForward(float Value)
@@ -494,6 +494,7 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 			if (Dog)
 			{
 				RightController->AttachDog = Dog;
+				Dog->bIsAttack = true;
 				Dog->DogAttackCollision->SetActive(false);
 
 				// KeepRelative : 손의 각도가 같으면 붙는 각도도 일정함

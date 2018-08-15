@@ -23,9 +23,9 @@ APotionBag::APotionBag()
 	PotionBagCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("PotionBagCollision"));
 	PotionBagCollision->SetupAttachment(PotionBagMesh);
 	
-	PotionBagCollision->SetRelativeLocation(FVector(1.0f, 10.0f, -55.0f));
+	PotionBagCollision->SetRelativeLocation(FVector(0, 10.0f, -50.0f));
 	PotionBagCollision->SetRelativeRotation(FRotator(0, 0, 90.0f));
-	PotionBagCollision->SetRelativeScale3D(FVector(1.0f,1.0f, 1.0f));
+	PotionBagCollision->SetRelativeScale3D(FVector(2.4f,2.8f, 2.5f));
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_PotionBag(TEXT("StaticMesh'/Game/Assets/Item/Mesh/PotionBags/Mesh/PotionBag.PotionBag'"));
 
@@ -39,7 +39,7 @@ APotionBag::APotionBag()
 	PotionCount = 5; //포션의 갯수를 5개로 정함
 	PotionBagMesh->ComponentTags.Add(TEXT("PotionBagMesh"));
 	Tags.Add(FName("PotionBag"));
-	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
 }
 
 // Called when the game starts or when spawned

@@ -41,19 +41,21 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 				FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(TestRotator, XNormalRotator);
 				MiniBoss->Yaw = CompleteRotator.Yaw;
 		
-				GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), MiniBoss->Yaw));
+				//GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), MiniBoss->Yaw));
 				if (MiniBoss)
 				{
 					if (Distance > 500.0f)
 					{
 						MiniBoss->WalkStopFlag = false;
+						MiniBoss->BackAttack = false;
 						MiniBoss->CurrentState = EMiniBossState::Chase;
-						MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+						MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;					
 					}
 
-					if (Distance < 300.0f)
+					if (Distance < 300.0f && !MiniBoss->BackAttack)
 					{
-						//MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
+						MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
+						MiniBoss->BackAttack = true;
 					}
 				}
 			}

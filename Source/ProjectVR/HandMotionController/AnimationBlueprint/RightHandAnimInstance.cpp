@@ -1,23 +1,24 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "RightHandAnimInstance.h"
 #include "HandMotionController/RightHandMotionController.h"
 
 void URightHandAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
-	AActor* Actor = GetOwningActor();//¾Ö´Ï¸ŞÀÌ¼Ç ºí·çÇÁ¸°Æ®¸¦ »ç¿ëÇÏ°í ÀÖ´Â ¾×ÅÍ¸¦ ¹İÈ¯ÇØ¼­ Actor¿¡ ÀúÀåÇÑ´Ù.
+	AActor* Actor = GetOwningActor();//ì• ë‹ˆë©”ì´ì…˜ ë¸”ë£¨í”„ë¦°íŠ¸ë¥¼ ì‚¬ìš©í•˜ê³  ìˆëŠ” ì•¡í„°ë¥¼ ë°˜í™˜í•´ì„œ Actorì— ì €ì¥í•œë‹¤.
 
-	//¾×ÅÍ°¡ ÀÖÀ¸¸é
+	//ì•¡í„°ê°€ ìˆìœ¼ë©´
 	if (Actor != nullptr && Actor->IsValidLowLevelFast()) 
 	{
-		//±¸ÇÑ ¾×ÅÍ¸¦ ARightHandMotionController·Î Çüº¯È¯ÇØ¼­ RightHandController¿¡ ÀúÀåÇÑ´Ù.
+		//êµ¬í•œ ì•¡í„°ë¥¼ ARightHandMotionControllerë¡œ í˜•ë³€í™˜í•´ì„œ RightHandControllerì— ì €ì¥í•œë‹¤.
 		ARightHandMotionController* RightHandController = Cast<ARightHandMotionController>(Actor);
 
-		if (RightHandController) //Çüº¯È¯¿¡ ¼º°øÇÏ¸é
+		if (RightHandController) //í˜•ë³€í™˜ì— ì„±ê³µí•˜ë©´
 		{
-			HandState = RightHandController->HandState; //RightHandControllerÀÌ °¡Áö°í ÀÖ´Â HandState¸¦ °¡Á®¿Í¼­ HandState¿¡ ³Ö¾îÁØ´Ù.
-			CurrentHandState = (float)(HandState) / 2.0f; //¼ÕÀÇ ¾Ö´Ï¸ŞÀÌ¼ÇÀ» Ãâ·ÂÇØÁÙ GripState °ªÀ» ±¸ÇØÁÖ±â À§ÇØ HandState°ªÀ» 2·Î ³ª´« °ªÀ» CurrentHandState¿¡ ³Ö´Â´Ù.
-			//¾Õ¿¡¼­ ±¸ÇÑ CurrentHandState¸¦ ¸ñÇ¥°ªÀ¸·Î ¼³Á¤ÇÏ°í GripState°¡ ¸ñÇ¥°ª±îÁö º¸°£ÇÏ´Â °ªÀ» GripState¿¡ ³Ö¾î¼­ ¾Ö´Ï¸ŞÀÌ¼ÇÀ» Ãâ·ÂÇØÁØ´Ù.
+			HandFormState = RightHandController->HandFormState;
+			HandState = RightHandController->HandState; //RightHandControllerì´ ê°€ì§€ê³  ìˆëŠ” HandStateë¥¼ ê°€ì ¸ì™€ì„œ HandStateì— ë„£ì–´ì¤€ë‹¤.			
+			CurrentHandState = (float)(HandState) / 2.0f; //ì†ì˜ ì• ë‹ˆë©”ì´ì…˜ì„ ì¶œë ¥í•´ì¤„ GripState ê°’ì„ êµ¬í•´ì£¼ê¸° ìœ„í•´ HandStateê°’ì„ 2ë¡œ ë‚˜ëˆˆ ê°’ì„ CurrentHandStateì— ë„£ëŠ”ë‹¤.
+			//ì•ì—ì„œ êµ¬í•œ CurrentHandStateë¥¼ ëª©í‘œê°’ìœ¼ë¡œ ì„¤ì •í•˜ê³  GripStateê°€ ëª©í‘œê°’ê¹Œì§€ ë³´ê°„í•˜ëŠ” ê°’ì„ GripStateì— ë„£ì–´ì„œ ì• ë‹ˆë©”ì´ì…˜ì„ ì¶œë ¥í•´ì¤€ë‹¤.
 			GripState = FMath::FInterpConstantTo(GripState, CurrentHandState, DeltaSeconds, InterpSpeed);
 		}
 	}

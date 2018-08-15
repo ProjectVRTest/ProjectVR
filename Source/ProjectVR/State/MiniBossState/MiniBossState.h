@@ -25,7 +25,8 @@ enum class EMiniBossAnimState : uint8
 	JumpAttack = 3 UMETA(DisplayName = "JumpAttack"),
 	AttackReady = 4 UMETA(DisplayName = "AttackReady"),
 	Attack = 5 UMETA(DisplayName = "Attack"),	
-	Parrying = 6 UMETA(DisplayName = "Parrying")
+	Parrying = 6 UMETA(DisplayName = "Parrying"),
+	BackWalk = 7 UMETA(DisplayName = "BackWalk")
 };
 
 UENUM(BlueprintType)
@@ -41,6 +42,10 @@ UENUM(BlueprintType)
 enum class EMiniBossAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
-	DefaultAttack = 1 UMETA(DisplayName = "DefaultAttack"),
-	ParryingAttack = 2 UMETA(DisplayName = "ParryingAttack")
+	RightUpLeftDown = 1 UMETA(DisplayName = "RightUpLeftDown"),
+	TwoHandWidth = 2 UMETA(DisplayName = "TwoHandWidth"),
+	Stab = 3 UMETA(DisplayName = "Stab"),
+	LongDistance = 4 UMETA(DisplayName = "LongDistance"),
+	FourCombo = 5 UMETA(DisplayName = "FourCombo"),
+	BackAttack = 6 UMETA(DisplayName = "BackAttack")
 };

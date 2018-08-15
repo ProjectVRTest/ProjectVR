@@ -14,8 +14,9 @@ class PROJECTVR_API UBTTask_AttackReadyState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 public:
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	
-	
-	
+	class AMiniBossAIController* AI;
+	class AMiniBoss* MiniBoss;
+	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;	
 };
