@@ -300,9 +300,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 								{
 									bAttack = false;		// 공격 불가
 
-									// 고정적이므로 카메라가 보는 방향보다 작으면 왼쪽으로 크면 오른쪽으로 회전할 수 있도록 해야함
-									RagdollDog->bIsLeftWander = false;
-									RagdollDog->bIsRightWander = true;
+									SetRandomCircle(RagdollDog);
 									break;
 								}
 							}
@@ -406,3 +404,20 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 	}
 
 }
+
+void UBTService_CheckCanAttack::SetRandomCircle(ADog * RagdollDog)
+{
+	int random = FMath::RandRange(0, 1);
+
+	if (random == 0)
+	{
+		RagdollDog->bIsLeftWander = false;
+		RagdollDog->bIsRightWander = true;
+	}
+	else
+	{
+		RagdollDog->bIsLeftWander = true;
+		RagdollDog->bIsRightWander = false;
+	}
+}
+
