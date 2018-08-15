@@ -22,6 +22,8 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 	ADogAIController* AI = Cast<ADogAIController>(OwnerComp.GetAIOwner());
 
+
+
 	if (AI)
 	{
 		AActor* Player = Cast<AActor>(AI->BBComponent->GetValueAsObject(TEXT("Player")));
@@ -34,20 +36,23 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 		if (RagdollDog && MyCharacter)
 		{
+			RagdollDog->bInAttackplace = false;
+			bAttack = true;
+
 			float StandardAngle = MyCharacter->Camera->GetComponentRotation().Yaw + 180.0f;		// 플레이어 기준 각도
 			float MonAngle = RagdollDog->GetActorRotation().Yaw + 180.0f;	// 개 기준 각도
 
 			float Max = StandardAngle + Range;		// 개의 공격가능 우 범위 
 			float Min = Max - (Range * 2);			// 개의 공격가능 좌 범위
 
-			// 0~360도 범위 -> 360도 초과시 0도부터 시작
+													// 0~360도 범위 -> 360도 초과시 0도부터 시작
 			Max = Max >= 360.0f ? Max - 360.0f : Max;
 			Min = Min < 0.0f ? 360.0f + Min : Min;
 
 			Max += 180.0;		// 우 범위 - 플레이어 기준을 개 기준으로 바꿈
 			Min += 180.0;		// 좌 범위 - 플레이어 기준을 개 기준으로 바꿈
 
-			// 0~360도 범위 -> 360도 초과시 0도부터 시작
+								// 0~360도 범위 -> 360도 초과시 0도부터 시작
 			Max = Max >= 360.0f ? Max - 360.0f : Max;
 			Min = Min >= 360.0f ? Min - 360.0f : Min;
 
@@ -92,7 +97,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				//}
 			}
-			else if (StandardAngle >= 360.0f - Range && StandardAngle >= 0.0f)		
+			else if (StandardAngle >= 360.0f - Range && StandardAngle >= 0.0f)
 			{
 				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle || MonAngle < Min)
 				{
@@ -188,6 +193,44 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 						RagdollDog->bIsLeftWander = false;;
 						RagdollDog->bIsRightWander = true;
 					}
+
+					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						RagdollDog->bInAttackplace = true;
+
+						ADog** Dogs = MyCharacter->DogArray.GetData();
+
+						for (int i = 0; i < MyCharacter->DogArray.Num(); i++)
+						{
+							if (Dogs[i]->bInAttackplace)		// 공격 가능 범위에 있을 때
+							{
+								if (Dogs[i] != RagdollDog)		// 자기랑 아닌거랑 비교
+								{
+									if (Dogs[i]->bIsAttack)		// 그 개가 점프공격할 때
+									{
+										bAttack = false;		// 공격 불가
+										break;
+									}
+								}
+							}
+						}
+
+						if (bAttack)
+						{
+							RagdollDog->CurrentDogState = EDogState::Battle;
+							RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+
+							if (!RagdollDog->bIsAttack)
+							{
+								RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+							}
+							RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+						}
+					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
@@ -202,18 +245,82 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 						RagdollDog->bIsLeftWander = true;;
 						RagdollDog->bIsRightWander = false;
 					}
-				}
-				//else
-				//{
-				//	RagdollDog->CurrentDogState = EDogState::Battle;
-				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
 
-				//	if (!RagdollDog->bIsAttack)
-				//	{
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-				//	}
-				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-				//}
+					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						RagdollDog->bInAttackplace = true;
+
+						ADog** Dogs = MyCharacter->DogArray.GetData();
+
+						for (int i = 0; i < MyCharacter->DogArray.Num(); i++)
+						{
+							if (Dogs[i]->bInAttackplace)		// 공격 가능 범위에 있을 때
+							{
+								if (Dogs[i] != RagdollDog)		// 자기랑 아닌거랑 비교
+								{
+									if (Dogs[i]->bIsAttack)		// 그 개가 점프공격할 때
+									{
+										bAttack = false;		// 공격 불가
+										break;
+									}
+								}
+							}
+						}
+
+						if (bAttack)
+						{
+							RagdollDog->CurrentDogState = EDogState::Battle;
+							RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+
+							if (!RagdollDog->bIsAttack)
+							{
+								RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+							}
+							RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+						}
+					}
+				}
+				else
+				{
+					RagdollDog->bInAttackplace = true;
+
+					ADog** Dogs = MyCharacter->DogArray.GetData();
+
+					for (int i = 0; i < MyCharacter->DogArray.Num(); i++)
+					{
+						if (Dogs[i]->bInAttackplace)		// 공격 가능 범위에 있을 때
+						{
+							if (Dogs[i] != RagdollDog)		// 자기랑 아닌거랑 비교
+							{
+								if (Dogs[i]->bIsAttack)		// 그 개가 점프공격할 때
+								{
+									bAttack = false;		// 공격 불가
+
+									// 고정적이므로 카메라가 보는 방향보다 작으면 왼쪽으로 크면 오른쪽으로 회전할 수 있도록 해야함
+									RagdollDog->bIsLeftWander = false;
+									RagdollDog->bIsRightWander = true;
+									break;
+								}
+							}
+						}
+					}
+
+					if (bAttack)
+					{
+						RagdollDog->CurrentDogState = EDogState::Battle;
+						RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+
+						if (!RagdollDog->bIsAttack)
+						{
+							RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+						}
+						RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+					}
+				}
 			}
 			else if (StandardAngle < 360.0f - Range && StandardAngle > 180.0f + Range)	// 5
 			{
@@ -297,5 +404,5 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			}
 		}
 	}
-	
+
 }

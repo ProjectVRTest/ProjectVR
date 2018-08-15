@@ -20,6 +20,8 @@ class PROJECTVR_API UBTService_CheckCanAttack : public UBTService_BlackboardBase
 	float store;
 
 	float Range;
+	bool bAttack;
+
 
 	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
