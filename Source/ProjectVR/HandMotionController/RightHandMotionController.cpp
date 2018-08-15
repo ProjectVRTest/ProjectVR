@@ -51,7 +51,7 @@ ARightHandMotionController::ARightHandMotionController()
 		HandMesh->SetSkeletalMesh(SK_RightHand.Object);
 	}
 
-	HandMesh->SetRelativeRotation(FRotator(-22.0f, 0, 90.0f)); //넣어준 스켈레탈 메쉬가 정면을 보도록 Roll방향으로 90도 돌린다.
+	HandMesh->SetRelativeRotation(FRotator(-90.0f, 0, 90.0f)); //넣어준 스켈레탈 메쉬가 정면을 보도록 Roll방향으로 90도 돌린다.
 	HandMesh->bGenerateOverlapEvents = true; //오버랩 이벤트가 발생할 수 있도록 켜준다.
 	HandMesh->SetCollisionProfileName(FName("OverlapAll")); //콜리전 프리셋을 OverlapOnlyPawn으로 바꿔서 Pawn은 오버랩되고 나머지는 블록되게 바꿔준다. 
 
@@ -73,6 +73,7 @@ ARightHandMotionController::ARightHandMotionController()
 	WantToGrip = true; //잡은 상태로 바꿔준다.		///////////////////////////////////////////////////////////////////////////////////
 	AttachedActor = nullptr;//손에 붙은 액터를 nullptr로 초기화한다.
 	HandState = E_HandState::Grab; //손에 상태를 Grab상태로 바꾼다.		///////////////////////////////////////////////////////////////////////////////////
+	HandFormState = EHandFormState::WeaponHandGrab;
 	Hand = EControllerHand::Right; //Hand에 Right값을 넣어준다.
 
 								   //모션컨트롤러의 MotionSource에 넣어주기위해 열거형을 이름으로 형변환해서
@@ -91,8 +92,8 @@ ARightHandMotionController::ARightHandMotionController()
 	// 포션생성 위치
 	PotionPosition = CreateDefaultSubobject<USceneComponent>(TEXT("PotionPosition"));
 	PotionPosition->SetupAttachment(HandMesh);
-	PotionPosition->SetRelativeLocation(FVector(10.925035f, -1.5f, -2.5f));
-	PotionPosition->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	PotionPosition->SetRelativeLocation(FVector(11.768803f, 0.847741f, -3.021931f));
+	PotionPosition->SetRelativeRotation(FRotator(3.364257f, -86.961861f, 177.434341f));
 
 	// 포션생성 위치
 	AttachDogPosition = CreateDefaultSubobject<USceneComponent>(TEXT("AttachDogPosition"));
@@ -105,9 +106,9 @@ ARightHandMotionController::ARightHandMotionController()
 	SwordAttachScene->SetupAttachment(HandMesh);// 생성한 검 씬컴포넌트를 HandMesh에 붙인다.
 												//붙일 검의 방향을 조절해주기위해
 
-	SwordAttachScene->SetRelativeRotation(FRotator(0, 0, 180));
-	//SwordAttachScene->SetRelativeRotation(FRotator(0, 61.0f, 180.0f)); //롤 방향으로 180도 돌리고
-	SwordAttachScene->SetRelativeLocation(FVector(10, 0, 0)); //x축으로 10만큼 이동시킨다.
+	//SwordAttachScene->SetRelativeRotation(FRotator(0.051609f, 32.97414f, -170.697067f));
+	SwordAttachScene->SetRelativeRotation(FRotator(0, 61.0f, 180.0f)); //롤 방향으로 180도 돌리고
+	SwordAttachScene->SetRelativeLocation(FVector(9.762876, -0.611591, -2.65936)); //x축으로 10만큼 이동시킨다.
 
 	VisibleSwordFlag = true; //초기에는 검을 보여준다.		///////////////////////////////////////////////////////////////////////////////////
 	HandTouchActorFlag = true; //처음에는 오른손에 검이 붙여있으므로 true로 해준다
@@ -192,6 +193,7 @@ void ARightHandMotionController::GrabActor()
 	bisRightGrab = true;
 	if (HandTouchActorFlag)//손에 액터가 부딪힌 상태이면
 	{
+		HandFormState = EHandFormState::PotionHandGrab;
 		NearestMesh = GetActorNearHand(); //근처에 있는 액터가 뭔지 판별한다.
 		if (NearestMesh) //근처에 액터가 있으면
 		{
@@ -202,10 +204,12 @@ void ARightHandMotionController::GrabActor()
 			}
 			else if (NearestMesh->ActorHasTag("PotionBag"))
 			{
+				GLog->Log(FString::Printf(TEXT("콜리전에 들어옴")));
 				APotionBag* PotionBag = Cast<APotionBag>(NearestMesh);
 
 				if (PotionBag)
 				{
+					GLog->Log(FString::Printf(TEXT("가방잇음")));
 					if (PotionBag->Potions.Num()>0)
 					{
 						FActorSpawnParameters SpawnActorOption; //액터를 스폰할때 쓰일 구조체 변수
@@ -225,14 +229,19 @@ void ARightHandMotionController::GrabActor()
 
 						if (Potion)
 						{
+							GLog->Log(FString::Printf(TEXT("가방에서 꺼낸 포션이 잇음")));
 							// 손에 붙임
 							AttachedActor = Potion;
 							//Potion->Mesh->SetSimulatePhysics(true);
 							//Potion->SetActorRelativeScale3D(FVector(0.22f, 0.15f, 0.15f));
 							Potion->Mesh->SetCollisionProfileName(TEXT("OverlapAll"));
-							Potion->SetActorRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+							Potion->SetActorRelativeScale3D(FVector(1.1f, 1.1f, 1.1f));
 							Potion->AttachToComponent(PotionPosition, AttachRules);//스폰한 검을 SwordAttachScene에 붙인다.
 							Potion->TokenCompleteDelegate.BindUObject(this, &ARightHandMotionController::HandNomalState);
+						}
+						else
+						{
+							GLog->Log(FString::Printf(TEXT("가방에서 꺼낸 포션이 없음")));
 						}
 
 						UVRGameInstance* GI = Cast<UVRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
@@ -246,6 +255,10 @@ void ARightHandMotionController::GrabActor()
 					{
 						HandNomalState();
 					}
+				}
+				else
+				{
+					GLog->Log(FString::Printf(TEXT("가방 없음")));
 				}
 			}
 			else
@@ -265,6 +278,7 @@ void ARightHandMotionController::ReleaseActor()
 	bisRightGrab = false;
 	if (AttachedActor)
 	{
+		HandFormState = EHandFormState::WeaponHandGrab;
 		WantToGrip = false;
 		VisibleSwordFlag = false;			// 단지 그랩을 풀었을 뿐. 오버랩엔드 함수에서 액터로부터 빠져나오면 true로 바꾼다.
 		if (AttachedActor->GetRootComponent()->GetAttachParent() == MotionController)

@@ -36,7 +36,7 @@ void UBTTask_MBMoveTo::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * Node
 		case EPathFollowingRequestResult::Failed:
 			break;
 		case EPathFollowingRequestResult::RequestSuccessful:
-			//GLog->Log(FString::Printf(TEXT("리퀘스트성공")));
+			GLog->Log(FString::Printf(TEXT("리퀘스트성공")));
 			GetWorld()->GetTimerManager().SetTimer(WalkTimer, this, &UBTTask_MBMoveTo::DelayStart, 0.2f);
 			break;
 		}

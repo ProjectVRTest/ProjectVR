@@ -44,7 +44,7 @@ EBTNodeResult::Type UBTTask_WanderForTarget::ExecuteTask(UBehaviorTreeComponent 
 
 				FVector Vec1 = UKismetMathLibrary::Subtract_VectorVector(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
 				FVector Vec2 = UKismetMathLibrary::RotateAngleAxis(Vec1, time, FVector(0.0f, 0.0f, 1.0f));
-
+				GLog->Log(FString::Printf(TEXT("adfasdfasdf")));
 				FVector Vec3 = MyCharacter->Camera->GetComponentLocation() + Vec2;
 
 				FRotator Rot1 = RagdollDog->GetActorRotation() + UKismetMathLibrary::RotatorFromAxisAndAngle(FVector(0.0f, 0.0f, 1.0f), time);

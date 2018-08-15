@@ -12,3 +12,10 @@ enum class E_HandState :uint8
 	CanGrab = 1 UMETA(DisplayName = "CanGrab"),
 	Grab = 2 UMETA(DisplayName = "Grab")
 };
+
+UENUM(BlueprintType)
+enum class EHandFormState : uint8
+{
+	WeaponHandGrab = 0 UMETA(DisplayName="WeaponHandGrab"),
+	PotionHandGrab = 1 UMETA(DisplayName="PotionHandGrab")
+};

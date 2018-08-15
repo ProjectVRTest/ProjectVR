@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -16,19 +16,21 @@ class PROJECTVR_API URightHandAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 public:
 	UFUNCTION()
-		virtual void NativeUpdateAnimation(float DeltaSeconds) override; //¾Ö´Ï¸ŞÀÌ¼Ç ºí·çÇÁ¸°Æ®¿¡¼­ÀÇ Tick
+		virtual void NativeUpdateAnimation(float DeltaSeconds) override; //ì• ë‹ˆë©”ì´ì…˜ ë¸”ë£¨í”„ë¦°íŠ¸ì—ì„œì˜ Tick
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HandState")
-		E_HandState HandState; //¿Ş¼Õ ÄÁÆ®·Ñ·¯ÀÇ HandState°ªÀ» ³Ö¾îÁÙ º¯¼ö
+		E_HandState HandState; //ì™¼ì† ì»¨íŠ¸ë¡¤ëŸ¬ì˜ HandStateê°’ì„ ë„£ì–´ì¤„ ë³€ìˆ˜
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HandState")
-		float GripState; // ÇöÀç ¿Ş¼Õ ÄÁÆ®·Ñ·¯ÀÇ HandState°ªÀ» Åä´ë·Î GripState¸¦ °è»êÇÑ´Ù.
-						 //HandState°ªÀÌ 0 ÀÌ¸é GripState=0
-						 //HandState°ªÀÌ 1 ÀÌ¸é GripState=0.5
-						 //HandState°ªÀÌ 2 ÀÌ¸é GripState=1
-						 //GripStateÀÇ °ª¿¡ µû¶ó ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ½ÇÇàµÈ´Ù.
+		EHandFormState HandFormState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HandState")
+		float GripState; // í˜„ì¬ ì™¼ì† ì»¨íŠ¸ë¡¤ëŸ¬ì˜ HandStateê°’ì„ í† ëŒ€ë¡œ GripStateë¥¼ ê³„ì‚°í•œë‹¤.
+						 //HandStateê°’ì´ 0 ì´ë©´ GripState=0
+						 //HandStateê°’ì´ 1 ì´ë©´ GripState=0.5
+						 //HandStateê°’ì´ 2 ì´ë©´ GripState=1
+						 //GripStateì˜ ê°’ì— ë”°ë¼ ì• ë‹ˆë©”ì´ì…˜ì´ ì‹¤í–‰ëœë‹¤.
 
-	float CurrentHandState; //¿Ş¼Õ ÄÁÆ®·Ñ·¯ÀÇ »óÅÂ°ªÀ» ¹Ş¾Æ¼­ 2·Î ³ª´«°ªÀ» ³Ö¾îÁÙ º¯¼ö
-							//2·Î ³ª´« ÀÌÀ¯´Â ¿­°ÅÇü HandStateÀÇ Ç×¸ñÀÌ 3°³ ÀÌ±â ¶§¹®
-	float InterpSpeed = 5.0f; //º¸°£ÇÒ¶§ ÃÖ´ë ¸îÃÊ µ¿¾È º¸°£ÇÒÁö Á¤ÇØÁÙ º¯¼ö
-							  //¼ö°¡ ³·À»¼ö·Ï ´À¸®°Ô º¸°£µÈ´Ù.
+	float CurrentHandState; //ì™¼ì† ì»¨íŠ¸ë¡¤ëŸ¬ì˜ ìƒíƒœê°’ì„ ë°›ì•„ì„œ 2ë¡œ ë‚˜ëˆˆê°’ì„ ë„£ì–´ì¤„ ë³€ìˆ˜
+							//2ë¡œ ë‚˜ëˆˆ ì´ìœ ëŠ” ì—´ê±°í˜• HandStateì˜ í•­ëª©ì´ 3ê°œ ì´ê¸° ë•Œë¬¸
+	float InterpSpeed = 5.0f; //ë³´ê°„í• ë•Œ ìµœëŒ€ ëª‡ì´ˆ ë™ì•ˆ ë³´ê°„í• ì§€ ì •í•´ì¤„ ë³€ìˆ˜
+							  //ìˆ˜ê°€ ë‚®ì„ìˆ˜ë¡ ëŠë¦¬ê²Œ ë³´ê°„ëœë‹¤.
 };

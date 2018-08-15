@@ -59,14 +59,21 @@ public:
 		float MaxHP; //최대 HP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float CurrentHP; //현재 HP
+	class UMaterialInterface* OpacityMaterials;
+	class UMaterialInterface* DefaultMaterials;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* AfterImageStartEffect;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* AfterImageEndEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class AMiniBossWeapon* Sword;
 	float Yaw;
 	bool WalkStopFlag;
+	bool BackAttack;
 
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn); //캐릭터를 감지하면 실행해줄 함수
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-	
 };

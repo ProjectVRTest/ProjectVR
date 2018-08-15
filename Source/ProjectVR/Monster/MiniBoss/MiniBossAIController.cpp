@@ -8,11 +8,12 @@
 #include "MiniBoss.h"
 
 #include "BehaviorTree/BehaviorTree.h"
+#include "UObject/ConstructorHelpers.h"
 
 AMiniBossAIController::AMiniBossAIController()
 {
 	BTComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTree"));
-	BBComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("Blackboard"));
+	BBComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("Blackboard"));	
 }
 
 void AMiniBossAIController::Possess(APawn * InPawn)

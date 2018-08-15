@@ -13,7 +13,8 @@ UCLASS()
 class PROJECTVR_API UBTTask_SetChase : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
-	
+
+		float Distance;
 		virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	
 	

@@ -10,5 +10,7 @@
 #include "TimerManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "kismet/KismetMathLibrary.h"
+#include "kismet/GameplayStatics.h"
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"

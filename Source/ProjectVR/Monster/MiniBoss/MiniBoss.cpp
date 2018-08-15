@@ -11,9 +11,12 @@
 #include "MiniBossAIController.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
-
+                                                           
 #include "Animation/AnimBlueprint.h"
 #include "Weapon/MiniBossWeapon.h"
+#include "Particles/ParticleSystem.h"
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 AMiniBoss::AMiniBoss()
 {
@@ -63,12 +66,36 @@ AMiniBoss::AMiniBoss()
 	JumpRunCheckFlag = true;
 	ParryingFlag = false;
 	IsParrying = false;
-
+	BackAttack = false;
 	MaxHP = 100;
 	CurrentHP = MaxHP;
 
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/Monster/MiniBoss/Effect/Materials/M_Opacity.M_Opacity'"));
+	if (M_Opacity.Succeeded())
+	{
+		OpacityMaterials = M_Opacity.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultMaterials(TEXT("Material'/Game/Assets/Monster/MiniBoss/Materials/M_MiniBoss.M_MiniBoss'"));
+	if (M_DefaultMaterials.Succeeded())
+	{
+		DefaultMaterials = M_DefaultMaterials.Object;
+	}
+
 	AIControllerClass = AMiniBossAIController::StaticClass();
 	
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageStartEffect(TEXT("ParticleSystem'/Game/Assets/Monster/MiniBoss/Effect/StartEffect.StartEffect'"));
+	if (PT_AfterImageStartEffect.Succeeded())
+	{
+		AfterImageStartEffect = PT_AfterImageStartEffect.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageEndEffect(TEXT("ParticleSystem'/Game/Assets/Monster/MiniBoss/Effect/EndEffect.EndEffect'"));
+	if (PT_AfterImageEndEffect.Succeeded())
+	{
+		AfterImageEndEffect = PT_AfterImageEndEffect.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>ABP_MiniBos(TEXT("AnimBlueprint'/Game/Blueprints/Monster/MiniBoss/Blueprints/ABP_MiniBoss.ABP_MiniBoss'"));
 
 	if (ABP_MiniBos.Succeeded())
@@ -87,6 +114,15 @@ void AMiniBoss::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.Owner = this;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+	Sword = GetWorld()->SpawnActor<AMiniBossWeapon>(Sword->StaticClass(), SpawnActorOption);
+
+	Sword->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("weapon001소켓")));
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &AMiniBoss::OnSeeCharacter);
@@ -107,7 +143,7 @@ void AMiniBoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentJumpState", (uint8)CurrentJumpState);
 		AI->BBComponent->SetValueAsEnum("CurrentAttackState", (uint8)CurrentAttackState);
 		CurrentFalling = GetCharacterMovement()->IsFalling();
-		AI->BBComponent->SetValueAsBool("CurrentFalling", CurrentFalling);		
+		AI->BBComponent->SetValueAsBool("CurrentFalling", CurrentFalling);	
 	}
 }
 
@@ -173,4 +209,3 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 
 	return Damage;
 }
-

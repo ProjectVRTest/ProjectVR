@@ -26,18 +26,12 @@ APlayerSword::APlayerSword()
 	SetRootComponent(SwordMesh);
 	SwordMesh->SetCollisionProfileName(TEXT("OverlapAll"));		// 메쉬의 콜리전 상태값을 NoCollision으로 줌.
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/Equipment/Sword/Mesh/sword.sword'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/Equipment/Sword/Mesh/CompleteSword2.CompleteSword2'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (SM_Sword.Succeeded())		// 검 메쉬를 찾았을 경우 실행
 	{
 		SwordMesh->SetStaticMesh(SM_Sword.Object);			// 스태틱 메쉬에 검 모양 설정
 	}
-
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> SwordMaterial(TEXT("Material'/Game/Assets/Equipment/Sword/Materials/SwordMaterial.SwordMaterial'"));
-	if (SwordMaterial.Succeeded())
-	{
-		SwordMesh->SetMaterial(0, SwordMaterial.Object);
-	}
-
+	
 	/* 콜리전 컴포넌트 생성 */
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));			
 	SwordCollision->SetupAttachment(SwordMesh);		// 콜리전을 검 메쉬에 붙임
@@ -64,20 +58,6 @@ void APlayerSword::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// 머테리얼 콜렉션 찾기
-		TEXT("MaterialParameterCollection'/Game/Assets/Equipment/EquipmentMaterialCollection.EquipmentMaterialCollection'"), NULL, LOAD_None, NULL));
-
-	if (Collection)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("dd %s"), *Collection->GetName());
-		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// 찾은 콜렉션을 콜렉션인스턴스에 저장
-		CollectionInstance->SetScalarParameterValue(FName("Opacity_Sword"), 0.75);		// 'Opacity_Sword'값을 가진 파라미터 값을 세팅
-	}
-
-	if (SwordCollision)
-	{
-		SwordCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerSword::OnSwordOverlap);
-	}
 }
 
 // Called every frame
@@ -129,13 +109,18 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 
 void APlayerSword::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭터에서 호출)
 {
-	static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// 머테리얼 콜렉션 찾기
-		TEXT("MaterialParameterCollection'/Game/Assets/Equipment/EquipmentMaterialCollection.EquipmentMaterialCollection'"), NULL, LOAD_None, NULL));
-
-	if (Collection)
+	if (SwordMesh)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("dd %s"), *Collection->GetName());
-		CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// 찾은 콜렉션을 콜렉션인스턴스에 저장
-		CollectionInstance->SetScalarParameterValue(FName("Opacity_Sword"), opacity);		// 'Opacity_Sword'값을 가진 파라미터 값을 세팅
+		SwordMesh->SetScalarParameterValueOnMaterials(FName(TEXT("Min")),opacity);
+		SwordMesh->SetScalarParameterValueOnMaterials(FName(TEXT("Max")), opacity);
 	}
+	//static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// 머테리얼 콜렉션 찾기
+	//	TEXT("MaterialParameterCollection'/Game/Assets/Equipment/EquipmentMaterialCollection.EquipmentMaterialCollection'"), NULL, LOAD_None, NULL));
+
+	//if (Collection)
+	//{
+	//	//UE_LOG(LogTemp, Warning, TEXT("dd %s"), *Collection->GetName());
+	//	CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// 찾은 콜렉션을 콜렉션인스턴스에 저장
+	//	CollectionInstance->SetScalarParameterValue(FName("Opacity_Sword"), opacity);		// 'Opacity_Sword'값을 가진 파라미터 값을 세팅
+	//}
 }
