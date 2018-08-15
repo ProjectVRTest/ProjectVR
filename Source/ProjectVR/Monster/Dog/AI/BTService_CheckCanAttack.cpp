@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTService_CheckCanAttack.h"
 #include "Monster/Dog/Dog.h"
@@ -34,24 +34,24 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 		if (RagdollDog && MyCharacter)
 		{
-			float StandardAngle = MyCharacter->Camera->GetComponentRotation().Yaw + 180.0f;		// ÇÃ·¹ÀÌ¾î ±âÁØ °¢µµ
-			float MonAngle = RagdollDog->GetActorRotation().Yaw + 180.0f;	// °³ ±âÁØ °¢µµ
+			float StandardAngle = MyCharacter->Camera->GetComponentRotation().Yaw + 180.0f;		// í”Œë ˆì´ì–´ ê¸°ì¤€ ê°ë„
+			float MonAngle = RagdollDog->GetActorRotation().Yaw + 180.0f;	// ê°œ ê¸°ì¤€ ê°ë„
 
-			float Max = StandardAngle + Range;		// °³ÀÇ °ø°Ý°¡´É ¿ì ¹üÀ§ 
-			float Min = Max - (Range * 2);			// °³ÀÇ °ø°Ý°¡´É ÁÂ ¹üÀ§
+			float Max = StandardAngle + Range;		// ê°œì˜ ê³µê²©ê°€ëŠ¥ ìš° ë²”ìœ„ 
+			float Min = Max - (Range * 2);			// ê°œì˜ ê³µê²©ê°€ëŠ¥ ì¢Œ ë²”ìœ„
 
-			// 0~360µµ ¹üÀ§ -> 360µµ ÃÊ°ú½Ã 0µµºÎÅÍ ½ÃÀÛ
+			// 0~360ë„ ë²”ìœ„ -> 360ë„ ì´ˆê³¼ì‹œ 0ë„ë¶€í„° ì‹œìž‘
 			Max = Max >= 360.0f ? Max - 360.0f : Max;
 			Min = Min < 0.0f ? 360.0f + Min : Min;
 
-			Max += 180.0;		// ¿ì ¹üÀ§ - ÇÃ·¹ÀÌ¾î ±âÁØÀ» °³ ±âÁØÀ¸·Î ¹Ù²Þ
-			Min += 180.0;		// ÁÂ ¹üÀ§ - ÇÃ·¹ÀÌ¾î ±âÁØÀ» °³ ±âÁØÀ¸·Î ¹Ù²Þ
+			Max += 180.0;		// ìš° ë²”ìœ„ - í”Œë ˆì´ì–´ ê¸°ì¤€ì„ ê°œ ê¸°ì¤€ìœ¼ë¡œ ë°”ê¿ˆ
+			Min += 180.0;		// ì¢Œ ë²”ìœ„ - í”Œë ˆì´ì–´ ê¸°ì¤€ì„ ê°œ ê¸°ì¤€ìœ¼ë¡œ ë°”ê¿ˆ
 
-			// 0~360µµ ¹üÀ§ -> 360µµ ÃÊ°ú½Ã 0µµºÎÅÍ ½ÃÀÛ
+			// 0~360ë„ ë²”ìœ„ -> 360ë„ ì´ˆê³¼ì‹œ 0ë„ë¶€í„° ì‹œìž‘
 			Max = Max >= 360.0f ? Max - 360.0f : Max;
 			Min = Min >= 360.0f ? Min - 360.0f : Min;
 
-			// ÁÖÀ§¸¦ µµ´Â °æ¿ìÀÇ ¼ö´Â 6°¡Áö, °³ÀÇ º¸´Â °¢µµ¶û ÇÃ·¹ÀÌ¾î¿Í º¸´Â °¢µµ ¹ÝÀü -------------------------------------------------------------------- ÁÖ¼® ´ë±â
+			// ì£¼ìœ„ë¥¼ ë„ëŠ” ê²½ìš°ì˜ ìˆ˜ëŠ” 6ê°€ì§€, ê°œì˜ ë³´ëŠ” ê°ë„ëž‘ í”Œë ˆì´ì–´ì™€ ë³´ëŠ” ê°ë„ ë°˜ì „ -------------------------------------------------------------------- ì£¼ì„ ëŒ€ê¸°
 			if (StandardAngle <= Range && StandardAngle >= 0.0f)
 			{
 				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle && MonAngle < Min)
@@ -87,7 +87,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
 
 				//	if (!RagdollDog->bIsAttack)
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart¿¡¼­ JumpStart·Î ÀÚµ¿ ¼¼ÆÃ
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStartì—ì„œ JumpStartë¡œ ìžë™ ì„¸íŒ…
 
 				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				//}
@@ -127,7 +127,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
 
 				//	if (!RagdollDog->bIsAttack)
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart¿¡¼­ JumpStart·Î ÀÚµ¿ ¼¼ÆÃ
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStartì—ì„œ JumpStartë¡œ ìžë™ ì„¸íŒ…
 
 				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				//}
@@ -168,7 +168,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
 
 				//	if (!RagdollDog->bIsAttack)
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart¿¡¼­ JumpStart·Î ÀÚµ¿ ¼¼ÆÃ
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStartì—ì„œ JumpStartë¡œ ìžë™ ì„¸íŒ…
 
 				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				//}
@@ -210,7 +210,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 				//	if (!RagdollDog->bIsAttack)
 				//	{
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart¿¡¼­ JumpStart·Î ÀÚµ¿ ¼¼ÆÃ
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStartì—ì„œ JumpStartë¡œ ìžë™ ì„¸íŒ…
 				//	}
 				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				//}
@@ -250,7 +250,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
 
 				//	if (!RagdollDog->bIsAttack)
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart¿¡¼­ JumpStart·Î ÀÚµ¿ ¼¼ÆÃ
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStartì—ì„œ JumpStartë¡œ ìžë™ ì„¸íŒ…
 
 				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				//}
@@ -290,7 +290,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
 
 				//	if (!RagdollDog->bIsAttack)
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart¿¡¼­ JumpStart·Î ÀÚµ¿ ¼¼ÆÃ
+				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStartì—ì„œ JumpStartë¡œ ìžë™ ì„¸íŒ…
 
 				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 				//}
