@@ -62,6 +62,7 @@ Build/*/**
 
 # Content Folder
 Content/Assets
+Blueprints/Maps
 
 # Built data for maps
 *_BuiltData.uasset

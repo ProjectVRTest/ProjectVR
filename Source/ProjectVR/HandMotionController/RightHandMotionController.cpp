@@ -106,9 +106,9 @@ ARightHandMotionController::ARightHandMotionController()
 	SwordAttachScene->SetupAttachment(HandMesh);// 생성한 검 씬컴포넌트를 HandMesh에 붙인다.
 												//붙일 검의 방향을 조절해주기위해
 
-	//SwordAttachScene->SetRelativeRotation(FRotator(0.051609f, 32.97414f, -170.697067f));
-	SwordAttachScene->SetRelativeRotation(FRotator(0, 61.0f, 180.0f)); //롤 방향으로 180도 돌리고
-	SwordAttachScene->SetRelativeLocation(FVector(9.762876, -0.611591, -2.65936)); //x축으로 10만큼 이동시킨다.
+	
+	SwordAttachScene->SetRelativeRotation(FRotator(0, 60.993034f, -175.082443f)); //롤 방향으로 180도 돌리고
+	SwordAttachScene->SetRelativeLocation(FVector(3.238229f, 5.621831f, -3.814407f)); //x축으로 10만큼 이동시킨다.
 
 	VisibleSwordFlag = true; //초기에는 검을 보여준다.		///////////////////////////////////////////////////////////////////////////////////
 	HandTouchActorFlag = true; //처음에는 오른손에 검이 붙여있으므로 true로 해준다

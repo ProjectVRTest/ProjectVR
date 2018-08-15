@@ -65,6 +65,7 @@ AMiniBoss::AMiniBoss()
 	JumpEndFlag = false;
 	JumpRunCheckFlag = true;
 	ParryingFlag = false;
+	AttackCompleteFlag = false;
 	IsParrying = false;
 	BackAttack = false;
 	MaxHP = 100;

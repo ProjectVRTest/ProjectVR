@@ -71,6 +71,7 @@ public:
 	float Yaw;
 	bool WalkStopFlag;
 	bool BackAttack;
+	bool AttackCompleteFlag;
 
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn); //캐릭터를 감지하면 실행해줄 함수
