@@ -28,4 +28,13 @@ class PROJECTVR_API UBTService_CheckCanAttack : public UBTService_BlackboardBase
 	
 	UFUNCTION()
 		void SetRandomCircle(ADog* RagdollDog);
+
+	UFUNCTION()
+		void AttackableRange(AMotionControllerCharacter* MyCharacter, ADog* RagdollDog);
+
+	UFUNCTION()
+		void LeftRange(ADogAIController* AI, ADog * RagdollDog);
+
+	UFUNCTION()
+		void RightRange(ADogAIController* AI, ADog * RagdollDog);
 };

@@ -37,7 +37,6 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 		if (RagdollDog && MyCharacter)
 		{
 			RagdollDog->bInAttackplace = false;
-			bAttack = true;
 
 			float StandardAngle = MyCharacter->Camera->GetComponentRotation().Yaw + 180.0f;		// 플레이어 기준 각도
 			float MonAngle = RagdollDog->GetActorRotation().Yaw + 180.0f;	// 개 기준 각도
@@ -61,132 +60,136 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			{
 				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle && MonAngle < Min)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
-					RagdollDog->bIsLeftWander = true;
-					RagdollDog->bIsRightWander = false;
+					RightRange(AI, RagdollDog);
 
 					if (MonAngle < StandardAngle || MonAngle > Max)
 					{
 						RagdollDog->bIsLeftWander = false;;
 						RagdollDog->bIsRightWander = true;
 					}
+
+					if ((MonAngle < StandardAngle || MonAngle > Max) || (MonAngle >= StandardAngle && MonAngle < Min))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						AttackableRange(MyCharacter, RagdollDog);
+					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle || MonAngle > Max)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-					RagdollDog->bIsLeftWander = false;
-					RagdollDog->bIsRightWander = true;
+					LeftRange(AI, RagdollDog);
 
 					if (MonAngle >= StandardAngle && MonAngle < Min)
 					{
 						RagdollDog->bIsLeftWander = true;;
 						RagdollDog->bIsRightWander = false;
 					}
+
+					if ((MonAngle < StandardAngle || MonAngle > Max) || (MonAngle >= StandardAngle && MonAngle < Min))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						AttackableRange(MyCharacter, RagdollDog);
+					}
 				}
-				//else
-				//{
-				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
-
-				//	if (!RagdollDog->bIsAttack)
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-				//}
+				else
+					AttackableRange(MyCharacter, RagdollDog);
 			}
 			else if (StandardAngle >= 360.0f - Range && StandardAngle >= 0.0f)
 			{
 				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle || MonAngle < Min)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
-					RagdollDog->bIsLeftWander = true;
-					RagdollDog->bIsRightWander = false;
+					RightRange(AI, RagdollDog);
 
 					if (MonAngle < StandardAngle && MonAngle > Max)
 					{
 						RagdollDog->bIsLeftWander = false;;
 						RagdollDog->bIsRightWander = true;
 					}
+
+					if ((MonAngle >= StandardAngle || MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						AttackableRange(MyCharacter, RagdollDog);
+					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-					RagdollDog->bIsLeftWander = false;
-					RagdollDog->bIsRightWander = true;
+					LeftRange(AI, RagdollDog);
 
 					if (MonAngle >= StandardAngle || MonAngle < Min)
 					{
 						RagdollDog->bIsLeftWander = true;;
 						RagdollDog->bIsRightWander = false;
 					}
+
+					if ((MonAngle >= StandardAngle || MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						AttackableRange(MyCharacter, RagdollDog);
+					}
 				}
-				//else
-				//{
-				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
-
-				//	if (!RagdollDog->bIsAttack)
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-				//}
-
+				else
+					AttackableRange(MyCharacter, RagdollDog);
 			}
 			else if (StandardAngle <= 180.0f + Range && StandardAngle >= 180.0f)	// 3
 			{
 				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle && MonAngle < Min)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
-					RagdollDog->bIsLeftWander = true;
-					RagdollDog->bIsRightWander = false;
+					RightRange(AI, RagdollDog);
 
 					if (MonAngle < StandardAngle && MonAngle > Max)
 					{
 						RagdollDog->bIsLeftWander = false;;
 						RagdollDog->bIsRightWander = true;
 					}
+
+					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						AttackableRange(MyCharacter, RagdollDog);
+					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-					RagdollDog->bIsLeftWander = false;
-					RagdollDog->bIsRightWander = true;
+					LeftRange(AI, RagdollDog);
 
 					if (MonAngle >= StandardAngle && MonAngle < Min)
 					{
 						RagdollDog->bIsLeftWander = true;;
 						RagdollDog->bIsRightWander = false;
 					}
+
+					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						AttackableRange(MyCharacter, RagdollDog);
+					}
 				}
-				//else
-				//{
-				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
-
-				//	if (!RagdollDog->bIsAttack)
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-				//}
+				else
+					AttackableRange(MyCharacter, RagdollDog);
 			}
 			else if (StandardAngle >= 180.0f - Range && StandardAngle <= 180.0f)	// 4
 			{
 				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle && MonAngle < Min)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
-					RagdollDog->bIsLeftWander = true;
-					RagdollDog->bIsRightWander = false;
+					RightRange(AI, RagdollDog);
 
 					if (MonAngle < StandardAngle && MonAngle > Max)
 					{
@@ -200,45 +203,12 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 					else
 					{
-						RagdollDog->bInAttackplace = true;
-
-						ADog** Dogs = MyCharacter->DogArray.GetData();
-
-						for (int i = 0; i < MyCharacter->DogArray.Num(); i++)
-						{
-							if (Dogs[i]->bInAttackplace)		// 공격 가능 범위에 있을 때
-							{
-								if (Dogs[i] != RagdollDog)		// 자기랑 아닌거랑 비교
-								{
-									if (Dogs[i]->bIsAttack)		// 그 개가 점프공격할 때
-									{
-										bAttack = false;		// 공격 불가
-										break;
-									}
-								}
-							}
-						}
-
-						if (bAttack)
-						{
-							RagdollDog->CurrentDogState = EDogState::Battle;
-							RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
-
-							if (!RagdollDog->bIsAttack)
-							{
-								RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-							}
-							RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-						}
+						AttackableRange(MyCharacter, RagdollDog);
 					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-					RagdollDog->bIsLeftWander = false;
-					RagdollDog->bIsRightWander = true;
+					LeftRange(AI, RagdollDog);
 
 					if (MonAngle >= StandardAngle && MonAngle < Min)
 					{
@@ -252,153 +222,99 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 					else
 					{
-						RagdollDog->bInAttackplace = true;
-
-						ADog** Dogs = MyCharacter->DogArray.GetData();
-
-						for (int i = 0; i < MyCharacter->DogArray.Num(); i++)
-						{
-							if (Dogs[i]->bInAttackplace)		// 공격 가능 범위에 있을 때
-							{
-								if (Dogs[i] != RagdollDog)		// 자기랑 아닌거랑 비교
-								{
-									if (Dogs[i]->bIsAttack)		// 그 개가 점프공격할 때
-									{
-										bAttack = false;		// 공격 불가
-										break;
-									}
-								}
-							}
-						}
-
-						if (bAttack)
-						{
-							RagdollDog->CurrentDogState = EDogState::Battle;
-							RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
-
-							if (!RagdollDog->bIsAttack)
-							{
-								RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-							}
-							RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-						}
+						AttackableRange(MyCharacter, RagdollDog);
 					}
 				}
 				else
 				{
-					RagdollDog->bInAttackplace = true;
-
-					ADog** Dogs = MyCharacter->DogArray.GetData();
-
-					for (int i = 0; i < MyCharacter->DogArray.Num(); i++)
-					{
-						if (Dogs[i]->bInAttackplace)		// 공격 가능 범위에 있을 때
-						{
-							if (Dogs[i] != RagdollDog)		// 자기랑 아닌거랑 비교
-							{
-								if (Dogs[i]->bIsAttack)		// 그 개가 점프공격할 때
-								{
-									bAttack = false;		// 공격 불가
-
-									SetRandomCircle(RagdollDog);
-									break;
-								}
-							}
-						}
-					}
-
-					if (bAttack)
-					{
-						RagdollDog->CurrentDogState = EDogState::Battle;
-						RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
-
-						if (!RagdollDog->bIsAttack)
-						{
-							RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-						}
-						RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-					}
+					AttackableRange(MyCharacter, RagdollDog);
 				}
 			}
 			else if (StandardAngle < 360.0f - Range && StandardAngle > 180.0f + Range)	// 5
 			{
 				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle || MonAngle < Min)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
-					RagdollDog->bIsLeftWander = true;
-					RagdollDog->bIsRightWander = false;
+					RightRange(AI, RagdollDog);
 
 					if (MonAngle < StandardAngle && MonAngle > Max)
 					{
 						RagdollDog->bIsLeftWander = false;;
 						RagdollDog->bIsRightWander = true;
 					}
+
+					if ((MonAngle >= StandardAngle || MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						AttackableRange(MyCharacter, RagdollDog);
+					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-					RagdollDog->bIsLeftWander = false;
-					RagdollDog->bIsRightWander = true;
+					LeftRange(AI, RagdollDog);
 
 					if (MonAngle >= StandardAngle || MonAngle < Min)
 					{
 						RagdollDog->bIsLeftWander = true;;
 						RagdollDog->bIsRightWander = false;
 					}
+
+					if ((MonAngle >= StandardAngle || MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						AttackableRange(MyCharacter, RagdollDog);
+					}
 				}
-				//else
-				//{
-				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
-
-				//	if (!RagdollDog->bIsAttack)
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-				//}
+				else
+					AttackableRange(MyCharacter, RagdollDog);
 			}
 			else if (StandardAngle > 0.0f + Range && StandardAngle < 180.0f - Range)	// 6
 			{
 				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle && MonAngle < Min)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
-					RagdollDog->bIsLeftWander = true;
-					RagdollDog->bIsRightWander = false;
+					RightRange(AI, RagdollDog);
 
 					if (MonAngle < StandardAngle || MonAngle > Max)
 					{
 						RagdollDog->bIsLeftWander = false;;
 						RagdollDog->bIsRightWander = true;
 					}
+
+					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle || MonAngle > Max))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						AttackableRange(MyCharacter, RagdollDog);
+					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle || MonAngle > Max)
 				{
-					AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-					RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
-					RagdollDog->bIsLeftWander = false;
-					RagdollDog->bIsRightWander = true;
+					LeftRange(AI, RagdollDog);
 
 					if (MonAngle >= StandardAngle && MonAngle < Min)
 					{
 						RagdollDog->bIsLeftWander = true;;
 						RagdollDog->bIsRightWander = false;
 					}
+
+					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle || MonAngle > Max))
+					{
+						RagdollDog->bInAttackplace = false;
+					}
+					else
+					{
+						AttackableRange(MyCharacter, RagdollDog);
+					}
 				}
-				//else
-				//{
-				//	RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
-
-				//	if (!RagdollDog->bIsAttack)
-				//		RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-
-				//	RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-				//}
+				else
+					AttackableRange(MyCharacter, RagdollDog);
 			}
 		}
 	}
@@ -419,5 +335,58 @@ void UBTService_CheckCanAttack::SetRandomCircle(ADog * RagdollDog)
 		RagdollDog->bIsLeftWander = true;
 		RagdollDog->bIsRightWander = false;
 	}
+}
+
+void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCharacter, ADog * RagdollDog)
+{
+	RagdollDog->bInAttackplace = true;
+	bAttack = true;
+	ADog** Dogs = MyCharacter->DogArray.GetData();
+
+	for (int i = 0; i < MyCharacter->DogArray.Num(); i++)
+	{
+		if (Dogs[i]->bInAttackplace)		// 공격 가능 범위에 있을 때
+		{
+			if (Dogs[i] != RagdollDog)		// 자기랑 아닌거랑 비교
+			{
+				bAttack = false;		// 공격 불가
+
+				SetRandomCircle(RagdollDog);
+				break;
+			}
+			else
+				break;
+		}
+	}
+
+	if (bAttack)
+	{
+		RagdollDog->CurrentDogState = EDogState::Battle;
+		RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+
+		if (!RagdollDog->bIsAttack)
+		{
+			RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
+		}
+		RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+	}
+}
+
+void UBTService_CheckCanAttack::LeftRange(ADogAIController* AI, ADog * RagdollDog)
+{
+	AI->BBComponent->SetValueAsInt("RotateCheck", 2);
+	RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
+	RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
+	RagdollDog->bIsLeftWander = false;
+	RagdollDog->bIsRightWander = true;
+}
+
+void UBTService_CheckCanAttack::RightRange(ADogAIController * AI, ADog * RagdollDog)
+{
+	AI->BBComponent->SetValueAsInt("RotateCheck", 1);
+	RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
+	RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+	RagdollDog->bIsLeftWander = true;
+	RagdollDog->bIsRightWander = false;
 }
 
