@@ -112,12 +112,16 @@ void AMotionControllerCharacter::BeginPlay()
 
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
-	LeftHand = GetWorld()->SpawnActor<ALeftHandMotionController>(LeftHand->StaticClass(), GetMesh()->GetComponentLocation(), GetMesh()->GetComponentRotation(), SpawnActorOption);
-
-	LeftHand->AttachToComponent(GetMesh(), AttachRules);
-
-	RightHand = GetWorld()->SpawnActor<ARightHandMotionController>(RightHand->StaticClass(), GetMesh()->GetComponentLocation(), GetMesh()->GetComponentRotation(), SpawnActorOption);
-	RightHand->AttachToComponent(GetMesh(), AttachRules);
+	//if (LeftHand->GetClass())
+	//{
+	//	LeftHand = GetWorld()->SpawnActor<ALeftHandMotionController>(LeftHand->StaticClass(), GetMesh()->GetComponentLocation(), GetMesh()->GetComponentRotation(), SpawnActorOption);
+	//	LeftHand->AttachToComponent(GetMesh(), AttachRules);
+	//}
+	//if (RightHand->GetClass())
+	//{
+	//	RightHand = GetWorld()->SpawnActor<ARightHandMotionController>(RightHand->StaticClass(), GetMesh()->GetComponentLocation(), GetMesh()->GetComponentRotation(), SpawnActorOption);
+	//	RightHand->AttachToComponent(GetMesh(), AttachRules);
+	//}
 
 	if (HeadBox)
 	{
