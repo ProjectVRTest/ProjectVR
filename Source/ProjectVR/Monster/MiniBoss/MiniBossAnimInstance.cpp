@@ -102,3 +102,13 @@ void UMiniBossAnimInstance::AnimNotify_JumpAttackEnd(UAnimNotify * Notify)
 		Miniboss->CurrentAnimState = EMiniBossAnimState::Wait;
 	}
 }
+
+void UMiniBossAnimInstance::AnimNotify_AttackComplete(UAnimNotify * Notify)
+{
+	AMiniBoss* Miniboss = Cast<AMiniBoss>(TryGetPawnOwner());
+
+	if (Miniboss)
+	{
+		Miniboss->AttackCompleteFlag = true;
+	}
+}
