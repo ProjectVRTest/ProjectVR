@@ -75,7 +75,7 @@ void UBTTask_MBBackWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8
 	SumDelta += DeltaSeconds;
 	if (MiniBoss)
 	{
-		MiniBoss->GetCharacterMovement()->AddImpulse(MiniBoss->GetActorForwardVector()*-300.0f+MiniBoss->GetActorUpVector(), true);
+		MiniBoss->GetCharacterMovement()->AddImpulse((MiniBoss->GetActorForwardVector()*-150.0f)+MiniBoss->GetActorUpVector(), true);
 		//MiniBoss->AddMovementInput(MiniBoss->GetActorForwardVector(), -1.0f);
 		if (SumDelta > 2.0f || Distance <150.0f)
 		{

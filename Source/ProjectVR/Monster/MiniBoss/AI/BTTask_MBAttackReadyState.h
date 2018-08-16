@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "BTTask_AttackReadyState.generated.h"
+#include "BTTask_MBAttackReadyState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTVR_API UBTTask_AttackReadyState : public UBTTask_BlackboardBase
+class PROJECTVR_API UBTTask_MBAttackReadyState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 public:

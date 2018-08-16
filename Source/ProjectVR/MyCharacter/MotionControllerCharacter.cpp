@@ -144,13 +144,6 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 	if (DogArray.Num() > 0)
 	{
 		DogArray.Shrink();	// 메모리 최적화
-		AActor** FindDog = DogArray.GetData();
-		UE_LOG(LogTemp, Log, TEXT("-----------------------------------------------^"));
-		for (int i = 0; i < DogArray.Num(); i++)
-		{
-			UE_LOG(LogTemp, Log, TEXT("%s"), *FindDog[i]->GetName());
-		}
-		UE_LOG(LogTemp, Log, TEXT("-----------------------------------------------v"));
 	}
 	
 

@@ -95,6 +95,8 @@ ADog::ADog()
 	bIsDeath = false;
 	bIsDetach = false;
 
+	bInAttackplace = false;
+
 	GetMesh()->SetSimulatePhysics(false);
 	GetMesh()->SetCollisionProfileName("Ragdoll");
 	GetCharacterMovement()->MaxWalkSpeed = 0.0f;

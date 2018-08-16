@@ -47,4 +47,6 @@ public:
 		void AnimNotify_JumpAttackStart(UAnimNotify* Notify);
 	UFUNCTION(BlueprintCallable, Category = "AI")
 		void AnimNotify_JumpAttackEnd(UAnimNotify* Notify);
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+		void AnimNotify_AttackComplete(UAnimNotify* Notify);
 };

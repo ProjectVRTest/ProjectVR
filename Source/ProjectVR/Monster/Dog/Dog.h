@@ -68,6 +68,8 @@ public:
 	bool bIsLeftWander;
 	bool bIsRightWander;
 
+	bool bInAttackplace;
+
 	UFUNCTION()
 		void AttachVirtualHandWithHead();
 
