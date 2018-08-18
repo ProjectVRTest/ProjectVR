@@ -29,7 +29,9 @@ enum class EDogAnimState : uint8
 	StandUp = 7 UMETA(DisplayName = "StandUp"),
 	Nothing = 8 UMETA(DisplayName = "Nothing"),
 	LeftSideWalk = 9 UMETA(DisplayName = "LeftSideWalk"),
-	SideWalk = 10 UMETA(DisplayName = "SideWalk")
+	SideWalk = 10 UMETA(DisplayName = "SideWalk"),
+	FallingDeath = 11 UMETA(DisplayName = "FallingDeath"),
+	StandDeath = 12 UMETA(DisplayName = "StandDeath")
 };
 
 UENUM(BlueprintType)
