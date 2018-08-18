@@ -42,7 +42,7 @@ AMiniBoss::AMiniBoss()
 	PawnSensing->bHearNoises = false;
 	PawnSensing->bSeePawns = true;
 	PawnSensing->SetPeripheralVisionAngle(30.0f);
-	PawnSensing->SightRadius = 3000.0f;
+	PawnSensing->SightRadius = 2000.0f;
 	PawnSensing->SensingInterval = 0.1f;
 
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree>MiniBoss_BT(TEXT("BehaviorTree'/Game/Blueprints/Monster/MiniBoss/AI/BT_MiniBoss.BT_MiniBoss'"));
@@ -134,8 +134,6 @@ void AMiniBoss::BeginPlay()
 void AMiniBoss::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//GLog->Log(FString::Printf(TEXT("Velocity : %0.1f"), GetCharacterMovement()->Velocity.Size()));
-	//UE_LOG(LogClass, Warning, TEXT("\n Monster pitch : %f \nYaw : %f \n Roll : %f\n "), GetActorRotation().Pitch, GetActorRotation().Yaw, GetActorRotation().Roll);
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
 	if (AI)
 	{

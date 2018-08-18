@@ -24,20 +24,27 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 		//UE_LOG(LogClass, Warning, TEXT("\nCaculate Rotator pitch : %f \nYaw : %f \n Roll : %f\n"),LookAt.Pitch,LookAt.Yaw,LookAt.Roll);
 		if (MiniBoss)
 		{
-			if (Distance > 1000.0f)
+			if (!MiniBoss->CurrentFalling)
 			{
-				//UE_LOG(LogClass, Warning, TEXT("점프 애드 범위 진입"));
-			}
-			else if(Distance <1000.0f && Distance >500.0f)
-			{
-				//UE_LOG(LogClass, Warning, TEXT("대쉬 애드 범위 진입"));
-			}
-			else if (Distance < 500.0f)
-			{			
-				MiniBoss->WalkStopFlag = true;
-				MiniBoss->CurrentState = EMiniBossState::Battle;
-				MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
-			}
+				if (Distance > 1000.0f)
+				{
+					if (MiniBoss->JumpRunCheckFlag)
+					{
+						MiniBoss->CurrentAnimState = EMiniBossAnimState::JumpAttackReady;
+						MiniBoss->JumpRunCheckFlag = false;
+					}					
+				}
+				else if (Distance <1000.0f && Distance >400.0f)
+				{
+					//UE_LOG(LogClass, Warning, TEXT("대쉬 애드 범위 진입"));
+				}
+				else if (Distance < 500.0f)
+				{
+					MiniBoss->WalkStopFlag = true;
+					MiniBoss->CurrentState = EMiniBossState::Battle;
+					MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+				}
+			}			
 		}
 	}
 }
