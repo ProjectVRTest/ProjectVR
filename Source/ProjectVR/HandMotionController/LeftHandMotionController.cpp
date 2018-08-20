@@ -57,10 +57,10 @@ ALeftHandMotionController::ALeftHandMotionController()
 	ShieldAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("ShieldAttachScene")); //방패를 붙일 씬컴포넌트를 생성해서 ShieldAttachScene에 넣는다.
 	ShieldAttachScene->SetupAttachment(HandMesh);//생성한 씬컴포넌트를 HandMesh에 붙인다.
 
-	ShieldAttachScene->SetRelativeLocation(FVector(-18.0f,-31.0f, 8.0f)); //위치를 조정한다.
+	ShieldAttachScene->SetRelativeLocation(FVector(-18.0f, -31.0f, 8.0f)); //위치를 조정한다.
 	ShieldAttachScene->SetRelativeRotation(FRotator(13.0f, 129.0f, -90.0f)); //방패 씬컴포넌트의 각도와
-	
-																	  //포션가방을 붙일 씬컴포넌트를 생성해서 PotionBagAttachScene에 저장한다.
+
+																			 //포션가방을 붙일 씬컴포넌트를 생성해서 PotionBagAttachScene에 저장한다.
 	PotionBagAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("PotionAttachScene"));
 	PotionBagAttachScene->SetupAttachment(HandMesh); //생성한 씬컴포넌트를 HandMesh에 붙인다.
 
@@ -94,9 +94,9 @@ void ALeftHandMotionController::BeginPlay()
 																									   //붙일위치는 타겟으로, 붙일각도도 타겟으로, 크기는 월드크기에 맞게끔 붙여준다.
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
-	//방패를 쉴드 씬 컴포넌트에 스폰시킨다.
-	Shield = GetWorld()->SpawnActor<APlayerShield>(Shield->StaticClass(),SpawnActorOption);
-	//방패를 AttachRules를 토대로 쉴드 씬 컴포넌트에 붙인다.
+	////방패를 쉴드 씬 컴포넌트에 스폰시킨다.
+	Shield = GetWorld()->SpawnActor<APlayerShield>(Shield->StaticClass(), ShieldAttachScene->GetComponentLocation(), ShieldAttachScene->GetComponentRotation(), SpawnActorOption);
+	////방패를 AttachRules를 토대로 쉴드 씬 컴포넌트에 붙인다.
 	Shield->AttachToComponent(ShieldAttachScene, AttachRules);
 
 	PotionBag = GetWorld()->SpawnActor<APotionBag>(PotionBag->StaticClass(), PotionBagAttachScene->GetComponentLocation(), PotionBagAttachScene->GetComponentRotation(), SpawnActorOption);
