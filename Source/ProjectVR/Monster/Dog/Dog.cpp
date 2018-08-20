@@ -129,6 +129,7 @@ void ADog::BeginPlay()
 void ADog::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, GetCapsuleComponent()->GetComponentRotation().Yaw, 0.0f));
 
 	FFindFloorResult FloorDistance;;

@@ -64,7 +64,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle < StandardAngle || MonAngle > Max)
 					{
-						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsLeftWander = false;
 						RagdollDog->bIsRightWander = true;
 					}
 
@@ -83,7 +83,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle >= StandardAngle && MonAngle < Min)
 					{
-						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsLeftWander = true;
 						RagdollDog->bIsRightWander = false;
 					}
 
@@ -107,7 +107,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle < StandardAngle && MonAngle > Max)
 					{
-						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsLeftWander = false;
 						RagdollDog->bIsRightWander = true;
 					}
 
@@ -126,7 +126,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle >= StandardAngle || MonAngle < Min)
 					{
-						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsLeftWander = true;
 						RagdollDog->bIsRightWander = false;
 					}
 
@@ -150,7 +150,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle < StandardAngle && MonAngle > Max)
 					{
-						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsLeftWander = false;
 						RagdollDog->bIsRightWander = true;
 					}
 
@@ -169,7 +169,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle >= StandardAngle && MonAngle < Min)
 					{
-						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsLeftWander = true;
 						RagdollDog->bIsRightWander = false;
 					}
 
@@ -193,7 +193,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle < StandardAngle && MonAngle > Max)
 					{
-						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsLeftWander = false;
 						RagdollDog->bIsRightWander = true;
 					}
 
@@ -212,7 +212,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle >= StandardAngle && MonAngle < Min)
 					{
-						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsLeftWander = true;
 						RagdollDog->bIsRightWander = false;
 					}
 
@@ -238,7 +238,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle < StandardAngle && MonAngle > Max)
 					{
-						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsLeftWander = false;
 						RagdollDog->bIsRightWander = true;
 					}
 
@@ -257,7 +257,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle >= StandardAngle || MonAngle < Min)
 					{
-						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsLeftWander = true;
 						RagdollDog->bIsRightWander = false;
 					}
 
@@ -281,7 +281,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle < StandardAngle || MonAngle > Max)
 					{
-						RagdollDog->bIsLeftWander = false;;
+						RagdollDog->bIsLeftWander = false;
 						RagdollDog->bIsRightWander = true;
 					}
 
@@ -300,7 +300,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 					if (MonAngle >= StandardAngle && MonAngle < Min)
 					{
-						RagdollDog->bIsLeftWander = true;;
+						RagdollDog->bIsLeftWander = true;
 						RagdollDog->bIsRightWander = false;
 					}
 

@@ -8,12 +8,10 @@
 #include "Engine/StaticMesh.h"
 #include "Engine/World.h"
 
-
-
 // Sets default values
 APotionBag::APotionBag()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	PotionBagMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PotionBagMesh"));
@@ -22,10 +20,10 @@ APotionBag::APotionBag()
 
 	PotionBagCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("PotionBagCollision"));
 	PotionBagCollision->SetupAttachment(PotionBagMesh);
-	
+
 	PotionBagCollision->SetRelativeLocation(FVector(0, 10.0f, -50.0f));
 	PotionBagCollision->SetRelativeRotation(FRotator(0, 0, 90.0f));
-	PotionBagCollision->SetRelativeScale3D(FVector(2.4f,2.8f, 2.5f));
+	PotionBagCollision->SetRelativeScale3D(FVector(2.4f, 2.8f, 2.5f));
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_PotionBag(TEXT("StaticMesh'/Game/Assets/Item/Mesh/PotionBags/Mesh/PotionBag.PotionBag'"));
 
@@ -46,11 +44,12 @@ APotionBag::APotionBag()
 void APotionBag::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	FActorSpawnParameters SpawnActorOption;
 	SpawnActorOption.Owner = this;
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	
+
+
 	for (int i = 0; i < PotionCount; i++)
 	{
 		Potion = GetWorld()->SpawnActor<APotion>(Potion->StaticClass(), SpawnActorOption);
@@ -72,7 +71,7 @@ void APotionBag::Tick(float DeltaTime)
 
 APotion* APotionBag::PotionPop()
 {
-	APotion* PopPotion=Potions.Pop();
+	APotion* PopPotion = Potions.Pop();
 	int CurrentPotionCount = Potions.Num();
 
 	UE_LOG(LogClass, Warning, TEXT("Pop : PotionCount %d"), CurrentPotionCount);
@@ -84,7 +83,7 @@ void APotionBag::PotionPush(APotion* PushPotion)
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
 	Potions.Add(PushPotion);
-	
+
 	int CurrentPotionCount = Potions.Num();
 
 	UE_LOG(LogClass, Warning, TEXT("Push : PotionCount %d"), CurrentPotionCount);
