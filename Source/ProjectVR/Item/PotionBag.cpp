@@ -52,8 +52,8 @@ void APotionBag::BeginPlay()
 
 	for (int i = 0; i < PotionCount; i++)
 	{
-		//Potion = GetWorld()->SpawnActor<APotion>(Potion->StaticClass(), SpawnActorOption);
-		//PotionPush(Potion);	
+		Potion = GetWorld()->SpawnActor<APotion>(Potion->StaticClass(), SpawnActorOption);
+		PotionPush(Potion);	
 	}
 
 	if (PotionBagCollision)
