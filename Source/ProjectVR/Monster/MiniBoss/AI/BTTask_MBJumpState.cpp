@@ -46,7 +46,7 @@ void UBTTask_MBJumpState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * N
 			{
 				GLog->Log(FString::Printf(TEXT("asl")));
 				MiniBoss->CurrentJumpState = EMiniBossJumpState::JumpLand;
-				MiniBoss->JumpRunCheckFlag = true;
+				MiniBoss->JumpRunCheckFlag = false;
 				FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 			}
 		}

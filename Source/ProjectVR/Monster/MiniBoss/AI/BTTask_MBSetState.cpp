@@ -15,6 +15,7 @@ EBTNodeResult::Type UBTTask_MBSetState::ExecuteTask(UBehaviorTreeComponent & Own
 		{
 			MiniBoss->CurrentState = SetState;
 			MiniBoss->CurrentAnimState = SetAnimState;
+			MiniBoss->CurrentJumpState = SetJumpAnimState;
 		}
 	}
 

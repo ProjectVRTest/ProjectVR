@@ -54,16 +54,16 @@ AMiniBoss::AMiniBoss()
 
 	Target = nullptr;
 
-	static ConstructorHelpers::FObjectFinder<UAnimMontage>Reaction_Montage(TEXT("AnimMontage'/Game/Blueprints/Monster/MiniBoss/Animation/Mutant/ReactionMontage.ReactionMontage'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>AttackReverse_Montage(TEXT("AnimMontage'/Game/Blueprints/Monster/MiniBoss/Animation/AM_AttackReverse.AM_AttackReverse'"));
 
-	if (Reaction_Montage.Succeeded())
+	if (AttackReverse_Montage.Succeeded())
 	{
-		ReactionMontage = Reaction_Montage.Object;
+		AttackReverseMontage= AttackReverse_Montage.Object;
 	}
 
 	CurrentFalling = false;
 	JumpEndFlag = false;
-	JumpRunCheckFlag = true;
+	JumpRunCheckFlag = false;
 	ParryingFlag = false;
 	AttackCompleteFlag = false;
 	IsParrying = false;
@@ -104,7 +104,7 @@ AMiniBoss::AMiniBoss()
 		GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 		GetMesh()->SetAnimInstanceClass(ABP_MiniBos.Object->GeneratedClass);
 	}
-	GetCharacterMovement()->MaxAcceleration = 200.0f;
+	GetCharacterMovement()->MaxAcceleration = 2048.0f;
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
@@ -114,6 +114,7 @@ AMiniBoss::AMiniBoss()
 void AMiniBoss::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	
 	FActorSpawnParameters SpawnActorOption;
 	SpawnActorOption.Owner = this;
@@ -134,7 +135,10 @@ void AMiniBoss::BeginPlay()
 void AMiniBoss::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
+
+	GLog->Log(FString::Printf(TEXT("%f"), GetCharacterMovement()->Velocity.Size()));
 	if (AI)
 	{
 		AI->BBComponent->SetValueAsEnum("CurrentState", (uint8)CurrentState);
@@ -203,7 +207,7 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 	}
 	else
 	{
-		PlayAnimMontage(ReactionMontage);
+		//PlayAnimMontage(ReactionMontage);
 	}
 
 	return Damage;

@@ -50,7 +50,7 @@ void UBTTask_RotationUpdate::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 
 				if (UKismetMathLibrary::EqualEqual_RotatorRotator(CurrentRot, LookAt, 10.0f))
 				{
 					MiniBoss->CurrentState = EMiniBossState::Battle;
-					MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;
+					//MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;
 				}
 			}
 		}

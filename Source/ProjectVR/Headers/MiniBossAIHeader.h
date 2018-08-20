@@ -14,3 +14,7 @@
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
+
+#define RightUpLeftDownAttack 1
+#define TwoHandWidthAttack 2
+#define StabAttack 3

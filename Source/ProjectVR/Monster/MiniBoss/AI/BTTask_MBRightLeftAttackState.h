@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "BTTask_AttackRecharge.generated.h"
+#include "BTTask_MBRightLeftAttackState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTVR_API UBTTask_AttackRecharge : public UBTTask_BlackboardBase
+class PROJECTVR_API UBTTask_MBRightLeftAttackState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 public:
+	int a;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;	
-
 };

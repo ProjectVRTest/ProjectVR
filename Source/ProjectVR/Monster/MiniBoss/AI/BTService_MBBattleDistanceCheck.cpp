@@ -44,34 +44,37 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 				//GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), MiniBoss->Yaw));
 				if (MiniBoss)
 				{
-					switch (MiniBoss->CurrentAnimState)
+					if (!MiniBoss->CurrentFalling)
 					{
-					case EMiniBossAnimState::Walk:
-						if (Distance > 500.0f)
+						switch (MiniBoss->CurrentAnimState)
 						{
-							MiniBoss->WalkStopFlag = false;
-							MiniBoss->BackAttack = false;
-							MiniBoss->CurrentState = EMiniBossState::Chase;
-							MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+						case EMiniBossAnimState::Walk:
+							if (Distance > 500.0f)
+							{
+								MiniBoss->WalkStopFlag = false;
+								MiniBoss->BackAttack = false;
+								MiniBoss->CurrentState = EMiniBossState::Chase;
+								MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+							}
+							else if (Distance < 300.0f && !MiniBoss->BackAttack)
+							{
+								MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
+								MiniBoss->CurrentAttackState = EMiniBossAttackState::RightUpLeftDown;
+								MiniBoss->BackAttack = true;
+							}
+							break;
+						case EMiniBossAnimState::Attack:
+							if (Distance > 500.0f && MiniBoss->AttackCompleteFlag)
+							{
+								MiniBoss->AttackCompleteFlag = false;
+								MiniBoss->CurrentState = EMiniBossState::Chase;
+								MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+							}
+							break;
+						case EMiniBossAnimState::BackWalk:
+							break;
 						}
-						else if (Distance < 300.0f && !MiniBoss->BackAttack)
-						{
-							MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
-							MiniBoss->CurrentAttackState = EMiniBossAttackState::RightUpLeftDown;
-							MiniBoss->BackAttack = true;
-						}
-						break;
-					case EMiniBossAnimState::Attack:
-						if (Distance > 500.0f && MiniBoss->AttackCompleteFlag)
-						{
-							MiniBoss->AttackCompleteFlag = false;
-							MiniBoss->CurrentState = EMiniBossState::Chase;
-							MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
-						}
-						break;
-					case EMiniBossAnimState::BackWalk:
-						break;
-					}			
+					}						
 				}
 			}
 		}	

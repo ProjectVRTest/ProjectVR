@@ -3,10 +3,6 @@
 #include "BTTask_MBAttackReadyState.h"
 #include "Headers/MiniBossAIHeader.h"
 
-void UBTTask_MBAttackReadyState::InitializeFromAsset(UBehaviorTree & Asset)
-{
-	Super::InitializeFromAsset(Asset);
-}
 
 EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
@@ -15,11 +11,27 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 	if (AI)
 	{
 		MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
+
+		if (MiniBoss)
+		{
+			int RandomAttackValue = FMath::RandRange(1, 3);
+
+			MiniBoss->CurrentAttackState = EMiniBossAttackState::RightUpLeftDown;
+			/*switch (RandomAttackValue)
+			{
+			case RightUpLeftDownAttack:
+				MiniBoss->CurrentAttackState = EMiniBossAttackState::RightUpLeftDown;
+				break;
+			case TwoHandWidthAttack:
+				MiniBoss->CurrentAttackState = EMiniBossAttackState::TwoHandWidth;
+				break;
+			case StabAttack:
+				MiniBoss->CurrentAttackState = EMiniBossAttackState::Stab;
+				break;
+			}*/
+		}
+
 	}
 	return EBTNodeResult::Type();
 }
 
-void UBTTask_MBAttackReadyState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
-{
-
-}

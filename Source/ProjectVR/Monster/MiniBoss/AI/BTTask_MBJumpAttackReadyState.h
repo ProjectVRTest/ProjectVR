@@ -16,8 +16,7 @@ class PROJECTVR_API UBTTask_MBJumpAttackReadyState : public UBTTask_BlackboardBa
 public:
 	class AMiniBoss* MiniBoss;
 	FTimerHandle DashTimer;
+	FTimerHandle WalkCompleteTimer;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-
 	void JumpRunCheck();
-
 };

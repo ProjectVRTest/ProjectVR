@@ -23,11 +23,10 @@ enum class EMiniBossAnimState : uint8
 	Walk = 1 UMETA(DisplayName = "Walk"),
 	JumpAttackReady = 2 UMETA(DisplayName = "JumpAttackReady"),
 	JumpAttack = 3 UMETA(DisplayName = "JumpAttack"),
-	AttackReady = 4 UMETA(DisplayName = "AttackReady"),
-	Attack = 5 UMETA(DisplayName = "Attack"),	
-	Parrying = 6 UMETA(DisplayName = "Parrying"),
-	BackWalk = 7 UMETA(DisplayName = "BackWalk"),
-	DashAttack = 8 UMETA(DisplayName = "DashAttack")
+	Attack = 4 UMETA(DisplayName = "Attack"),	
+	Parrying = 5 UMETA(DisplayName = "Parrying"),
+	BackWalk = 6 UMETA(DisplayName = "BackWalk"),
+	DashAttack = 7 UMETA(DisplayName = "DashAttack")
 };
 
 UENUM(BlueprintType)
@@ -43,10 +42,11 @@ UENUM(BlueprintType)
 enum class EMiniBossAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
-	RightUpLeftDown = 1 UMETA(DisplayName = "RightUpLeftDown"),
-	TwoHandWidth = 2 UMETA(DisplayName = "TwoHandWidth"),
-	Stab = 3 UMETA(DisplayName = "Stab"),
-	LongDistance = 4 UMETA(DisplayName = "LongDistance"),
-	FourCombo = 5 UMETA(DisplayName = "FourCombo"),
-	BackAttack = 6 UMETA(DisplayName = "BackAttack")
+	AttackReady = 1 UMETA(DisplayName = "AttackReady"),
+	RightUpLeftDown = 2 UMETA(DisplayName = "RightUpLeftDown"),
+	TwoHandWidth = 3 UMETA(DisplayName = "TwoHandWidth"),
+	Stab = 4 UMETA(DisplayName = "Stab"),
+	LongDistance = 5 UMETA(DisplayName = "LongDistance"),
+	FourCombo = 6 UMETA(DisplayName = "FourCombo"),
+	BackAttack = 7 UMETA(DisplayName = "BackAttack")
 };

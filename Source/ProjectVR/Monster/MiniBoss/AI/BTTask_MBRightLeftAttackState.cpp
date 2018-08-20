@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "BTTask_AttackRecharge.h"
-#include "Monster/MiniBoss/MiniBossAIController.h"
-#include "Monster/MiniBoss/MiniBoss.h"
+#include "BTTask_MBRightLeftAttackState.h"
+#include "Headers/MiniBossAIHeader.h"
 
-EBTNodeResult::Type UBTTask_AttackRecharge::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
+
+EBTNodeResult::Type UBTTask_MBRightLeftAttackState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
 
@@ -14,7 +14,7 @@ EBTNodeResult::Type UBTTask_AttackRecharge::ExecuteTask(UBehaviorTreeComponent &
 
 		if (MiniBoss)
 		{
-			MiniBoss->CurrentAnimState = EMiniBossAnimState::Wait;
+			
 		}
 	}
 	return EBTNodeResult::Succeeded;

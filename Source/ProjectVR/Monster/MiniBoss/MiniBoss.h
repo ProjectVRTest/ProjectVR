@@ -44,7 +44,7 @@ public:
 		class AActor* Target; 
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimMontage")
-		class UAnimMontage* ReactionMontage; //피격 애니메이션
+		class UAnimMontage* AttackReverseMontage; //피격 애니메이션
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
 		bool CurrentFalling; //캐릭터가 현재 추락하고 있는지 확인해줄 변수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
