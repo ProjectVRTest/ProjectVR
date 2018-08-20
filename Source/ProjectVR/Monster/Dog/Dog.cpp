@@ -130,13 +130,6 @@ void ADog::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	/*if (CurrentDogState == EDogState::Chase)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Chase"));
-	}*/
-
-	
-
 	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, GetCapsuleComponent()->GetComponentRotation().Yaw, 0.0f));
 
 	FFindFloorResult FloorDistance;;
