@@ -33,16 +33,16 @@ void UBTService_DistanceCalculation::TickNode(UBehaviorTreeComponent & OwnerComp
 
 			Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
 
-			if (Distance > 400.0f)
+			if (RagdollDog->CurrentDogState != EDogState::Chase && Distance > 400.0f)
 			{
 				RagdollDog->CurrentDogState = EDogState::Chase;
 				RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
 				RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
 				RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
 			}
-			else if (Distance <= 400.0f)
+			else if (RagdollDog->CurrentDogState != EDogState::Circle &&Distance <= 400.0f)
 			{
-				RagdollDog->CurrentDogState = EDogState::Battle;
+				RagdollDog->CurrentDogState = EDogState::Circle;
 				RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
 				RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
 				RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;

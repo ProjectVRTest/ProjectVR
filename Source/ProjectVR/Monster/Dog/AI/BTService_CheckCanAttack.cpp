@@ -22,14 +22,21 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 	ADogAIController* AI = Cast<ADogAIController>(OwnerComp.GetAIOwner());
 
-
-
 	if (AI)
 	{
 		AActor* Player = Cast<AActor>(AI->BBComponent->GetValueAsObject(TEXT("Player")));
 		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
 		ADog* RagdollDog = Cast<ADog>(AI->GetPawn());
 
+		float Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+
+		if (Distance > 400.0f)
+		{
+			RagdollDog->CurrentDogState = EDogState::Chase;
+			RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
+			RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
+			RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+		}
 
 		if (RagdollDog->Landing || RagdollDog->AttachActor || RagdollDog->bIsAttack)
 			return;
@@ -331,6 +338,7 @@ void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCh
 void UBTService_CheckCanAttack::LeftRange(ADogAIController* AI, ADog * RagdollDog)
 {
 	AI->BBComponent->SetValueAsInt("RotateCheck", 2);
+	RagdollDog->CurrentDogState = EDogState::Circle;
 	RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 	RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
 	RagdollDog->bIsLeftWander = false;
@@ -340,6 +348,7 @@ void UBTService_CheckCanAttack::LeftRange(ADogAIController* AI, ADog * RagdollDo
 void UBTService_CheckCanAttack::RightRange(ADogAIController * AI, ADog * RagdollDog)
 {
 	AI->BBComponent->SetValueAsInt("RotateCheck", 1);
+	RagdollDog->CurrentDogState = EDogState::Circle;
 	RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 	RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
 	RagdollDog->bIsLeftWander = true;
