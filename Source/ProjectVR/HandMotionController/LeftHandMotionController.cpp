@@ -14,7 +14,7 @@
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "HandMotionController/RightHandMotionController.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "Monster/Dog/Dog.h"		// 왼손으로 개를 때릴때, 개가 물고 있는지를 알기 위해서 형변환 해줘야함
 // Sets default values
 ALeftHandMotionController::ALeftHandMotionController()
 {
@@ -94,9 +94,9 @@ void ALeftHandMotionController::BeginPlay()
 																									   //붙일위치는 타겟으로, 붙일각도도 타겟으로, 크기는 월드크기에 맞게끔 붙여준다.
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
-	//방패를 쉴드 씬 컴포넌트에 스폰시킨다.
+	////방패를 쉴드 씬 컴포넌트에 스폰시킨다.
 	Shield = GetWorld()->SpawnActor<APlayerShield>(Shield->StaticClass(), ShieldAttachScene->GetComponentLocation(), ShieldAttachScene->GetComponentRotation(), SpawnActorOption);
-	//방패를 AttachRules를 토대로 쉴드 씬 컴포넌트에 붙인다.
+	////방패를 AttachRules를 토대로 쉴드 씬 컴포넌트에 붙인다.
 	Shield->AttachToComponent(ShieldAttachScene, AttachRules);
 
 	PotionBag = GetWorld()->SpawnActor<APotionBag>(PotionBag->StaticClass(), PotionBagAttachScene->GetComponentLocation(), PotionBagAttachScene->GetComponentRotation(), SpawnActorOption);
@@ -220,13 +220,18 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 {
 	if (OtherActor->ActorHasTag("Dog"))
 	{
-		if (GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
-		{
-			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		ADog* RagdollDog = Cast<ADog>(OtherActor);
 
-			if (Character->RightHand->AttachDog)
+		if (RagdollDog->AttachActor)		// 개가 물고 있지 않으면 왼손과 어떤 상호작용을 해도 무시할 수 있어야 함
+		{
+			if (GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
 			{
-				UGameplayStatics::ApplyDamage(OtherActor, 10.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
+				AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+				if (Character->RightHand->AttachDog)
+				{
+					UGameplayStatics::ApplyDamage(OtherActor, 10.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
+				}
 			}
 		}
 	}

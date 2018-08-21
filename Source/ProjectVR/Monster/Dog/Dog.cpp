@@ -247,12 +247,12 @@ void ADog::OnSeePlayer(APawn * Pawn)
 	if (Pawn->ActorHasTag("Character") && FloorDistance.FloorDist < 3.0f)
 	{
 		// 캐릭터의 오른손의 붙어있는 액터를 초기화
-		if (!once)
+		/*if (!once)
 		{
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(Pawn);
 			Character->DogArray.Add(this);
 			once = true;
-		}
+		}*/
 		ADogAIController* AI = Cast<ADogAIController>(GetController());
 
 		if ( AI && !AI->BBComponent->GetValueAsObject("Player"))

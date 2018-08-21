@@ -13,15 +13,8 @@ UCLASS()
 class PROJECTVR_API UBTService_CheckCanAttack : public UBTService_BlackboardBase
 {
 	GENERATED_BODY()
-	
-		bool bIsAttack;
-	bool AddMore;
-	bool SubMore;
-	float store;
 
 	float Range;
-	bool bAttack;
-
 
 	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
@@ -37,4 +30,7 @@ class PROJECTVR_API UBTService_CheckCanAttack : public UBTService_BlackboardBase
 
 	UFUNCTION()
 		void RightRange(ADogAIController* AI, ADog * RagdollDog);
+
+	UFUNCTION()
+		void UnAttackableRange(AMotionControllerCharacter* MyCharacter, ADog* RagdollDog);
 };
