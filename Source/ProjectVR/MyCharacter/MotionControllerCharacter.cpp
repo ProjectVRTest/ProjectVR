@@ -147,6 +147,11 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 		DogArray.Shrink();	// 메모리 최적화
 	}
 
+	/*ADog** Dog = DogArray.GetData();
+	for (int i = 0; i <DogArray.Num(); i++)
+	{
+		UE_LOG(LogClass, Warning, TEXT("%d - %s"),i+1, *Dog[i]->GetName());
+	}*/
 
 	//UE_LOG(LogClass, Warning, TEXT("Left2 ------ %f / %f / %f"), StandardAngle, Min, Max);
 	//if (SpringArm)
@@ -495,11 +500,9 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 				FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
 
 				Dog->AttachToComponent(RightController->AttachDogPosition, AttachRules);
-				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", true, true);
-				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
-				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-R-Thigh", true, true);
-				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-L-Thigh", true, true);
-				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", true, true);
+				
+				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);
+				
 
 				Dog->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 				Dog->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));

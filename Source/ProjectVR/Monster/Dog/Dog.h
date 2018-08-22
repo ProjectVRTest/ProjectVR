@@ -70,6 +70,9 @@ public:
 
 	bool bInAttackplace;
 
+	// TEST
+	bool once; // 서비스에서 배열에 딱 한번 들어가게 하기위해서 하는 것
+	bool bAttack;   // 서비스에서 공격을 허락하는 부울값
 	UFUNCTION()
 		void AttachVirtualHandWithHead();
 
@@ -88,6 +91,4 @@ public:
 
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// 데미지 받기
-
-	bool once;
 };

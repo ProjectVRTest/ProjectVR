@@ -22,14 +22,21 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 	ADogAIController* AI = Cast<ADogAIController>(OwnerComp.GetAIOwner());
 
-
-
 	if (AI)
 	{
 		AActor* Player = Cast<AActor>(AI->BBComponent->GetValueAsObject(TEXT("Player")));
 		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
 		ADog* RagdollDog = Cast<ADog>(AI->GetPawn());
 
+		float Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+
+		if (Distance > 400.0f)
+		{
+			RagdollDog->CurrentDogState = EDogState::Chase;
+			RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
+			RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
+			RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+		}
 
 		if (RagdollDog->Landing || RagdollDog->AttachActor || RagdollDog->bIsAttack)
 			return;
@@ -69,13 +76,9 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle < StandardAngle || MonAngle > Max) || (MonAngle >= StandardAngle && MonAngle < Min))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle || MonAngle > Max)
 				{
@@ -88,13 +91,9 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle < StandardAngle || MonAngle > Max) || (MonAngle >= StandardAngle && MonAngle < Min))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else
 					AttackableRange(MyCharacter, RagdollDog);
@@ -112,13 +111,9 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle >= StandardAngle || MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
@@ -131,13 +126,9 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle >= StandardAngle || MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else
 					AttackableRange(MyCharacter, RagdollDog);
@@ -155,13 +146,9 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
@@ -174,13 +161,9 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else
 					AttackableRange(MyCharacter, RagdollDog);
@@ -198,13 +181,9 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
@@ -217,18 +196,12 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else
-				{
 					AttackableRange(MyCharacter, RagdollDog);
-				}
 			}
 			else if (StandardAngle < 360.0f - Range && StandardAngle > 180.0f + Range)	// 5
 			{
@@ -243,13 +216,9 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle >= StandardAngle || MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
 				{
@@ -262,13 +231,9 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle >= StandardAngle || MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else
 					AttackableRange(MyCharacter, RagdollDog);
@@ -286,13 +251,9 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle || MonAngle > Max))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle || MonAngle > Max)
 				{
@@ -305,13 +266,9 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					}
 
 					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle || MonAngle > Max))
-					{
-						RagdollDog->bInAttackplace = false;
-					}
+						UnAttackableRange(MyCharacter, RagdollDog);
 					else
-					{
 						AttackableRange(MyCharacter, RagdollDog);
-					}
 				}
 				else
 					AttackableRange(MyCharacter, RagdollDog);
@@ -340,27 +297,33 @@ void UBTService_CheckCanAttack::SetRandomCircle(ADog * RagdollDog)
 void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCharacter, ADog * RagdollDog)
 {
 	RagdollDog->bInAttackplace = true;
-	bAttack = true;
+	RagdollDog->bAttack = false;
+
+	if (!RagdollDog->once)
+	{
+		MyCharacter->DogArray.Add(RagdollDog);
+		RagdollDog->once = true;
+	}
+
 	ADog** Dogs = MyCharacter->DogArray.GetData();
 
 	for (int i = 0; i < MyCharacter->DogArray.Num(); i++)
 	{
-		if (Dogs[i]->bInAttackplace)		// 공격 가능 범위에 있을 때
+		if (Dogs[i] != RagdollDog)		// 자기랑 아닌거랑 비교
 		{
-			if (Dogs[i] != RagdollDog)		// 자기랑 아닌거랑 비교
-			{
-				bAttack = false;		// 공격 불가
-
-				SetRandomCircle(RagdollDog);
-				break;
-			}
-			else
-				break;
+			RagdollDog->bAttack = false;		// 공격 불가
+			return;
+		}
+		else
+		{
+			RagdollDog->bAttack = true;
+			break;
 		}
 	}
 
-	if (bAttack)
+	if (RagdollDog->bAttack)
 	{
+		UE_LOG(LogClass, Warning, TEXT("Service3 %s"), *RagdollDog->GetName());
 		RagdollDog->CurrentDogState = EDogState::Battle;
 		RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
 
@@ -375,6 +338,7 @@ void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCh
 void UBTService_CheckCanAttack::LeftRange(ADogAIController* AI, ADog * RagdollDog)
 {
 	AI->BBComponent->SetValueAsInt("RotateCheck", 2);
+	RagdollDog->CurrentDogState = EDogState::Circle;
 	RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 	RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
 	RagdollDog->bIsLeftWander = false;
@@ -384,9 +348,20 @@ void UBTService_CheckCanAttack::LeftRange(ADogAIController* AI, ADog * RagdollDo
 void UBTService_CheckCanAttack::RightRange(ADogAIController * AI, ADog * RagdollDog)
 {
 	AI->BBComponent->SetValueAsInt("RotateCheck", 1);
+	RagdollDog->CurrentDogState = EDogState::Circle;
 	RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
 	RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
 	RagdollDog->bIsLeftWander = true;
 	RagdollDog->bIsRightWander = false;
+}
+
+void UBTService_CheckCanAttack::UnAttackableRange(AMotionControllerCharacter * MyCharacter, ADog * RagdollDog)
+{
+	if (!RagdollDog->AttachActor)		// 물고있을 때는 다른 개들이 물지 못하도록 배열삭제를 막음
+	{
+		RagdollDog->bInAttackplace = false;
+		MyCharacter->DogArray.Remove(RagdollDog);
+		RagdollDog->once = false;
+	}
 }
 
