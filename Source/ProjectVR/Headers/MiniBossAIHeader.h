@@ -16,5 +16,5 @@
 #include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
 
 #define RightUpLeftDownAttack 1
-#define TwoHandWidthAttack 2
-#define StabAttack 3
+#define StabAttack 2
+#define TwoHandWidthAttack 3

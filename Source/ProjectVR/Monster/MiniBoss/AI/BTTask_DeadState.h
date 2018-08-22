@@ -14,8 +14,5 @@ class PROJECTVR_API UBTTask_DeadState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 public:
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	
-	
-	
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);	
 };

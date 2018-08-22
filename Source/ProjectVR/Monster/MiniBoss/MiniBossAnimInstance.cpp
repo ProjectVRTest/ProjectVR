@@ -37,6 +37,7 @@ void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentAttackState = MiniBoss->CurrentAttackState;
 		WalkStopFlag = MiniBoss->WalkStopFlag;
 		Yaw = MiniBoss->Yaw;
+		StabFlag = MiniBoss->StabFlag;
 		AMotionControllerPC* PC = Cast<AMotionControllerPC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));		
 
 		if (PC)

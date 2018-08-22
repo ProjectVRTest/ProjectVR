@@ -21,6 +21,8 @@ public:
 		EMiniBossAnimState SetAnimState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EMiniBossJumpState SetJumpAnimState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		EMiniBossAttackState SetAttackState;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	
 };

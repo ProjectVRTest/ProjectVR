@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTTask_MBBackWalkState.h"
 #include "Headers/MiniBossAIHeader.h"
@@ -79,7 +79,7 @@ void UBTTask_MBBackWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8
 		//MiniBoss->AddMovementInput(MiniBoss->GetActorForwardVector(), -1.0f);
 		if (SumDelta > 2.0f || Distance <150.0f)
 		{
-			MiniBoss->BackAttack = false;
+			MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
 			AfterImageOff();
 			GetWorld()->GetTimerManager().ClearTimer(AfterImageStartTimer);
 			GetWorld()->GetTimerManager().ClearTimer(AfterImageEndTimer);

@@ -67,7 +67,8 @@ AMiniBoss::AMiniBoss()
 	ParryingFlag = false;
 	AttackCompleteFlag = false;
 	IsParrying = false;
-	BackAttack = false;
+	IsAttack = false; //공격할수 있게 해줌
+	StabFlag = false;
 	MaxHP = 100;
 	CurrentHP = MaxHP;
 

@@ -4,18 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "BTTask_RoarState.generated.h"
+#include "BTTask_MBStabReadyState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTVR_API UBTTask_RoarState : public UBTTask_BlackboardBase
+class PROJECTVR_API UBTTask_MBStabReadyState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
-public:
+public:	
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	
-	
-	
 };

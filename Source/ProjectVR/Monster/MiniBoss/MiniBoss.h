@@ -68,10 +68,11 @@ public:
 		class UParticleSystem* AfterImageEndEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class AMiniBossWeapon* Sword;
-	float Yaw;
-	bool WalkStopFlag;
-	bool BackAttack;
-	bool AttackCompleteFlag;
+	float Yaw; //캐릭터가 좌우로 움직일때 판단해줄 값
+	bool WalkStopFlag; 
+	bool IsAttack; //공격중인지 아닌지 판단
+	bool AttackCompleteFlag; //공격이 완료 됏는지 판단
+	bool StabFlag; 
 
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn); //캐릭터를 감지하면 실행해줄 함수

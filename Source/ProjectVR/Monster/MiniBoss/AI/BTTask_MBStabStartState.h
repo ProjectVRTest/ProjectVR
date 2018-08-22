@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "BTTask_MBRightLeftAttackState.generated.h"
+#include "BTTask_MBStabStartState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTVR_API UBTTask_MBRightLeftAttackState : public UBTTask_BlackboardBase
+class PROJECTVR_API UBTTask_MBStabStartState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 public:

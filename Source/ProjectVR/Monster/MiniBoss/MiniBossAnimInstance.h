@@ -34,6 +34,8 @@ public:
 		float Yaw;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Walk")
 		bool WalkStopFlag;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool StabFlag;
 
 	FTimerHandle AnimationChangeTimer;
 	bool IdleAnimationChangeFlag;
