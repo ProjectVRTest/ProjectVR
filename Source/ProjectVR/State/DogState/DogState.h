@@ -14,6 +14,7 @@ enum class EDogState : uint8
 	Hurled = 4 UMETA(DisplayName = "Hurled"),
 	Nothing = 5 UMETA(DisplayName = "Nothing"),
 	Circle = 6 UMETA(DisplayName = "Circle"),
+	Bite = 7 UMETA(DisplayName = "Bite")
 };
 
 UENUM(BlueprintType)

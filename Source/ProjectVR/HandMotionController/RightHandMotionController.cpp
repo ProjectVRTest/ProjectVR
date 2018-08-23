@@ -98,7 +98,7 @@ ARightHandMotionController::ARightHandMotionController()
 	// 포션생성 위치
 	AttachDogPosition = CreateDefaultSubobject<USceneComponent>(TEXT("AttachDogPosition"));
 	AttachDogPosition->SetupAttachment(HandMesh);
-	AttachDogPosition->SetRelativeLocation(FVector(-30.0f, 50.0f, -40.0f));
+	AttachDogPosition->SetRelativeLocation(FVector(-10.0f, 53.0f, -30.0f));
 	AttachDogPosition->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 
 	//손에 무기를 붙이기 위해 사용할 씬컴포넌트를 생성해서 SwordAttachScene에 넣어준다.
