@@ -23,6 +23,8 @@ public:
 		EMiniBossJumpState CurrentJumpState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EMiniBossAttackState CurrentAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		EMiniBossDashState CurrentDashState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		FRotator LookAtRotator;
 
@@ -36,7 +38,8 @@ public:
 		bool WalkStopFlag;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
 		bool StabFlag;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool TwoHandWidthFlag;
 	FTimerHandle AnimationChangeTimer;
 	bool IdleAnimationChangeFlag;
 	
@@ -51,4 +54,7 @@ public:
 		void AnimNotify_JumpAttackEnd(UAnimNotify* Notify);
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 		void AnimNotify_AttackComplete(UAnimNotify* Notify);
+
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		void AnimNotify_DashStart(UAnimNotify* Notify);
 };

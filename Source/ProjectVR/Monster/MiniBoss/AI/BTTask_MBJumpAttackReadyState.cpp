@@ -14,7 +14,6 @@ EBTNodeResult::Type UBTTask_MBJumpAttackReadyState::ExecuteTask(UBehaviorTreeCom
 		if (MiniBoss)
 		{
 			float Distance = AI->BBComponent->GetValueAsFloat("Distance");
-			MiniBoss->JumpRunCheckFlag = true;
 			MiniBoss->CurrentAnimState = EMiniBossAnimState::JumpAttack;
 			MiniBoss->CurrentJumpState = EMiniBossJumpState::JumpStart;	      
 		}

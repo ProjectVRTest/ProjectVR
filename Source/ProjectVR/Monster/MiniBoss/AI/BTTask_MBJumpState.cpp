@@ -46,7 +46,6 @@ void UBTTask_MBJumpState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * N
 			{
 				GLog->Log(FString::Printf(TEXT("asl")));
 				MiniBoss->CurrentJumpState = EMiniBossJumpState::JumpLand;
-				MiniBoss->JumpRunCheckFlag = false;
 				MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
 				FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 			}

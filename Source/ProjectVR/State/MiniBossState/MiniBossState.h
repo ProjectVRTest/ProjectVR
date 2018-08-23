@@ -39,6 +39,15 @@ enum class EMiniBossJumpState : uint8
 };
 
 UENUM(BlueprintType)
+enum class EMiniBossDashState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	DashStart = 1 UMETA(DisplayName = "DashStart"),
+	DashLoop = 2 UMETA(DisplayName = "DashLoop"),
+	DashEnd = 3 UMETA(DisplayName = "DashEnd")
+};
+
+UENUM(BlueprintType)
 enum class EMiniBossAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),

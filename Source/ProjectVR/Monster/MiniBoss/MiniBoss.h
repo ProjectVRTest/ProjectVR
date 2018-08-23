@@ -35,7 +35,9 @@ public:
 		EMiniBossJumpState CurrentJumpState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EMiniBossAttackState CurrentAttackState;
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EMiniBossDashState CurrentDashState;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
@@ -46,11 +48,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimMontage")
 		class UAnimMontage* AttackReverseMontage; //피격 애니메이션
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
-		bool CurrentFalling; //캐릭터가 현재 추락하고 있는지 확인해줄 변수
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
-		bool JumpEndFlag; //점프가 끝났음을 알려주는 변수
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
-		bool JumpRunCheckFlag; //점프 or 달리기를 다시 설정할수 있게 해주는 변수 
+		bool CurrentFalling; //캐릭터가 현재 추락하고 있는지 확인해줄 변수 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
 		bool ParryingFlag; //패링이 가능한 구간에 true로 바뀌고 구간이 끝나면 false로 바뀌는 변수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
@@ -72,7 +70,9 @@ public:
 	bool WalkStopFlag; 
 	bool IsAttack; //공격중인지 아닌지 판단
 	bool AttackCompleteFlag; //공격이 완료 됏는지 판단
-	bool StabFlag; 
+	bool StabFlag; //찌르기 애니메이션의 재생을 판단해줄 변수로 true이면 찌르기 노콤보 애니메이션이 재생되고, false이면 찌르기 콤보 애니메이션이 재생된다.
+	bool TwoHandWidthFlag; //가로베기 애니메이션의 재생을 판단해줄 변수로 true이면 가로베기 노콤보 애니메이션이 재생되고, false이면 가로베기 콤보 애니메이션이 재생된다.
+
 
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn); //캐릭터를 감지하면 실행해줄 함수

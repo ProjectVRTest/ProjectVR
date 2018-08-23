@@ -45,8 +45,7 @@ void UBTService_MBStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 					break;
 				}
 				break;
-			}
-			
+			}			
 
 			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
 

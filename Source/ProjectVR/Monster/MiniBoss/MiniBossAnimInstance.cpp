@@ -35,40 +35,12 @@ void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentAnimState = MiniBoss->CurrentAnimState;
 		CurrentJumpState = MiniBoss->CurrentJumpState;
 		CurrentAttackState = MiniBoss->CurrentAttackState;
+		CurrentDashState = MiniBoss->CurrentDashState;
 		WalkStopFlag = MiniBoss->WalkStopFlag;
 		Yaw = MiniBoss->Yaw;
 		StabFlag = MiniBoss->StabFlag;
-		AMotionControllerPC* PC = Cast<AMotionControllerPC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));		
-
-		if (PC)
-		{
-			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(PC->GetPawn());
-
-			if (MyCharacter)
-			{
-				FRotator LookAt, CurrentRot;
-
-				/*LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->GetActorLocation());
-				CurrentRot = FMath::Lerp(MiniBoss->GetActorRotation(), LookAt, DeltaSeconds);
-
-				MiniBoss->SetActorRotation(CurrentRot);*/		
-
-				//Velocity = MiniBoss->GetCharacterMovement()->Velocity;
-				//TestRotator = MiniBoss->GetActorRotation();
-
-				//FVector NormalVector = UKismetMathLibrary::Normal(Velocity);
-				//FRotator XNormalRotator=UKismetMathLibrary::MakeRotFromX(NormalVector);
-				//FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(TestRotator, XNormalRotator);
-				//Yaw = CompleteRotator.Yaw;
-
-				//UE_LOG(LogClass, Warning, TEXT("Yaw : %f"), Yaw);
-			}
-		}
-
-		Direction = CalculateDirection(MiniBoss->GetCharacterMovement()->Velocity, MiniBoss->GetActorRotation());
+		TwoHandWidthFlag = MiniBoss->TwoHandWidthFlag;
 		Speed = MiniBoss->GetCharacterMovement()->Velocity.Size();
-		
-		//UE_LOG(LogClass, Warning, TEXT("Direction : %0.1f\n Speed : %0.1f\n"), Direction, Speed);
 	}
 }
 
@@ -111,5 +83,19 @@ void UMiniBossAnimInstance::AnimNotify_AttackComplete(UAnimNotify * Notify)
 	if (Miniboss)
 	{
 		Miniboss->AttackCompleteFlag = true;
+	}
+}
+
+void UMiniBossAnimInstance::AnimNotify_DashStart(UAnimNotify * Notify)
+{
+	AMiniBoss* Miniboss = Cast<AMiniBoss>(TryGetPawnOwner());
+
+	if (Miniboss)
+	{
+		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Miniboss->Target);
+
+		FVector LaunchVector;
+		//FVector
+
 	}
 }

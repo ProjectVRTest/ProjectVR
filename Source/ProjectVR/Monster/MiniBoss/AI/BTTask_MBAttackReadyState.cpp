@@ -18,25 +18,30 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 		float WaitTime;
 		if (MiniBoss)
 		{
-			int RandomAttackValue = FMath::RandRange(1, 2);
+			int RandomAttackValue = FMath::RandRange(1, 3);
 				
 			switch (RandomAttackValue)
 			{
 			case RightUpLeftDownAttack:
 				WaitTime = 0.9f;
-				AI->BBComponent->SetValueAsFloat(TEXT("AttackAnimationWaitTime"), WaitTime);
-				MiniBoss->StabFlag = false;
+				MiniBoss->StabFlag = false; //우상단 좌하단 베기가 나왓으므로 찌르기 연계가 가능하니까 콤보 애니메이션이 나오게 설정
+				MiniBoss->TwoHandWidthFlag = true;
 				MiniBoss->CurrentAttackState = EMiniBossAttackState::RightUpLeftDown;
 				break;
 			case StabAttack:
 				WaitTime = 1.0f;
-				MiniBoss->StabFlag = true;
+				MiniBoss->StabFlag = true; //콤보 애니메이션이 안나오게 설정
+				MiniBoss->TwoHandWidthFlag = true;
 				MiniBoss->CurrentAttackState = EMiniBossAttackState::StabReady;
 				break;
 			case TwoHandWidthAttack:
+				WaitTime = 1.5f;
+				MiniBoss->StabFlag = false; //우상단 좌하단 베기가 나왓으므로 찌르기 연계가 가능하니까 콤보 애니메이션이 나오게 설정
+				MiniBoss->TwoHandWidthFlag = false;
 				MiniBoss->CurrentAttackState = EMiniBossAttackState::TwoHandWidth;
 				break;		
 			}
+			AI->BBComponent->SetValueAsFloat(TEXT("AttackAnimationWaitTime"), WaitTime);
 		}
 
 	}

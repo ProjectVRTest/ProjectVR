@@ -37,6 +37,7 @@ AMiniBoss::AMiniBoss()
 	CurrentAnimState = EMiniBossAnimState::Wait;
 	CurrentJumpState = EMiniBossJumpState::Idle;
 	CurrentAttackState = EMiniBossAttackState::Idle;
+	CurrentDashState = EMiniBossDashState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
@@ -62,13 +63,12 @@ AMiniBoss::AMiniBoss()
 	}
 
 	CurrentFalling = false;
-	JumpEndFlag = false;
-	JumpRunCheckFlag = false;
 	ParryingFlag = false;
 	AttackCompleteFlag = false;
 	IsParrying = false;
 	IsAttack = false; //공격할수 있게 해줌
 	StabFlag = false;
+	TwoHandWidthFlag = false;
 	MaxHP = 100;
 	CurrentHP = MaxHP;
 
@@ -139,13 +139,14 @@ void AMiniBoss::Tick(float DeltaTime)
 	
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
 
-	GLog->Log(FString::Printf(TEXT("%f"), GetCharacterMovement()->Velocity.Size()));
+	//GLog->Log(FString::Printf(TEXT("%f"), GetCharacterMovement()->Velocity.Size()));
 	if (AI)
 	{
 		AI->BBComponent->SetValueAsEnum("CurrentState", (uint8)CurrentState);
 		AI->BBComponent->SetValueAsEnum("CurrentAnimState", (uint8)CurrentAnimState);
 		AI->BBComponent->SetValueAsEnum("CurrentJumpState", (uint8)CurrentJumpState);
 		AI->BBComponent->SetValueAsEnum("CurrentAttackState", (uint8)CurrentAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentDashState", (uint8)CurrentDashState);
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 		AI->BBComponent->SetValueAsBool("CurrentFalling", CurrentFalling);	
 	}

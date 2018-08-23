@@ -58,30 +58,37 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 							}
 							else if (Distance < 300.0f && !MiniBoss->IsAttack)
 							{
+								GLog->Log(FString::Printf(TEXT("Walk -> Attack")));
 								MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
 								MiniBoss->CurrentAttackState = EMiniBossAttackState::AttackReady;
 								MiniBoss->IsAttack = true; //공격중이란것을 나타냄
 							}
 							break;
 						case EMiniBossAnimState::Attack:
-							if (Distance > 500.0f && MiniBoss->AttackCompleteFlag)
-							{
-								MiniBoss->AttackCompleteFlag = false;
-								MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
-								MiniBoss->CurrentState = EMiniBossState::Chase;
-								MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
-								MiniBoss->CurrentAttackState = EMiniBossAttackState::AttackReady;
-							}
-							
 							switch (MiniBoss->CurrentAttackState)
 							{
+							case EMiniBossAttackState::AttackReady:
+								if (Distance > 500.0f && MiniBoss->AttackCompleteFlag)
+								{
+									MiniBoss->AttackCompleteFlag = false;
+									MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
+									MiniBoss->CurrentState = EMiniBossState::Chase;
+									MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+									MiniBoss->CurrentAttackState = EMiniBossAttackState::AttackReady;
+								}
+								break;
+							case EMiniBossAttackState::RightUpLeftDown:
+								break;
 							case EMiniBossAttackState::StabReady:
 								break;
 							case EMiniBossAttackState::StabStart:
 								break;
+							case EMiniBossAttackState::TwoHandWidth:
+								break;
 							}							
 							break;
 						case EMiniBossAnimState::BackWalk:
+							GLog->Log(FString::Printf(TEXT("BackWalk")));
 							break;
 						}
 					}						

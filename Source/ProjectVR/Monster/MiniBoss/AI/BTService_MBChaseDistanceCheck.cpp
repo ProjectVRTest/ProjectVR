@@ -31,10 +31,7 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 				case EMiniBossAnimState::Walk:
 					if (Distance > 1000.0f)
 					{
-						if (!MiniBoss->JumpRunCheckFlag)
-						{
-							MiniBoss->CurrentAnimState = EMiniBossAnimState::JumpAttackReady;
-						}											
+						MiniBoss->CurrentAnimState = EMiniBossAnimState::JumpAttackReady; 											
 					}
 					else if (Distance <1000.0f && Distance >400.0f)
 					{
