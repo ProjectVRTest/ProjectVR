@@ -35,7 +35,8 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 					}
 					else if (Distance <1000.0f && Distance >400.0f)
 					{
-						//UE_LOG(LogClass, Warning, TEXT("대쉬 애드 범위 진입"));
+						MiniBoss->CurrentAnimState = EMiniBossAnimState::DashAttack;
+						GLog->Log(FString::Printf(TEXT("대쉬 애드 범위 진입")));
 					}
 					else if (Distance < 500.0f)
 					{

@@ -46,56 +46,59 @@ void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 void UMiniBossAnimInstance::AnimNotify_JumpAttackStart(UAnimNotify * Notify)
 {
-	AMiniBoss* Miniboss = Cast<AMiniBoss>(TryGetPawnOwner());
+	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
 		
-	if (Miniboss)
+	if (MiniBoss)
 	{
-		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Miniboss->Target);
+		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(MiniBoss->Target);
 		FVector LaunchVector;
 		FVector GoalVector = MyCharacter->AttackPoints[0]->GetActorLocation();
 
 		UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(),
 			LaunchVector,
-			Miniboss->GetActorLocation(),
+			MiniBoss->GetActorLocation(),
 			GoalVector,
 			0,
 			0.5f);
-		UE_LOG(LogClass, Warning, TEXT("X : %f Y : %f Z :%f"), LaunchVector.X, LaunchVector.Y, LaunchVector.Z);
-		Miniboss->LaunchCharacter(LaunchVector, true, true);
+		//UE_LOG(LogClass, Warning, TEXT("X : %f Y : %f Z :%f"), LaunchVector.X, LaunchVector.Y, LaunchVector.Z);
+		MiniBoss->LaunchCharacter(LaunchVector, true, true);
 	}
 }
 
 void UMiniBossAnimInstance::AnimNotify_JumpAttackEnd(UAnimNotify * Notify)
 {
-	AMiniBoss* Miniboss = Cast<AMiniBoss>(TryGetPawnOwner());
+	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
 
-	if (Miniboss)
+	if (MiniBoss)
 	{
-		Miniboss->CurrentJumpState = EMiniBossJumpState::Idle;
-		Miniboss->CurrentAnimState = EMiniBossAnimState::Wait;
+		MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
+		MiniBoss->CurrentAnimState = EMiniBossAnimState::Wait;
 	}
 }
 
 void UMiniBossAnimInstance::AnimNotify_AttackComplete(UAnimNotify * Notify)
 {
-	AMiniBoss* Miniboss = Cast<AMiniBoss>(TryGetPawnOwner());
+	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
 
-	if (Miniboss)
+	if (MiniBoss)
 	{
-		Miniboss->AttackCompleteFlag = true;
+		MiniBoss->AttackCompleteFlag = true;
 	}
 }
 
 void UMiniBossAnimInstance::AnimNotify_DashStart(UAnimNotify * Notify)
 {
-	AMiniBoss* Miniboss = Cast<AMiniBoss>(TryGetPawnOwner());
+	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
 
-	if (Miniboss)
+	if (MiniBoss)
 	{
-		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Miniboss->Target);
+		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(MiniBoss->Target);
 
 		FVector LaunchVector;
-		//FVector
+		LaunchVector = MiniBoss->GetActorForwardVector()*300.0f + MiniBoss->GetActorUpVector()*2.0f;
 
+		MiniBoss->GetCharacterMovement()->AddImpulse((MiniBoss->GetActorForwardVector()*200.0f) + MiniBoss->GetActorUpVector()*2.0f, true);
+
+		//MiniBoss->LaunchCharacter(LaunchVector, true, true);
 	}
 }
