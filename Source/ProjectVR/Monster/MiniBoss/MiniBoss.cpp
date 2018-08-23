@@ -205,7 +205,7 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 	if (ParryingFlag)
 	{
 		IsParrying = true;
-		CurrentAnimState = EMiniBossAnimState::Parrying;
+		CurrentAnimState = EMiniBossAnimState::ParryingReady;
 	}
 	else
 	{

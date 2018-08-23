@@ -41,6 +41,7 @@ void UBTTask_MBDashState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * N
 
 		if (CurrentFalling && PreviousFalling)
 		{
+			GLog->Log(FString::Printf(TEXT("DashLoop")));
 			MiniBoss->CurrentDashState = EMiniBossDashState::DashLoop;
 		}
 

@@ -47,6 +47,8 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 					break;
 				case EMiniBossAnimState::JumpAttack:
 					break;
+				case EMiniBossAnimState::DashAttack:
+					break;
 				}				
 			}			
 		}

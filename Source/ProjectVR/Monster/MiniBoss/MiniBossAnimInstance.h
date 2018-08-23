@@ -57,4 +57,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AI")
 		void AnimNotify_DashStart(UAnimNotify* Notify);
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		void AnimNotify_DashEnd(UAnimNotify* Notify);
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		void AnimNotify_GroundFrictionDefault(UAnimNotify* Notify);
 };

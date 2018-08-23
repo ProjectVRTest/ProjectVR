@@ -83,7 +83,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	HeadBox->bGenerateOverlapEvents = true;
 	HeadBox->ComponentTags.Add(FName("Head"));
 
-	GetCharacterMovement()->MaxWalkSpeed = 450.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 280.0f;
 
 	MaxHp = 100.0f;
 	CurrentHp = MaxHp;

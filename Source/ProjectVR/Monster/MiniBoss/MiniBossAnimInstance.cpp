@@ -12,14 +12,15 @@
 #include "MyTargetPoint.h"
 #include "TimerManager.h"
 #include "MyCharacter/MotionControllerPC.h"
-#include "MyCharacter/MotionControllerPC.h"
+#include "Math/RandomStream.h"
+
+#define LEFT 1
+#define STRAIGHT 2
+#define RIGHT 3
 
 void UMiniBossAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
-
-	UE_LOG(LogClass, Warning, TEXT("애니메이션 시작"));
-
 }
 
 void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -89,16 +90,60 @@ void UMiniBossAnimInstance::AnimNotify_AttackComplete(UAnimNotify * Notify)
 void UMiniBossAnimInstance::AnimNotify_DashStart(UAnimNotify * Notify)
 {
 	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
-
+	FVector LaunchVector;
+	FVector RandomYawVector;
+	FRotator RandomRotator=FRotator::ZeroRotator;
+	int RandomYaw = FMath::RandRange(1, 3);
 	if (MiniBoss)
 	{
 		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(MiniBoss->Target);
+		if (MyCharacter)
+		{
+			switch (RandomYaw)
+			{
+			case LEFT:
+				RandomRotator.Yaw = -5.0f;
+				break;
+			case STRAIGHT:
+				RandomRotator.Yaw = 0;
+				break;
+			case RIGHT:
+				RandomRotator.Yaw = 5.0f;
+				break;
+			}
 
-		FVector LaunchVector;
-		LaunchVector = MiniBoss->GetActorForwardVector()*300.0f + MiniBoss->GetActorUpVector()*2.0f;
+			MiniBoss->SetActorRotation(MiniBoss->GetActorRotation() + RandomRotator);
+			MiniBoss->GetCharacterMovement()->GroundFriction = 1.5f;
+			MiniBoss->GetMesh()->SetMaterial(0, MiniBoss->OpacityMaterials);
+			FVector DistanceVector = UKismetMathLibrary::Subtract_VectorVector(MiniBoss->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+			LaunchVector = (DistanceVector.Size() * MiniBoss->GetActorForwardVector()*2.5f)+ MiniBoss->GetActorUpVector()*100.0f;
+			GLog->Log(FString::Printf(TEXT("Y : %d"), RandomYaw));
+			MiniBoss->LaunchCharacter(LaunchVector, true, true);
+		}
+		
+		
+		//MiniBoss->GetCharacterMovement()->AddImpulse((MiniBoss->GetActorForwardVector()*1000.0f) + MiniBoss->GetActorUpVector()*10.0f, true);
 
-		MiniBoss->GetCharacterMovement()->AddImpulse((MiniBoss->GetActorForwardVector()*200.0f) + MiniBoss->GetActorUpVector()*2.0f, true);
+		
+	}
+}
 
-		//MiniBoss->LaunchCharacter(LaunchVector, true, true);
+void UMiniBossAnimInstance::AnimNotify_DashEnd(UAnimNotify * Notify)
+{
+	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
+	
+	if (MiniBoss)
+	{
+		MiniBoss->GetMesh()->SetMaterial(0, MiniBoss->DefaultMaterials);
+	}
+}
+
+void UMiniBossAnimInstance::AnimNotify_GroundFrictionDefault(UAnimNotify * Notify)
+{
+	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
+
+	if (MiniBoss)
+	{
+		MiniBoss->GetCharacterMovement()->GroundFriction = 8.0f;	
 	}
 }
