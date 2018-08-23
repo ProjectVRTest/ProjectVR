@@ -73,6 +73,8 @@ public:
 	// TEST
 	bool once; // 서비스에서 배열에 딱 한번 들어가게 하기위해서 하는 것
 	bool bAttack;   // 서비스에서 공격을 허락하는 부울값
+	bool AttackWaite;	// 공격을 대기한다. true면 배회함
+
 	UFUNCTION()
 		void AttachVirtualHandWithHead();
 

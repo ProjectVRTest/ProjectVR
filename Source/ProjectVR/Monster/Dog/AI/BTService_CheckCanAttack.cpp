@@ -36,6 +36,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
 			RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
 			RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+			return;
 		}
 
 		if (RagdollDog->Landing || RagdollDog->AttachActor || RagdollDog->bIsAttack)
@@ -135,7 +136,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			}
 			else if (StandardAngle <= 180.0f + Range && StandardAngle >= 180.0f)	// 3
 			{
-				if (RagdollDog->bIsLeftWander || MonAngle >= StandardAngle && MonAngle < Min)
+				if (RagdollDog->bIsLeftWander || (MonAngle >= StandardAngle && MonAngle < Min))
 				{
 					RightRange(AI, RagdollDog);
 
@@ -143,14 +144,15 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					{
 						RagdollDog->bIsLeftWander = false;
 						RagdollDog->bIsRightWander = true;
+						return;
 					}
 
-					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
-						UnAttackableRange(MyCharacter, RagdollDog);
-					else
+					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))		// 공격 범위를 벗어남
+						UnAttackableRange(MyCharacter, RagdollDog);	
+					else		// 공격범위에 있음
 						AttackableRange(MyCharacter, RagdollDog);
 				}
-				else if (RagdollDog->bIsRightWander || MonAngle < StandardAngle && MonAngle > Max)
+				else if (RagdollDog->bIsRightWander || (MonAngle < StandardAngle && MonAngle > Max))
 				{
 					LeftRange(AI, RagdollDog);
 
@@ -158,6 +160,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 					{
 						RagdollDog->bIsLeftWander = true;
 						RagdollDog->bIsRightWander = false;
+						return;
 					}
 
 					if ((MonAngle >= StandardAngle && MonAngle < Min) || (MonAngle < StandardAngle && MonAngle > Max))
@@ -312,6 +315,12 @@ void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCh
 		if (Dogs[i] != RagdollDog)		// 자기랑 아닌거랑 비교
 		{
 			RagdollDog->bAttack = false;		// 공격 불가
+
+			if (!RagdollDog->AttackWaite)		// 여러마리가 있을 때 / 공격을 할 수 없다면 랜덤한 방향으로 배회하도록 한다
+			{
+				SetRandomCircle(RagdollDog);
+				RagdollDog->AttackWaite = true;
+			}
 			return;
 		}
 		else

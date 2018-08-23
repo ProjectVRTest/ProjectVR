@@ -69,6 +69,7 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 					PreviousFalling = CurrentFalling;
 					return;
 				}
+				UE_LOG(LogTemp, Log, TEXT("ddddddddddddddddddddddddddddddddddddddddddddd"));
 				RagdollDog->Landing = true;
 			}
 			

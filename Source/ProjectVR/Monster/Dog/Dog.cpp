@@ -69,7 +69,7 @@ ADog::ADog()
 
 	ADog::GetCapsuleComponent()->SetCapsuleHalfHeight(55.0f);
 	ADog::GetCapsuleComponent()->SetCapsuleRadius(30.0f);
-	GetMesh()->SetRelativeLocation(FVector(-20.0f, 0.0f, -50.0f));
+	GetMesh()->SetRelativeLocation(FVector(-20.0f, 0.0f, -55.0f));
 	GetMesh()->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 
 	DogAttackCollision->SetCollisionProfileName(TEXT("OverlapAll"));
@@ -96,6 +96,8 @@ ADog::ADog()
 	bIsDetach = false;
 
 	bInAttackplace = false;
+
+	AttackWaite = false;
 
 	GetMesh()->SetSimulatePhysics(false);
 	GetMesh()->SetCollisionProfileName("Ragdoll");
