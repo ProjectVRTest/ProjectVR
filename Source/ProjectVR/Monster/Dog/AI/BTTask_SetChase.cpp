@@ -23,20 +23,21 @@ EBTNodeResult::Type UBTTask_SetChase::ExecuteTask(UBehaviorTreeComponent & Owner
 
 		if (Dog)
 		{
-			if (Distance > 400.0f)
+			//if (Distance > 400.0f)
 			{
 				Dog->CurrentDogState = EDogState::Chase;
 				Dog->CurrentDogAnimState = EDogAnimState::Run;
 				Dog->CurrentDogJumpState = EDogJumpState::Nothing;
 				Dog->CurrentDogCircleState = EDogCircleState::Nothing;
 			}
-			else
+			/*else
 			{
 				Dog->CurrentDogState = EDogState::Battle;
 				Dog->CurrentDogAnimState = EDogAnimState::Nothing;
 				Dog->CurrentDogJumpState = EDogJumpState::Nothing;
 				Dog->CurrentDogCircleState = EDogCircleState::Nothing;
-			}
+			}*/
+
 		}
 	}
 	return EBTNodeResult::Succeeded;
