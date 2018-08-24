@@ -42,15 +42,8 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 
 		if (RagdollDog->Landing || RagdollDog->AttachActor || RagdollDog->bIsAttack)
-		{
-			if(RagdollDog->Landing)
-				UE_LOG(LogTemp, Log, TEXT("gggggggggggggggggggggggggggggggggggggggg"));
-			if (RagdollDog->AttachActor)
-				UE_LOG(LogTemp, Log, TEXT("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"));
-			if (RagdollDog->bIsAttack)
-				UE_LOG(LogTemp, Log, TEXT("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"));
 			return;
-		}
+		
 		if (RagdollDog && MyCharacter)
 		{
 			RagdollDog->bInAttackplace = false;
@@ -315,7 +308,6 @@ void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCh
 	{
 		MyCharacter->DogArray.Add(RagdollDog);
 		RagdollDog->once = true;
-		UE_LOG(LogTemp, Log, TEXT("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"));
 	}
 
 	ADog** Dogs = MyCharacter->DogArray.GetData();

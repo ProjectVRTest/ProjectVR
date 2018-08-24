@@ -15,7 +15,6 @@ EBTNodeResult::Type UBTTask_RevocationLanding::ExecuteTask(UBehaviorTreeComponen
 		if (Dog)
 		{
 			Dog->Landing = false;
-			UE_LOG(LogTemp, Log, TEXT("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"));
 			return EBTNodeResult::Succeeded;
 		}
 	}
