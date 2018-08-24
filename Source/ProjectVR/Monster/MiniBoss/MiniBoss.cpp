@@ -69,7 +69,7 @@ AMiniBoss::AMiniBoss()
 	IsAttack = false; //공격할수 있게 해줌
 	StabFlag = false;
 	TwoHandWidthFlag = false;
-	MaxHP = 100;
+	MaxHP = 100000.0f;
 	CurrentHP = MaxHP;
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/Monster/MiniBoss/Effect/Materials/M_Opacity.M_Opacity'"));
@@ -139,6 +139,9 @@ void AMiniBoss::Tick(float DeltaTime)
 	
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
 
+	GLog->Log(FString::Printf(TEXT("ParryingFlag : %d"), ParryingFlag));
+	GLog->Log(FString::Printf(TEXT("HP : %f"),CurrentHP));
+
 	//GLog->Log(FString::Printf(TEXT("%f"), GetCharacterMovement()->Velocity.Size()));
 	if (AI)
 	{
@@ -201,6 +204,7 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 		CurrentHP = 0;
 		CurrentState = EMiniBossState::Dead;
 	}
+	
 
 	if (ParryingFlag)
 	{

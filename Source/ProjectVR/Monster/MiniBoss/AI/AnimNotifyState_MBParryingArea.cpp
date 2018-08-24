@@ -12,14 +12,8 @@ void UAnimNotifyState_MBParryingArea::NotifyBegin(USkeletalMeshComponent * MeshC
 
 	if (MiniBoss)
 	{
-
+		MiniBoss->ParryingFlag = true;
 	}
-	//AMutantMonster* Mutant = Cast<AMutantMonster>(MeshComp->GetOwner());
-
-	//if (Mutant)
-	//{
-	//	Mutant->ParryingFlag = true;
-	//}
 }
 
 void UAnimNotifyState_MBParryingArea::NotifyTick(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float FrameDeltaTime)
@@ -30,4 +24,11 @@ void UAnimNotifyState_MBParryingArea::NotifyTick(USkeletalMeshComponent * MeshCo
 void UAnimNotifyState_MBParryingArea::NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation)
 {
 	Super::NotifyEnd(MeshComp, Animation);
+
+	AMiniBoss* MiniBoss = Cast<AMiniBoss>(MeshComp->GetOwner());
+
+	if (MiniBoss)
+	{
+		MiniBoss->ParryingFlag = false;
+	}
 }

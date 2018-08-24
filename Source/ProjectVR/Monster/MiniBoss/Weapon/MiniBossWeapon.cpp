@@ -30,6 +30,9 @@ AMiniBossWeapon::AMiniBossWeapon()
 	SwordCollision->SetRelativeLocation(FVector(62.0f, 0, 0));
 	SwordCollision->SetRelativeRotation(FRotator(90.0f, 0, 0));	
 	SwordCollision->SetRelativeScale3D(FVector(0.7f, 0.7f, 2.3f));
+
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 }
 
 // Called when the game starts or when spawned

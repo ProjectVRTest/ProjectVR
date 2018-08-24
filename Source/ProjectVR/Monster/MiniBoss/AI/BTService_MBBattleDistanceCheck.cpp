@@ -58,7 +58,7 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 							}
 							else if (Distance < 300.0f && !MiniBoss->IsAttack)
 							{
-								GLog->Log(FString::Printf(TEXT("Walk -> Attack")));
+								//GLog->Log(FString::Printf(TEXT("Walk -> Attack")));
 								MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
 								MiniBoss->CurrentAttackState = EMiniBossAttackState::AttackReady;
 								MiniBoss->IsAttack = true; //공격중이란것을 나타냄
@@ -88,7 +88,7 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 							}							
 							break;
 						case EMiniBossAnimState::BackWalk:
-							GLog->Log(FString::Printf(TEXT("BackWalk")));
+							//GLog->Log(FString::Printf(TEXT("BackWalk")));
 							break;
 						}
 					}						

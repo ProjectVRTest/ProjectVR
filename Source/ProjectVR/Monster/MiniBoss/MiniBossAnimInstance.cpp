@@ -117,7 +117,7 @@ void UMiniBossAnimInstance::AnimNotify_DashStart(UAnimNotify * Notify)
 			MiniBoss->GetMesh()->SetMaterial(0, MiniBoss->OpacityMaterials);
 			FVector DistanceVector = UKismetMathLibrary::Subtract_VectorVector(MiniBoss->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
 			LaunchVector = (DistanceVector.Size() * MiniBoss->GetActorForwardVector()*2.5f)+ MiniBoss->GetActorUpVector()*100.0f;
-			GLog->Log(FString::Printf(TEXT("Y : %d"), RandomYaw));
+			//GLog->Log(FString::Printf(TEXT("Y : %d"), RandomYaw));
 			MiniBoss->LaunchCharacter(LaunchVector, true, true);
 		}
 		

@@ -13,7 +13,7 @@ enum class EMiniBossState : uint8
 	Chase = 2 UMETA(DisplayName = "Chase"),
 	Battle = 3 UMETA(DisplayName = "Battle"),
 	Dead = 4 UMETA(DisplayName = "Dead"),
-	Rotate = 5 UMETA(DisplayName = "Rotate")
+	Groggy = 5 UMETA(DisplayName = "Groggy")
 };
 
 UENUM(BlueprintType)

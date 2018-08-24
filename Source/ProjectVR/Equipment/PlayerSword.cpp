@@ -38,9 +38,9 @@ APlayerSword::APlayerSword()
 	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 
 	// 콜리전 위치 및 방향, 크기 설정
-	SwordCollision->SetRelativeLocation(FVector(0.0f, 450.0f, 0.0f));
+	SwordCollision->SetRelativeLocation(FVector(0.0f, 70.0f, 0.0f));
 	SwordCollision->SetRelativeRotation(FRotator(0.0f,0.0f,90.0f));
-	SwordCollision->SetRelativeScale3D(FVector(1.0f, 1.0f, 8.0f));
+	SwordCollision->SetRelativeScale3D(FVector(0.5f, 0.5f, 1.5f));
 
 	// 검 메쉬의 크기 설정
 	//SwordMesh->SetRelativeScale3D(FVector(0.25f, 0.25f, 0.25f));
@@ -48,7 +48,7 @@ APlayerSword::APlayerSword()
 
 	Timer = 0.0f;		// 타이머 초기화
 
-	Tags.Add(FName(TEXT("PlayerSword")));		// 생성한 방패를 'PlayerSword'란 이름으로 태그를 줌
+	Tags.Add(FName(TEXT("PlayerSword")));		// 생성한 검을 'PlayerSword'란 이름으로 태그를 줌
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
@@ -58,6 +58,10 @@ void APlayerSword::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (SwordCollision)
+	{
+		SwordCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerSword::OnSwordOverlap);
+	}
 }
 
 // Called every frame
