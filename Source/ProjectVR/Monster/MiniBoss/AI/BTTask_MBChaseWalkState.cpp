@@ -31,7 +31,11 @@ EBTNodeResult::Type UBTTask_MBChaseWalkState::ExecuteTask(UBehaviorTreeComponent
 						AI->BBComponent->SetValueAsObject("MovePoint", MovePoints[RandomAttackPointIndex]);
 					}
 					return EBTNodeResult::Succeeded;
-				}				
+				}
+				else
+				{
+					return EBTNodeResult::Failed;
+				}
 			}
 			else
 			{
