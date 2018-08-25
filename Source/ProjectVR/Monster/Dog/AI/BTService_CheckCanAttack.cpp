@@ -36,12 +36,14 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
 			RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
 			RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+			UnAttackableRange(MyCharacter, RagdollDog);
 			return;
 		}
 
+
 		if (RagdollDog->Landing || RagdollDog->AttachActor || RagdollDog->bIsAttack)
 			return;
-
+		
 		if (RagdollDog && MyCharacter)
 		{
 			RagdollDog->bInAttackplace = false;
@@ -369,8 +371,11 @@ void UBTService_CheckCanAttack::UnAttackableRange(AMotionControllerCharacter * M
 	if (!RagdollDog->AttachActor)		// 물고있을 때는 다른 개들이 물지 못하도록 배열삭제를 막음
 	{
 		RagdollDog->bInAttackplace = false;
-		MyCharacter->DogArray.Remove(RagdollDog);
 		RagdollDog->once = false;
+		RagdollDog->bIsAttack = false;
+
+		if (MyCharacter->DogArray.Find(RagdollDog))			// 배열에 개가 있으면
+			MyCharacter->DogArray.Remove(RagdollDog);		// 제거
 	}
 }
 
