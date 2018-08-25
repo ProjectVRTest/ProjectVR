@@ -19,7 +19,8 @@ EBTNodeResult::Type UBTTask_SetBattle::ExecuteTask(UBehaviorTreeComponent & Owne
 			Dog->CurrentDogAnimState = EDogAnimState::Nothing;
 			Dog->CurrentDogJumpState = EDogJumpState::Nothing;
 			Dog->CurrentDogCircleState = EDogCircleState::Nothing;
+			return EBTNodeResult::Succeeded;
 		}
 	}
-	return EBTNodeResult::Succeeded;
+	return EBTNodeResult::Failed;
 }

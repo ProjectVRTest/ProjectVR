@@ -23,11 +23,12 @@ EBTNodeResult::Type UBTTask_SetJumpStart::ExecuteTask(UBehaviorTreeComponent & O
 				{
 					Dog->bIsAttack = true;
 					Dog->CurrentDogJumpState = EDogJumpState::JumpStart;
+					return EBTNodeResult::Succeeded;
 				}
 			}
 		}
 	}
-	return EBTNodeResult::Succeeded;
+	return EBTNodeResult::Failed;
 }
 
 void UBTTask_SetJumpStart::InitializeFromAsset(UBehaviorTree & Asset)

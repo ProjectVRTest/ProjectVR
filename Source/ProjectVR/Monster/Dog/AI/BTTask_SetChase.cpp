@@ -29,6 +29,7 @@ EBTNodeResult::Type UBTTask_SetChase::ExecuteTask(UBehaviorTreeComponent & Owner
 				Dog->CurrentDogAnimState = EDogAnimState::Run;
 				Dog->CurrentDogJumpState = EDogJumpState::Nothing;
 				Dog->CurrentDogCircleState = EDogCircleState::Nothing;
+				return EBTNodeResult::Succeeded;
 			}
 			/*else
 			{
@@ -40,5 +41,5 @@ EBTNodeResult::Type UBTTask_SetChase::ExecuteTask(UBehaviorTreeComponent & Owner
 
 		}
 	}
-	return EBTNodeResult::Succeeded;
+	return EBTNodeResult::Failed;
 }

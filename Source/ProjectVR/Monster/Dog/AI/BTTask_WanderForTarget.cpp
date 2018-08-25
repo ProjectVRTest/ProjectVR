@@ -49,11 +49,12 @@ EBTNodeResult::Type UBTTask_WanderForTarget::ExecuteTask(UBehaviorTreeComponent 
 				FRotator Rot1 = RagdollDog->GetActorRotation() + UKismetMathLibrary::RotatorFromAxisAndAngle(FVector(0.0f, 0.0f, 1.0f), time);
 
 				RagdollDog->SetActorLocationAndRotation(Vec3, Rot1);
+				return EBTNodeResult::Succeeded;
 			}
 		}
 	}
 
-	return EBTNodeResult::Succeeded;
+	return EBTNodeResult::Failed;
 }
 
 void UBTTask_WanderForTarget::InitializeFromAsset(UBehaviorTree & Asset)

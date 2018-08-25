@@ -25,27 +25,31 @@ void UBTService_DistanceCalculation::TickNode(UBehaviorTreeComponent & OwnerComp
 	if (AI)
 	{
 		AActor* Player = Cast<AActor>(AI->BBComponent->GetValueAsObject(TEXT("Player")));
-		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
-		ADog* RagdollDog = Cast<ADog>(AI->GetPawn());
-		
-		if (RagdollDog && MyCharacter)
+
+		if (Player)
 		{
+			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
+			ADog* RagdollDog = Cast<ADog>(AI->GetPawn());
 
-			Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+			if (RagdollDog && MyCharacter)
+			{
 
-			if (RagdollDog->CurrentDogState != EDogState::Chase && Distance > 400.0f)
-			{
-				RagdollDog->CurrentDogState = EDogState::Chase;
-				RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
-				RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
-				RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
-			}
-			else if (RagdollDog->CurrentDogState != EDogState::Circle &&Distance <= 400.0f)
-			{
-				RagdollDog->CurrentDogState = EDogState::Circle;
-				RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
-				RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
-				RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+				Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+
+				if (RagdollDog->CurrentDogState != EDogState::Chase && Distance > 400.0f)
+				{
+					RagdollDog->CurrentDogState = EDogState::Chase;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
+					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+				}
+				else if (RagdollDog->CurrentDogState != EDogState::Circle &&Distance <= 400.0f)
+				{
+					RagdollDog->CurrentDogState = EDogState::Circle;
+					RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
+					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
+					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+				}
 			}
 		}
 	}

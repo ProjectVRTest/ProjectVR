@@ -143,18 +143,15 @@ void ADog::Tick(float DeltaTime)
 
 	FFindFloorResult FloorDistance;;
 	GetCharacterMovement()->ComputeFloorDist(GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34, 0);
+
 	if (FloorDistance.FloorDist < 3.0f)
-	{
 		bOnLand = true;
-	}
 	else
-	{
 		bOnLand = false;
-	}
 
 	AI = Cast<ADogAIController>(GetController());
 
-	if (OnLandFlag)
+	if (OnLandFlag && AI)
 	{
 		if (AI->BBComponent->GetValueAsFloat("DistanceWithLand") < 3.0f)
 		{
@@ -225,18 +222,21 @@ void ADog::Tick(float DeltaTime)
 
 			// 캐릭터의 오른손의 붙어있는 액터를 초기화
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-			Character->RightHand->AttachDog = nullptr;
+			if (Character)
+			{
+				Character->RightHand->AttachDog = nullptr;
 
-			// 날라가는 방향
-			FVector Direction = Character->Camera->GetUpVector() + Character->Camera->GetForwardVector();
+				// 날라가는 방향
+				FVector Direction = Character->Camera->GetUpVector() + Character->Camera->GetForwardVector();
 
-			// 날라가는 힘을 조절
-			GetCapsuleComponent()->SetPhysicsLinearVelocity(Direction* 500.0f);
-			GetCapsuleComponent()->SetPhysicsAngularVelocity(Direction* 500.0f);
-			GetCapsuleComponent()->SetSimulatePhysics(true);
-			GetCapsuleComponent()->AddForce(Direction * 500.0f);
+				// 날라가는 힘을 조절
+				GetCapsuleComponent()->SetPhysicsLinearVelocity(Direction* 500.0f);
+				GetCapsuleComponent()->SetPhysicsAngularVelocity(Direction* 500.0f);
+				GetCapsuleComponent()->SetSimulatePhysics(true);
+				GetCapsuleComponent()->AddForce(Direction * 500.0f);
 
-			OnLandFlag = true;		// 바닥에 닿았을 때 한번만 실행
+				OnLandFlag = true;		// 바닥에 닿았을 때 한번만 실행
+			}
 		}
 	}
 }
@@ -255,13 +255,6 @@ void ADog::OnSeePlayer(APawn * Pawn)
 
 	if (Pawn->ActorHasTag("Character") && FloorDistance.FloorDist < 3.0f)
 	{
-		// 캐릭터의 오른손의 붙어있는 액터를 초기화
-		/*if (!once)
-		{
-			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(Pawn);
-			Character->DogArray.Add(this);
-			once = true;
-		}*/
 		ADogAIController* AI = Cast<ADogAIController>(GetController());
 
 		if ( AI && !AI->BBComponent->GetValueAsObject("Player"))
@@ -299,7 +292,6 @@ float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControll
 	{
 		bIsDeath = true;
 		bpunchDetach = true;
-		UE_LOG(LogTemp, Log, TEXT("Death!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
 	}
 
 	return Damage;

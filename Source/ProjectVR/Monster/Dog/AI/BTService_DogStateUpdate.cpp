@@ -25,37 +25,40 @@ void UBTService_DogStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 	if (AI)
 	{
 		AActor* Player = Cast<AActor>(AI->BBComponent->GetValueAsObject(TEXT("Player")));
-		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
-		ADog* RagdollDog = Cast<ADog>(AI->GetPawn());
-		
-		if (RagdollDog && MyCharacter)
-		{
-			Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
-			DistanceWithLand = AI->BBComponent->GetValueAsFloat("DistanceWithLand");
-			//UE_LOG(LogClass, Warning, TEXT("%f"), Distance);
 
-			switch (RagdollDog->CurrentDogState)
+		if (Player)
+		{
+			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
+			ADog* RagdollDog = Cast<ADog>(AI->GetPawn());
+
+			if (RagdollDog && MyCharacter)
 			{
-			case EDogState::Idle:
-				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
-				break;
-			case EDogState::Chase:
-				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-				break;
-			case EDogState::Battle:
-				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
-				break;
-			case EDogState::Hurled:
-				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
-				break;
-			case EDogState::Death:
-				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
-				break;
-			case EDogState::Nothing:
-				RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
-				break;
-			default:
-				break;
+				Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+				DistanceWithLand = AI->BBComponent->GetValueAsFloat("DistanceWithLand");
+
+				switch (RagdollDog->CurrentDogState)
+				{
+				case EDogState::Idle:
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
+					break;
+				case EDogState::Chase:
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+					break;
+				case EDogState::Battle:
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+					break;
+				case EDogState::Hurled:
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
+					break;
+				case EDogState::Death:
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
+					break;
+				case EDogState::Nothing:
+					RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}
