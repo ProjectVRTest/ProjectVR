@@ -131,7 +131,11 @@ void AMiniBoss::BeginPlay()
 
 	Sword = GetWorld()->SpawnActor<AMiniBossWeapon>(Sword->StaticClass(), SpawnActorOption);
 
-	Sword->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("weapon001소켓")));
+	if (Sword)
+	{
+		Sword->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("weapon001소켓")));
+	}
+	
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &AMiniBoss::OnSeeCharacter);

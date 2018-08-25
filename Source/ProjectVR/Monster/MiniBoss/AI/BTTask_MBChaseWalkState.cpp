@@ -21,14 +21,17 @@ EBTNodeResult::Type UBTTask_MBChaseWalkState::ExecuteTask(UBehaviorTreeComponent
 			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(AI->BBComponent->GetValueAsObject("Player"));
 			if (MyCharacter)
 			{
-				MovePoints = MyCharacter->AttackPoints;
-				int RandomAttackPointIndex = FMath::RandRange(0, 7);
-
-				if (!AI->BBComponent->GetValueAsObject("MovePoint"))
+				if (MyCharacter->AttackPoints.Num() > 0)
 				{
-					AI->BBComponent->SetValueAsObject("MovePoint", MovePoints[RandomAttackPointIndex]);
+					MovePoints = MyCharacter->AttackPoints;
+					int RandomAttackPointIndex = FMath::RandRange(0, 7);
+
+					if (!AI->BBComponent->GetValueAsObject("MovePoint"))
+					{
+						AI->BBComponent->SetValueAsObject("MovePoint", MovePoints[RandomAttackPointIndex]);
+					}
+					return EBTNodeResult::Succeeded;
 				}				
-				return EBTNodeResult::Succeeded;
 			}
 			else
 			{

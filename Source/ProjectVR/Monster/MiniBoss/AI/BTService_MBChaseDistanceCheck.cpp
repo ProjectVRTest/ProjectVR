@@ -22,7 +22,7 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 
 		LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation() , MyCharacter->GetActorLocation());
 
-		if (MiniBoss)
+		if (MiniBoss && Player)
 		{
 			if (!MiniBoss->CurrentFalling)
 			{

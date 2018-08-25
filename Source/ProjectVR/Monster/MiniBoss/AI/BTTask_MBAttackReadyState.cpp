@@ -45,6 +45,6 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 		}
 
 	}
-	return EBTNodeResult::Type();
+	return EBTNodeResult::Succeeded;
 }
 

@@ -26,24 +26,25 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 
 			if (MyCharacter)
 			{
-				AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
-
-				LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->GetActorLocation());
-				CurrentRot = FMath::Lerp(MiniBoss->GetActorRotation(), LookAt, DeltaSeconds);
-
-				MiniBoss->SetActorRotation(CurrentRot);
-
-				Velocity = MiniBoss->GetCharacterMovement()->Velocity;
-				TestRotator = MiniBoss->GetActorRotation();
-
-				FVector NormalVector = UKismetMathLibrary::Normal(Velocity);
-				FRotator XNormalRotator = UKismetMathLibrary::MakeRotFromX(NormalVector);
-				FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(TestRotator, XNormalRotator);
-				MiniBoss->Yaw = CompleteRotator.Yaw;
-		
-				//GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), MiniBoss->Yaw));
+				AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());		
+	
 				if (MiniBoss)
 				{
+					LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->GetActorLocation());
+					CurrentRot = FMath::Lerp(MiniBoss->GetActorRotation(), LookAt, DeltaSeconds);
+
+					MiniBoss->SetActorRotation(CurrentRot);
+
+					Velocity = MiniBoss->GetCharacterMovement()->Velocity;
+					TestRotator = MiniBoss->GetActorRotation();
+
+					FVector NormalVector = UKismetMathLibrary::Normal(Velocity);
+					FRotator XNormalRotator = UKismetMathLibrary::MakeRotFromX(NormalVector);
+					FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(TestRotator, XNormalRotator);
+					MiniBoss->Yaw = CompleteRotator.Yaw;
+
+					//GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), MiniBoss->Yaw));
+
 					if (!MiniBoss->CurrentFalling)
 					{
 						switch (MiniBoss->CurrentAnimState)
