@@ -98,13 +98,19 @@ AMiniBoss::AMiniBoss()
 		AfterImageEndEffect = PT_AfterImageEndEffect.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>ABP_MiniBos(TEXT("AnimBlueprint'/Game/Blueprints/Monster/MiniBoss/Blueprints/ABP_MiniBoss.ABP_MiniBoss'"));
+	static ConstructorHelpers::FObjectFinder<UClass>ABP_MiniBos(TEXT("AnimBlueprint'/Game/Blueprints/Monster/MiniBoss/Blueprints/ABP_MiniBoss.ABP_MiniBoss_C'"));
 
 	if (ABP_MiniBos.Succeeded())
 	{
-		GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-		GetMesh()->SetAnimInstanceClass(ABP_MiniBos.Object->GeneratedClass);
+		UClass* MiniBossAnimBlueprint = ABP_MiniBos.Object;
+
+		if (MiniBossAnimBlueprint)
+		{
+			GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+			GetMesh()->SetAnimInstanceClass(MiniBossAnimBlueprint);
+		}		
 	}
+
 	GetCharacterMovement()->MaxAcceleration = 2048.0f;
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));

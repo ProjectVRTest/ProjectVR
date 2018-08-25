@@ -81,12 +81,17 @@ ARightHandMotionController::ARightHandMotionController()
 	MotionController->MotionSource = (FName(*HandName)); //넣어준다.
 
 														 //손에 사용할 애니메이션블루프린트를 에디터에서 찾아서 ABP_Hand에 넣어준다.
-	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>ABP_Hand(TEXT("AnimBlueprint'/Game/Blueprints/MyCharacter/Hand/ABP_RightHand.ABP_RightHand'"));
+	static ConstructorHelpers::FObjectFinder<UClass>ABP_Hand(TEXT("AnimBlueprint'/Game/Blueprints/MyCharacter/Hand/ABP_RightHand.ABP_RightHand_C'"));
 
 	if (ABP_Hand.Succeeded()) //애니메이션블루프린트를 찾앗으면
 	{
-		HandMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint); //손의 애니메이션모드를 블루프린트형으로 바꿔주고
-		HandMesh->SetAnimInstanceClass(ABP_Hand.Object->GeneratedClass); //위에서 찾은 애니메이션블루프린트를 꽂아준다.
+		UClass* RightHandAnimBlueprint = ABP_Hand.Object;
+
+		if (RightHandAnimBlueprint)
+		{
+			HandMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint); //손의 애니메이션모드를 블루프린트형으로 바꿔주고
+			HandMesh->SetAnimInstanceClass(RightHandAnimBlueprint); //위에서 찾은 애니메이션블루프린트를 꽂아준다.
+		}		
 	}
 
 	// 포션생성 위치

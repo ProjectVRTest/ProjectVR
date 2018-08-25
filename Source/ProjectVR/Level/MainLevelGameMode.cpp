@@ -2,10 +2,12 @@
 
 #include "MainLevelGameMode.h"
 #include "MyCharacter/MotionControllerCharacter.h"
+#include "MyCharacter/MotionControllerPC.h"
 
 AMainLevelGameMode::AMainLevelGameMode()
 {
 	DefaultPawnClass = AMotionControllerCharacter::StaticClass();
+	PlayerControllerClass = AMotionControllerPC::StaticClass();
 }
 
 

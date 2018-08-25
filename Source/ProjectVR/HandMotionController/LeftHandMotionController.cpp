@@ -68,12 +68,17 @@ ALeftHandMotionController::ALeftHandMotionController()
 	PotionBagAttachScene->SetRelativeRotation(FRotator(0, 93.0f, 0));
 
 	//왼손의 애니메이션을 지정해주기 위해 에디터상에 있는 애니메이션블루프린트를 가져와서 ABP_Hand에 넣는다.
-	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>ABP_Hand(TEXT("AnimBlueprint'/Game/Blueprints/MyCharacter/Hand/ABP_LeftHand.ABP_LeftHand'"));
+	static ConstructorHelpers::FObjectFinder<UClass>ABP_Hand(TEXT("AnimBlueprint'/Game/Blueprints/MyCharacter/Hand/ABP_LeftHand.ABP_LeftHand_C'"));
 
 	if (ABP_Hand.Succeeded()) //불러오는데 성공했으면
 	{
-		HandMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint); //왼손의 애니메이션모드를 블루프린트로 지정한다.
-		HandMesh->SetAnimInstanceClass(ABP_Hand.Object->GeneratedClass); //왼손의 애니메이션블루프린트를 ABP_Hand로 지정한다.
+		UClass* LeftHandAnimBlueprint = ABP_Hand.Object;
+
+		if (LeftHandAnimBlueprint)
+		{
+			HandMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint); //왼손의 애니메이션모드를 블루프린트로 지정한다.
+			HandMesh->SetAnimInstanceClass(LeftHandAnimBlueprint); //왼손의 애니메이션블루프린트를 ABP_Hand로 지정한다.
+		}		
 	}
 
 	Tags.Add(FName(TEXT("LeftHand"))); //왼손의 태그를 LeftHand로 정한다.

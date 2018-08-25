@@ -55,12 +55,17 @@ ANormalMonster::ANormalMonster()
 
 	AIControllerClass = ANormalMonsterAIController::StaticClass();
 
-	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>ABP_NormalMonster(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Normal/Blueprints/ABP_NormalMonster.ABP_NormalMonster'"));
+	static ConstructorHelpers::FObjectFinder<UClass>ABP_NormalMonster(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Normal/Blueprints/ABP_NormalMonster.ABP_NormalMonster_C'"));
 
 	if (ABP_NormalMonster.Succeeded())
 	{
-		GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-		GetMesh()->SetAnimInstanceClass(ABP_NormalMonster.Object->GeneratedClass);
+		UClass* NormalMonsterAnimBlueprint = ABP_NormalMonster.Object;
+		
+		if (NormalMonsterAnimBlueprint)
+		{
+			GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+			GetMesh()->SetAnimInstanceClass(NormalMonsterAnimBlueprint);
+		}		
 	}
 
 	GetCharacterMovement()->MaxWalkSpeed = 450.0f;

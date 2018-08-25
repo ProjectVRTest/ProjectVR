@@ -46,12 +46,19 @@ ADog::ADog()
 		BehaviorTree = Monster_BehaviorTree.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UAnimBlueprint>Monster_AnimBlueprint(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Dog/Blueprints2/ABP_Dog.ABP_Dog'"));
+	//기존에 사용 하던 UAnimBlueprint는 패키징 이후에 엔진이 찾을수 없는것으로 판단
+	//새롭게 UClass로 오브젝트를 찾고 꽂아 넣는 형식으로 바꿈
+	static ConstructorHelpers::FObjectFinder<UClass>Monster_AnimBlueprint(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Dog/Blueprints2/ABP_Dog.ABP_Dog_C'"));
 
 	if (Monster_AnimBlueprint.Succeeded())
 	{
-		GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-		GetMesh()->SetAnimInstanceClass(Monster_AnimBlueprint.Object->GeneratedClass);
+		UClass* DogAnimBlueprint = Monster_AnimBlueprint.Object;
+		
+		if (DogAnimBlueprint)
+		{
+			GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+			GetMesh()->SetAnimInstanceClass(DogAnimBlueprint);
+		}		
 	}
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface>Monster_Material(TEXT("Material'/Game/Assets/Monster/Dog/Materials/M_Dog.M_Dog'"));

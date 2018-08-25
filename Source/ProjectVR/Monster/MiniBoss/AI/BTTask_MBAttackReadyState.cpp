@@ -15,7 +15,7 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 	if (AI)
 	{
 		MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
-		float WaitTime;
+		float WaitTime = 0;
 		if (MiniBoss)
 		{
 			int RandomAttackValue = FMath::RandRange(1, 3);
