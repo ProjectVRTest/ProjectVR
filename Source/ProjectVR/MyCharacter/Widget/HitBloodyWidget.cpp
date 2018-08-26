@@ -47,19 +47,25 @@ void UHitBloodyWidget::FillAnimationsMap()			// 위젯 애니메이션 탐색
 		{
 			UObjectProperty* ObjProp = Cast<UObjectProperty>(Prop);
 
-			// Only want the properties that are widget animations
-			if (ObjProp->PropertyClass == UWidgetAnimation::StaticClass())		// UWidgetAnimation형식의 클래스 찾기
+			if (ObjProp)
 			{
-				UObject* Obj = ObjProp->GetObjectPropertyValue_InContainer(this);
-
-				UWidgetAnimation* WidgetAnim = Cast<UWidgetAnimation>(Obj);			// 찾은 애니메이션을 함수를 사용할 수 있도록 함
-
-				if (WidgetAnim != nullptr && WidgetAnim->MovieScene != nullptr)
+				// Only want the properties that are widget animations
+				if (ObjProp->PropertyClass == UWidgetAnimation::StaticClass())		// UWidgetAnimation형식의 클래스 찾기
 				{
-					FName AnimName = WidgetAnim->MovieScene->GetFName();			// 위젯의 애니메이션 이름 저장
-					AnimationsMap.Add(AnimName, WidgetAnim);						// 이름을 배열에 저장
+					UObject* Obj = ObjProp->GetObjectPropertyValue_InContainer(this);
+
+					if (Obj)
+					{
+						UWidgetAnimation* WidgetAnim = Cast<UWidgetAnimation>(Obj);			// 찾은 애니메이션을 함수를 사용할 수 있도록 함
+
+						if (WidgetAnim != nullptr && WidgetAnim->MovieScene != nullptr)
+						{
+							FName AnimName = WidgetAnim->MovieScene->GetFName();			// 위젯의 애니메이션 이름 저장
+							AnimationsMap.Add(AnimName, WidgetAnim);						// 이름을 배열에 저장
+						}
+					}
 				}
-			}
+			}			
 		}
 
 		Prop = Prop->PropertyLinkNext;		// 다음 탐색

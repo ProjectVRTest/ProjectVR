@@ -74,7 +74,10 @@ void ULeftHandWidget::AssignAnimations()
 			{
 				UObject* object = objectProp->GetObjectPropertyValue_InContainer(this);		// 현재 objectProp에서 오브젝트를 object에 저장한다. 이 object는 UWidgetAnimation 클래스
 
-				WidgetAnim = Cast<UWidgetAnimation>(object);		// object 캐스트
+				if (object)
+				{
+					WidgetAnim = Cast<UWidgetAnimation>(object);		// object 캐스트
+				}				
 			}
 		}
 		prop = prop->PropertyLinkNext;		// 다음 속성을 찾아봄
