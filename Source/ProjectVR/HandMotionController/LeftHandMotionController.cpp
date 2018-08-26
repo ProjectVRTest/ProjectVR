@@ -227,15 +227,19 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 	{
 		ADog* RagdollDog = Cast<ADog>(OtherActor);
 
-		if (RagdollDog->AttachActor)		// 개가 물고 있지 않으면 왼손과 어떤 상호작용을 해도 무시할 수 있어야 함
+		if (RagdollDog && RagdollDog->AttachActor)		// 개가 물고 있지 않으면 왼손과 어떤 상호작용을 해도 무시할 수 있어야 함
 		{
 			if (GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
 			{
 				AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
-				if (Character->RightHand->AttachDog)
+				if (Character)
 				{
-					UGameplayStatics::ApplyDamage(OtherActor, 10.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
+					if (Character->RightHand)
+					{
+						if(Character->RightHand->AttachDog)
+							UGameplayStatics::ApplyDamage(OtherActor, 10.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
+					}
 				}
 			}
 		}
@@ -250,9 +254,7 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 	}
 
 	if (OtherActor->ActorHasTag("DisregardForLeftHand"))
-	{
 		return;
-	}
 }
 
 void ALeftHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
@@ -265,9 +267,7 @@ void ALeftHandMotionController::OnHandEndOverlap(UPrimitiveComponent * Overlappe
 		return;
 	}
 	if (OtherActor->ActorHasTag("DisregardForLeftHand"))
-	{
 		return;
-	}
 }
 
 FString ALeftHandMotionController::GetEnumToString(EControllerHand Value)

@@ -413,14 +413,11 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 void ARightHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
 	if (OtherActor->ActorHasTag("DisregardForRightHand"))
-	{
 		return;
-	}
 
 	if (HandState != E_HandState::Grab)
-	{
 		HandNomalState();
-	}
+
 	return;
 }
 

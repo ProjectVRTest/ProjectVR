@@ -129,9 +129,6 @@ void ADog::BeginPlay()
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &ADog::OnSeePlayer);
 	}
-
-	GetMesh()->OnComponentBeginOverlap.AddDynamic(this, &ADog::OnBodyOverlap);
-	DogAttackCollision->OnComponentBeginOverlap.AddDynamic(this, &ADog::OnHeadOverlap);		// 오버랩 이벤트를 발생시킬 수 있도록 설정
 }
 
 // Called every frame
@@ -270,19 +267,6 @@ void ADog::OnSeePlayer(APawn * Pawn)
 	}
 }
 
-void ADog::AttachVirtualHandWithHead()
-{
-}
-
-void ADog::OnBodyOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
-
-}
-
-void ADog::OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
-	
-}
 
 float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {

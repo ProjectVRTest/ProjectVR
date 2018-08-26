@@ -75,18 +75,7 @@ public:
 	bool bAttack;   // 서비스에서 공격을 허락하는 부울값
 	bool AttackWaite;	// 공격을 대기한다. true면 배회함
 
-	UFUNCTION()
-		void AttachVirtualHandWithHead();
-
 	bool bIsAttach;
-
-	UFUNCTION()
-		void OnBodyOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
-			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 데미지를 전달하기위한 함수
-
-	UFUNCTION()
-		void OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
-			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 데미지를 전달하기위한 함수
 
 	int point;
 	float prelinear, preangular;
