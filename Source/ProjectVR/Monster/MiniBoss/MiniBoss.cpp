@@ -149,8 +149,8 @@ void AMiniBoss::Tick(float DeltaTime)
 	
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
 
-	GLog->Log(FString::Printf(TEXT("ParryingFlag : %d"), ParryingFlag));
-	GLog->Log(FString::Printf(TEXT("HP : %f"),CurrentHP));
+	//GLog->Log(FString::Printf(TEXT("ParryingFlag : %d"), ParryingFlag));
+	//GLog->Log(FString::Printf(TEXT("HP : %f"),CurrentHP));
 
 	//GLog->Log(FString::Printf(TEXT("%f"), GetCharacterMovement()->Velocity.Size()));
 	if (AI)

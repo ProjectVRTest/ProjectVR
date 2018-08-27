@@ -22,6 +22,12 @@ APotion::APotion()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PotionMesh"));
 	SetRootComponent(Mesh);	
 
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Potion(TEXT("StaticMesh'/Game/Assets/Item/Mesh/Potion/Mesh/potion.potion'"));
+
+	if (SM_Potion.Succeeded())
+	{
+		Mesh->SetStaticMesh(SM_Potion.Object);
+	}
 	BagInputFlag = false;
 	BagInputCompleteFlag = false;
 
@@ -38,17 +44,17 @@ void APotion::BeginPlay()
 
 	Mesh->OnComponentBeginOverlap.AddDynamic(this, &APotion::OnPotionBeginOverlap);
 	
-	if (AItemDataSingleton::GetInstatnce()->DataTable) //싱글톤 객체에 데이터 테이블이 있는지 우선 확인한다.
-	{
-		//있으면 첫번째에 있는 인덱스에 해당하는 데이터테이블의 행값을 가져와서 DataTable에 저장한다.
-		DataTable = AItemDataSingleton::GetInstatnce()->GetItemData(1);
+	//if (AItemDataSingleton::GetInstatnce()->DataTable) //싱글톤 객체에 데이터 테이블이 있는지 우선 확인한다.
+	//{
+	//	//있으면 첫번째에 있는 인덱스에 해당하는 데이터테이블의 행값을 가져와서 DataTable에 저장한다.
+	//	DataTable = AItemDataSingleton::GetInstatnce()->GetItemData(1);
 
-		//메쉬를 로딩하기 위해 변수를 선언한다.
-		FStreamableManager AssetLoader;
+	//	//메쉬를 로딩하기 위해 변수를 선언한다.
+	//	FStreamableManager AssetLoader;
 
-		//물약의 Mesh를 앞에서 저장해둔 DataTable의 ItemMesh를 이용해서 설정해준다.
-		Mesh->SetStaticMesh(AssetLoader.LoadSynchronous<UStaticMesh>(DataTable.ItemMesh));
-	}
+	//	//물약의 Mesh를 앞에서 저장해둔 DataTable의 ItemMesh를 이용해서 설정해준다.
+	//	Mesh->SetStaticMesh(AssetLoader.LoadSynchronous<UStaticMesh>(DataTable.ItemMesh));
+	//}
 }
 
 // Called every frame

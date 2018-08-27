@@ -53,7 +53,11 @@ void APotionBag::BeginPlay()
 	for (int i = 0; i < PotionCount; i++)
 	{
 		Potion = GetWorld()->SpawnActor<APotion>(Potion->StaticClass(), SpawnActorOption);
-		PotionPush(Potion);	
+
+		if (Potion)
+		{
+			PotionPush(Potion);
+		}		
 	}
 
 	if (PotionBagCollision)
@@ -82,34 +86,37 @@ void APotionBag::PotionPush(APotion* PushPotion)
 {
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
-	Potions.Add(PushPotion);
-
-	int CurrentPotionCount = Potions.Num();
-
-	UE_LOG(LogClass, Warning, TEXT("Push : PotionCount %d"), CurrentPotionCount);
-	switch (CurrentPotionCount)
+	if (PushPotion)
 	{
-	case 1:
-		PushPotion->AttachToComponent(PotionBagMesh, AttachRules, TEXT("PotionOne"));
-		UE_LOG(LogClass, Warning, TEXT("PotionOne"));
-		break;
-	case 2:
-		PushPotion->AttachToComponent(PotionBagMesh, AttachRules, TEXT("PotionTwo"));
-		UE_LOG(LogClass, Warning, TEXT("PotionTwo"));
-		break;
-	case 3:
-		PushPotion->AttachToComponent(PotionBagMesh, AttachRules, TEXT("PotionThree"));
-		UE_LOG(LogClass, Warning, TEXT("PotionThree"));
-		break;
-	case 4:
-		PushPotion->AttachToComponent(PotionBagMesh, AttachRules, TEXT("PotionFour"));
-		UE_LOG(LogClass, Warning, TEXT("PotionFour"));
-		break;
-	case 5:
-		PushPotion->AttachToComponent(PotionBagMesh, AttachRules, TEXT("PotionFive"));
-		UE_LOG(LogClass, Warning, TEXT("PotionFive"));
-		break;
-	}
+		int index =Potions.Add(PushPotion);
+
+		int CurrentPotionCount = Potions.Num();
+
+		GLog->Log(FString::Printf(TEXT("Potion Index : %d"), CurrentPotionCount));
+
+		if (PotionBagMesh)
+		{
+			switch (CurrentPotionCount)
+			{
+			case 1:
+				PushPotion->AttachToComponent(PotionBagMesh, AttachRules, TEXT("PotionOne"));
+				break;
+			case 2:
+				PushPotion->AttachToComponent(PotionBagMesh, AttachRules, TEXT("PotionTwo"));
+				break;
+			case 3:
+				PushPotion->AttachToComponent(PotionBagMesh, AttachRules, TEXT("PotionThree"));
+				break;
+			case 4:
+				PushPotion->AttachToComponent(PotionBagMesh, AttachRules, TEXT("PotionFour"));
+				break;
+			case 5:
+				PushPotion->AttachToComponent(PotionBagMesh, AttachRules, TEXT("PotionFive"));
+				break;
+			}
+		}
+	
+	}	
 }
 
 void APotionBag::PotionBagOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
