@@ -61,6 +61,7 @@ void AMiniBossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponen
 	{
 		if (OtherActor->ActorHasTag(TEXT("Character")))
 		{
+			IsWeaponAttack = false;
 			GLog->Log(FString::Printf(TEXT("캐릭터 때림")));
 		}
 	}	

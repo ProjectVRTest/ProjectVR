@@ -8,7 +8,7 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
 	FName DistanceBlackBoardKey = GetSelectedBlackboardKey();
-	GLog->Log(FString::Printf(TEXT("if -1f")));
+	//GLog->Log(FString::Printf(TEXT("if -1f")));
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
 	if (AI)
 	{

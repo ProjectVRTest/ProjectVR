@@ -16,12 +16,10 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 	{
 		MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
 		float WaitTime = 0;
-		int RandomAttackValue = 3;
 		if (MiniBoss)
 		{
-			//int RandomAttackValue = FMath::RandRange(1, 3);
+			int RandomAttackValue = FMath::RandRange(1, 3);
 
-			
 			switch (RandomAttackValue)
 			{
 			case RightUpLeftDownAttack:
