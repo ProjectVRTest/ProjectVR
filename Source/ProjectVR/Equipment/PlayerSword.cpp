@@ -80,6 +80,7 @@ void APlayerSword::Tick(float DeltaTime)
 void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)		// 오버랩이벤트시 실행할 것들
 {
+	//UE_LOG(LogClass, Warning, TEXT("Damage %s"), *(SweepResult.BoneName.ToString()));
 	if (OtherActor->ActorHasTag("Monster"))		// 오버랩된 액터가 'Monster'라는 태그를 가지고 있으면 실행
 	{
 		if (Timer >= 0.5f)			// 타이머가 0.5 이상의 수를 가지고 있을 때 실행 (조건1)

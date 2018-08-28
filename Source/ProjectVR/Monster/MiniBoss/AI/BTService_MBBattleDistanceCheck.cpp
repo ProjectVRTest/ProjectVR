@@ -8,9 +8,8 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
 	FName DistanceBlackBoardKey = GetSelectedBlackboardKey();
-
+	GLog->Log(FString::Printf(TEXT("if -1f")));
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
-
 	if (AI)
 	{
 		FRotator LookAt, CurrentRot;
@@ -23,11 +22,9 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 		if (Player)
 		{
 			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
-
 			if (MyCharacter)
 			{
 				AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());		
-	
 				if (MiniBoss)
 				{
 					LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->GetActorLocation());
@@ -44,7 +41,6 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 					MiniBoss->Yaw = CompleteRotator.Yaw;
 
 					//GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), MiniBoss->Yaw));
-
 					if (!MiniBoss->CurrentFalling)
 					{
 						switch (MiniBoss->CurrentAnimState)
@@ -54,14 +50,14 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 							{
 								MiniBoss->WalkStopFlag = false;
 								MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
-								MiniBoss->CurrentState = EMiniBossState::Chase;
 								MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+								MiniBoss->CurrentState = EMiniBossState::Chase;								
 							}
 							else if (Distance < 300.0f && !MiniBoss->IsAttack)
 							{
 								//GLog->Log(FString::Printf(TEXT("Walk -> Attack")));
-								MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
 								MiniBoss->CurrentAttackState = EMiniBossAttackState::AttackReady;
+								MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;								
 								MiniBoss->IsAttack = true; //공격중이란것을 나타냄
 							}
 							break;
@@ -73,18 +69,22 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 								{
 									MiniBoss->AttackCompleteFlag = false;
 									MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
-									MiniBoss->CurrentState = EMiniBossState::Chase;
 									MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
 									MiniBoss->CurrentAttackState = EMiniBossAttackState::AttackReady;
+									MiniBoss->CurrentState = EMiniBossState::Chase;									
 								}
 								break;
-							case EMiniBossAttackState::RightUpLeftDown:
+							case EMiniBossAttackState::RightUpLeftDownReady:								
+								break;
+							case EMiniBossAttackState::RightUpLeftDownStart:
 								break;
 							case EMiniBossAttackState::StabReady:
 								break;
 							case EMiniBossAttackState::StabStart:
 								break;
-							case EMiniBossAttackState::TwoHandWidth:
+							case EMiniBossAttackState::TwoHandWidthReady:
+								break;
+							case EMiniBossAttackState::TwoHandWidthStart:
 								break;
 							}							
 							break;

@@ -23,9 +23,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	void WeaponBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UStaticMeshComponent* SwordMesh;			
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UCapsuleComponent* SwordCollision;				
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool IsWeaponAttack;
+
 };

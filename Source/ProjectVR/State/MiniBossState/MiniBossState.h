@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -52,11 +52,13 @@ enum class EMiniBossAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
 	AttackReady = 1 UMETA(DisplayName = "AttackReady"),
-	RightUpLeftDown = 2 UMETA(DisplayName = "RightUpLeftDown"),
-	TwoHandWidth = 3 UMETA(DisplayName = "TwoHandWidth"),
+	RightUpLeftDownReady = 2 UMETA(DisplayName = "RightUpLeftDownReady"),
+	TwoHandWidthReady = 3 UMETA(DisplayName = "TwoHandWidthReady"),
 	StabReady = 4 UMETA(DisplayName = "StabReady"),
 	LongDistance = 5 UMETA(DisplayName = "LongDistance"),
 	FourCombo = 6 UMETA(DisplayName = "FourCombo"),
 	BackAttack = 7 UMETA(DisplayName = "BackAttack"),
-	StabStart = 8 UMETA(DisplayName = "StabStart")
+	StabStart = 8 UMETA(DisplayName = "StabStart"),
+	RightUpLeftDownStart = 9 UMETA(DisplayName = "RightUpLeftDownStart"),
+	TwoHandWidthStart = 10 UMETA(DisplayName = "TwoHandWidthStart")
 };

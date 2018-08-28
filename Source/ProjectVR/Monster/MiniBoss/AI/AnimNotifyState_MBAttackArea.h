@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
-#include "AnimNotifyState_MBParryingArea.generated.h"
+#include "AnimNotifyState_MBAttackArea.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTVR_API UAnimNotifyState_MBParryingArea : public UAnimNotifyState
+class PROJECTVR_API UAnimNotifyState_MBAttackArea : public UAnimNotifyState
 {
 	GENERATED_BODY()
 public:
 	virtual void NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration) override;
 	virtual void NotifyTick(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float FrameDeltaTime) override;
-	virtual void NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation) override;
+	virtual void NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation) override;	
 };
