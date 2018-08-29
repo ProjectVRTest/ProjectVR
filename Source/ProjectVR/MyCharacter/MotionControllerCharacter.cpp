@@ -63,7 +63,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 
 	Stereo->SetRelativeLocation(FVector(100.0f, 0.0f, 0.0f));
 	Stereo->bLiveTexture = true;
-	Stereo->SetQuadSize(FVector2D(150.0f, 150.0f));
+	Stereo->SetQuadSize(FVector2D(250.0f, 250.0f));
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> HitUI(TEXT("WidgetBlueprint'/Game/Blueprints/UI/BloodEffectHUD.BloodEffectHUD_C'"));
 	if (HitUI.Succeeded())
@@ -173,7 +173,6 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 
 	if (IsValid(Widget->GetRenderTarget()))
 	{
-		UE_LOG(LogClass, Warning, TEXT("CheckForUI"));
 		UTexture* texture;
 		texture = Cast<UTextureRenderTarget2D>(Widget->GetRenderTarget());
 		Stereo->SetTexture(Widget->GetRenderTarget());
