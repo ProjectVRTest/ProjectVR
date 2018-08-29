@@ -55,18 +55,16 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 
-	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("SceneA"));
-	Scene->SetupAttachment(Camera);
-
 	Stereo = CreateDefaultSubobject<UStereoLayerComponent>(TEXT("StereoB"));
-	Stereo->SetupAttachment(Scene);
+	Stereo->SetupAttachment(Camera);
 
 	Widget = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetB"));
-	Widget->SetupAttachment(Scene);
+	Widget->SetupAttachment(Camera);
 
-	Stereo->SetRelativeLocation(FVector(70.0f, 0.0f, 0.0f));
+	Stereo->SetRelativeLocation(FVector(100.0f, 0.0f, 0.0f));
 	Stereo->bLiveTexture = true;
-	Stereo->SetQuadSize(FVector2D(1000.0f, 1000.0f));
+	Stereo->SetQuadSize(FVector2D(150.0f, 150.0f));
+
 	static ConstructorHelpers::FClassFinder<UUserWidget> HitUI(TEXT("WidgetBlueprint'/Game/Blueprints/UI/BloodEffectHUD.BloodEffectHUD_C'"));
 	if (HitUI.Succeeded())
 	{
@@ -74,7 +72,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	}
 	Widget->SetWidgetSpace(EWidgetSpace::World);
 	Widget->SetDrawSize(FVector2D(1000.0f, 1000.0f));
-	Widget->bVisible = false;
+	Widget->bVisible = true;
 
 	HeadBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HeadBox"));
 	HeadBox->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
@@ -173,12 +171,13 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 	//	}
 	//}
 
-	//if (IsValid(Widget->GetRenderTarget()))
-	//{
-	//	UTexture* texture;
-	//	texture = Cast<UTextureRenderTarget2D>(Widget->GetRenderTarget());
-	//	Stereo->SetTexture(Widget->GetRenderTarget());
-	//}
+	if (IsValid(Widget->GetRenderTarget()))
+	{
+		UE_LOG(LogClass, Warning, TEXT("CheckForUI"));
+		UTexture* texture;
+		texture = Cast<UTextureRenderTarget2D>(Widget->GetRenderTarget());
+		Stereo->SetTexture(Widget->GetRenderTarget());
+	}
 
 	//// Idle 상태, 움직이지 않을 때 카메라 숨쉬기 흔들림.
 	//if (CurrentState != EPlayerState::Idle && this->GetVelocity().Size() == 0)
