@@ -28,21 +28,6 @@ APlayerShield::APlayerShield()
 		ShieldMesh->SetStaticMesh(SM_Shield.Object);		// 스태틱 메쉬에 방패 모양 설정
 	}
 
-	/* 위젯 컴포넌트 생성 */
-	CharacterStateWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("StateInfoWidget"));	
-	CharacterStateWidget->SetupAttachment(ShieldMesh);			// 위젯을 방패 메쉬에 붙임
-
-	static ConstructorHelpers::FClassFinder<UUserWidget> StaminaUI(TEXT("WidgetBlueprint'/Game/Blueprints/UI/LeftHandWidget.LeftHandWidget_C'"));		// 레퍼런스 경로로 위젯 블루프린트를 찾음
-	if (StaminaUI.Succeeded())		// 위젯블루프린트를 찾았을 경우 실행
-	{
-		CharacterStateWidget->SetWidgetClass(StaminaUI.Class);		// 찾은 위젯 클래스로 설정
-	}
-
-	// 위젯을 적절한 위치와 방향, 크기로 설정
-	CharacterStateWidget->SetRelativeRotation(FRotator(0, -90.0f, 0));
-	CharacterStateWidget->SetRelativeScale3D(FVector(0.112368, -0.112368, 0.112368));
-	CharacterStateWidget->SetRelativeLocation(FVector(9.0f, -16.0f, 60.0f));
-
 	Tags.Add(FName(TEXT("PlayerShield")));		// 생성한 방패를 'PlayerShield'란 이름으로 태그를 줌
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
