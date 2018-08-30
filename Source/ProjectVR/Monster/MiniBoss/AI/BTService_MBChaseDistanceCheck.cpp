@@ -33,16 +33,16 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 					{
 						MiniBoss->CurrentAnimState = EMiniBossAnimState::JumpAttackReady; 											
 					}
-					else if (Distance <1000.0f && Distance >400.0f)
+					else if (Distance <1000.0f && Distance >500.0f)
 					{
-						MiniBoss->CurrentAnimState = EMiniBossAnimState::DashAttack;
-						GLog->Log(FString::Printf(TEXT("대쉬 애드 범위 진입")));
+						//GLog->Log(FString::Printf(TEXT("대쉬 애드 범위 진입")));
 					}
 					else if (Distance < 500.0f)
 					{
 						MiniBoss->WalkStopFlag = true;
-						MiniBoss->CurrentState = EMiniBossState::Battle;
+						AI->BBComponent->SetValueAsInt(TEXT("DashCount"), 0);
 						MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+						MiniBoss->CurrentState = EMiniBossState::Battle;						
 					}
 					break;
 				case EMiniBossAnimState::JumpAttack:

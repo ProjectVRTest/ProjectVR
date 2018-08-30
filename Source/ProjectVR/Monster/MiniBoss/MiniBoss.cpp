@@ -72,7 +72,7 @@ AMiniBoss::AMiniBoss()
 	MaxHP = 100000.0f;
 	CurrentHP = MaxHP;
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/Monster/MiniBoss/Effect/Materials/M_Opacity.M_Opacity'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/Monster/MiniBoss/Effect/BackDash/Materials/M_Opacity.M_Opacity'"));
 	if (M_Opacity.Succeeded())
 	{
 		OpacityMaterials = M_Opacity.Object;
@@ -86,13 +86,13 @@ AMiniBoss::AMiniBoss()
 
 	AIControllerClass = AMiniBossAIController::StaticClass();
 	
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageStartEffect(TEXT("ParticleSystem'/Game/Assets/Monster/MiniBoss/Effect/StartEffect.StartEffect'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageStartEffect(TEXT("ParticleSystem'/Game/Assets/Monster/MiniBoss/Effect/BackDash/StartEffect.StartEffect'"));
 	if (PT_AfterImageStartEffect.Succeeded())
 	{
 		AfterImageStartEffect = PT_AfterImageStartEffect.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageEndEffect(TEXT("ParticleSystem'/Game/Assets/Monster/MiniBoss/Effect/EndEffect.EndEffect'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageEndEffect(TEXT("ParticleSystem'/Game/Assets/Monster/MiniBoss/Effect/BackDash/EndEffect.EndEffect'"));
 	if (PT_AfterImageEndEffect.Succeeded())
 	{
 		AfterImageEndEffect = PT_AfterImageEndEffect.Object;
