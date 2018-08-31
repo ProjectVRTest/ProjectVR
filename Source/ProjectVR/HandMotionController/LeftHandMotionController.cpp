@@ -57,8 +57,8 @@ ALeftHandMotionController::ALeftHandMotionController()
 	ShieldAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("ShieldAttachScene")); //방패를 붙일 씬컴포넌트를 생성해서 ShieldAttachScene에 넣는다.
 	ShieldAttachScene->SetupAttachment(HandMesh);//생성한 씬컴포넌트를 HandMesh에 붙인다.
 
-	ShieldAttachScene->SetRelativeLocation(FVector(-18.0f, -31.0f, 8.0f)); //위치를 조정한다.
-	ShieldAttachScene->SetRelativeRotation(FRotator(13.0f, 129.0f, -90.0f)); //방패 씬컴포넌트의 각도와
+	//ShieldAttachScene->SetRelativeLocation(FVector(-18.0f, -31.0f, 8.0f)); //위치를 조정한다.
+	//ShieldAttachScene->SetRelativeRotation(FRotator(13.0f, 129.0f, -90.0f)); //방패 씬컴포넌트의 각도와
 
 																			 //포션가방을 붙일 씬컴포넌트를 생성해서 PotionBagAttachScene에 저장한다.
 	PotionBagAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("PotionAttachScene"));

@@ -218,6 +218,7 @@ void AMotionControllerCharacter::SetupPlayerInputComponent(UInputComponent* Play
 
 	PlayerInputComponent->BindAction(TEXT("DashRight"), IE_Pressed, this, &AMotionControllerCharacter::DashRightStart);
 	PlayerInputComponent->BindAction(TEXT("DashRight"), IE_Released, this, &AMotionControllerCharacter::DashEnd);
+
 }
 
 // 오파시티값이 있어도 항상 그랩상태로 있는다고 가정할 때
@@ -236,7 +237,7 @@ void AMotionControllerCharacter::GrabLeftOn()
 
 	// 처음에 그랩상태를 State::Grab으로 세팅해야함, GrabActor()함수에서 반환값 bool로 변환해야함 -> 아직 확실하지 않으므로 장비로 테스트
 	// if(잡힌게 없으면) 
-	LeftHand->Shield->ConvertOfOpacity(0);
+	LeftHand->Shield->ConvertOfOpacity(1);
 }
 
 void AMotionControllerCharacter::GrabLeftOff()
@@ -252,7 +253,7 @@ void AMotionControllerCharacter::GrabRightOn()
 
 	RightHand->GrabActor();
 
-	RightHand->Sword->ConvertOfOpacity(0);
+	RightHand->Sword->ConvertOfOpacity(1);
 }
 
 void AMotionControllerCharacter::GrabRightOff()

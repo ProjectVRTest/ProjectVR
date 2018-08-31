@@ -6,6 +6,10 @@
 #include "Components/CapsuleComponent.h"
 
 #include "Engine/StaticMesh.h"
+#include "kismet/GameplayStatics.h"
+#include "MyCharacter/MotionControllerCharacter.h"
+#include "Monster/MiniBoss/MiniBoss.h"
+
 // Sets default values
 AMiniBossWeapon::AMiniBossWeapon()
 {
@@ -33,6 +37,7 @@ AMiniBossWeapon::AMiniBossWeapon()
 
 	IsWeaponAttack = false;
 	SwordCollision->bHiddenInGame = true;
+	Tags.Add(FName(TEXT("MiniBossWeapon")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 }
@@ -51,8 +56,7 @@ void AMiniBossWeapon::BeginPlay()
 // Called every frame
 void AMiniBossWeapon::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-
+	Super::Tick(DeltaTime);	
 }
 
 void AMiniBossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
@@ -62,7 +66,20 @@ void AMiniBossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponen
 		if (OtherActor->ActorHasTag(TEXT("Character")))
 		{
 			IsWeaponAttack = false;
-			GLog->Log(FString::Printf(TEXT("캐릭터 때림")));
+			
+			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(OtherActor);
+
+			if (MyCharacter)
+			{
+				AMiniBoss* MiniBoss = Cast<AMiniBoss>(GetAttachParentActor());
+
+				if (MiniBoss)
+				{
+					// (오버랩발생된 액터, 데미지, 데미지를가한 주체, 실제 데미지를 가한주체, 데미지종류클래스)
+					//UGameplayStatics::ApplyDamage(OtherActor, 10.0f, nullptr, MiniBoss, nullptr);
+				}				
+			}
+			//GLog->Log(FString::Printf(TEXT("캐릭터 때림")));
 		}
 	}	
 }

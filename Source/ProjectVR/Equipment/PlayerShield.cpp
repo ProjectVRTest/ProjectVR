@@ -8,6 +8,8 @@
 #include "Runtime/Engine/Classes/Materials/MaterialParameterCollectionInstance.h"
 #include "Runtime/Engine/Classes/Materials/MaterialParameterCollection.h"
 #include "Engine/StaticMesh.h"
+#include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
+#include "Monster/MiniBoss/MiniBoss.h"
 
 // Sets default values
 APlayerShield::APlayerShield()
@@ -17,7 +19,7 @@ APlayerShield::APlayerShield()
 	
 	/* 스태틱 매쉬 컴포넌트 생성 */
 	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));
-	ShieldMesh->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));			// 캐릭터와의 충돌을 피하기위해서 Pawn(캐릭터)만 Overlap되도록 설정
+	ShieldMesh->SetCollisionProfileName(TEXT("OverlapAll"));			// 캐릭터와의 충돌을 피하기위해서 Pawn(캐릭터)만 Overlap되도록 설정
 	SetRootComponent(ShieldMesh);
 
 	ShieldMesh->SetRelativeScale3D(FVector(-1.0f, 1.0f, 1.0f));
@@ -28,6 +30,9 @@ APlayerShield::APlayerShield()
 		ShieldMesh->SetStaticMesh(SM_Shield.Object);		// 스태틱 메쉬에 방패 모양 설정
 	}
 
+	
+	IsActivation = false;
+	IsMiniBossWeaponOverlap = false;
 	Tags.Add(FName(TEXT("PlayerShield")));		// 생성한 방패를 'PlayerShield'란 이름으로 태그를 줌
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
@@ -38,6 +43,11 @@ void APlayerShield::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (ShieldMesh)
+	{
+		ShieldMesh->OnComponentBeginOverlap.AddDynamic(this, &APlayerShield::OnShieldOverlapStart);
+		ShieldMesh->OnComponentEndOverlap.AddDynamic(this, &APlayerShield::OnShieldOverlapEnd);
+	}
 }
 
 // Called every frame
@@ -45,6 +55,15 @@ void APlayerShield::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (IsActivation && IsMiniBossWeaponOverlap)
+	{
+		if(MiniBoss)
+		{
+			GLog->Log(FString::Printf(TEXT("방패 패링")));
+			MiniBoss->CurrentAnimState = EMiniBossAnimState::ParryingReady;
+		}
+	}
+	//GLog->Log(FString::Printf(TEXT("%d"), IsMiniBossWeaponOverlap));
 	//UE_LOG(LogTemp, Log, TEXT(" ** %f"), ShieldMesh->GetPhysicsLinearVelocity().Size());
 }
 
@@ -52,17 +71,61 @@ void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭
 {
 	if (ShieldMesh)
 	{
-		ShieldMesh->SetScalarParameterValueOnMaterials(FName(TEXT("Min")), opacity);
-		ShieldMesh->SetScalarParameterValueOnMaterials(FName(TEXT("Max")), opacity);
+		ShieldMesh->SetScalarParameterValueOnMaterials(FName(TEXT("ShieldOpacity")), opacity);		
 	}
-	//static UMaterialParameterCollection* Collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), NULL,		// 머테리얼 콜렉션 찾기
-	//	TEXT("Material'/Game/Assets/Equipment/Shield/Materials/ShieldMaterial.ShieldMaterial'"), NULL, LOAD_None, NULL));	
 
-	//if (Collection)
-	//{
-	//	//UE_LOG(LogTemp, Warning, TEXT("dd %s"), *Collection->GetName());
-	//	CollectionInstance = GetWorld()->GetParameterCollectionInstance(Collection);		// 찾은 콜렉션을 콜렉션인스턴스에 저장
-	//	CollectionInstance->SetScalarParameterValue(FName("Opacity_Shield"), opacity);		// 'Opacity_Sword'값을 가진 파라미터 값을 세팅
-	//}
+	if (IsActivation)
+	{
+		IsActivation = false;
+	}
+	else
+	{
+		IsActivation = true;
+	}
 }
 
+void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	if (OtherActor->ActorHasTag(TEXT("MiniBossWeapon")))
+	{
+		IsMiniBossWeaponOverlap = true;
+
+		if (IsActivation && IsMiniBossWeaponOverlap)
+		{
+			AMiniBossWeapon* MiniBossWeapon = Cast<AMiniBossWeapon>(OtherActor);
+
+			if (MiniBossWeapon)
+			{
+				if (MiniBossWeapon->IsWeaponAttack)
+				{
+					MiniBoss = Cast<AMiniBoss>(MiniBossWeapon->GetAttachParentActor());
+
+					/*if (MiniBoss)
+					{
+						GLog->Log(FString::Printf(TEXT("방패 패링")));
+						MiniBoss->CurrentAnimState = EMiniBossAnimState::ParryingReady;
+					}
+					else
+					{
+						GLog->Log(FString::Printf(TEXT("Null")));
+					}*/
+				}
+			}
+		}
+
+		if (ShieldMesh->GetPhysicsLinearVelocity().Size() >= 50.0f)
+		{
+			GLog->Log(FString::Printf(TEXT("속력 50이상 판정")));
+		}		
+	}
+}
+
+void APlayerShield::OnShieldOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor->ActorHasTag(TEXT("MiniBossWeapon")))
+	{
+		GLog->Log(FString::Printf(TEXT("칼에서 벗어남")));
+		IsMiniBossWeaponOverlap = false;
+		MiniBoss = nullptr;
+	}	
+}

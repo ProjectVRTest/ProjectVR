@@ -27,9 +27,17 @@ public:
 		class UStaticMeshComponent* ShieldMesh;			// 메쉬에 방패를 붙일 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UWidgetComponent* CharacterStateWidget;		// 캐릭터 상태 위젯 ( 물약 / 체력 / 스테미너 ) 컴포넌트
-
+	class AMiniBoss* MiniBoss;
+	bool IsActivation;
+	bool IsMiniBossWeaponOverlap;
 	UFUNCTION()
 		void ConvertOfOpacity(float opacity);
+
+	UFUNCTION()
+	void OnShieldOverlapStart(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION()
+	void OnShieldOverlapEnd(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex);
 
 	UPROPERTY()
 		class UMaterialParameterCollectionInstance* CollectionInstance;

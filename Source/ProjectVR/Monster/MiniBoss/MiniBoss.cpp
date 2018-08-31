@@ -207,7 +207,7 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 
 	CurrentHP -= Damage;
 
-	UE_LOG(LogClass, Warning, TEXT("%s"), *EventInstigator->GetPawn()->GetName());
+	//UE_LOG(LogClass, Warning, TEXT("%s"), *EventInstigator->GetPawn()->GetName());
 
 	if (CurrentHP < 0)
 	{
@@ -219,7 +219,7 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 	if (ParryingFlag)
 	{
 		IsParrying = true;
-		CurrentAnimState = EMiniBossAnimState::ParryingReady;
+		//CurrentAnimState = EMiniBossAnimState::ParryingReady;
 	}
 	else
 	{
