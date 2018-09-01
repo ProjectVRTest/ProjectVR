@@ -27,10 +27,10 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 				AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());		
 				if (MiniBoss)
 				{
-					LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->GetActorLocation());
+					/*LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->GetActorLocation());
 					CurrentRot = FMath::Lerp(MiniBoss->GetActorRotation(), LookAt, DeltaSeconds);
 
-					MiniBoss->SetActorRotation(CurrentRot);
+					MiniBoss->SetActorRotation(CurrentRot);*/
 
 					Velocity = MiniBoss->GetCharacterMovement()->Velocity;
 					TestRotator = MiniBoss->GetActorRotation();

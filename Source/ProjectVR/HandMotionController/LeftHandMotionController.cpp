@@ -15,6 +15,9 @@
 #include "HandMotionController/RightHandMotionController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Monster/Dog/Dog.h"		// 왼손으로 개를 때릴때, 개가 물고 있는지를 알기 위해서 형변환 해줘야함
+#include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
+
 // Sets default values
 ALeftHandMotionController::ALeftHandMotionController()
 {
@@ -67,6 +70,26 @@ ALeftHandMotionController::ALeftHandMotionController()
 	PotionBagAttachScene->SetRelativeLocation(FVector(-13.0f, 0, 1.8f)); //위치를 조정한다.
 	PotionBagAttachScene->SetRelativeRotation(FRotator(0, 93.0f, 0));
 
+	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SphereMesh"));
+	SphereMesh->SetupAttachment(HandMesh);
+
+	SphereMesh->SetRelativeLocation(FVector(-18.0f, -0.07149f, -0.485587f)); //위치를 조정한다.
+	SphereMesh->SetRelativeScale3D(FVector(0.04f, 0.09f, 0.07f ));
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>M_Sphere(TEXT("Material'/Game/Assets/MyCharacter/Hand/Materials/NewMaterial.NewMaterial'"));
+
+	if (M_Sphere.Succeeded())
+	{
+		SphereMesh->SetMaterial(0, M_Sphere.Object);
+	}	
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sphere(TEXT("StaticMesh'/Game/Assets/MyCharacter/Hand/Mesh/Sphere.Sphere'"));
+
+	if (SM_Sphere.Succeeded())
+	{
+		SphereMesh->SetStaticMesh(SM_Sphere.Object);
+	}
+	
 	//왼손의 애니메이션을 지정해주기 위해 에디터상에 있는 애니메이션블루프린트를 가져와서 ABP_Hand에 넣는다.
 	static ConstructorHelpers::FObjectFinder<UClass>ABP_Hand(TEXT("AnimBlueprint'/Game/Blueprints/MyCharacter/Hand/ABP_LeftHand.ABP_LeftHand_C'"));
 

@@ -27,7 +27,8 @@ enum class EMiniBossAnimState : uint8
 	ParryingReady = 5 UMETA(DisplayName = "ParryingReady"),
 	BackWalk = 6 UMETA(DisplayName = "BackWalk"),
 	DashAttack = 7 UMETA(DisplayName = "DashAttack"),
-	Rotate = 6 UMETA(DisplayNAme = "Rotate")
+	Rotate = 8 UMETA(DisplayName = "Rotate"),
+	BattleWalk = 9 UMETA(DisplayName = "BattleWalk")
 };
 
 UENUM(BlueprintType)

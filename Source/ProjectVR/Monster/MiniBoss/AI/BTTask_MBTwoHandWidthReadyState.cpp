@@ -19,7 +19,7 @@ EBTNodeResult::Type UBTTask_MBTwoHandWidthReadyState::ExecuteTask(UBehaviorTreeC
 
 			if (Distance < 350.0f)
 			{
-				AttackAnimationWaitTime = 1.0f;
+				AttackAnimationWaitTime = 0.4f;
 				ReverseAttackAnimationWaitTime = 0;
 				AI->BBComponent->SetValueAsFloat(TEXT("ReverseWaitTime"), ReverseAttackAnimationWaitTime);
 				MiniBoss->CurrentAttackState = EMiniBossAttackState::StabReady;

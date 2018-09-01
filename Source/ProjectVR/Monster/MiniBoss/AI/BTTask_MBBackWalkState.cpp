@@ -75,8 +75,8 @@ void UBTTask_MBBackWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8
 	SumDelta += DeltaSeconds;
 	if (MiniBoss)
 	{
-		MiniBoss->GetCharacterMovement()->AddImpulse((MiniBoss->GetActorForwardVector()*-150.0f)+MiniBoss->GetActorUpVector()*2.0f, true);
-		if (SumDelta > 2.0f)
+		MiniBoss->GetCharacterMovement()->AddImpulse((MiniBoss->GetActorForwardVector()*-300.0f)+MiniBoss->GetActorUpVector()*2.0f, true);
+		if (SumDelta > 1.0f)
 		{
 			MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
 			AfterImageOff();

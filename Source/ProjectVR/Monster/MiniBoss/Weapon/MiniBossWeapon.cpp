@@ -27,6 +27,12 @@ AMiniBossWeapon::AMiniBossWeapon()
 		SwordMesh->SetStaticMesh(SM_Sword.Object);
 	}
 
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>M_Sword(TEXT("Material'/Game/Assets/Monster/MiniBoss/Weapon/Materials/M_Weapon.M_Weapon'"));
+
+	if (M_Sword.Succeeded())
+	{
+		SwordMesh->SetMaterial(0,M_Sword.Object);
+	}
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
 	SwordCollision->SetupAttachment(SwordMesh);	
 	SwordCollision->SetCollisionProfileName(TEXT("NoCollision"));

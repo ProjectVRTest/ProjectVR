@@ -66,6 +66,9 @@ public:
 	//포션가방
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PotionBag")
 		class APotionBag* PotionBag;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UStaticMeshComponent* SphereMesh;
+
 	//그립버튼을 누를때 호출되는 함수
 	UFUNCTION()
 		void GrabActor();

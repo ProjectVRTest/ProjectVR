@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 				MiniBoss->CurrentAttackState = EMiniBossAttackState::RightUpLeftDownReady;
 				break;
 			case StabAttack:
-				WaitTime = 1.0f;
+				WaitTime = 0.5f;
 				MiniBoss->StabFlag = true; //콤보 애니메이션이 안나오게 설정
 				MiniBoss->TwoHandWidthFlag = true;
 				MiniBoss->CurrentAttackState = EMiniBossAttackState::StabReady;

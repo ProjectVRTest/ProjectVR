@@ -27,7 +27,7 @@ void UBTService_MBStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 				case EMiniBossAnimState::Wait:
 					break;
 				case EMiniBossAnimState::Walk:
-					MiniBoss->GetCharacterMovement()->MaxWalkSpeed = 160.0f;
+					MiniBoss->GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 					break;
 				case EMiniBossAnimState::Attack:
 					break;
@@ -39,7 +39,7 @@ void UBTService_MBStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 				case EMiniBossAnimState::Wait:
 					break;
 				case EMiniBossAnimState::Walk:
-					MiniBoss->GetCharacterMovement()->MaxWalkSpeed =100.0f;
+					MiniBoss->GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 					break;
 				case EMiniBossAnimState::Attack:
 					break;

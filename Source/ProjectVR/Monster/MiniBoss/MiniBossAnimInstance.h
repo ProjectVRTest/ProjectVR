@@ -30,8 +30,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Velocity")
 		float Speed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Velocity")
-		float Direction;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Yaw")
 		float Yaw;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Walk")
