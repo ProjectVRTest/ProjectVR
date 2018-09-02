@@ -10,7 +10,8 @@
 #include "Engine/StaticMesh.h"
 #include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
 #include "Monster/MiniBoss/MiniBoss.h"
-
+#include "Kismet/GameplayStatics.h"				// 오너 설정
+#include "MyCharacter/MotionControllerCharacter.h"	// 오너 설정
 // Sets default values
 APlayerShield::APlayerShield()
 {
@@ -43,6 +44,9 @@ void APlayerShield::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// 오너 설정
+	ShieldOwner = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
 	if (ShieldMesh)
 	{
 		ShieldMesh->OnComponentBeginOverlap.AddDynamic(this, &APlayerShield::OnShieldOverlapStart);

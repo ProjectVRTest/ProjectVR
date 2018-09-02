@@ -42,4 +42,10 @@ public:
 
 	UPROPERTY()
 		class UMaterialParameterCollectionInstance* CollectionInstance;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
+		class AMotionControllerCharacter* SwordOwner;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
+		float SwordPhysicsVelocityValue;
 };

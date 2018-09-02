@@ -28,7 +28,9 @@ EBTNodeResult::Type UBTTask_SetDeath::ExecuteTask(UBehaviorTreeComponent & Owner
 			Dog->CurrentDogJumpState = EDogJumpState::Nothing;
 			Dog->CurrentDogCircleState = EDogCircleState::Nothing;
 
-			UE_LOG(LogTemp, Log, TEXT("Deeeeeeaaaaath"));
+			if (MyCharacter->DogArray.Find(Dog))			// 배열에 개가 있으면
+				MyCharacter->DogArray.Remove(Dog);		// 제거
+
 			return EBTNodeResult::Succeeded;
 		}
 	}

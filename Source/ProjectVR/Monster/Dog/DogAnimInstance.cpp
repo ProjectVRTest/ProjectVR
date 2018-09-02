@@ -31,6 +31,7 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentDogAnimState = RagdollDog->CurrentDogAnimState;
 		CurrentDogJumpState = RagdollDog->CurrentDogJumpState;
 		CurrentDogCircleState = RagdollDog->CurrentDogCircleState;
+		onLand = RagdollDog->bOnLand;
 
 		CurrentFalling = RagdollDog->CurrentFalling;
 
@@ -99,6 +100,7 @@ void UDogAnimInstance::AnimNotify_JumpStart(UAnimNotify * Notify)
 				GoalVector,
 				0,
 				0.5f);
+			RagdollDog->DogAttackCollision->bGenerateOverlapEvents = true;
 			RagdollDog->LaunchCharacter(LaunchVector, true, true);
 			RagdollDog->bOnLand = false;		// ¶¥¿¡ ¾øÀ½
 		}
