@@ -310,6 +310,8 @@ void UBTService_CheckCanAttack::SetRandomCircle(ADog * RagdollDog)
 
 void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCharacter, ADog * RagdollDog)
 {
+	UE_LOG(LogTemp, Log, TEXT("Attack Attack Attack"));
+
 	RagdollDog->bInAttackplace = true;
 	RagdollDog->bAttack = false;
 

@@ -144,6 +144,10 @@ void ADog::Tick(float DeltaTime)
 		DogAttackCollision->bGenerateOverlapEvents = false;
 		CurrentDogState = EDogState::Death;
 		CurrentDogAnimState = EDogAnimState::StandDeath;
+
+		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		if (Character->DogArray.Contains(this))
+			Character->DogArray.Remove(this);
 	}
 
 	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, GetCapsuleComponent()->GetComponentRotation().Yaw, 0.0f));
@@ -194,7 +198,7 @@ void ADog::Tick(float DeltaTime)
 		bOnLand = false;		// 팔에 붙어있으니까 땅에 없음
 
 		FVector ForceVector = GetMesh()->GetPhysicsAngularVelocity();
-		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(AttachActor);
 
 		// 포인트 식으로 일정 횟수 누적되면 개가 떨어짐 8이 적당함 - 각도만 틀면 떨어지는것 방지
 		if (GetMesh()->GetPhysicsLinearVelocity().Size() >= 300.0f && GetMesh()->GetPhysicsAngularVelocity().Size() >= 400.0f)
