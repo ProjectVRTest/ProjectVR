@@ -5,6 +5,7 @@
 
 #include "AI/Navigation/NavigationSystem.h"
 #include "MyTargetPoint.h"
+#include "HeadMountedDisplayFunctionLibrary.h"
 
 EBTNodeResult::Type UBTTask_MBChaseWalkState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
@@ -26,9 +27,16 @@ EBTNodeResult::Type UBTTask_MBChaseWalkState::ExecuteTask(UBehaviorTreeComponent
 					MovePoints = MyCharacter->AttackPoints;
 					int RandomAttackPointIndex = FMath::RandRange(0, 7);
 
+					AI->BBComponent->SetValueAsVector("MovePoint", MyCharacter->Camera->GetComponentLocation());
+
 					if (!AI->BBComponent->GetValueAsObject("MovePoint"))
 					{
-						AI->BBComponent->SetValueAsObject("MovePoint", MovePoints[RandomAttackPointIndex]);
+						FRotator DeviceRotation;
+						FVector DevicePosition;
+
+						UHeadMountedDisplayFunctionLibrary::GetOrientationAndPosition(DeviceRotation, DevicePosition);
+						//AI->BBComponent->SetValueAsObject("MovePoint", MovePoints[RandomAttackPointIndex]);
+						AI->BBComponent->SetValueAsVector("MovePoint", DevicePosition);
 					}
 					return EBTNodeResult::Succeeded;
 				}

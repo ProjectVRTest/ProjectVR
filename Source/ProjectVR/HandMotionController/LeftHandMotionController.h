@@ -69,6 +69,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UStaticMeshComponent* SphereMesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Haptic")
+		class UHapticFeedbackEffect_Base* VRHapticEffect;
+
 	//그립버튼을 누를때 호출되는 함수
 	UFUNCTION()
 		void GrabActor();

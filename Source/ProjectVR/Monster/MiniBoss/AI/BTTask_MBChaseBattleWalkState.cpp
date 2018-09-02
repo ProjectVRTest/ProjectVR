@@ -25,7 +25,7 @@ EBTNodeResult::Type UBTTask_MBChaseBattleWalkState::ExecuteTask(UBehaviorTreeCom
 		MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
 
 		RandomMove = FMath::RandRange(1, 2);
-		RandomChaseValue = FMath::RandRange(30, 50);
+		RandomChaseValue = FMath::RandRange(30, 60);
 		AI->BBComponent->SetValueAsInt("RandomMove", RandomMove);
 	}
 
@@ -58,7 +58,7 @@ void UBTTask_MBChaseBattleWalkState::TickTask(UBehaviorTreeComponent & OwnerComp
 		if (MoveCount >= RandomChaseValue)
 		{
 			MoveCount = 0;
-			RandomChaseValue = FMath::RandRange(30, 50);
+			RandomChaseValue = FMath::RandRange(30, 60);
 			RandomMove = FMath::RandRange(1, 2);
 		}
 	}

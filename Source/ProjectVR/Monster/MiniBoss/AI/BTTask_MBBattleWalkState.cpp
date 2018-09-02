@@ -24,7 +24,7 @@ EBTNodeResult::Type UBTTask_MBBattleWalkState::ExecuteTask(UBehaviorTreeComponen
 	}
 
 	return EBTNodeResult::InProgress;
-}
+} 
 
 void UBTTask_MBBattleWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {

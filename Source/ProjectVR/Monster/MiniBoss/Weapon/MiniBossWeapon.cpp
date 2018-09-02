@@ -18,7 +18,7 @@ AMiniBossWeapon::AMiniBossWeapon()
 
 	SwordMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwordMesh"));
 	SetRootComponent(SwordMesh);
-	SwordMesh->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));		
+	SwordMesh->SetCollisionProfileName(TEXT("NoCollision"));		
 	
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/Monster/MiniBoss/Weapon/Mesh/SM_MBWeapon.SM_MBWeapon'"));
 
@@ -35,14 +35,15 @@ AMiniBossWeapon::AMiniBossWeapon()
 	}
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
 	SwordCollision->SetupAttachment(SwordMesh);	
-	SwordCollision->SetCollisionProfileName(TEXT("NoCollision"));
+	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 
 	SwordCollision->SetRelativeLocation(FVector(62.0f, 0, 0));
 	SwordCollision->SetRelativeRotation(FRotator(90.0f, 0, 0));	
-	SwordCollision->SetRelativeScale3D(FVector(0.7f, 0.7f, 2.3f));
+	SwordCollision->SetRelativeScale3D(FVector(1.0f, 1.0f, 2.3f));
 
 	IsWeaponAttack = false;
-	SwordCollision->bHiddenInGame = true;
+	IsParryingAttack = false;
+	SwordCollision->bHiddenInGame = false;
 	Tags.Add(FName(TEXT("MiniBossWeapon")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -55,7 +56,7 @@ void AMiniBossWeapon::BeginPlay()
 	
 	if (SwordMesh)
 	{
-		SwordMesh->OnComponentBeginOverlap.AddDynamic(this, &AMiniBossWeapon::WeaponBeginOverlap);
+		SwordCollision->OnComponentBeginOverlap.AddDynamic(this, &AMiniBossWeapon::WeaponBeginOverlap);
 	}
 }
 

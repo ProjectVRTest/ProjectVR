@@ -33,6 +33,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float Damage;		// 데미지
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Haptic")
+		class UHapticFeedbackEffect_Base* SwordHapticEffect;
+
 	UFUNCTION()
 		void OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 데미지를 전달하기위한 함수
@@ -40,6 +43,6 @@ public:
 	UFUNCTION()
 		void ConvertOfOpacity(float opacity);
 
-	UPROPERTY()
-		class UMaterialParameterCollectionInstance* CollectionInstance;
+	UFUNCTION()
+		void RumbleRightController(float Intensity);
 };

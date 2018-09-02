@@ -18,10 +18,10 @@ EBTNodeResult::Type UBTTask_MBParryingState::ExecuteTask(UBehaviorTreeComponent 
 		{
 			MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌	
 			MiniBoss->AttackCompleteFlag = true;
-			MiniBoss->CurrentState = EMiniBossState::Battle;
 			MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
 			MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
 			MiniBoss->CurrentAttackState = EMiniBossAttackState::Idle;
+			MiniBoss->CurrentState = EMiniBossState::Battle;		
 		}
 	}
 

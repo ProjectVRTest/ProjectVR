@@ -32,5 +32,6 @@ public:
 		class UCapsuleComponent* SwordCollision;				
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool IsWeaponAttack;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool IsParryingAttack;
 };

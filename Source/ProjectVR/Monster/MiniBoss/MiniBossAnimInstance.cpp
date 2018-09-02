@@ -48,20 +48,45 @@ void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 void UMiniBossAnimInstance::AnimNotify_JumpAttackStart(UAnimNotify * Notify)
 {
 	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
-		
+
 	if (MiniBoss)
 	{
 		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(MiniBoss->Target);
 		FVector LaunchVector;
 		FVector GoalVector = MyCharacter->AttackPoints[0]->GetActorLocation();
-
+		float CalculateLaunchVector = GoalVector.Size() - MiniBoss->GetActorLocation().Size();
 		UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(),
 			LaunchVector,
 			MiniBoss->GetActorLocation(),
 			GoalVector,
 			0,
-			0.5f);
-		//UE_LOG(LogClass, Warning, TEXT("X : %f Y : %f Z :%f"), LaunchVector.X, LaunchVector.Y, LaunchVector.Z);
+			0.65f);
+
+		FHitResult outHit;
+		TArray<FVector> Vector;
+		FVector OutVector;
+		TArray<TEnumAsByte<EObjectTypeQuery>> ObjType;
+		TArray<AActor*> IgnoreActor;
+
+		IgnoreActor.Add(MiniBoss);
+
+		UGameplayStatics::PredictProjectilePath(
+			GetWorld(),
+			outHit,
+			Vector,
+			OutVector,
+			MiniBoss->GetActorLocation(),
+			LaunchVector,
+			true,
+			10.0f,
+			ObjType,
+			false,
+			IgnoreActor,
+			EDrawDebugTrace::Persistent,
+			0,
+			15.0f,
+			2.0f,
+			0);
 		MiniBoss->LaunchCharacter(LaunchVector, true, true);
 	}
 }

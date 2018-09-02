@@ -7,13 +7,12 @@
 #include "Kismet/GameplayStatics.h"							// 데미지전달시 사용
 
 #include "MyCharacter/MotionControllerCharacter.h"
-#include "HandMotionController/Widget/LeftHandWidget.h"
-#include "HandMotionController/LeftHandMotionController.h"
-#include "PlayerShield.h"
 
-#include "Runtime/Engine/Classes/Materials/MaterialParameterCollectionInstance.h"
-#include "Runtime/Engine/Classes/Materials/MaterialParameterCollection.h"
 #include "Engine/StaticMesh.h"
+
+#include "Haptics/HapticFeedbackEffect_Base.h"
+#include "MyCharacter/MotionControllerPC.h"
+#include "HandMotionController/RightHandMotionController.h"
 
 // Sets default values
 APlayerSword::APlayerSword()
@@ -24,7 +23,7 @@ APlayerSword::APlayerSword()
 	/* 스태틱 매쉬 컴포넌트 생성 */
 	SwordMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwordMesh"));
 	SetRootComponent(SwordMesh);
-	SwordMesh->SetCollisionProfileName(TEXT("OverlapAll"));		// 메쉬의 콜리전 상태값을 NoCollision으로 줌.
+	SwordMesh->SetCollisionProfileName(TEXT("NoCollision"));		// 메쉬의 콜리전 상태값을 NoCollision으로 줌.
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/Equipment/Sword/Mesh/SM_Sword.SM_Sword'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (SM_Sword.Succeeded())		// 검 메쉬를 찾았을 경우 실행
@@ -41,6 +40,13 @@ APlayerSword::APlayerSword()
 	SwordCollision->SetRelativeLocation(FVector(0.0f, 70.0f, 0.0f));
 	SwordCollision->SetRelativeRotation(FRotator(0.0f,0.0f,90.0f));
 	SwordCollision->SetRelativeScale3D(FVector(0.5f, 0.5f, 1.5f));
+
+	static ConstructorHelpers::FObjectFinder<UHapticFeedbackEffect_Base> HapticEffect(TEXT("HapticFeedbackEffect_Curve'/Game/Assets/MyCharacter/Hand/HandHaptics.HandHaptics'"));
+
+	if (HapticEffect.Succeeded())
+	{
+		SwordHapticEffect = HapticEffect.Object;
+	}
 
 	// 검 메쉬의 크기 설정
 	//SwordMesh->SetRelativeScale3D(FVector(0.25f, 0.25f, 0.25f));
@@ -85,19 +91,20 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 	{
 		if (Timer >= 0.5f)			// 타이머가 0.5 이상의 수를 가지고 있을 때 실행 (조건1)
 		{
-			if (SwordMesh->GetPhysicsLinearVelocity().Size() >= 200.0f)		// 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
+			if (SwordCollision->GetPhysicsLinearVelocity().Size() >= 200.0f)		// 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
 			{
-				UE_LOG(LogClass, Warning, TEXT("데미지 판정 진입"));
 				Timer = 0.0f;		// 공격 판정이 일어났을 때 타이머 0으로
 
-				if (SwordMesh->GetPhysicsLinearVelocity().Size() <= 500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
-				{					
-					UE_LOG(LogClass, Warning, TEXT("몬스터 일반 데미지 입힘"));
+				if (SwordCollision->GetPhysicsLinearVelocity().Size() <= 500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
+				{				
+					GLog->Log(FString::Printf(TEXT("일반 공격")));
+					RumbleRightController(0.5f);
 					Damage = 10.0f;
 				}
 				else // 선속도의 크기가 500초과일 때 데미지 15 (조건4)
 				{
-					UE_LOG(LogClass, Warning, TEXT("몬스터 크리티컬 데미지 입힘"));
+					GLog->Log(FString::Printf(TEXT("크리 공격")));
+					RumbleRightController(1.0f);
 					Damage = 15.0f;
 				}
 				//AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(GetOwner());
@@ -117,5 +124,20 @@ void APlayerSword::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭�
 	if (SwordMesh)
 	{
 		SwordMesh->SetScalarParameterValueOnMaterials(FName(TEXT("SwordOpacity")), opacity);
+	}
+}
+
+void APlayerSword::RumbleRightController(float Intensity)
+{
+	AMotionControllerPC* PC = Cast<AMotionControllerPC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	if (PC)
+	{
+		ARightHandMotionController* RightHand = Cast<ARightHandMotionController>(GetAttachParentActor());
+
+		if (RightHand)
+		{
+			PC->PlayHapticEffect(SwordHapticEffect, RightHand->Hand, Intensity);
+		}
 	}
 }

@@ -34,6 +34,7 @@
 #include "Monster/Dog/Dog.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
+#include "HeadMountedDisplayFunctionLibrary.h"
 
 // Sets default values
 AMotionControllerCharacter::AMotionControllerCharacter()
@@ -103,6 +104,14 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 void AMotionControllerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FName DeviceName = UHeadMountedDisplayFunctionLibrary::GetHMDDeviceName();
+	
+	GLog->Log(DeviceName.ToString());
+	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
+	{
+		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Eye);
+	}
 
 	FActorSpawnParameters SpawnActorOption;
 	SpawnActorOption.Owner = this;
@@ -517,13 +526,13 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 	{
 		CurrentHp += 30;		// 회복량
 
-		ULeftHandWidget* HandWidget = Cast<ULeftHandWidget>
-			(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// 왼손 방패의 위젯을 ULeftHandWidget내의 함수를 사용할 수 있도록 캐스트한다.
+		//ULeftHandWidget* HandWidget = Cast<ULeftHandWidget>
+		//	(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// 왼손 방패의 위젯을 ULeftHandWidget내의 함수를 사용할 수 있도록 캐스트한다.
 
-		if (HandWidget)
-		{
-			HandWidget->GainHP(30);		// 회복
-		}
+		//if (HandWidget)
+		//{
+		//	HandWidget->GainHP(30);		// 회복
+		//}
 	}
 
 	if (OtherComp->ComponentHasTag("DogAttackCollision"))

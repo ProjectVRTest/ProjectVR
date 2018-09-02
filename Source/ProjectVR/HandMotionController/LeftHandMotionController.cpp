@@ -17,6 +17,9 @@
 #include "Monster/Dog/Dog.h"		// 왼손으로 개를 때릴때, 개가 물고 있는지를 알기 위해서 형변환 해줘야함
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
+#include "Haptics/HapticFeedbackEffect_Base.h"
+
+
 
 // Sets default values
 ALeftHandMotionController::ALeftHandMotionController()
@@ -72,9 +75,9 @@ ALeftHandMotionController::ALeftHandMotionController()
 
 	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SphereMesh"));
 	SphereMesh->SetupAttachment(HandMesh);
-
 	SphereMesh->SetRelativeLocation(FVector(-18.0f, -0.07149f, -0.485587f)); //위치를 조정한다.
 	SphereMesh->SetRelativeScale3D(FVector(0.04f, 0.09f, 0.07f ));
+	SphereMesh->SetCollisionProfileName(TEXT("NoCollision"));
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface>M_Sphere(TEXT("Material'/Game/Assets/MyCharacter/Hand/Materials/NewMaterial.NewMaterial'"));
 
@@ -82,6 +85,14 @@ ALeftHandMotionController::ALeftHandMotionController()
 	{
 		SphereMesh->SetMaterial(0, M_Sphere.Object);
 	}	
+
+	static ConstructorHelpers::FObjectFinder<UHapticFeedbackEffect_Base> HapticEffect(TEXT("HapticFeedbackEffect_Curve'/Game/Assets/MyCharacter/Hand/HandHaptics.HandHaptics'"));
+
+	if (HapticEffect.Succeeded())
+	{
+		VRHapticEffect = HapticEffect.Object;
+	}
+	
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sphere(TEXT("StaticMesh'/Game/Assets/MyCharacter/Hand/Mesh/Sphere.Sphere'"));
 

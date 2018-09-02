@@ -10,6 +10,13 @@
 #include "Engine/StaticMesh.h"
 #include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
 #include "Monster/MiniBoss/MiniBoss.h"
+#include "Particles/ParticleSystem.h"
+#include "kismet/GameplayStatics.h"
+#include "Components/BoxComponent.h"
+
+#include "Haptics/HapticFeedbackEffect_Base.h"
+#include "MyCharacter/MotionControllerPC.h"
+#include "HandMotionController/LeftHandMotionController.h"
 
 // Sets default values
 APlayerShield::APlayerShield()
@@ -19,7 +26,7 @@ APlayerShield::APlayerShield()
 	
 	/* 스태틱 매쉬 컴포넌트 생성 */
 	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));
-	ShieldMesh->SetCollisionProfileName(TEXT("OverlapAll"));			// 캐릭터와의 충돌을 피하기위해서 Pawn(캐릭터)만 Overlap되도록 설정
+	ShieldMesh->SetCollisionProfileName(TEXT("NoCollision"));			// 캐릭터와의 충돌을 피하기위해서 Pawn(캐릭터)만 Overlap되도록 설정
 	SetRootComponent(ShieldMesh);
 
 	ShieldMesh->SetRelativeScale3D(FVector(-1.0f, 1.0f, 1.0f));
@@ -30,9 +37,28 @@ APlayerShield::APlayerShield()
 		ShieldMesh->SetStaticMesh(SM_Shield.Object);		// 스태틱 메쉬에 방패 모양 설정
 	}
 
-	
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingEffect(TEXT("ParticleSystem'/Game/Assets/StarterContent/Particles/P_Explosion.P_Explosion'"));
+	if (PT_ParryingEffect.Succeeded())
+	{
+		ParryingEffect = PT_ParryingEffect.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UHapticFeedbackEffect_Base> HapticEffect(TEXT("HapticFeedbackEffect_Curve'/Game/Assets/MyCharacter/Hand/HandHaptics.HandHaptics'"));
+
+	if (HapticEffect.Succeeded())
+	{
+		ShieldHapticEffect = HapticEffect.Object;
+	}	
+
+	ShieldCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("ShieldCollsion"));
+	ShieldCollision->SetupAttachment(ShieldMesh);
+	ShieldCollision->SetRelativeLocation(FVector(-2.2f, 10.0f, 1.4f));
+	ShieldCollision->SetRelativeRotation(FRotator(0, -20.0f, 0));
+	ShieldCollision->SetRelativeScale3D(FVector(0.75f, 1.5f, 0.24f));
+	ShieldCollision->SetCollisionProfileName(TEXT("OverlapAll"));
+	ShieldCollision->bHiddenInGame = false;
 	IsActivation = false;
-	IsMiniBossWeaponOverlap = false;
+	
 	Tags.Add(FName(TEXT("PlayerShield")));		// 생성한 방패를 'PlayerShield'란 이름으로 태그를 줌
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
@@ -45,8 +71,8 @@ void APlayerShield::BeginPlay()
 	
 	if (ShieldMesh)
 	{
-		ShieldMesh->OnComponentBeginOverlap.AddDynamic(this, &APlayerShield::OnShieldOverlapStart);
-		ShieldMesh->OnComponentEndOverlap.AddDynamic(this, &APlayerShield::OnShieldOverlapEnd);
+		ShieldCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerShield::OnShieldOverlapStart);
+		ShieldCollision->OnComponentEndOverlap.AddDynamic(this, &APlayerShield::OnShieldOverlapEnd);
 	}
 }
 
@@ -55,16 +81,11 @@ void APlayerShield::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (IsActivation && IsMiniBossWeaponOverlap)
+	if (ShieldMesh->GetPhysicsLinearVelocity().Size() > 300.0f)
 	{
-		if(MiniBoss)
-		{
-			GLog->Log(FString::Printf(TEXT("방패 패링")));
-			MiniBoss->CurrentAnimState = EMiniBossAnimState::ParryingReady;
-		}
+		GLog->Log(FString::Printf(TEXT("방패 속도 : %0.1f"), ShieldMesh->GetPhysicsLinearVelocity().Size()));
 	}
-	//GLog->Log(FString::Printf(TEXT("%d"), IsMiniBossWeaponOverlap));
-	//UE_LOG(LogTemp, Log, TEXT(" ** %f"), ShieldMesh->GetPhysicsLinearVelocity().Size());
+	
 }
 
 void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭터에서 호출)
@@ -88,35 +109,31 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 {
 	if (OtherActor->ActorHasTag(TEXT("MiniBossWeapon")))
 	{
-		IsMiniBossWeaponOverlap = true;
+		AMiniBossWeapon* MiniBossWeapon = Cast<AMiniBossWeapon>(OtherActor);
 
-		if (IsActivation && IsMiniBossWeaponOverlap)
+		if (MiniBossWeapon)
 		{
-			AMiniBossWeapon* MiniBossWeapon = Cast<AMiniBossWeapon>(OtherActor);
-
-			if (MiniBossWeapon)
+			if (MiniBossWeapon->IsParryingAttack)
 			{
-				if (MiniBossWeapon->IsWeaponAttack)
+				MiniBoss = Cast<AMiniBoss>(MiniBossWeapon->GetAttachParentActor());
+				if (MiniBoss)
 				{
-					MiniBoss = Cast<AMiniBoss>(MiniBossWeapon->GetAttachParentActor());
-
-					/*if (MiniBoss)
+					if (IsActivation && ShieldCollision->GetPhysicsLinearVelocity().Size() > 300.0f)
 					{
+						RumbleLeftController(5.0f);
+						MiniBossWeapon->IsParryingAttack = false;
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, MiniBoss->GetActorLocation());
+						//SweepResult.
 						GLog->Log(FString::Printf(TEXT("방패 패링")));
 						MiniBoss->CurrentAnimState = EMiniBossAnimState::ParryingReady;
 					}
-					else
-					{
-						GLog->Log(FString::Printf(TEXT("Null")));
-					}*/
+				}
+				else
+				{
+					GLog->Log(FString::Printf(TEXT("Null")));
 				}
 			}
 		}
-
-		if (ShieldMesh->GetPhysicsLinearVelocity().Size() >= 50.0f)
-		{
-			GLog->Log(FString::Printf(TEXT("속력 50이상 판정")));
-		}		
 	}
 }
 
@@ -124,8 +141,21 @@ void APlayerShield::OnShieldOverlapEnd(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherActor->ActorHasTag(TEXT("MiniBossWeapon")))
 	{
-		GLog->Log(FString::Printf(TEXT("칼에서 벗어남")));
-		IsMiniBossWeaponOverlap = false;
-		MiniBoss = nullptr;
+
 	}	
+}
+
+void APlayerShield::RumbleLeftController(float Intensity)
+{
+	AMotionControllerPC* PC = Cast<AMotionControllerPC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	if (PC)
+	{
+		ALeftHandMotionController* LeftHand = Cast<ALeftHandMotionController>(GetAttachParentActor());
+
+		if (LeftHand)
+		{
+			PC->PlayHapticEffect(ShieldHapticEffect, LeftHand->Hand, Intensity);
+		}		
+	}
 }
