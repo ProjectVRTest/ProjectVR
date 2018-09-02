@@ -47,6 +47,7 @@ APlayerSword::APlayerSword()
 	{
 		SwordHapticEffect = HapticEffect.Object;
 	}
+	IsActivation = false;
 
 	// 검 메쉬의 크기 설정
 	//SwordMesh->SetRelativeScale3D(FVector(0.25f, 0.25f, 0.25f));
@@ -85,8 +86,9 @@ void APlayerSword::Tick(float DeltaTime)
 	}
 
 	if (SwordOwner)
-		SwordPhysicsVelocityValue = SwordMesh->GetPhysicsLinearVelocity().Size() - SwordOwner->GetVelocity().Size();
-
+	{
+		SwordPhysicsVelocityValue = SwordCollision->GetPhysicsLinearVelocity().Size() - SwordOwner->GetVelocity().Size();
+	}	
 }
 
 void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
@@ -96,12 +98,13 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 	{
 		if (Timer >= 0.5f)			// 타이머가 0.5 이상의 수를 가지고 있을 때 실행 (조건1)
 		{
-			if (SwordPhysicsVelocityValue >= 200.0f)		// 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
+			if (IsActivation && SwordPhysicsVelocityValue >= 200.0f) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
 			{
 				Timer = 0.0f;		// 공격 판정이 일어났을 때 타이머 0으로
 
 				if (SwordPhysicsVelocityValue <= 500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
 				{					
+					RumbleRightController(0.5f);
 					Damage = 10.0f;
 				}
 				else // 선속도의 크기가 500초과일 때 데미지 15 (조건4)
@@ -127,6 +130,15 @@ void APlayerSword::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭�
 	if (SwordMesh)
 	{
 		SwordMesh->SetScalarParameterValueOnMaterials(FName(TEXT("SwordOpacity")), opacity);
+	}
+
+	if (IsActivation)
+	{
+		IsActivation = false;
+	}
+	else
+	{
+		IsActivation = true;
 	}
 }
 

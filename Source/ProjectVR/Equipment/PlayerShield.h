@@ -36,6 +36,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Haptic")
 		class UHapticFeedbackEffect_Base* ShieldHapticEffect;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
+		class AMotionControllerCharacter* ShieldOwner;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
+		float ShieldPhysicsVelocityValue;
+
 	class AMiniBoss* MiniBoss;
 	bool IsActivation;
 
@@ -50,6 +56,5 @@ public:
 
 	UFUNCTION()
 		void RumbleLeftController(float Intensity);
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
-		class AMotionControllerCharacter* ShieldOwner;
+
 };

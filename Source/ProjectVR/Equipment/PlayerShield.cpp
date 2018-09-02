@@ -88,7 +88,11 @@ void APlayerShield::Tick(float DeltaTime)
 	{
 		GLog->Log(FString::Printf(TEXT("방패 속도 : %0.1f"), ShieldMesh->GetPhysicsLinearVelocity().Size()));
 	}
-	
+
+	if (ShieldOwner)
+	{
+		ShieldPhysicsVelocityValue = ShieldCollision->GetPhysicsLinearVelocity().Size() - ShieldOwner->GetVelocity().Size();
+	}
 }
 
 void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭터에서 호출)
@@ -121,7 +125,7 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 				MiniBoss = Cast<AMiniBoss>(MiniBossWeapon->GetAttachParentActor());
 				if (MiniBoss)
 				{
-					if (IsActivation && ShieldCollision->GetPhysicsLinearVelocity().Size() > 300.0f)
+					if (IsActivation && ShieldPhysicsVelocityValue > 300.0f) //그립버튼을 누르고 방패의 선속도가 300이상일때 판정
 					{
 						RumbleLeftController(5.0f);
 						MiniBossWeapon->IsParryingAttack = false;

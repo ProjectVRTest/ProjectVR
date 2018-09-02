@@ -36,6 +36,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Haptic")
 		class UHapticFeedbackEffect_Base* SwordHapticEffect;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
+		class AMotionControllerCharacter* SwordOwner;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
+		float SwordPhysicsVelocityValue;
+
+	bool IsActivation;
+	
 	UFUNCTION()
 		void OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 데미지를 전달하기위한 함수
@@ -45,8 +52,5 @@ public:
 
 	UFUNCTION()
 		void RumbleRightController(float Intensity);
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
-		class AMotionControllerCharacter* SwordOwner;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
-		float SwordPhysicsVelocityValue;
+
 };
