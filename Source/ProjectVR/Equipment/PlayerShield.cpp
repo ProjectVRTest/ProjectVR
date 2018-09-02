@@ -17,7 +17,7 @@
 #include "Haptics/HapticFeedbackEffect_Base.h"
 #include "MyCharacter/MotionControllerPC.h"
 #include "HandMotionController/LeftHandMotionController.h"
-
+#include "MyCharacter/MotionControllerCharacter.h"	// 오너 설정
 // Sets default values
 APlayerShield::APlayerShield()
 {
@@ -69,6 +69,9 @@ void APlayerShield::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// 오너 설정
+	ShieldOwner = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
 	if (ShieldMesh)
 	{
 		ShieldCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerShield::OnShieldOverlapStart);

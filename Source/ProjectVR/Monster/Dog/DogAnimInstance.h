@@ -32,6 +32,8 @@ public:
 		bool CurrentFalling;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpData")
 		bool PreviousFalling;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+		bool onLand;
 
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeInitializeAnimation() override;

@@ -4,7 +4,7 @@
 #include "Components/StaticMeshComponent.h"			// 스태틱메쉬 컴포넌트
 #include "UObject/ConstructorHelpers.h"					// ConstructorHelpers 사용
 #include "Components/CapsuleComponent.h"				// 캡슐컴포넌트
-#include "Kismet/GameplayStatics.h"							// 데미지전달시 사용
+#include "Kismet/GameplayStatics.h"							// 데미지전달시 사용 / 오너 설정
 
 #include "MyCharacter/MotionControllerCharacter.h"
 
@@ -64,6 +64,9 @@ void APlayerSword::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// 오너 설정
+	SwordOwner = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
 	if (SwordCollision)
 	{
 		SwordCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerSword::OnSwordOverlap);
@@ -80,25 +83,25 @@ void APlayerSword::Tick(float DeltaTime)
 	{
 		//UE_LOG(LogClass, Warning, TEXT("%0.1f"), SwordMesh->GetPhysicsLinearVelocity().Size());
 	}
-	
+
+	if (SwordOwner)
+		SwordPhysicsVelocityValue = SwordMesh->GetPhysicsLinearVelocity().Size() - SwordOwner->GetVelocity().Size();
+
 }
 
 void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)		// 오버랩이벤트시 실행할 것들
 {
-	//UE_LOG(LogClass, Warning, TEXT("Damage %s"), *(SweepResult.BoneName.ToString()));
 	if (OtherActor->ActorHasTag("Monster"))		// 오버랩된 액터가 'Monster'라는 태그를 가지고 있으면 실행
 	{
 		if (Timer >= 0.5f)			// 타이머가 0.5 이상의 수를 가지고 있을 때 실행 (조건1)
 		{
-			if (SwordCollision->GetPhysicsLinearVelocity().Size() >= 200.0f)		// 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
+			if (SwordPhysicsVelocityValue >= 200.0f)		// 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
 			{
 				Timer = 0.0f;		// 공격 판정이 일어났을 때 타이머 0으로
 
-				if (SwordCollision->GetPhysicsLinearVelocity().Size() <= 500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
-				{				
-					GLog->Log(FString::Printf(TEXT("일반 공격")));
-					RumbleRightController(0.5f);
+				if (SwordPhysicsVelocityValue <= 500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
+				{					
 					Damage = 10.0f;
 				}
 				else // 선속도의 크기가 500초과일 때 데미지 15 (조건4)

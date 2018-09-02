@@ -160,6 +160,7 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 		DogArray.Shrink();	// 메모리 최적화
 	}
 
+
 	/*ADog** Dog = DogArray.GetData();
 	for (int i = 0; i <DogArray.Num(); i++)
 	{
@@ -566,6 +567,7 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 				Dog->CurrentDogCircleState = EDogCircleState::Nothing;
 
 				Dog->AttachActor = this;
+				Dog->DogAttackCollision->bGenerateOverlapEvents = true;
 			}
 		}
 	}

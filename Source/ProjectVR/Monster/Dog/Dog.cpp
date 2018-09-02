@@ -29,6 +29,8 @@
 #include "HandMotionController/RightHandMotionController.h"
 #include "HandMotionController/LeftHandMotionController.h"
 #include "Components/SphereComponent.h"
+
+#include "Equipment/PlayerSword.h"			// 물고 있을때 검의 데미지를 안 받기 위해서 작업
 // Sets default values
 ADog::ADog()
 {
@@ -84,7 +86,7 @@ ADog::ADog()
 	DogAttackCollision->SetRelativeScale3D(FVector(0.8f, 0.8f, 0.8f));
 	DogAttackCollision->SetActive(false);
 	DogAttackCollision->ComponentTags.Add("DogAttackCollision");
-
+	DogAttackCollision->bGenerateOverlapEvents = false;
 
 	PawnSensing->bHearNoises = false;
 	PawnSensing->bSeePawns = true;
@@ -136,6 +138,18 @@ void ADog::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// 틱으로 HP가 0미만인게 확인되면 평시상태로 죽음
+	if (CurrentHP < 0.0f && bOnLand)
+	{
+		DogAttackCollision->bGenerateOverlapEvents = false;
+		CurrentDogState = EDogState::Death;
+		CurrentDogAnimState = EDogAnimState::StandDeath;
+
+		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		if (Character->DogArray.Contains(this))
+			Character->DogArray.Remove(this);
+	}
+
 	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, GetCapsuleComponent()->GetComponentRotation().Yaw, 0.0f));
 
 	FFindFloorResult FloorDistance;;
@@ -153,16 +167,13 @@ void ADog::Tick(float DeltaTime)
 		if (AI->BBComponent->GetValueAsFloat("DistanceWithLand") < 3.0f)
 		{
 			// 땅에 붙으면 실행됨 -> 날라가는 액션이 추가되면 #1, #2만 남겨두고 나머지는 태스크 추가해서 실행할 것
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", false, true);
 			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-R-Thigh", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-L-Thigh", false, true);
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", false, true);
 			GetCapsuleComponent()->SetSimulatePhysics(false);		// #1
 			OnLandFlag = false;		// #2
 		}
 	}
 
+	// 블랙보드에 매 틱마다 정보 전달
 	if (AI)
 	{
 		AI->BBComponent->SetValueAsEnum("CurrentDogState", (uint8)CurrentDogState);
@@ -187,7 +198,7 @@ void ADog::Tick(float DeltaTime)
 		bOnLand = false;		// 팔에 붙어있으니까 땅에 없음
 
 		FVector ForceVector = GetMesh()->GetPhysicsAngularVelocity();
-		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(AttachActor);
 
 		// 포인트 식으로 일정 횟수 누적되면 개가 떨어짐 8이 적당함 - 각도만 틀면 떨어지는것 방지
 		if (GetMesh()->GetPhysicsLinearVelocity().Size() >= 300.0f && GetMesh()->GetPhysicsAngularVelocity().Size() >= 400.0f)
@@ -270,12 +281,21 @@ void ADog::OnSeePlayer(APawn * Pawn)
 
 float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
+	APlayerSword* Sword = Cast<APlayerSword>(DamageCauser);
+	if (CurrentDogState == EDogState::Bite && Sword)
+		return 0;
+
 	CurrentHP -= Damage;
 
 	if (CurrentHP < 0.0f)
 	{
-		bIsDeath = true;
-		bpunchDetach = true;
+		DogAttackCollision->bGenerateOverlapEvents = false;
+		if (CurrentDogState == EDogState::Bite)
+		{
+			CurrentDogAnimState = EDogAnimState::FallingDeath;
+			bIsDeath = true;
+			bpunchDetach = true;
+		}
 	}
 
 	return Damage;

@@ -28,7 +28,6 @@ EBTNodeResult::Type UBTTask_SetDeath::ExecuteTask(UBehaviorTreeComponent & Owner
 			Dog->CurrentDogJumpState = EDogJumpState::Nothing;
 			Dog->CurrentDogCircleState = EDogCircleState::Nothing;
 
-			UE_LOG(LogTemp, Log, TEXT("Deeeeeeaaaaath"));
 			return EBTNodeResult::Succeeded;
 		}
 	}

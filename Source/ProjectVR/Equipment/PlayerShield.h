@@ -50,4 +50,6 @@ public:
 
 	UFUNCTION()
 		void RumbleLeftController(float Intensity);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
+		class AMotionControllerCharacter* ShieldOwner;
 };
