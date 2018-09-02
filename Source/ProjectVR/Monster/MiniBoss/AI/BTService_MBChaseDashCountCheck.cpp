@@ -23,7 +23,7 @@ void UBTService_MBChaseDashCountCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 
 		int DashRandom = FMath::RandRange(1, 20);
 
-		GLog->Log(FString::Printf(TEXT("DashRandom : %d"), DashRandom));
+		//GLog->Log(FString::Printf(TEXT("DashRandom : %d"), DashRandom));
 		if (DashRandom < 2)
 		{
 			AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());

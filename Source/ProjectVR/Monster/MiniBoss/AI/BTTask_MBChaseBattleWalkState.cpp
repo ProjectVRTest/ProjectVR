@@ -37,7 +37,7 @@ void UBTTask_MBChaseBattleWalkState::TickTask(UBehaviorTreeComponent & OwnerComp
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
 	MoveCount++;
-	GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), MiniBoss->Yaw));
+	//GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), MiniBoss->Yaw));
 	//GLog->Log(FString::Printf(TEXT("MoveCount %d"),MoveCount));
 
 	
