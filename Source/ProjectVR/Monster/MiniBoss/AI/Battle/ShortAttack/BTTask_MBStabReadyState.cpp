@@ -16,7 +16,7 @@ EBTNodeResult::Type UBTTask_MBStabReadyState::ExecuteTask(UBehaviorTreeComponent
 		{
 			WaitTime = 1.2f;
 			AI->BBComponent->SetValueAsFloat(TEXT("AttackAnimationWaitTime"), WaitTime);
-			MiniBoss->CurrentAttackState = EMiniBossAttackState::StabStart;
+			MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::StabStart;
 		}
 	}
 

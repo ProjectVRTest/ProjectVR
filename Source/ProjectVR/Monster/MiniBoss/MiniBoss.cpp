@@ -36,7 +36,7 @@ AMiniBoss::AMiniBoss()
 	CurrentState = EMiniBossState::Idle;
 	CurrentAnimState = EMiniBossAnimState::Wait;
 	CurrentJumpState = EMiniBossJumpState::Idle;
-	CurrentAttackState = EMiniBossAttackState::Idle;
+	CurrentShortAttackState = EMiniBossShortAttackState::Idle;
 	CurrentDashState = EMiniBossDashState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
@@ -158,7 +158,10 @@ void AMiniBoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentState", (uint8)CurrentState);
 		AI->BBComponent->SetValueAsEnum("CurrentAnimState", (uint8)CurrentAnimState);
 		AI->BBComponent->SetValueAsEnum("CurrentJumpState", (uint8)CurrentJumpState);
-		AI->BBComponent->SetValueAsEnum("CurrentAttackState", (uint8)CurrentAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentShortAttackState", (uint8)CurrentShortAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentWaveAttackState", (uint8)CurrentWaveAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentComboAttackState", (uint8)CurrentComboAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentBackAttackState", (uint8)CurrentBackAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentDashState", (uint8)CurrentDashState);
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 		AI->BBComponent->SetValueAsBool("CurrentFalling", CurrentFalling);	

@@ -22,11 +22,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EMiniBossJumpState CurrentJumpState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		EMiniBossAttackState CurrentAttackState;
+		EMiniBossShortAttackState CurrentShortAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EMiniBossWaveAttackState CurrentWaveAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EMiniBossComboAttackState CurrentComboAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EMiniBossBackAttackState CurrentBackAttackState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EMiniBossDashState CurrentDashState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-		FRotator LookAtRotator;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Velocity")
 		float Speed;

@@ -34,7 +34,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EMiniBossJumpState CurrentJumpState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EMiniBossAttackState CurrentAttackState;
+		EMiniBossShortAttackState CurrentShortAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EMiniBossWaveAttackState CurrentWaveAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EMiniBossComboAttackState CurrentComboAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EMiniBossBackAttackState CurrentBackAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EMiniBossDashState CurrentDashState;
 

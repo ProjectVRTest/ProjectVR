@@ -23,12 +23,14 @@ enum class EMiniBossAnimState : uint8
 	Walk = 1 UMETA(DisplayName = "Walk"),
 	JumpAttackReady = 2 UMETA(DisplayName = "JumpAttackReady"),
 	JumpAttack = 3 UMETA(DisplayName = "JumpAttack"),
-	Attack = 4 UMETA(DisplayName = "Attack"),	
-	ParryingReady = 5 UMETA(DisplayName = "ParryingReady"),
-	BackWalk = 6 UMETA(DisplayName = "BackWalk"),
-	DashAttack = 7 UMETA(DisplayName = "DashAttack"),
-	Rotate = 8 UMETA(DisplayName = "Rotate"),
-	BattleWalk = 9 UMETA(DisplayName = "BattleWalk")
+	Attack = 4 UMETA(DisplayName = "Attack"),
+	AttackReady = 5 UMETA(DisplayName = "AttackReady"),
+	ParryingReady = 6 UMETA(DisplayName = "ParryingReady"),
+	ParryingStart = 7 UMETA(DisplayName = "ParryingStart"),
+	BackWalk = 8 UMETA(DisplayName = "BackWalk"),                                               
+	DashAttack = 9 UMETA(DisplayName = "DashAttack"),
+	Rotate = 10 UMETA(DisplayName = "Rotate"),
+	BattleWalk = 11 UMETA(DisplayName = "BattleWalk")
 };
 
 UENUM(BlueprintType)
@@ -50,17 +52,40 @@ enum class EMiniBossDashState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMiniBossAttackState : uint8
+enum class EMiniBossShortAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
-	AttackReady = 1 UMETA(DisplayName = "AttackReady"),
+	ShortAttackReady = 1 UMETA(DisplayName = "ShortAttackReady"),
 	RightUpLeftDownReady = 2 UMETA(DisplayName = "RightUpLeftDownReady"),
-	TwoHandWidthReady = 3 UMETA(DisplayName = "TwoHandWidthReady"),
-	StabReady = 4 UMETA(DisplayName = "StabReady"),
-	LongDistance = 5 UMETA(DisplayName = "LongDistance"),
-	FourCombo = 6 UMETA(DisplayName = "FourCombo"),
-	BackAttack = 7 UMETA(DisplayName = "BackAttack"),
-	StabStart = 8 UMETA(DisplayName = "StabStart"),
-	RightUpLeftDownStart = 9 UMETA(DisplayName = "RightUpLeftDownStart"),
-	TwoHandWidthStart = 10 UMETA(DisplayName = "TwoHandWidthStart")
+	RightUpLeftDownStart = 3 UMETA(DisplayName = "RightUpLeftDownStart"),
+	TwoHandWidthReady = 4 UMETA(DisplayName = "TwoHandWidthReady"),
+	TwoHandWidthStart = 5 UMETA(DisplayName = "TwoHandWidthStart"),
+	StabReady = 6 UMETA(DisplayName = "StabReady"),
+	StabStart = 7 UMETA(DisplayName = "StabStart"),
+	CounterAttack = 8 UMETA(DisplayName = "CounterAttack")
 };
+
+UENUM(BlueprintType)
+enum class EMiniBossWaveAttackState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	TwoHandWidthReady = 1 UMETA(DisplayName = "TwoHandWidthReady"),
+	TwoHandWidthStart = 2 UMETA(DisplayName = "TwoHandWidthStart"),
+	SwordWaveReady = 3 UMETA(DisplayName = "SwordWaveReady"),
+	SwordWaveStart = 4 UMETA(DisplayName = "SwordWaveStart")
+};
+
+UENUM(BlueprintType)
+enum class EMiniBossComboAttackState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	ComboAttack = 1 UMETA(DisplayName = "ComboAttack")
+};
+
+UENUM(BlueprintType)
+enum class EMiniBossBackAttackState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	BackAttack = 1 UMETA(DisplayName = "BackAttack")
+};
+

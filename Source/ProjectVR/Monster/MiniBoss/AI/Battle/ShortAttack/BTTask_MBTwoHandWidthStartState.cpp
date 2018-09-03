@@ -13,7 +13,7 @@ EBTNodeResult::Type UBTTask_MBTwoHandWidthStartState::ExecuteTask(UBehaviorTreeC
 
 		if (MiniBoss)
 		{
-			float ReverseAttackAnimationWaitTime = 1.8f;			
+			float ReverseAttackAnimationWaitTime = 1.2f;			
 			AI->BBComponent->SetValueAsFloat(TEXT("ReverseWaitTime"), ReverseAttackAnimationWaitTime);
 			MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌		
 			MiniBoss->AttackCompleteFlag = true;

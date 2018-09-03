@@ -13,7 +13,7 @@ UCLASS()
 class PROJECTVR_API UBTTask_MBAttackReadyState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
-public:
+private:
 	class AMiniBossAIController* AI;
 	class AMiniBoss* MiniBoss;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);

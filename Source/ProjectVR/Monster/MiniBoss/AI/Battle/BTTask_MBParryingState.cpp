@@ -20,7 +20,7 @@ EBTNodeResult::Type UBTTask_MBParryingState::ExecuteTask(UBehaviorTreeComponent 
 			MiniBoss->AttackCompleteFlag = true;
 			MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
 			MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
-			MiniBoss->CurrentAttackState = EMiniBossAttackState::Idle;
+			MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
 			MiniBoss->CurrentState = EMiniBossState::Battle;		
 		}
 	}

@@ -27,10 +27,11 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 				AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());		
 				if (MiniBoss)
 				{
-					/*LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->GetActorLocation());
+					LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->GetActorLocation());
 					CurrentRot = FMath::Lerp(MiniBoss->GetActorRotation(), LookAt, DeltaSeconds);
 
-					MiniBoss->SetActorRotation(CurrentRot);*/
+					//GLog->Log(FString::Printf(TEXT("%0.1f"), LookAt.Yaw));
+					//MiniBoss->SetActorRotation(CurrentRot);
 
 					Velocity = MiniBoss->GetCharacterMovement()->Velocity;
 					TestRotator = MiniBoss->GetActorRotation();
@@ -56,35 +57,35 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 							else if (Distance < 300.0f && !MiniBoss->IsAttack)
 							{
 								//GLog->Log(FString::Printf(TEXT("Walk -> Attack")));
-								MiniBoss->CurrentAttackState = EMiniBossAttackState::AttackReady;
+								MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
 								MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;								
 								MiniBoss->IsAttack = true; //공격중이란것을 나타냄
 							}
 							break;
 						case EMiniBossAnimState::Attack:
-							switch (MiniBoss->CurrentAttackState)
+							switch (MiniBoss->CurrentShortAttackState)
 							{
-							case EMiniBossAttackState::AttackReady:
+							case EMiniBossShortAttackState::ShortAttackReady:
 								if (Distance > 500.0f && MiniBoss->AttackCompleteFlag)
 								{
 									MiniBoss->AttackCompleteFlag = false;
 									MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
 									MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
-									MiniBoss->CurrentAttackState = EMiniBossAttackState::AttackReady;
+									MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
 									MiniBoss->CurrentState = EMiniBossState::Chase;									
 								}
 								break;
-							case EMiniBossAttackState::RightUpLeftDownReady:								
+							case EMiniBossShortAttackState::RightUpLeftDownReady:
 								break;
-							case EMiniBossAttackState::RightUpLeftDownStart:
+							case EMiniBossShortAttackState::RightUpLeftDownStart:
 								break;
-							case EMiniBossAttackState::StabReady:
+							case EMiniBossShortAttackState::StabReady:
 								break;
-							case EMiniBossAttackState::StabStart:
+							case EMiniBossShortAttackState::StabStart:
 								break;
-							case EMiniBossAttackState::TwoHandWidthReady:
+							case EMiniBossShortAttackState::TwoHandWidthReady:
 								break;
-							case EMiniBossAttackState::TwoHandWidthStart:
+							case EMiniBossShortAttackState::TwoHandWidthStart:
 								break;
 							}							
 							break;

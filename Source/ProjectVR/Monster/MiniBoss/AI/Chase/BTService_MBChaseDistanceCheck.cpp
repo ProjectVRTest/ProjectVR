@@ -54,13 +54,11 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 					{
 						//MiniBoss->WalkStopFlag = true;
 						AI->BBComponent->SetValueAsInt(TEXT("DashCount"), 0);
-						//GLog->Log
-						//MiniBoss->Yaw
 						MiniBoss->CurrentAnimState = EMiniBossAnimState::BattleWalk;						
 					}
 					else if(Distance <300.0f)
 					{
-						MiniBoss->CurrentAttackState = EMiniBossAttackState::AttackReady;
+						MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
 						MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
 						MiniBoss->CurrentState = EMiniBossState::Battle;
 					}
@@ -76,8 +74,7 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 					}
 					else if (Distance < 300.0f)
 					{
-						MiniBoss->CurrentAttackState = EMiniBossAttackState::AttackReady;
-						MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
+						MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;
 						MiniBoss->CurrentState = EMiniBossState::Battle;							
 					}
 					break;

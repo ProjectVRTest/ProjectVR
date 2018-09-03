@@ -16,7 +16,7 @@ EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent
 
 		if (MiniBoss)
 		{
-			if (MiniBoss->CurrentAttackState != EMiniBossAttackState::StabReady)
+			if (MiniBoss->CurrentShortAttackState != EMiniBossShortAttackState::StabReady)
 			{
 				int RandomState = FMath::RandRange(1, 10);
 
@@ -25,14 +25,14 @@ EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent
 					MiniBoss->CurrentState = EMiniBossState::Battle;
 					MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
 					MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
-					MiniBoss->CurrentAttackState = EMiniBossAttackState::Idle;
+					MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
 				}
 				else
 				{
 					MiniBoss->CurrentState = EMiniBossState::Battle;
 					MiniBoss->CurrentAnimState = EMiniBossAnimState::BackWalk;
 					MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
-					MiniBoss->CurrentAttackState = EMiniBossAttackState::Idle;
+					MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
 				}
 			}
 		}
