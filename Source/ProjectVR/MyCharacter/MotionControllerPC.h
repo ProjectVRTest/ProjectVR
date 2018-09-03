@@ -13,8 +13,12 @@ UCLASS()
 class PROJECTVR_API AMotionControllerPC : public APlayerController
 {
 	GENERATED_BODY()
-	
-	
-	
-	
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Haptic")
+		class UHapticFeedbackEffect_Base* HapticEffect;
+
+	AMotionControllerPC();
+
+	UFUNCTION()
+		void RumbleHandController(EControllerHand& Hand,float& Intensity);
 };

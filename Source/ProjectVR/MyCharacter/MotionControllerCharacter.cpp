@@ -71,6 +71,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	{
 		Widget->SetWidgetClass(HitUI.Class);
 	}
+	
 	Widget->SetWidgetSpace(EWidgetSpace::World);
 	Widget->SetDrawSize(FVector2D(1000.0f, 1000.0f));
 	Widget->bVisible = true;
@@ -485,6 +486,7 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 		}
 
 		CurrentHp -= Damage;			// 현재 체력감소
+	
 		ULeftHandWidget* HandWidget = Cast<ULeftHandWidget>
 			(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// 왼손 방패의 위젯을 ULeftHandWidget내의 함수를 사용할 수 있도록 캐스트한다.
 

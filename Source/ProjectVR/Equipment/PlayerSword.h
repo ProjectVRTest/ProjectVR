@@ -33,9 +33,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float Damage;		// 데미지
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Haptic")
-		class UHapticFeedbackEffect_Base* SwordHapticEffect;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
 		class AMotionControllerCharacter* SwordOwner;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")

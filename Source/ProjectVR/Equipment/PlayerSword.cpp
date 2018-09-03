@@ -41,12 +41,6 @@ APlayerSword::APlayerSword()
 	SwordCollision->SetRelativeRotation(FRotator(0.0f,0.0f,90.0f));
 	SwordCollision->SetRelativeScale3D(FVector(0.5f, 0.5f, 1.5f));
 
-	static ConstructorHelpers::FObjectFinder<UHapticFeedbackEffect_Base> HapticEffect(TEXT("HapticFeedbackEffect_Curve'/Game/Assets/MyCharacter/Hand/HandHaptics.HandHaptics'"));
-
-	if (HapticEffect.Succeeded())
-	{
-		SwordHapticEffect = HapticEffect.Object;
-	}
 	IsActivation = false;
 
 	// 검 메쉬의 크기 설정
@@ -152,7 +146,7 @@ void APlayerSword::RumbleRightController(float Intensity)
 
 		if (RightHand)
 		{
-			PC->PlayHapticEffect(SwordHapticEffect, RightHand->Hand, Intensity);
+			PC->RumbleHandController(RightHand->Hand, Intensity);
 		}
 	}
 }

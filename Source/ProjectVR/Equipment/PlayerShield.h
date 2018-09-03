@@ -33,9 +33,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UBoxComponent* ShieldCollision;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Haptic")
-		class UHapticFeedbackEffect_Base* ShieldHapticEffect;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
 		class AMotionControllerCharacter* ShieldOwner;
 

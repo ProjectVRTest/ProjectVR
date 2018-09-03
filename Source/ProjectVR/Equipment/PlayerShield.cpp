@@ -43,13 +43,6 @@ APlayerShield::APlayerShield()
 		ParryingEffect = PT_ParryingEffect.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UHapticFeedbackEffect_Base> HapticEffect(TEXT("HapticFeedbackEffect_Curve'/Game/Assets/MyCharacter/Hand/HandHaptics.HandHaptics'"));
-
-	if (HapticEffect.Succeeded())
-	{
-		ShieldHapticEffect = HapticEffect.Object;
-	}	
-
 	ShieldCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("ShieldCollsion"));
 	ShieldCollision->SetupAttachment(ShieldMesh);
 	ShieldCollision->SetRelativeLocation(FVector(-2.2f, 10.0f, 1.4f));
@@ -162,7 +155,7 @@ void APlayerShield::RumbleLeftController(float Intensity)
 
 		if (LeftHand)
 		{
-			PC->PlayHapticEffect(ShieldHapticEffect, LeftHand->Hand, Intensity);
+			PC->RumbleHandController(LeftHand->Hand,Intensity);
 		}		
 	}
 }

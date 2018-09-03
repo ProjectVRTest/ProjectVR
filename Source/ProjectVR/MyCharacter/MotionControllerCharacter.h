@@ -52,7 +52,7 @@ public:
 		class ARightHandMotionController* RightHand;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class USceneComponent* Scene;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere,Category = "StateWidget")
 		class UWidgetComponent* Widget;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class UStereoLayerComponent* Stereo;
