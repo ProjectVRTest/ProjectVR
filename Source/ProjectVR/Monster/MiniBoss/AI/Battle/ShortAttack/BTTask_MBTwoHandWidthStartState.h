@@ -13,6 +13,6 @@ UCLASS()
 class PROJECTVR_API UBTTask_MBTwoHandWidthStartState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
-public:
+private:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };

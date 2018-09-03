@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "BTTask_MBTwoHandWidthReadyState.generated.h"
+#include "BTTask_MBWATwoHandStartState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTVR_API UBTTask_MBTwoHandWidthReadyState : public UBTTask_BlackboardBase
+class PROJECTVR_API UBTTask_MBWATwoHandStartState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 private:

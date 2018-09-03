@@ -17,6 +17,8 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 		
 		if (MiniBoss)
 		{
+			int RandomPattern = FMath::RandRange(1, 3);
+			
 			MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
 			MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
 			GLog->Log(FString::Printf(TEXT("어택 래디 스테이트 진입")));

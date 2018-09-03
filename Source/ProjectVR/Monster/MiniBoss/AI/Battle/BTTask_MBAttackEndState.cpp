@@ -23,7 +23,7 @@ EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent
 				if (RandomState >= 5)
 				{
 					MiniBoss->CurrentState = EMiniBossState::Battle;
-					MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+					MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;
 					MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
 					MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
 				}
