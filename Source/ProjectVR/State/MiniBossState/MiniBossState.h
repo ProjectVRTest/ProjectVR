@@ -52,6 +52,16 @@ enum class EMiniBossDashState : uint8
 };
 
 UENUM(BlueprintType)
+enum class EMiniBossAttackState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	ShortAttack = 1 UMETA(DisplayName = "ShortAttack"),
+	WaveAttack = 2 UMETA(DisplayName = "WaveAttack"),
+	ComboAttack = 3 UMETA(DisplayName = "ComboAttack"),
+	BackAttack = 4 UMETA(DisplayName = "BackAttack")
+};
+
+UENUM(BlueprintType)
 enum class EMiniBossShortAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
@@ -79,13 +89,13 @@ UENUM(BlueprintType)
 enum class EMiniBossComboAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
-	ComboAttack = 1 UMETA(DisplayName = "ComboAttack")
+	ComboAttackStart = 1 UMETA(DisplayName = "ComboAttackStart")
 };
 
 UENUM(BlueprintType)
 enum class EMiniBossBackAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
-	BackAttack = 1 UMETA(DisplayName = "BackAttack")
+	BackAttackStart = 1 UMETA(DisplayName = "BackAttackStart")
 };
 

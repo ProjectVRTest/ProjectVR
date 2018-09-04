@@ -82,6 +82,7 @@ void UBTTask_MBBackWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8
 			AfterImageOff();
 			GetWorld()->GetTimerManager().ClearTimer(AfterImageStartTimer);
 			GetWorld()->GetTimerManager().ClearTimer(AfterImageEndTimer);
+			MiniBoss->CurrentState = EMiniBossState::Chase;
 			MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
 			
 			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);			

@@ -17,9 +17,29 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 		
 		if (MiniBoss)
 		{
-			int RandomPattern = FMath::RandRange(1, 3);
+			int RandomPattern = FMath::RandRange(1, 15);
 			
-			MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
+			if (RandomPattern > 0 && RandomPattern <8)
+			{
+				MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
+				MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
+				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
+				MiniBoss->CurrentAttackState = EMiniBossAttackState::ShortAttack;
+			}
+			else if (RandomPattern > 7 && RandomPattern < 12)
+			{
+				MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
+				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
+				MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::TwoHandWidthReady;
+				MiniBoss->CurrentAttackState = EMiniBossAttackState::WaveAttack;
+			}
+			else if (RandomPattern > 11)
+			{
+				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
+				MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
+				MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::ComboAttackStart;
+				MiniBoss->CurrentAttackState = EMiniBossAttackState::ComboAttack;
+			}
 			MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
 			GLog->Log(FString::Printf(TEXT("어택 래디 스테이트 진입")));
 		}

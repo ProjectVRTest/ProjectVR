@@ -16,7 +16,12 @@ EBTNodeResult::Type UBTTask_MBSetState::ExecuteTask(UBehaviorTreeComponent & Own
 			MiniBoss->CurrentState = SetState;
 			MiniBoss->CurrentAnimState = SetAnimState;
 			MiniBoss->CurrentJumpState = SetJumpAnimState;
+			MiniBoss->CurrentAttackState = SetAttackState;
 			MiniBoss->CurrentShortAttackState = SetShortAttackState;
+			MiniBoss->CurrentWaveAttackState = SetWaveAttackState;
+			MiniBoss->CurrentComboAttackState = SetComboAttackState;
+			MiniBoss->CurrentBackAttackState = SetBackAttackState;
+			MiniBoss->CurrentDashState = SetDashState;
 		}
 	}
 

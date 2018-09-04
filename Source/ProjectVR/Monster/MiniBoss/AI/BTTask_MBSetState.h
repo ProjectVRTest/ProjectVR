@@ -22,7 +22,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EMiniBossJumpState SetJumpAnimState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		EMiniBossAttackState SetAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EMiniBossShortAttackState SetShortAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		EMiniBossWaveAttackState SetWaveAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		EMiniBossComboAttackState SetComboAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		EMiniBossBackAttackState SetBackAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		EMiniBossDashState SetDashState;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	
 };

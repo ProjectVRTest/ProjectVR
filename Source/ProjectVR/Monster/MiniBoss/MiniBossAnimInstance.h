@@ -22,6 +22,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EMiniBossJumpState CurrentJumpState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		EMiniBossAttackState CurrentAttackState;	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EMiniBossShortAttackState CurrentShortAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EMiniBossWaveAttackState CurrentWaveAttackState;

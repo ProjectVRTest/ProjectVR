@@ -35,6 +35,7 @@ void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentState = MiniBoss->CurrentState;
 		CurrentAnimState = MiniBoss->CurrentAnimState;
 		CurrentJumpState = MiniBoss->CurrentJumpState;
+		CurrentAttackState = MiniBoss->CurrentAttackState;
 		CurrentShortAttackState = MiniBoss->CurrentShortAttackState;
 		CurrentWaveAttackState = MiniBoss->CurrentWaveAttackState;
 		CurrentComboAttackState = MiniBoss->CurrentComboAttackState;
