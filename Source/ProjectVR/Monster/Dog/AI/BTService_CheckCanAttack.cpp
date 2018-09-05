@@ -40,9 +40,10 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			return;
 		}
 
-		if (RagdollDog->Landing || RagdollDog->AttachActor || RagdollDog->bIsAttack)
+		if ( RagdollDog->AttachActor || RagdollDog->bIsAttack)
+		{
 			return;
-		
+		}
 		if (RagdollDog && MyCharacter)
 		{
 			RagdollDog->bInAttackplace = false;
@@ -323,25 +324,20 @@ void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCh
 
 	ADog** Dogs = MyCharacter->DogArray.GetData();
 
-	for (int i = 0; i < MyCharacter->DogArray.Num(); i++)
+	if (Dogs[0] != RagdollDog)		// 자기랑 아닌거랑 비교
 	{
-		if (Dogs[i] != RagdollDog)		// 자기랑 아닌거랑 비교
-		{
-			RagdollDog->bAttack = false;		// 공격 불가
+		RagdollDog->bAttack = false;		// 공격 불가
 
-			if (!RagdollDog->AttackWaite)		// 여러마리가 있을 때 / 공격을 할 수 없다면 랜덤한 방향으로 배회하도록 한다
-			{
-				SetRandomCircle(RagdollDog);
-				RagdollDog->AttackWaite = true;
-			}
-			return;
-		}
-		else
+		if (!RagdollDog->AttackWaite)		// 여러마리가 있을 때 / 공격을 할 수 없다면 랜덤한 방향으로 배회하도록 한다
 		{
-			RagdollDog->bAttack = true;
-			break;
+			SetRandomCircle(RagdollDog);
+			RagdollDog->AttackWaite = true;
 		}
+		return;
 	}
+		else
+			RagdollDog->bAttack = true;
+	
 
 	if (RagdollDog->bAttack)
 	{

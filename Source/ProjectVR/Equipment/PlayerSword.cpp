@@ -37,9 +37,9 @@ APlayerSword::APlayerSword()
 	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 
 	// 콜리전 위치 및 방향, 크기 설정
-	SwordCollision->SetRelativeLocation(FVector(0.0f, 70.0f, 0.0f));
+	SwordCollision->SetRelativeLocation(FVector(0.0f, 90.0f, 0.0f));
 	SwordCollision->SetRelativeRotation(FRotator(0.0f,0.0f,90.0f));
-	SwordCollision->SetRelativeScale3D(FVector(0.5f, 0.5f, 1.5f));
+	SwordCollision->SetRelativeScale3D(FVector(0.75f, 0.75f, 1.6f));
 
 	IsActivation = false;
 
@@ -74,11 +74,7 @@ void APlayerSword::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	Timer += DeltaTime;		// 타이머
-	if (SwordMesh->GetPhysicsLinearVelocity().Size() > 200)
-	{
-		//UE_LOG(LogClass, Warning, TEXT("%0.1f"), SwordMesh->GetPhysicsLinearVelocity().Size());
-	}
-
+	
 	if (SwordOwner)
 	{
 		SwordPhysicsVelocityValue = SwordCollision->GetPhysicsLinearVelocity().Size() - SwordOwner->GetVelocity().Size();
@@ -92,11 +88,11 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 	{
 		if (Timer >= 0.5f)			// 타이머가 0.5 이상의 수를 가지고 있을 때 실행 (조건1)
 		{
-			if (IsActivation && SwordPhysicsVelocityValue >= 200.0f) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
+			if (IsActivation && SwordPhysicsVelocityValue >= 300.0f) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
 			{
 				Timer = 0.0f;		// 공격 판정이 일어났을 때 타이머 0으로
 
-				if (SwordPhysicsVelocityValue <= 500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
+				if (SwordPhysicsVelocityValue <= 300)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
 				{					
 					RumbleRightController(0.5f);
 					Damage = 10.0f;
