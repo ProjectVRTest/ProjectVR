@@ -17,7 +17,8 @@
 #include "Haptics/HapticFeedbackEffect_Base.h"
 #include "MyCharacter/MotionControllerPC.h"
 #include "HandMotionController/LeftHandMotionController.h"
-#include "MyCharacter/MotionControllerCharacter.h"	// 오너 설정
+#include "MyCharacter/MotionControllerCharacter.h"	// Setting Owner
+#include "MyCharacter/Widget/HPStaminaBar.h"			// Character State Bar
 // Sets default values
 APlayerShield::APlayerShield()
 {
@@ -26,16 +27,20 @@ APlayerShield::APlayerShield()
 	
 	/* 스태틱 매쉬 컴포넌트 생성 */
 	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));
-	ShieldMesh->SetCollisionProfileName(TEXT("NoCollision"));			// 캐릭터와의 충돌을 피하기위해서 Pawn(캐릭터)만 Overlap되도록 설정
 	SetRootComponent(ShieldMesh);
-
-	ShieldMesh->SetRelativeScale3D(FVector(-1.0f, 1.0f, 1.0f));
-
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shield(TEXT("StaticMesh'/Game/Assets/Equipment/Shield/Mesh/SM_Shield.SM_Shield'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (SM_Shield.Succeeded())		// 방패 메쉬를 찾았을 경우 실행
 	{
 		ShieldMesh->SetStaticMesh(SM_Shield.Object);		// 스태틱 메쉬에 방패 모양 설정
 	}
+
+	// 방패 콜리전 
+	ShieldCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("ShieldCollsion"));
+	ShieldCollision->SetupAttachment(ShieldMesh);
+
+	// 상태 바
+	StateBarScene = CreateDefaultSubobject<USceneComponent>(TEXT("StateScene"));
+	StateBarScene->SetupAttachment(ShieldMesh);
 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingEffect(TEXT("ParticleSystem'/Game/Assets/StarterContent/Particles/P_Explosion.P_Explosion'"));
 	if (PT_ParryingEffect.Succeeded())
@@ -43,13 +48,18 @@ APlayerShield::APlayerShield()
 		ParryingEffect = PT_ParryingEffect.Object;
 	}
 
-	ShieldCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("ShieldCollsion"));
-	ShieldCollision->SetupAttachment(ShieldMesh);
+	StateBar = nullptr;
+	ShieldMesh->SetRelativeScale3D(FVector(-1.0f, 1.0f, 1.0f));
+	ShieldMesh->SetCollisionProfileName(TEXT("NoCollision"));			// 캐릭터와의 충돌을 피하기위해서 Pawn(캐릭터)만 Overlap되도록 설정
+
 	ShieldCollision->SetRelativeLocation(FVector(-2.2f, 10.0f, 1.4f));
 	ShieldCollision->SetRelativeRotation(FRotator(0, -20.0f, 0));
 	ShieldCollision->SetRelativeScale3D(FVector(0.75f, 1.5f, 0.24f));
 	ShieldCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 	ShieldCollision->bHiddenInGame = false;
+
+	StateBarScene->SetRelativeLocation(FVector(-23.0f, -10.0f, 0.0f));
+	StateBarScene->SetRelativeRotation(FRotator(0.0f, -19.0f, -90.0f));
 	IsActivation = false;
 	
 	Tags.Add(FName(TEXT("PlayerShield")));		// 생성한 방패를 'PlayerShield'란 이름으로 태그를 줌
@@ -61,7 +71,16 @@ APlayerShield::APlayerShield()
 void APlayerShield::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.Owner = this; 
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+	////방패를 쉴드 씬 컴포넌트에 스폰시킨다.
+	StateBar = GetWorld()->SpawnActor<AHPStaminaBar>(StateBar->StaticClass(), StateBarScene->GetComponentLocation(), StateBarScene->GetComponentRotation(), SpawnActorOption);
+	////방패를 AttachRules를 토대로 쉴드 씬 컴포넌트에 붙인다.
+	StateBar->AttachToComponent(StateBarScene, AttachRules);
 	// 오너 설정
 	ShieldOwner = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 

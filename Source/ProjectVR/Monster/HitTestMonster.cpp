@@ -65,6 +65,8 @@ void AHitTestMonster::OnOverlap(UPrimitiveComponent * OverlappedComp, AActor * O
 		if (Character)
 		{
 			UGameplayStatics::ApplyDamage(OtherActor, 10.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
+			UE_LOG(LogTemp, Log, TEXT("Take Damage $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"));
+
 		}
 	}
 }
