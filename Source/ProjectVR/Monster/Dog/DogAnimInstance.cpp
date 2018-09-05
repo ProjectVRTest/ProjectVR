@@ -66,15 +66,16 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
 
 					RagdollDog->bIsDetach = false;
+					RagdollDog->Landing = false;
 
 					PreviousFalling = CurrentFalling;
 					return;
 				}
-				
-				RagdollDog->Landing = true;
+				else if (CurrentDogState == EDogState::Battle)				// 전투상태일때는 착지가능상태로 바꿔줌
+				{
+					RagdollDog->Landing = true;
+				}
 			}
-			
-			
 		}
 		PreviousFalling = CurrentFalling;
 	}

@@ -82,7 +82,7 @@ ADog::ADog()
 	GetMesh()->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 
 	DogAttackCollision->SetCollisionProfileName(TEXT("OverlapAll"));
-	DogAttackCollision->SetRelativeLocation(FVector(0.0f, 72.0f, 82.0f));
+	DogAttackCollision->SetRelativeLocation(FVector(10.0f, -8.0f, 2.0f));
 	DogAttackCollision->SetRelativeScale3D(FVector(0.8f, 0.8f, 0.8f));
 	DogAttackCollision->SetActive(false);
 	DogAttackCollision->ComponentTags.Add("DogAttackCollision");
@@ -244,6 +244,13 @@ void ADog::Tick(float DeltaTime)
 				GetCapsuleComponent()->AddForce(Direction * 500.0f);
 
 				OnLandFlag = true;		// 바닥에 닿았을 때 한번만 실행
+
+				// 물기 조건 초기화
+				Character->DogArray.Remove(this);
+				bInAttackplace = false;
+				once = false;
+				bIsAttack = false;
+				AttachActor = nullptr;
 			}
 		}
 	}
@@ -283,18 +290,25 @@ float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControll
 {
 	APlayerSword* Sword = Cast<APlayerSword>(DamageCauser);
 	if (CurrentDogState == EDogState::Bite && Sword)
+	{
 		return 0;
+	}
 
 	CurrentHP -= Damage;
 
 	if (CurrentHP < 0.0f)
 	{
 		DogAttackCollision->bGenerateOverlapEvents = false;
+
 		if (CurrentDogState == EDogState::Bite)
 		{
 			CurrentDogAnimState = EDogAnimState::FallingDeath;
 			bIsDeath = true;
 			bpunchDetach = true;
+		}
+		else if (CurrentDogState == EDogState::Battle)
+		{
+			CurrentDogState = EDogState::Death;
 		}
 	}
 

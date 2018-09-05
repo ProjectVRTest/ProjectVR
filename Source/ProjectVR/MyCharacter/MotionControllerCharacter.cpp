@@ -35,6 +35,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "MyCharacter/Widget/HPStaminaBar.h"
 
 // Sets default values
 AMotionControllerCharacter::AMotionControllerCharacter()
@@ -160,7 +161,6 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 	{
 		DogArray.Shrink();	// 메모리 최적화
 	}
-
 
 	/*ADog** Dog = DogArray.GetData();
 	for (int i = 0; i <DogArray.Num(); i++)
@@ -473,6 +473,7 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 
 	if (!InvincibleTimeOn)
 	{
+
 		bisHit = true;
 		Widget->bVisible = true;
 
@@ -487,13 +488,15 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 
 		CurrentHp -= Damage;			// 현재 체력감소
 	
-		ULeftHandWidget* HandWidget = Cast<ULeftHandWidget>
-			(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// 왼손 방패의 위젯을 ULeftHandWidget내의 함수를 사용할 수 있도록 캐스트한다.
+		//ULeftHandWidget* HandWidget = Cast<ULeftHandWidget>
+		//	(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// 왼손 방패의 위젯을 ULeftHandWidget내의 함수를 사용할 수 있도록 캐스트한다.
 
-		if (HandWidget)
-		{
-			HandWidget->ReceiveDamage(Damage);			// 데미지를 받는다.
-		}
+		//if (HandWidget)
+		//{
+		//	HandWidget->ReceiveDamage(Damage);			// 데미지를 받는다.
+		//}
+
+		LeftHand->Shield->StateBar->GetDamage(Damage);
 		InvincibleTimeOn = true;		// 피격되면 즉시 무적시간 활성화
 		GetWorld()->GetTimerManager().SetTimer(DamageTimerHandle, this, &AMotionControllerCharacter::DamageTimer, 0.01f, false, 1.5f);		// 1.5초 후 무적시간을 비활성화
 	}

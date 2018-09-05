@@ -23,19 +23,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
 		class UStaticMeshComponent* ShieldMesh;			// 메쉬에 방패를 붙일 컴포넌트
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UWidgetComponent* CharacterStateWidget;		// 캐릭터 상태 위젯 ( 물약 / 체력 / 스테미너 ) 컴포넌트
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
+		class UBoxComponent* ShieldCollision;
+	UPROPERTY(VisibleAnywhere , BlueprintReadOnly)
+		class USceneComponent* StateBarScene;		// 캐릭터 상태 바
+	UPROPERTY(VisibleAnywhere, Category = "StateBar")
+		class AHPStaminaBar* StateBar;		// 캐릭터 상태 바
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* ParryingEffect;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UBoxComponent* ShieldCollision;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
 		class AMotionControllerCharacter* ShieldOwner;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
 		float ShieldPhysicsVelocityValue;
 
