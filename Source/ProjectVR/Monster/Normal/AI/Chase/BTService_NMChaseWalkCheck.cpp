@@ -6,7 +6,7 @@
 void UBTService_NMChaseWalkCheck::InitializeFromAsset(UBehaviorTree & Asset)
 {
 	Super::InitializeFromAsset(Asset);
-
+	ChaseWalkTimeCount = 0;
 }
 
 void UBTService_NMChaseWalkCheck::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
@@ -25,10 +25,12 @@ void UBTService_NMChaseWalkCheck::TickNode(UBehaviorTreeComponent & OwnerComp, u
 
 		if (NormalMonster)
 		{
-			if (Distance > 500.0f)
+			ChaseWalkTimeCount++;
+			
+			if (ChaseWalkTimeCount >= 2.0f)
 			{
-				UE_LOG(LogClass, Warning, TEXT("거리확인 진입"));
-				//NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Run;
+				ChaseWalkTimeCount = 0;
+				NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Run;
 			}
 		}
 	}

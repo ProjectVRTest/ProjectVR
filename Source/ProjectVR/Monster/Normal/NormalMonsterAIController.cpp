@@ -24,10 +24,10 @@ void ANormalMonsterAIController::Possess(APawn * InPawn)
 
 	if (NormalMonster)
 	{
-		if (NormalMonster->BehaviorTree)
+		if (NormalMonster->SwordBehaviorTree)
 		{
-			BBComponent->InitializeBlackboard(*(NormalMonster->BehaviorTree->BlackboardAsset));
-			BTComponent->StartTree(*(NormalMonster->BehaviorTree));
+			BBComponent->InitializeBlackboard(*(NormalMonster->SwordBehaviorTree->BlackboardAsset));
+			BTComponent->StartTree(*(NormalMonster->SwordBehaviorTree));
 		}
 	}
 }

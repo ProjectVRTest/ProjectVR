@@ -17,3 +17,13 @@ void UNormalMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentIdleState = NormalMonster->CurrentIdleState;
 	}
 }
+
+void UNormalMonsterAnimInstance::AnimNotify_AttackEnd(UAnimNotify * Notify)
+{
+	ANormalMonster* NormalMonster = Cast<ANormalMonster>(TryGetPawnOwner());
+
+	if (NormalMonster)
+	{
+		NormalMonster->AttackEndFlag = true;
+	}
+}

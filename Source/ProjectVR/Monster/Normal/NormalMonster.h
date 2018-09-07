@@ -29,27 +29,31 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		ENormalMonsterState CurrentState;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		ENormalMonsterAnimState CurrentAnimState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IdleState")
 		ENormalMonsterIdleState CurrentIdleState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		ENormalMonsterAttackState CurrentAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		ENormalMonsterKind MonsterKind;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-		class UBehaviorTree* BehaviorTree;
+		class UBehaviorTree* SwordBehaviorTree;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+		class UBehaviorTree* ArcherBehaviorTree;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 		TArray<class AMyTargetPoint*> PatrolPoints;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class AActor* Target;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float MaxHP; //최대 HP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float CurrentHP; //현재 HP
-
+	bool AttackEndFlag;
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn);
 

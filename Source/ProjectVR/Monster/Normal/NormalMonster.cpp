@@ -21,7 +21,7 @@ ANormalMonster::ANormalMonster()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Normal_Monster_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/Monster/NormalMonster/Mesh/Normal_Monster.Normal_Monster'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Normal_Monster_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/Monster/NormalMonster/Mesh/Character/Normal_Monster.Normal_Monster'"));
 
 	if (Normal_Monster_SK_Mesh.Succeeded())
 	{
@@ -41,13 +41,20 @@ ANormalMonster::ANormalMonster()
 	PawnSensing->bSeePawns = true;
 	PawnSensing->SetPeripheralVisionAngle(30.0f);
 	PawnSensing->SightRadius = 3000.0f;
-	PawnSensing->SensingInterval = 0.01f;
+	PawnSensing->SensingInterval = 0.1f;
 
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree>NormalMonster_BT(TEXT("BehaviorTree'/Game/Blueprints/Monster/Normal/AI/BT_NormalMonster.BT_NormalMonster'"));
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree>NormalSwordMonster_BT(TEXT("BehaviorTree'/Game/Blueprints/Monster/Normal/AI/BT_NormalSwordMonster.BT_NormalSwordMonster'"));
 
-	if (NormalMonster_BT.Succeeded())
+	if (NormalSwordMonster_BT.Succeeded())
 	{
-		BehaviorTree = NormalMonster_BT.Object;
+		SwordBehaviorTree = NormalSwordMonster_BT.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree>NormalArcherMonster_BT(TEXT("BehaviorTree'/Game/Blueprints/Monster/Normal/AI/BT_NormalArcherMonster.BT_NormalArcherMonster'"));
+
+	if (NormalArcherMonster_BT.Succeeded())
+	{
+		ArcherBehaviorTree = NormalArcherMonster_BT.Object;
 	}
 
 	MaxHP = 100;
@@ -68,6 +75,8 @@ ANormalMonster::ANormalMonster()
 		}		
 	}
 
+	Target = nullptr;
+	AttackEndFlag = false;
 	GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -78,7 +87,13 @@ ANormalMonster::ANormalMonster()
 void ANormalMonster::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
+
+	if (AI)
+	{
+		AI->BBComponent->SetValueAsEnum(TEXT("MonsterKind"), (uint8)MonsterKind);
+	}
+
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &ANormalMonster::OnSeeCharacter);
@@ -118,19 +133,28 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 
 		if (AI)
 		{
-			/*switch (CurrentState)
+			if (CurrentAnimState == ENormalMonsterAnimState::AttackWait)
 			{
-			case ENormalMonsterState::Idle:
-				AI->BBComponent->SetValueAsObject("Player", Pawn);
-				CurrentState = ENormalMonsterState::Chase;
-				CurrentAnimState = ENormalMonsterAnimState::Walk;
-				break;
-			case ENormalMonsterState::Patrol:
-				AI->BBComponent->SetValueAsObject("Player", Pawn);
-				CurrentState = ENormalMonsterState::Chase;
-				CurrentAnimState = ENormalMonsterAnimState::Walk;
-				break;
-			}*/
+				return;
+			}
+			else
+			{
+				if (Target == nullptr)
+				{
+					Target = Pawn;
+					AI->BBComponent->SetValueAsObject("Player", Pawn);
+					CurrentState = ENormalMonsterState::Chase;
+
+					if (MonsterKind == ENormalMonsterKind::SwordMan)
+					{
+						CurrentAnimState = ENormalMonsterAnimState::Wait;
+					}
+					else
+					{
+						CurrentAnimState = ENormalMonsterAnimState::Walk;
+					}
+				}
+			}
 		}
 	}
 }
@@ -139,6 +163,45 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
+	if (CurrentAnimState == ENormalMonsterAnimState::AttackWait)
+	{
+		ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
+
+		if (AI)
+		{
+			if (CurrentAnimState == ENormalMonsterAnimState::AttackWait)
+			{
+				Target = DamageCauser;
+				AI->BBComponent->SetValueAsObject("Player", DamageCauser);
+
+				float Distance = AI->BBComponent->GetValueAsFloat(TEXT("Distnace"));
+
+				if (Distance <= 400.0f)
+				{
+					CurrentState = ENormalMonsterState::Battle;
+				}
+				else
+				{
+					CurrentState = ENormalMonsterState::Chase;
+					switch (MonsterKind)
+					{
+					case ENormalMonsterKind::SwordMan:
+						CurrentAnimState = ENormalMonsterAnimState::Wait;
+						break;
+					case ENormalMonsterKind::Archer:
+						CurrentAnimState = ENormalMonsterAnimState::Walk;
+						break;
+					}					
+				}		
+
+				CurrentHP -= Damage;
+			}
+			else
+			{
+				CurrentHP -= Damage;
+			}			
+		}
+	}
 	return Damage;
 }
 

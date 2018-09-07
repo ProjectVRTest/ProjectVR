@@ -19,6 +19,7 @@ public:
 		ENormalMonsterState SetState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		ENormalMonsterAnimState SetAnimState;
+
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	
 	

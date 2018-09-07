@@ -17,9 +17,14 @@ EBTNodeResult::Type UBTTask_NMIdleState::ExecuteTask(UBehaviorTreeComponent & Ow
 	if (AI)
 	{
 		NormalMonster = Cast<ANormalMonster>(AI->GetPawn());
-		if (NormalMonster)
+		
+		if (NormalMonster->CurrentIdleState == ENormalMonsterIdleState::Wait)
 		{
 			GetWorld()->GetTimerManager().SetTimer(PatrolOnTimer, this, &UBTTask_NMIdleState::PatrolStart, 0.5f, false);
+		}
+		else
+		{
+			return EBTNodeResult::Succeeded;
 		}		
 	}
 	return EBTNodeResult::InProgress;
@@ -29,8 +34,14 @@ void UBTTask_NMIdleState::PatrolStart()
 {
 	if (NormalMonster)
 	{		
-	//	UE_LOG(LogClass, Warning, TEXT("PatrolStart"));
-		NormalMonster->CurrentState = ENormalMonsterState::Patrol;
-		NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Walk;
+		if (NormalMonster->CurrentAnimState == ENormalMonsterAnimState::AttackWait)
+		{
+			return;
+		}
+		else
+		{
+			NormalMonster->CurrentState = ENormalMonsterState::Patrol;
+			NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Walk;
+		}		
 	}
 }

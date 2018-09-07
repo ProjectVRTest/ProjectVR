@@ -26,4 +26,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;	
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+		void AnimNotify_AttackEnd(UAnimNotify* Notify);
 };

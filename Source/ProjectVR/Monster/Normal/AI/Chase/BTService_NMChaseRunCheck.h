@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Services/BTService_BlackboardBase.h"
-#include "BTService_NMChaseWalkCheck.generated.h"
+#include "BTService_NMChaseRunCheck.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTVR_API UBTService_NMChaseWalkCheck : public UBTService_BlackboardBase
+class PROJECTVR_API UBTService_NMChaseRunCheck : public UBTService_BlackboardBase
 {
 	GENERATED_BODY()
-public:
+private:
 	float Distance;
-	bool checkFlag;
+	float ChaseRunTimeCount;
 	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
-	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;	
+	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 };

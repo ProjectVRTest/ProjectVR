@@ -27,7 +27,7 @@ enum class EMiniBossAnimState : uint8
 	AttackReady = 5 UMETA(DisplayName = "AttackReady"),
 	ParryingReady = 6 UMETA(DisplayName = "ParryingReady"),
 	ParryingStart = 7 UMETA(DisplayName = "ParryingStart"),
-	BackWalk = 8 UMETA(DisplayName = "BackWalk"),                                               
+	BackWalk = 8 UMETA(DisplayName = "BackWalk"),  
 	DashAttack = 9 UMETA(DisplayName = "DashAttack"),
 	Rotate = 10 UMETA(DisplayName = "Rotate"),
 	BattleWalk = 11 UMETA(DisplayName = "BattleWalk")

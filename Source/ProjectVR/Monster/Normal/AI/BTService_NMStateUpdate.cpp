@@ -26,10 +26,12 @@ void UBTService_NMStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 				NormalMonster->GetCharacterMovement()->MaxWalkSpeed = 0;
 				break;
 			case ENormalMonsterAnimState::Walk:
-				NormalMonster->GetCharacterMovement()->MaxWalkSpeed = 450.0f;
+				NormalMonster->GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 				break;
 			case ENormalMonsterAnimState::Run:
-				NormalMonster->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+				NormalMonster->GetCharacterMovement()->MaxWalkSpeed = 350.0f;
+				break;
+			case ENormalMonsterAnimState::RageAttack:
 				break;
 			}
 
@@ -38,7 +40,6 @@ void UBTService_NMStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 				AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
 				Distance = FVector::Distance(NormalMonster->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
 				AI->BBComponent->SetValueAsFloat("Distance", Distance);
-
 			}
 		}
 	}

@@ -6,6 +6,13 @@
 #include "NormalMonsterState.generated.h"
 
 UENUM(BlueprintType)
+enum class ENormalMonsterKind : uint8
+{
+	SwordMan = 0 UMETA(DisplayName = "SwordMan"),
+	Archer = 1 UMETA(DisplayName = "Archer")
+};
+
+UENUM(BlueprintType)
 enum class ENormalMonsterState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
@@ -13,8 +20,7 @@ enum class ENormalMonsterState : uint8
 	Chase = 2 UMETA(DisplayName = "Chase"),
 	Battle = 3 UMETA(DisplayName = "Battle"),
 	Dead = 4 UMETA(DisplayName = "Dead"),
-	Rotate = 5 UMETA(DisplayName = "Rotate"),
-	Recovery = 6 UMETA(DisplayName = "Recovery")
+	Rotate = 5 UMETA(DisplayName = "Rotate")
 };
 
 UENUM(BlueprintType)
@@ -25,7 +31,10 @@ enum class ENormalMonsterAnimState : uint8
 	BattleWait = 2 UMETA(DisplayName = "BattleWait"), //전투공격 대기 상태
 	Walk = 3 UMETA(DisplayName = "Walk"),
 	Run = 4 UMETA(DisplayName = "Run"),
-	RageRun = 5 UMETA(DisplayName = "RageRun")
+	RageRun = 5 UMETA(DisplayName = "RageRun"),
+	RageAttack = 6 UMETA(DisplayName = "RageAttack"),
+	AttackReady = 7 UMETA(DisplayName = "AttackReady"),
+	Attack = 8 UMETA(DisplayName = "Attack")
 };
 
 UENUM(BlueprintType)
@@ -35,17 +44,17 @@ enum class ENormalMonsterIdleState : uint8
 	Sprawling = 1 UMETA(DisplayName = "Sprawling"),
 	Bed = 2 UMETA(DisplayName = "Bed"),
 	SitDown = 3 UMETA(DisplayName = "SitDown"),
-	Hide = 4 UMETA(DisplayName= "Hide"),
-	
+	Hide = 4 UMETA(DisplayName= "Hide")
 };
 
 UENUM(BlueprintType)
 enum class ENormalMonsterAttackState : uint8
 {
 	Stand = 0 UMETA(DisplayName = "Stand"),
-	DefaultAttack = 1 UMETA(DisplayName = "DefaultAttack"),
-	ComboAttack = 2 UMETA(DisplayName = "ComboAttack"),
-	RageAttack = 3 UMETA(DisplayName = "RageAttack"),
-	BackAttack = 4 UMETA(DisplayName = "BackAttack")
+	StabAttackReady = 1 UMETA(DisplayName = "StabAttackReady"),
+	StabAttackStart = 2 UMETA(DisplayName = "StabAttackStart"),
+	ClipplingAttackReady = 3 UMETA(DisplayName = "ClipplingAttackReady"),
+	ClipplingAttackStart = 4 UMETA(DisplayName = "ClipplingAttackStart"),
+	ComboAttackReady = 5 UMETA(DisplayName = "ComboAttack"),
+	ComboAttackReadyStart = 6 UMETA(DisplayName = "ComboAttackReadyStart")
 };
-
