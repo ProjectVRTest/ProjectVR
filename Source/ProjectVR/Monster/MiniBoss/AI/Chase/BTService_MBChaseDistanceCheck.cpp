@@ -12,7 +12,7 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
 
 	FVector Velocity;
-	FRotator TestRotator;
+	FRotator MiniBossRotator;
 
 	if (AI)
 	{
@@ -28,11 +28,11 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 		if (MiniBoss && Player)
 		{
 			Velocity = MiniBoss->GetCharacterMovement()->Velocity;
-			TestRotator = MiniBoss->GetActorRotation();
+			MiniBossRotator = MiniBoss->GetActorRotation();
 
 			FVector NormalVector = UKismetMathLibrary::Normal(Velocity);
 			FRotator XNormalRotator = UKismetMathLibrary::MakeRotFromX(NormalVector);
-			FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(TestRotator, XNormalRotator);
+			FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(MiniBossRotator, XNormalRotator);
 			MiniBoss->Yaw = CompleteRotator.Yaw;
 
 			//GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), MiniBoss->Yaw));

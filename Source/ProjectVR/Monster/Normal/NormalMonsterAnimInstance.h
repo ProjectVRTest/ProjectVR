@@ -20,10 +20,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		ENormalMonsterAnimState CurrentAnimState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		ENormalMonsterAttackState CurrentAttackState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		ENormalMonsterIdleState CurrentIdleState;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		ENormalMonsterAttackState CurrentAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		ENormalMonsterStabAttackState CurrentStabAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		ENormalMonsterComboAttackAttackState CurrentComboAttackState;
+
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;	
 	UFUNCTION(BlueprintCallable, Category = "Attack")

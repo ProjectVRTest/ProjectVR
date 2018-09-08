@@ -35,18 +35,21 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 				}
 				else if (Distance < 400.0f)
 				{
+					NormalMonster->CurrentAnimState = ENormalMonsterAnimState::AttackReady;
 					NormalMonster->CurrentState = ENormalMonsterState::Battle;
 				}
 				break;
 			case ENormalMonsterAnimState::Walk:
 				if (Distance < 400.0f)
 				{
+					NormalMonster->CurrentAnimState = ENormalMonsterAnimState::AttackReady;
 					NormalMonster->CurrentState = ENormalMonsterState::Battle;
 				}
 				break;
 			case ENormalMonsterAnimState::Run:
 				if (Distance < 400.0f)
 				{
+					NormalMonster->CurrentAnimState = ENormalMonsterAnimState::AttackReady;
 					NormalMonster->CurrentState = ENormalMonsterState::Battle;
 				}
 				break;

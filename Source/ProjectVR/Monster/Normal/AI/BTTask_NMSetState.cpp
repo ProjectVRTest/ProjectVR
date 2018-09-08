@@ -15,6 +15,10 @@ EBTNodeResult::Type UBTTask_NMSetState::ExecuteTask(UBehaviorTreeComponent & Own
 		{
 			NormalMonster->CurrentState = SetState;
 			NormalMonster->CurrentAnimState = SetAnimState;
+			NormalMonster->CurrentIdleState = SetIdleState;
+			NormalMonster->CurrentAttackState = SetAttackState;
+			NormalMonster->CurrentStabAttackState = SetStabAttackState;
+			NormalMonster->CurrentComboAttackState = SetComboAttackState;
 		}
 	}
 	return EBTNodeResult::Succeeded;

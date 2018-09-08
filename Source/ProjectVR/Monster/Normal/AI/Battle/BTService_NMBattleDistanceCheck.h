@@ -13,8 +13,9 @@ UCLASS()
 class PROJECTVR_API UBTService_NMBattleDistanceCheck : public UBTService_BlackboardBase
 {
 	GENERATED_BODY()
-	
-	
-	
-	
+private:
+	FVector Velocity;
+	FRotator NMRotator;
+	float Distance;
+	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 };

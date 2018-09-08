@@ -41,8 +41,8 @@ UENUM(BlueprintType)
 enum class ENormalMonsterIdleState : uint8
 {
 	Wait = 0 UMETA(DisplayName = "Wait"),
-	Sprawling = 1 UMETA(DisplayName = "Sprawling"),
-	Bed = 2 UMETA(DisplayName = "Bed"),
+	Lean = 1 UMETA(DisplayName = "Lean"),
+	Recumbent = 2 UMETA(DisplayName = "Recumbent"),
 	SitDown = 3 UMETA(DisplayName = "SitDown"),
 	Hide = 4 UMETA(DisplayName= "Hide")
 };
@@ -50,11 +50,24 @@ enum class ENormalMonsterIdleState : uint8
 UENUM(BlueprintType)
 enum class ENormalMonsterAttackState : uint8
 {
-	Stand = 0 UMETA(DisplayName = "Stand"),
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	StabAttack = 1 UMETA(DisplayName = "StabAttack"),	
+	ComboAttack = 2 UMETA(DisplayName = "ComboAttack")	
+};
+
+UENUM(BlueprintType)
+enum class ENormalMonsterStabAttackState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
 	StabAttackReady = 1 UMETA(DisplayName = "StabAttackReady"),
 	StabAttackStart = 2 UMETA(DisplayName = "StabAttackStart"),
 	ClipplingAttackReady = 3 UMETA(DisplayName = "ClipplingAttackReady"),
-	ClipplingAttackStart = 4 UMETA(DisplayName = "ClipplingAttackStart"),
-	ComboAttackReady = 5 UMETA(DisplayName = "ComboAttack"),
-	ComboAttackReadyStart = 6 UMETA(DisplayName = "ComboAttackReadyStart")
+	ClipplingAttackStart = 4 UMETA(DisplayName = "ClipplingAttackStart")
+};
+
+UENUM(BlueprintType)
+enum class ENormalMonsterComboAttackAttackState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	ComboAttackStart = 1 UMETA(DisplayName = "ComboAttackStart")	
 };

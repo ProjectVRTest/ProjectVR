@@ -21,7 +21,7 @@ ANormalMonster::ANormalMonster()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Normal_Monster_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/Monster/NormalMonster/Mesh/Character/Normal_Monster.Normal_Monster'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Normal_Monster_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/Monster/NormalMonster/Mesh/Character/SK_NormalMonster.SK_NormalMonster'"));
 
 	if (Normal_Monster_SK_Mesh.Succeeded())
 	{
@@ -34,7 +34,7 @@ ANormalMonster::ANormalMonster()
 	CurrentState = ENormalMonsterState::Idle;
 	CurrentAnimState = ENormalMonsterAnimState::Wait;
 	CurrentIdleState = ENormalMonsterIdleState::Wait;
-	CurrentAttackState = ENormalMonsterAttackState::Stand;
+	CurrentAttackState = ENormalMonsterAttackState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
@@ -114,6 +114,8 @@ void ANormalMonster::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentAnimState", (uint8)CurrentAnimState);
 		AI->BBComponent->SetValueAsEnum("CurrentIdleState", (uint8)CurrentIdleState);
 		AI->BBComponent->SetValueAsEnum("CurrentAttackState", (uint8)CurrentAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentStabAttackState", (uint8)CurrentStabAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentComboAttackState", (uint8)CurrentComboAttackState);
 	}
 }
 

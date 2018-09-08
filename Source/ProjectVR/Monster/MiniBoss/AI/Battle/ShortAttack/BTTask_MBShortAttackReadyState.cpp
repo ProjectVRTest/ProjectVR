@@ -27,7 +27,7 @@ EBTNodeResult::Type UBTTask_MBShortAttackReadyState::ExecuteTask(UBehaviorTreeCo
 				MiniBoss->TwoHandWidthFlag = true;
 				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::RightUpLeftDownReady;
 				break;
-			case StabAttack:
+			case StabAttacked:
 				WaitTime = 0.5f;
 				MiniBoss->StabFlag = true; //콤보 애니메이션이 안나오게 설정
 				MiniBoss->TwoHandWidthFlag = true;

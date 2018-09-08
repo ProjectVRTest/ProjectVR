@@ -37,6 +37,10 @@ public:
 		ENormalMonsterAttackState CurrentAttackState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		ENormalMonsterKind MonsterKind;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		ENormalMonsterStabAttackState CurrentStabAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		ENormalMonsterComboAttackAttackState CurrentComboAttackState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;
@@ -49,6 +53,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class AActor* Target;
 
+	float Yaw; //캐릭터 회전에 쓰일 Yaw값
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float MaxHP; //최대 HP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")

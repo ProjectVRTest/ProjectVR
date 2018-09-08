@@ -13,8 +13,10 @@ void UNormalMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		CurrentState = NormalMonster->CurrentState;
 		CurrentAnimState = NormalMonster->CurrentAnimState;
-		CurrentAttackState = NormalMonster->CurrentAttackState;
 		CurrentIdleState = NormalMonster->CurrentIdleState;
+		CurrentAttackState = NormalMonster->CurrentAttackState;
+		CurrentStabAttackState = NormalMonster->CurrentStabAttackState;
+		CurrentComboAttackState = NormalMonster->CurrentComboAttackState;
 	}
 }
 

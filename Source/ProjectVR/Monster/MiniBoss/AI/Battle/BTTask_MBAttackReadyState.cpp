@@ -5,7 +5,7 @@
 
 EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
-	AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
+	AMiniBossAIController* AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
 
 	//루트모션을 켜주는 행위는
 	//루트본을 원점좌표로 설정해서 컬리전이 루트본의 움직임을 따라가게 해주는 행위로
@@ -13,7 +13,7 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 	
 	if (AI)
 	{
-		MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
+		AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
 		
 		if (MiniBoss)
 		{
@@ -41,7 +41,6 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 				MiniBoss->CurrentAttackState = EMiniBossAttackState::ComboAttack;
 			}
 			MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
-			GLog->Log(FString::Printf(TEXT("어택 래디 스테이트 진입")));
 		}
 	}
 	return EBTNodeResult::Succeeded;
