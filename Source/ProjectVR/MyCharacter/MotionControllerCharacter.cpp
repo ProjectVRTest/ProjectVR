@@ -37,6 +37,8 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "MyCharacter/Widget/HPStaminaBar.h"
 
+#include "MyCharacter/Widget/Menu.h"
+
 // Sets default values
 AMotionControllerCharacter::AMotionControllerCharacter()
 {
@@ -231,7 +233,7 @@ void AMotionControllerCharacter::SetupPlayerInputComponent(UInputComponent* Play
 	PlayerInputComponent->BindAction(TEXT("DashRight"), IE_Released, this, &AMotionControllerCharacter::DashEnd);
 
 	//  Test
-	PlayerInputComponent->BindAction(TEXT("Menu"), IE_Released, this, &AMotionControllerCharacter::DashEnd);
+	PlayerInputComponent->BindAction(TEXT("Menu"), IE_Released, this, &AMotionControllerCharacter::GameMenu);
 }
 
 // 오파시티값이 있어도 항상 그랩상태로 있는다고 가정할 때
@@ -351,6 +353,17 @@ void AMotionControllerCharacter::DashEnd()
 
 void AMotionControllerCharacter::GameMenu()
 {
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.Owner = this;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FVector location = FVector(Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, Camera->GetComponentLocation().Z);
+	FRotator rotator = FRotator(0.0f, 180.0f, 0.0f);
+
+	AMenu* Menu = GetWorld()->SpawnActor<AMenu>(Menu->StaticClass(), location,
+		rotator, SpawnActorOption);
+
+	UE_LOG(LogTemp, Log, TEXT("Menu Tween"));
 }
 
 void AMotionControllerCharacter::AttackPointSet()

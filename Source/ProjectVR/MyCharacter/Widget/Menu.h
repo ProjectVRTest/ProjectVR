@@ -23,10 +23,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(VisibleAnywhere, BluepintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USceneComponent* Scene;
 
-	UPROPERTY(VisibleAnywhere, BluepintReadOnly, Category = "Widget")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
 		class UWidgetComponent* Menu;
 	
 	

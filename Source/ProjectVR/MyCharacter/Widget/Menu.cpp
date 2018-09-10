@@ -18,12 +18,11 @@ AMenu::AMenu()
 	Menu = CreateDefaultSubobject<UWidgetComponent>(TEXT("Menu"));
 	Menu->SetupAttachment(RootComponent);
 
-	static ConstructorHelpers::FObjectFinder<UUserWidget> BP_Widget(TEXT("WidgetBlueprint'/Game/Blueprints/UI/Menu/MenuTest.MenuTest_C'"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> BP_Widget(TEXT("WidgetBlueprint'/Game/Blueprints/UI/Menu/MenuTest.MenuTest_C'"));
 	if (BP_Widget.Succeeded())
 	{
-		Menu->SetWidget(BP_Widget.Object);
+		Menu->SetWidgetClass(BP_Widget.Class);
 	}
-
 }
 
 // Called when the game starts or when spawned
