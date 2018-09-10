@@ -230,6 +230,8 @@ void AMotionControllerCharacter::SetupPlayerInputComponent(UInputComponent* Play
 	PlayerInputComponent->BindAction(TEXT("DashRight"), IE_Pressed, this, &AMotionControllerCharacter::DashRightStart);
 	PlayerInputComponent->BindAction(TEXT("DashRight"), IE_Released, this, &AMotionControllerCharacter::DashEnd);
 
+	//  Test
+	PlayerInputComponent->BindAction(TEXT("Menu"), IE_Released, this, &AMotionControllerCharacter::DashEnd);
 }
 
 // 오파시티값이 있어도 항상 그랩상태로 있는다고 가정할 때
@@ -345,6 +347,10 @@ void AMotionControllerCharacter::DashRightStart()
 void AMotionControllerCharacter::DashEnd()
 {
 	GetCharacterMovement()->GroundFriction = 8.0f;
+}
+
+void AMotionControllerCharacter::GameMenu()
+{
 }
 
 void AMotionControllerCharacter::AttackPointSet()

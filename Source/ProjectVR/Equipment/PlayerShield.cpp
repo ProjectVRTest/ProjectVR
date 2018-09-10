@@ -52,17 +52,20 @@ APlayerShield::APlayerShield()
 	ShieldMesh->SetRelativeScale3D(FVector(-1.0f, 1.0f, 1.0f));
 	ShieldMesh->SetCollisionProfileName(TEXT("NoCollision"));			// 캐릭터와의 충돌을 피하기위해서 Pawn(캐릭터)만 Overlap되도록 설정
 
+	// 위치, 각도 및 크기 설정
 	ShieldCollision->SetRelativeLocation(FVector(-2.2f, 10.0f, 1.4f));
 	ShieldCollision->SetRelativeRotation(FRotator(0, -20.0f, 0));
 	ShieldCollision->SetRelativeScale3D(FVector(0.75f, 1.5f, 0.24f));
 	ShieldCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 	ShieldCollision->bHiddenInGame = false;
 
+	// 스테이트바 씬의 위기값과 회전값 설정
 	StateBarScene->SetRelativeLocation(FVector(-23.0f, -10.0f, 0.0f));
 	StateBarScene->SetRelativeRotation(FRotator(0.0f, -19.0f, -90.0f));
 	IsActivation = false;
 	
-	Tags.Add(FName(TEXT("PlayerShield")));		// 생성한 방패를 'PlayerShield'란 이름으로 태그를 줌
+	// 태그
+	Tags.Add(FName(TEXT("PlayerShield")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }

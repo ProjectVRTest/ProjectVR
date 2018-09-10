@@ -43,13 +43,10 @@ APlayerSword::APlayerSword()
 
 	IsActivation = false;
 
-	// 검 메쉬의 크기 설정
-	//SwordMesh->SetRelativeScale3D(FVector(0.25f, 0.25f, 0.25f));
-
-
 	Timer = 0.0f;		// 타이머 초기화
 
-	Tags.Add(FName(TEXT("PlayerSword")));		// 생성한 검을 'PlayerSword'란 이름으로 태그를 줌
+	// 태그
+	Tags.Add(FName(TEXT("PlayerSword")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
@@ -62,6 +59,7 @@ void APlayerSword::BeginPlay()
 	// 오너 설정
 	SwordOwner = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
+	// 공격
 	if (SwordCollision)
 	{
 		SwordCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerSword::OnSwordOverlap);
@@ -75,6 +73,7 @@ void APlayerSword::Tick(float DeltaTime)
 
 	Timer += DeltaTime;		// 타이머
 	
+	// 매 틱마다 캐릭터의 운동값을 뺌
 	if (SwordOwner)
 	{
 		SwordPhysicsVelocityValue = SwordCollision->GetPhysicsLinearVelocity().Size() - SwordOwner->GetVelocity().Size();

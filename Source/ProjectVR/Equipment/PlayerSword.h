@@ -34,16 +34,18 @@ public:
 		float Damage;		// 데미지
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
-		class AMotionControllerCharacter* SwordOwner;
+		class AMotionControllerCharacter* SwordOwner;			// 오너 설정
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
-		float SwordPhysicsVelocityValue;
+		float SwordPhysicsVelocityValue;			// 운동값
 
 	bool IsActivation;
 	
+	// 공격
 	UFUNCTION()
 		void OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 데미지를 전달하기위한 함수
 	
+	// 투명도 변경
 	UFUNCTION()
 		void ConvertOfOpacity(float opacity);
 

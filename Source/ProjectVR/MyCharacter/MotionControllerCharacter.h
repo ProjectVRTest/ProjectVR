@@ -120,6 +120,11 @@ public:
 	UFUNCTION()
 		void DashEnd();
 
+	UFUNCTION()
+		void GameMenu();
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
+		class AMenu* Menu;*/
+
 	void AttackPointSet();
 		
 	UFUNCTION()
