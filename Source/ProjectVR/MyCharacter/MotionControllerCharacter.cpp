@@ -353,16 +353,23 @@ void AMotionControllerCharacter::DashEnd()
 
 void AMotionControllerCharacter::GameMenu()
 {
-	FActorSpawnParameters SpawnActorOption;
-	SpawnActorOption.Owner = this;
-	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	if (!Menu)
+	{
+		FActorSpawnParameters SpawnActorOption;
+		SpawnActorOption.Owner = this;
+		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	FVector location = FVector(Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, Camera->GetComponentLocation().Z);
-	FRotator rotator = FRotator(0.0f, 180.0f, 0.0f);
+		FVector location = FVector(Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, Camera->GetComponentLocation().Z);
+		FRotator rotator = FRotator(0.0f, 180.0f, 0.0f);
 
-	AMenu* Menu = GetWorld()->SpawnActor<AMenu>(Menu->StaticClass(), location,
-		rotator, SpawnActorOption);
-
+		Menu = GetWorld()->SpawnActor<AMenu>(Menu->StaticClass(), location,
+			rotator, SpawnActorOption);
+	}
+	else
+	{
+		Menu->Destroy();
+		Menu = nullptr;
+	}
 	UE_LOG(LogTemp, Log, TEXT("Menu Tween"));
 }
 

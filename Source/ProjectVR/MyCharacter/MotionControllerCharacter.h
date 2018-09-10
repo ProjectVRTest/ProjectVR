@@ -122,8 +122,8 @@ public:
 
 	UFUNCTION()
 		void GameMenu();
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget")
-		class AMenu* Menu;*/
+	UPROPERTY()
+		class AMenu* Menu;
 
 	void AttackPointSet();
 		
