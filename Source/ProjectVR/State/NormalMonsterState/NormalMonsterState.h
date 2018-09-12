@@ -66,8 +66,17 @@ enum class ENormalMonsterStabAttackState : uint8
 };
 
 UENUM(BlueprintType)
-enum class ENormalMonsterComboAttackAttackState : uint8
+enum class ENormalMonsterComboAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
-	ComboAttackStart = 1 UMETA(DisplayName = "ComboAttackStart")	
+	ComboAttackReady = 1 UMETA(DisplayName = "ComboAttackReady"),	
+	ComboAttackStart = 2 UMETA(DisplayName = "ComboAttackStart")
+};
+
+UENUM(BlueprintType)
+enum class ENormalMonsterArcherAttackState : uint8
+{
+	idle = 0 UMETA(DisplayName = "Idle"),
+	ArcherAttackReady = 1 UMETA(DisplayName = "ArcherAttackReady"),
+	ArcherAttackStart = 2 UMETA(DisplayName = "ArcherAttackStart")
 };

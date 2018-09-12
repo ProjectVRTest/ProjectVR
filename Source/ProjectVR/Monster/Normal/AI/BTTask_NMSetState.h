@@ -23,10 +23,10 @@ public:
 		ENormalMonsterIdleState SetIdleState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		ENormalMonsterAttackState SetAttackState;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		ENormalMonsterStabAttackState SetStabAttackState;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		ENormalMonsterComboAttackAttackState SetComboAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		ENormalMonsterComboAttackState SetComboAttackState;
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	

@@ -40,7 +40,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		ENormalMonsterStabAttackState CurrentStabAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		ENormalMonsterComboAttackAttackState CurrentComboAttackState;
+		ENormalMonsterComboAttackState CurrentComboAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		ENormalMonsterArcherAttackState CurrentArcherAttackState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;
@@ -58,7 +60,7 @@ public:
 		float MaxHP; //최대 HP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float CurrentHP; //현재 HP
-	bool AttackEndFlag;
+	bool NMAttackEndFlag;
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn);
 

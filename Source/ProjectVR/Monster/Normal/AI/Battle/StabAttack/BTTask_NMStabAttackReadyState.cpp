@@ -9,21 +9,13 @@ EBTNodeResult::Type UBTTask_NMStabAttackReadyState::ExecuteTask(UBehaviorTreeCom
 
 	if (AI)
 	{
+		AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 0.2f);
+
 		ANormalMonster* NormalMonster = Cast<ANormalMonster>(AI->GetPawn());
 
 		if (NormalMonster)
 		{
-			float Distance = AI->BBComponent->GetValueAsFloat("Distnace");
-
-			if (Distance < 350.0f)
-			{
-				 //콤보 공격 시작
-				NormalMonster->CurrentStabAttackState = ENormalMonsterStabAttackState::ClipplingAttackReady;
-			}
-			else
-			{
-				//단타로 끝냄
-			}
+			NormalMonster->CurrentStabAttackState = ENormalMonsterStabAttackState::StabAttackStart;		
 		}		
 	}
 

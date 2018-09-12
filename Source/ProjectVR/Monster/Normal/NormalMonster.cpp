@@ -76,7 +76,7 @@ ANormalMonster::ANormalMonster()
 	}
 
 	Target = nullptr;
-	AttackEndFlag = false;
+	NMAttackEndFlag = false;
 	GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -116,6 +116,7 @@ void ANormalMonster::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentAttackState", (uint8)CurrentAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentStabAttackState", (uint8)CurrentStabAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentComboAttackState", (uint8)CurrentComboAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentArcherAttackState", (uint8)CurrentArcherAttackState);
 	}
 }
 

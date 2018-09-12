@@ -17,6 +17,7 @@ void UNormalMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentAttackState = NormalMonster->CurrentAttackState;
 		CurrentStabAttackState = NormalMonster->CurrentStabAttackState;
 		CurrentComboAttackState = NormalMonster->CurrentComboAttackState;
+		CurrentArcherAttackState = NormalMonster->CurrentArcherAttackState;
 	}
 }
 
@@ -26,6 +27,6 @@ void UNormalMonsterAnimInstance::AnimNotify_AttackEnd(UAnimNotify * Notify)
 
 	if (NormalMonster)
 	{
-		NormalMonster->AttackEndFlag = true;
+		NormalMonster->NMAttackEndFlag = true;
 	}
 }

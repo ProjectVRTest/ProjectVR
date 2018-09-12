@@ -18,9 +18,11 @@ private:
 	float ChaseWalkTimeCount;
 	float ChaseRunTimerCount;
 
-	FTimerHandle ChaseWalkCountTimer;
-	FTimerHandle ChaseRunCountTimer;
+	bool RageAttackFlag;
+
+	FTimerHandle RageAttackTimer;
 
 	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+	void RageAttackTimerCount();
 };

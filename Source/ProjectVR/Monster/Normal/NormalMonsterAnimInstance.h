@@ -26,7 +26,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		ENormalMonsterStabAttackState CurrentStabAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		ENormalMonsterComboAttackAttackState CurrentComboAttackState;
+		ENormalMonsterComboAttackState CurrentComboAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		ENormalMonsterArcherAttackState CurrentArcherAttackState;
 
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;	

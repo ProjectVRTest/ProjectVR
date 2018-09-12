@@ -34,11 +34,33 @@ void UBTService_NMBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 					FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(NMRotator, XNormalRotator);
 					NormalMonster->Yaw = CompleteRotator.Yaw;
 
-					switch (NormalMonster->CurrentAnimState)
+					Distance = AI->BBComponent->GetValueAsFloat(DistanceBlackBoardKey);
+
+					//GLog->Log(FString::Printf(TEXT("NMAttackEndFlag %d"), NormalMonster->NMAttackEndFlag));
+					if (Distance > 400.0f )
 					{
-					case ENormalMonsterAnimState::Walk:
-						break;	
+						NormalMonster->NMAttackEndFlag = false;
+
+						switch (NormalMonster->CurrentAnimState)
+						{
+						case ENormalMonsterAnimState::Walk:
+							NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Walk;
+							NormalMonster->CurrentState = ENormalMonsterState::Chase;
+							break;
+						}						
 					}
+					else
+					{
+						switch (NormalMonster->CurrentAnimState)
+						{
+						case ENormalMonsterAnimState::Walk:
+							if (Distance < 300.0f)
+							{
+								NormalMonster->CurrentAnimState = ENormalMonsterAnimState::AttackReady;
+							}
+							break;
+						}
+					}				
 				}
 			}
 		}

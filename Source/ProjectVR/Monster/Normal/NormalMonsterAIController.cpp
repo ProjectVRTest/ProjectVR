@@ -24,10 +24,25 @@ void ANormalMonsterAIController::Possess(APawn * InPawn)
 
 	if (NormalMonster)
 	{
-		if (NormalMonster->SwordBehaviorTree)
+		switch (NormalMonster->MonsterKind)
 		{
-			BBComponent->InitializeBlackboard(*(NormalMonster->SwordBehaviorTree->BlackboardAsset));
-			BTComponent->StartTree(*(NormalMonster->SwordBehaviorTree));
+		case ENormalMonsterKind::SwordMan:
+			if (NormalMonster->SwordBehaviorTree)
+			{
+				GLog->Log(FString::Printf(TEXT("SwordMan Start")));
+				BBComponent->InitializeBlackboard(*(NormalMonster->SwordBehaviorTree->BlackboardAsset));
+				BTComponent->StartTree(*(NormalMonster->SwordBehaviorTree));
+			}
+			break;
+		case ENormalMonsterKind::Archer:
+			if (NormalMonster->ArcherBehaviorTree)
+			{
+				GLog->Log(FString::Printf(TEXT("Archer Start")));
+				BBComponent->InitializeBlackboard(*(NormalMonster->ArcherBehaviorTree->BlackboardAsset));
+				BTComponent->StartTree(*(NormalMonster->ArcherBehaviorTree));
+			}
+			break;
 		}
+	
 	}
 }

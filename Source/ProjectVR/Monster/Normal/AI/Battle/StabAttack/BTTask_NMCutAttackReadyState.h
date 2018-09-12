@@ -13,8 +13,7 @@ UCLASS()
 class PROJECTVR_API UBTTask_NMCutAttackReadyState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
-	
-	
-	
-	
+private:
+	float CutAnimationReadyTime;
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);	
 };

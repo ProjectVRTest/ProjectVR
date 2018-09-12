@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTTask_NMBattleWalkState.h"
 #include "Headers/NormalMonsterAIHeader.h"
@@ -18,7 +18,7 @@ EBTNodeResult::Type UBTTask_NMBattleWalkState::ExecuteTask(UBehaviorTreeComponen
 	if (AI)
 	{
 		NormalMonster = Cast<ANormalMonster>(AI->GetPawn());
-		RandomMovePattern = FMath::RandRange(1, 13);
+		RandomMovePattern = FMath::RandRange(1, 15);
 		RandomMove = FMath::RandRange(0, 1);
 	}
 	return EBTNodeResult::InProgress;
@@ -30,6 +30,10 @@ void UBTTask_NMBattleWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uin
 
 	if (NormalMonster)
 	{
+		GLog->Log(FString::Printf(TEXT("RandomMovePattern : %d "), RandomMovePattern));
+
+		float Distance = AI->BBComponent->GetValueAsFloat("Distance");
+
 		if (RandomMovePattern > 0 && RandomMovePattern < 6)
 		{
 			switch (RandomMove)
@@ -48,10 +52,10 @@ void UBTTask_NMBattleWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uin
 		{
 			NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Wait;
 		}
-		else if (RandomMovePattern > 9 && RandomMovePattern < 14)
+		else if (RandomMovePattern > 9 && RandomMovePattern < 15)
 		{
-			NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Wait;
 			NormalMonster->CurrentState = ENormalMonsterState::Chase;
+			NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Wait;
 		}
 	}
 }

@@ -13,8 +13,6 @@ UCLASS()
 class PROJECTVR_API UBTTask_NMCutAttackStartState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
-	
-	
-	
-	
+private:
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
 };

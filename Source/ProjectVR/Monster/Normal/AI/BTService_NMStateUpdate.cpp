@@ -31,6 +31,9 @@ void UBTService_NMStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 			case ENormalMonsterAnimState::Run:
 				NormalMonster->GetCharacterMovement()->MaxWalkSpeed = 350.0f;
 				break;
+			case ENormalMonsterAnimState::RageRun:
+				NormalMonster->GetCharacterMovement()->MaxWalkSpeed = 450.0f;
+				break;
 			case ENormalMonsterAnimState::RageAttack:
 				break;
 			}
