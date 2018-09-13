@@ -26,6 +26,8 @@
 
 #include "Kismet/KismetMathLibrary.h"
 
+#include "Components/WidgetInteractionComponent.h"
+
 // Sets default values
 ARightHandMotionController::ARightHandMotionController()
 {
@@ -65,6 +67,9 @@ ARightHandMotionController::ARightHandMotionController()
 	GrabSphere->SetRelativeLocation(FVector(14.0f, 0, 0));
 	//생성한 스피어 콜리전의 크기값을 조정한다.
 	GrabSphere->SetSphereRadius(10.0f);
+
+	interaction = CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("Interaction"));
+	interaction->SetupAttachment(GrabSphere);
 
 	//오른손의 상호작용 영역을 표시해줄 컴포넌트인 SteamVRChaperone 컴포넌트를 생성해서 StemVRChaperone에 넣어준다.
 	SteamVRChaperone = CreateDefaultSubobject<USteamVRChaperoneComponent>(TEXT("SteamVRChaperone"));

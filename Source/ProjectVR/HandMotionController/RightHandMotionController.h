@@ -70,6 +70,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USceneComponent* SwordAttachScene;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UWidgetInteractionComponent* interaction;
+
 	//오른손에 붙일 검클래스
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sword")
 		class APlayerSword* Sword;
@@ -130,5 +133,7 @@ public:
 
 	UPROPERTY()
 		class ADog* AttachDog;
+
+	
 
 };

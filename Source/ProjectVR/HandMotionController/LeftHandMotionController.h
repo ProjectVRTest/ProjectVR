@@ -57,6 +57,11 @@ public:
 	//방패붙일 위치의 씬컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shield")
 		class USceneComponent* ShieldAttachScene;
+
+	// 상호작용
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UWidgetInteractionComponent* interaction;
+
 	//방패
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shield")
 		class APlayerShield* Shield;
