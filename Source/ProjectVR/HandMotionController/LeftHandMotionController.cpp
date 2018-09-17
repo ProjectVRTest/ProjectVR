@@ -18,7 +18,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
 #include "Haptics/HapticFeedbackEffect_Base.h"
-
+#include "Components/WidgetInteractionComponent.h"			// 상호작용
 
 
 // Sets default values
@@ -48,6 +48,10 @@ ALeftHandMotionController::ALeftHandMotionController()
 
 	GrabSphere->SetRelativeLocation(FVector(14.0f, 0, 0)); //스피어콜리전의 위치를 조정한다.
 	GrabSphere->SetSphereRadius(10.0f); //스피어콜리전의 크기를 지정한다.
+
+	interaction = CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("Interaction"));
+	interaction->SetupAttachment(GrabSphere);
+
 	SteamVRChaperone = CreateDefaultSubobject<USteamVRChaperoneComponent>(TEXT("SteamVRChaperone"));
 
 	WantToGrip = false; //쥐고 있지 않은 상황으로 초기값을 설정한다.

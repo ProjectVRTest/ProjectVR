@@ -37,7 +37,8 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "MyCharacter/Widget/HPStaminaBar.h"
 
-#include "MyCharacter/Widget/Menu.h"
+#include "MyCharacter/Widget/Menu.h"									// 메뉴의 활성화 / 비활성화
+#include "Components/WidgetInteractionComponent.h"			// 위젯과의 상호작용
 
 // Sets default values
 AMotionControllerCharacter::AMotionControllerCharacter()
@@ -242,6 +243,8 @@ void AMotionControllerCharacter::GrabLeftOn()
 
 	// 왼손으로 할수 있는것은 아무것도 없으므로 LeftHand->GrabActor();를 빼는거 고려해야함, 그런데 문을 두손으로 연다고하면 조건문 줘서 문이 아닐때는 걸러줘야함
 
+	LeftHand->interaction->PressPointerKey(EKeys::LeftMouseButton);
+
 	GrabState = E_HandState::Grab;
 
 	// GrabActor를 빼고 왼손은 문일 때를 가정해서 새로운 함수 만들기
@@ -257,6 +260,8 @@ void AMotionControllerCharacter::GrabLeftOn()
 
 void AMotionControllerCharacter::GrabLeftOff()
 {
+	LeftHand->interaction->ReleasePointerKey(EKeys::LeftMouseButton);
+
 	GrabState = E_HandState::Open;
 	LeftHand->ReleaseActor();
 	LeftHand->Shield->ConvertOfOpacity(0.5f);
@@ -264,6 +269,8 @@ void AMotionControllerCharacter::GrabLeftOff()
 
 void AMotionControllerCharacter::GrabRightOn()
 {
+	RightHand->interaction->PressPointerKey(EKeys::LeftMouseButton);
+
 	GrabState = E_HandState::Grab;
 
 	RightHand->GrabActor();
@@ -273,6 +280,8 @@ void AMotionControllerCharacter::GrabRightOn()
 
 void AMotionControllerCharacter::GrabRightOff()
 {
+	RightHand->interaction->ReleasePointerKey(EKeys::LeftMouseButton);
+
 	GrabState = E_HandState::Open;
 
 	RightHand->ReleaseActor();
