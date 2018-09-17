@@ -41,6 +41,8 @@ void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentComboAttackState = MiniBoss->CurrentComboAttackState;
 		CurrentBackAttackState = MiniBoss->CurrentBackAttackState;
 		CurrentDashState = MiniBoss->CurrentDashState;
+		CurrentParryingState = MiniBoss->CurrentParryingState;
+
 		WalkStopFlag = MiniBoss->WalkStopFlag;
 		Yaw = MiniBoss->Yaw;
 		StabFlag = MiniBoss->StabFlag;

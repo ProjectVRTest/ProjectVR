@@ -147,6 +147,7 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, MiniBoss->GetActorLocation());
 						//SweepResult.
 						GLog->Log(FString::Printf(TEXT("방패 패링")));
+						MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingStart;
 						MiniBoss->CurrentAnimState = EMiniBossAnimState::ParryingReady;
 					}
 				}

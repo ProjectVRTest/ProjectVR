@@ -45,6 +45,8 @@ public:
 		EMiniBossBackAttackState CurrentBackAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EMiniBossDashState CurrentDashState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EMiniBossParryingState CurrentParryingState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;

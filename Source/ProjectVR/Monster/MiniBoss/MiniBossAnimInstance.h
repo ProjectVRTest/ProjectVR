@@ -33,6 +33,8 @@ public:
 		EMiniBossBackAttackState CurrentBackAttackState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EMiniBossDashState CurrentDashState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EMiniBossParryingState CurrentParryingState;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Velocity")
 		float Speed;

@@ -35,6 +35,7 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 			}
 			else if (RandomPattern > 11)
 			{
+				AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 3.7f);
 				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
 				MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
 				MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::ComboAttackStart;

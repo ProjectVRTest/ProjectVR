@@ -58,7 +58,8 @@ enum class EMiniBossAttackState : uint8
 	ShortAttack = 1 UMETA(DisplayName = "ShortAttack"),
 	WaveAttack = 2 UMETA(DisplayName = "WaveAttack"),
 	ComboAttack = 3 UMETA(DisplayName = "ComboAttack"),
-	BackAttack = 4 UMETA(DisplayName = "BackAttack")
+	BackAttack = 4 UMETA(DisplayName = "BackAttack"),
+	ParryingState = 5 UMETA(DisplayName = "ParryingState")
 };
 
 UENUM(BlueprintType)
@@ -99,3 +100,12 @@ enum class EMiniBossBackAttackState : uint8
 	BackAttackStart = 1 UMETA(DisplayName = "BackAttackStart")
 };
 
+UENUM(BlueprintType)
+enum class EMiniBossParryingState : uint8
+{
+	Idle= 0 UMETA(DisplayName ="Idle"),
+	ParryingStart = 1 UMETA(DisplayName = "ParryingStart"),
+	ParryingLoop = 2 UMETA(DisplayName = "ParryingLoop"),	
+	CountAttack = 3 UMETA(DisplayName = "CountAttack"),
+	ParryingSuccess = 4 UMETA(DisplayName = "ParryingSuccess")
+};

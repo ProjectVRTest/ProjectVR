@@ -17,6 +17,8 @@
 #include "Particles/ParticleSystem.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "Kismet/KismetSystemLibrary.h"
+
 // Sets default values
 AMiniBoss::AMiniBoss()
 {
@@ -148,6 +150,14 @@ void AMiniBoss::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
+	FVector Origin;
+	FVector BoxExtent;
+	float SphereRadius;
+	UKismetSystemLibrary::GetComponentBounds(GetMesh(), Origin, BoxExtent, SphereRadius);
+
+	GLog->Log(FString::Printf(TEXT("Origin X : %0.1f  Y : %0.1f Z : %0.1f"), Origin.X, Origin.Y, Origin.Z));
+	GLog->Log(FString::Printf(TEXT("Origin %0.1f"), Origin.Size()));
+	//GLog->Log(FString::Printf(TEXT("Origin %d : \n BoxExtent : %d \n SphereRadius : %0.1f"),Origin.Size(),BoxExtent.Size(),SphereRadius));
 
 	//GLog->Log(FString::Printf(TEXT("ParryingFlag : %d"), ParryingFlag));
 	//GLog->Log(FString::Printf(TEXT("HP : %f"),CurrentHP));
@@ -164,6 +174,8 @@ void AMiniBoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentComboAttackState", (uint8)CurrentComboAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentBackAttackState", (uint8)CurrentBackAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentDashState", (uint8)CurrentDashState);
+		AI->BBComponent->SetValueAsEnum("CurrentParryingState", (uint8)CurrentParryingState);
+
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 		AI->BBComponent->SetValueAsBool("CurrentFalling", CurrentFalling);	
 	}
