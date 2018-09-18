@@ -72,8 +72,7 @@ enum class EMiniBossShortAttackState : uint8
 	TwoHandWidthReady = 4 UMETA(DisplayName = "TwoHandWidthReady"),
 	TwoHandWidthStart = 5 UMETA(DisplayName = "TwoHandWidthStart"),
 	StabReady = 6 UMETA(DisplayName = "StabReady"),
-	StabStart = 7 UMETA(DisplayName = "StabStart"),
-	CounterAttack = 8 UMETA(DisplayName = "CounterAttack")
+	StabStart = 7 UMETA(DisplayName = "StabStart")
 };
 
 UENUM(BlueprintType)

@@ -17,7 +17,7 @@ EBTNodeResult::Type UBTTask_MBStabStartState::ExecuteTask(UBehaviorTreeComponent
 			WaitTime = 0.7f;
 			AI->BBComponent->SetValueAsFloat(TEXT("AttackAnimationWaitTime"), WaitTime);
 			MiniBoss->PlayAnimMontage(MiniBoss->AttackReverseMontage, 1.0f, TEXT("StabIdleReverse"));
-			MiniBoss->AttackCompleteFlag = true;
+		//	MiniBoss->AttackCompleteFlag = true;
 			MiniBoss->IsAttack = false;			
 		}
 	}

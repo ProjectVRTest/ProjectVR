@@ -21,6 +21,7 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 			
 			if (RandomPattern > 0 && RandomPattern <8)
 			{
+				GLog->Log(FString::Printf(TEXT("ShorAttack")));
 				MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
 				MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
 				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
@@ -35,7 +36,7 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 			}
 			else if (RandomPattern > 11)
 			{
-				AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 3.7f);
+				AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 3.0f);
 				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
 				MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
 				MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::ComboAttackStart;

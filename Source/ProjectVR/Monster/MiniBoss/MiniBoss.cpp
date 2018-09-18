@@ -155,14 +155,17 @@ void AMiniBoss::Tick(float DeltaTime)
 	float SphereRadius;
 	UKismetSystemLibrary::GetComponentBounds(GetMesh(), Origin, BoxExtent, SphereRadius);
 
-	GLog->Log(FString::Printf(TEXT("Origin X : %0.1f  Y : %0.1f Z : %0.1f"), Origin.X, Origin.Y, Origin.Z));
-	GLog->Log(FString::Printf(TEXT("Origin %0.1f"), Origin.Size()));
+	//GLog->Log(FString::Printf(TEXT("%d"), AttackCompleteFlag));
+
+	/*GLog->Log(FString::Printf(TEXT("Origin X : %0.1f  Y : %0.1f Z : %0.1f"), Origin.X, Origin.Y, Origin.Z));
+	GLog->Log(FString::Printf(TEXT("Origin %0.1f"), Origin.Size()));*/
 	//GLog->Log(FString::Printf(TEXT("Origin %d : \n BoxExtent : %d \n SphereRadius : %0.1f"),Origin.Size(),BoxExtent.Size(),SphereRadius));
 
 	//GLog->Log(FString::Printf(TEXT("ParryingFlag : %d"), ParryingFlag));
 	//GLog->Log(FString::Printf(TEXT("HP : %f"),CurrentHP));
 
 	//GLog->Log(FString::Printf(TEXT("%f"), GetCharacterMovement()->Velocity.Size()));
+
 	if (AI)
 	{
 		AI->BBComponent->SetValueAsEnum("CurrentState", (uint8)CurrentState);
@@ -176,7 +179,7 @@ void AMiniBoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentDashState", (uint8)CurrentDashState);
 		AI->BBComponent->SetValueAsEnum("CurrentParryingState", (uint8)CurrentParryingState);
 
-		CurrentFalling = GetCharacterMovement()->IsFalling();
+		CurrentFalling = GetCharacterMovement()->IsFalling(); 
 		AI->BBComponent->SetValueAsBool("CurrentFalling", CurrentFalling);	
 	}
 }
@@ -199,10 +202,13 @@ void AMiniBoss::OnSeeCharacter(APawn * Pawn)
 			switch (CurrentState)
 			{
 			case EMiniBossState::Idle:
-				AI->BBComponent->SetValueAsObject("Player", Pawn);
-				Target = Pawn;
-				CurrentState = EMiniBossState::Chase;
-				CurrentAnimState = EMiniBossAnimState::Walk;
+				if (!Target)
+				{
+					AI->BBComponent->SetValueAsObject("Player", Pawn);
+					Target = Pawn;
+					CurrentState = EMiniBossState::Chase;
+					CurrentAnimState = EMiniBossAnimState::Walk;
+				}				
 				break;
 			case EMiniBossState::Chase:
 				break;
@@ -231,7 +237,6 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 		CurrentState = EMiniBossState::Dead;
 	}
 	
-
 	if (ParryingFlag)
 	{
 		IsParrying = true;

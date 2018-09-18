@@ -57,21 +57,28 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 							else if (Distance < 300.0f && !MiniBoss->IsAttack)
 							{
 								//GLog->Log(FString::Printf(TEXT("Walk -> Attack")));
-								MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
-								MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;								
+								//MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
+								MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;		
+								MiniBoss->CurrentState = EMiniBossState::Battle;
 								MiniBoss->IsAttack = true; //공격중이란것을 나타냄
 							}
 							break;
 						case EMiniBossAnimState::Attack:
+
+							if (Distance > 500.0f && MiniBoss->AttackCompleteFlag)
+							{
+								GLog->Log(FString::Printf(TEXT("Disatance 500.0 이상 , AttackCompleteFlag true")));
+							}
 							switch (MiniBoss->CurrentShortAttackState)
 							{
 							case EMiniBossShortAttackState::ShortAttackReady:
 								if (Distance > 500.0f && MiniBoss->AttackCompleteFlag)
-								{
+								{									
+									GLog->Log(FString::Printf(TEXT("ShorAttackReady")));
 									MiniBoss->AttackCompleteFlag = false;
 									MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
 									MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
-									MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
+								
 									MiniBoss->CurrentState = EMiniBossState::Chase;									
 								}
 								break;
@@ -87,7 +94,19 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 								break;
 							case EMiniBossShortAttackState::TwoHandWidthStart:
 								break;
-							}							
+							}	
+
+							if (MiniBoss->CurrentAttackState == EMiniBossAttackState::ComboAttack)
+							{
+								if (Distance > 500.0f &&MiniBoss->AttackCompleteFlag)
+								{
+									GLog->Log(FString::Printf(TEXT("ComboAttack")));
+									MiniBoss->AttackCompleteFlag = false;
+									MiniBoss->IsAttack = false;
+									MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+									MiniBoss->CurrentState = EMiniBossState::Chase;
+								}
+							}
 							break;
 						case EMiniBossAnimState::BackWalk:
 							//GLog->Log(FString::Printf(TEXT("BackWalk")));

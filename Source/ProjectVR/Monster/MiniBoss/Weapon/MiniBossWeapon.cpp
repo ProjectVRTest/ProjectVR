@@ -86,7 +86,7 @@ void AMiniBossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponen
 					//UGameplayStatics::ApplyDamage(OtherActor, 10.0f, nullptr, MiniBoss, nullptr);
 				}				
 			}
-			//GLog->Log(FString::Printf(TEXT("캐릭터 때림")));
+			GLog->Log(FString::Printf(TEXT("캐릭터 때림")));
 		}
 	}	
 }
