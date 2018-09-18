@@ -16,7 +16,7 @@ EBTNodeResult::Type UBTTask_MBRLAttackStartState::ExecuteTask(UBehaviorTreeCompo
 			float ReverseAttackAnimationWaitTime=1.2f;			
 			AI->BBComponent->SetValueAsFloat(TEXT("ReverseWaitTime"), ReverseAttackAnimationWaitTime);
 			MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌	
-			MiniBoss->AttackCompleteFlag = true;
+		//	MiniBoss->AttackCompleteFlag = true;
 			MiniBoss->PlayAnimMontage(MiniBoss->AttackReverseMontage, 1.0f, TEXT("RightLeftIdleReverse"));
 		}
 	}

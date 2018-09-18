@@ -14,7 +14,6 @@ void UAnimNotifyState_MBAttackArea::NotifyBegin(USkeletalMeshComponent * MeshCom
 	if (MiniBoss)
 	{
 		MiniBoss->Sword->IsWeaponAttack = true;
-		MiniBoss->Sword->IsParryingAttack = true;
 	}
 }
 
@@ -32,6 +31,5 @@ void UAnimNotifyState_MBAttackArea::NotifyEnd(USkeletalMeshComponent * MeshComp,
 	if (MiniBoss)
 	{
 		MiniBoss->Sword->IsWeaponAttack = false;
-		MiniBoss->Sword->IsParryingAttack = false;
 	}
 }
