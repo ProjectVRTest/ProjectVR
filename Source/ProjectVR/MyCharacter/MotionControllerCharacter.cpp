@@ -368,10 +368,11 @@ void AMotionControllerCharacter::GameMenu()
 		SpawnActorOption.Owner = this;
 		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		FVector location = FVector(Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, Camera->GetComponentLocation().Z);
-		FRotator rotator = FRotator(0.0f, 180.0f, 0.0f);
+		
+		FVector location = FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
+		FRotator rotator = FRotator(GetActorRotation().Pitch + 20.0f, GetActorRotation().Yaw + 180.0f, GetActorRotation().Roll);
 
-		Menu = GetWorld()->SpawnActor<AMenu>(Menu->StaticClass(), location,
+		Menu = GetWorld()->SpawnActor<AMenu>(Menu->StaticClass(), location + GetActorForwardVector() * 150,
 			rotator, SpawnActorOption);
 	}
 	else
