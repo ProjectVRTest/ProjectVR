@@ -52,7 +52,7 @@ public:
 		class UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UBehaviorTree* BehaviorTree;
-	UPROPERTY(VisibleAnywhere, BleurpintReadOnly, Category = "AI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UCameraComponent* TargetCamera;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 		class AActor* Target; 
