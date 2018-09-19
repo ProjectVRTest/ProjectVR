@@ -18,6 +18,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Kismet/KismetSystemLibrary.h"
+#include "MyCharacter/MotionControllerCharacter.h"
 
 // Sets default values
 AMiniBoss::AMiniBoss()
@@ -55,6 +56,7 @@ AMiniBoss::AMiniBoss()
 		BehaviorTree = MiniBoss_BT.Object;
 	}
 
+	TargetCamera = nullptr;
 	Target = nullptr;
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>AttackReverse_Montage(TEXT("AnimMontage'/Game/Blueprints/Monster/MiniBoss/Animation/AM_AttackReverse.AM_AttackReverse'"));
@@ -204,6 +206,13 @@ void AMiniBoss::OnSeeCharacter(APawn * Pawn)
 			case EMiniBossState::Idle:
 				if (!Target)
 				{
+					AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Pawn);
+
+					if (MyCharacter)
+					{
+						GLog->Log(FString::Printf(TEXT("CameraComponent In")));
+						AI->BBComponent->SetValueAsObject("PlayerCamera", Cast<UObject>(MyCharacter->Camera));
+					}
 					AI->BBComponent->SetValueAsObject("Player", Pawn);
 					Target = Pawn;
 					CurrentState = EMiniBossState::Chase;

@@ -13,6 +13,7 @@ EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent
 
 		AI->BBComponent->SetValueAsFloat(TEXT("AttackAnimationWaitTime"), 0);
 		AI->BBComponent->SetValueAsFloat(TEXT("ReverseWaitTime"), 0);
+		float Distance = AI->BBComponent->GetValueAsFloat("Distance");
 
 		if (MiniBoss)
 		{
@@ -20,7 +21,7 @@ EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent
 			{
 				int RandomState = FMath::RandRange(1, 10);
 
-				if (RandomState >= 3)
+				if (RandomState >= 3 && Distance < 300.0f)
 				{
 					MiniBoss->CurrentState = EMiniBossState::Battle;
 					MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;
