@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -40,10 +40,10 @@ public:
 
 	UFUNCTION()
 		void OnLeverOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
-			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// ¿À¹ö·¦ÀÌº¥Æ®·Î ¿À¸¥¼Õ°ú »óÈ£ÀÛ¿ëÇÏ±â À§ÇØ¼­ ¸¸µê
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// ì˜¤ë²„ë©ì´ë²¤íŠ¸ë¡œ ì˜¤ë¥¸ì†ê³¼ ìƒí˜¸ì‘ìš©í•˜ê¸° ìœ„í•´ì„œ ë§Œë“¦
 
 	UFUNCTION()
 		void OnLeverEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor
-			, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);		// ¸¸¾à ¿À¸¥¼ÕÀÌ ·¹¹ö¸¦ ºüÁ®³ª°£´Ù¸é Interactor¸¦ null·Î ¸¸µé¾îÁà¾ßÇÏ±â ¶§¹®
+			, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);		// ë§Œì•½ ì˜¤ë¥¸ì†ì´ ë ˆë²„ë¥¼ ë¹ ì ¸ë‚˜ê°„ë‹¤ë©´ Interactorë¥¼ nullë¡œ ë§Œë“¤ì–´ì¤˜ì•¼í•˜ê¸° ë•Œë¬¸
 
 };

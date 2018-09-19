@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -45,34 +45,34 @@ public:
 		float SteminaBarZSize;
 
 	UPROPERTY()
-		class AMotionControllerCharacter* OwnerCharacter; //ÇÃ·¹ÀÌ¾î Ä³¸¯ÅÍ. ¸ÅÆ½¸¶´Ù Ã¼·Â°ú ½ºÅ×¹Ì³Ê¸¦ ºÒ·¯¿È -> ³ªÁß¿¡ ¸Ş¸ğ¸®»ç¿ë·® ÁÙÀÏ°ÅÀÓ
+		class AMotionControllerCharacter* OwnerCharacter; //í”Œë ˆì´ì–´ ìºë¦­í„°. ë§¤í‹±ë§ˆë‹¤ ì²´ë ¥ê³¼ ìŠ¤í…Œë¯¸ë„ˆë¥¼ ë¶ˆëŸ¬ì˜´ -> ë‚˜ì¤‘ì— ë©”ëª¨ë¦¬ì‚¬ìš©ëŸ‰ ì¤„ì¼ê±°ì„
 
-	float ChangOfHP;				// HP Áõ°¨ º¯È­·®
-	float ChangOfStamina;		// ½ºÅ×¹Ì³Ê Áõ°¨ º¯È­·®
-	float Damage;					// µ¥¹ÌÁö
+	float ChangOfHP;				// HP ì¦ê° ë³€í™”ëŸ‰
+	float ChangOfStamina;		// ìŠ¤í…Œë¯¸ë„ˆ ì¦ê° ë³€í™”ëŸ‰
+	float Damage;					// ë°ë¯¸ì§€
 
-	// ÇÃ·¹ÀÌ¾î Ã¼·ÂÀ¸·Î ¿¬°á ÇØ¾ßÇÔ//
+	// í”Œë ˆì´ì–´ ì²´ë ¥ìœ¼ë¡œ ì—°ê²° í•´ì•¼í•¨//
 	float CurrentHP;
 	float VirtualHP;
 	float MaxHP;
 
-	// ÇÃ·¹ÀÌ¾î ½ºÅ×¹Ì³Ê·Î ¿¬°á ÇØ¾ßÇÔ//
+	// í”Œë ˆì´ì–´ ìŠ¤í…Œë¯¸ë„ˆë¡œ ì—°ê²° í•´ì•¼í•¨//
 	float CurrentStamina;
 	float VirtualStamina;
 	float MaxStamina;
 	float PreStamina;
 
-	// ÇÔ¼ö
+	// í•¨ìˆ˜
 	UFUNCTION()
-		void GetDamage(float damage);		// µ¥¹ÌÁö¸¦ ¹ŞÀ» ¶§ °¡»óHP°¨¼Ò¿Í ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+		void GetDamage(float damage);		// ë°ë¯¸ì§€ë¥¼ ë°›ì„ ë•Œ ê°€ìƒHPê°ì†Œì™€ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
 	UFUNCTION()
-		void RecoveryHP(float recoveryHP);				// HP¸¦ ¾ò´Â ÇÔ¼ö
+		void RecoveryHP(float recoveryHP);				// HPë¥¼ ì–»ëŠ” í•¨ìˆ˜
 	UFUNCTION()
-		void UseStamina(float _useValue);			// ½ºÅ×¹Ì³Ê¸¦ »ç¿ëÇÏ´Â ÇÔ¼ö
+		void UseStamina(float _useValue);			// ìŠ¤í…Œë¯¸ë„ˆë¥¼ ì‚¬ìš©í•˜ëŠ” í•¨ìˆ˜
 	UFUNCTION()
-		void RecoveryStamina(float _useValue);		// ½ºÅ×¹Ì³Ê¸¦ ¾ò´Â ÇÔ¼ö
+		void RecoveryStamina(float _useValue);		// ìŠ¤í…Œë¯¸ë„ˆë¥¼ ì–»ëŠ” í•¨ìˆ˜
 	UFUNCTION()
-		void AutoGainStamina();						// ÀÚµ¿ÀûÀ¸·Î ½ºÅ×¹Ì³Ê°¡ Ã¤¿öÁö´Â ÇÔ¼ö
+		void AutoGainStamina();						// ìë™ì ìœ¼ë¡œ ìŠ¤í…Œë¯¸ë„ˆê°€ ì±„ì›Œì§€ëŠ” í•¨ìˆ˜
 	UPROPERTY()
-		FTimerHandle AutoTimerHandle;			// Å¸ÀÌ¸ÓÇÚµé
+		FTimerHandle AutoTimerHandle;			// íƒ€ì´ë¨¸í•¸ë“¤
 };

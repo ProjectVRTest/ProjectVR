@@ -21,7 +21,7 @@ ANormalMonster::ANormalMonster()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Normal_Monster_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/Monster/NormalMonster/Mesh/Character/SK_NormalMonster.SK_NormalMonster'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Normal_Monster_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Character/SK_NormalMonster.SK_NormalMonster'"));
 
 	if (Normal_Monster_SK_Mesh.Succeeded())
 	{

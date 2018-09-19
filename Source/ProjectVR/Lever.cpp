@@ -1,20 +1,22 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Lever.h"
 #include "Components/StaticMeshComponent.h"
-#include "UObject/ConstructorHelpers.h"					// ÄÜÅÙÃ÷ ºê¶ó¿ìÀú·ÎºÎÅÍ Æ÷¼ÇÀÇ ¸ğ¾çÀ» °¡Á®¿Ã ¶§ »ç¿ë
-#include	"MyCharacter/MotionControllerCharacter.h"	// ¿À¸¥¼Õ°ú »óÈ£ÀÛ¿ëÇÏ±â À§ÇØ¼­ Ä³¸¯ÅÍ¿¡ RightGrab¿¡ ´ëÇÑ boolº¯¼ö¸¦ µÎ¾úŸ¼
+#include "UObject/ConstructorHelpers.h"					// ì½˜í…ì¸  ë¸Œë¼ìš°ì €ë¡œë¶€í„° í¬ì…˜ì˜ ëª¨ì–‘ì„ ê°€ì ¸ì˜¬ ë•Œ ì‚¬ìš©
+#include	"MyCharacter/MotionControllerCharacter.h"	// ì˜¤ë¥¸ì†ê³¼ ìƒí˜¸ì‘ìš©í•˜ê¸° ìœ„í•´ì„œ ìºë¦­í„°ì— RightGrabì— ëŒ€í•œ boolë³€ìˆ˜ë¥¼ ë‘ì—ˆì†
 #include "Kismet/KismetMathLibrary.h"
-#include "Kismet/GameplayStatics.h"							// Ä³¸¯ÅÍ Ã£±â
+#include "Kismet/GameplayStatics.h"							// ìºë¦­í„° ì°¾ê¸°
 #include "HandMotionController/RightHandMotionController.h"
 #include "Engine/World.h"
+#include "Engine/StaticMesh.h"
+
 // Sets default values
 ALever::ALever()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// ¸ğ¾ç »ı¼º
+	// ëª¨ì–‘ ìƒì„±
 	LeverObject = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeverObj"));
 	LeverObject->SetupAttachment(RootComponent);
 
@@ -26,11 +28,11 @@ ALever::ALever()
 
 	/////////////////////////////////////////////////////////////////////////////////////
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>PotionShape(TEXT("StaticMesh'/Game/Assets/Geometry/Meshes/1M_Cube.1M_Cube'"));		// ·¹ÆÛ·±½º °æ·Î·Î ¹æÆĞ ¸Å½¬¸¦ Ã£À½
-	if (PotionShape.Succeeded())		// °Ë ¸Ş½¬¸¦ Ã£¾ÒÀ» °æ¿ì ½ÇÇà
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>PotionShape(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));		// ë ˆí¼ëŸ°ìŠ¤ ê²½ë¡œë¡œ ë°©íŒ¨ ë§¤ì‰¬ë¥¼ ì°¾ìŒ
+	if (PotionShape.Succeeded())		// ê²€ ë©”ì‰¬ë¥¼ ì°¾ì•˜ì„ ê²½ìš° ì‹¤í–‰
 	{
-		Lever->SetStaticMesh(PotionShape.Object);			// ½ºÅÂÆ½ ¸Ş½¬¿¡ °Ë ¸ğ¾ç ¼³Á¤
-		LeverObject->SetStaticMesh(PotionShape.Object);			// ½ºÅÂÆ½ ¸Ş½¬¿¡ °Ë ¸ğ¾ç ¼³Á¤
+		Lever->SetStaticMesh(PotionShape.Object);			// ìŠ¤íƒœí‹± ë©”ì‰¬ì— ê²€ ëª¨ì–‘ ì„¤ì •
+		LeverObject->SetStaticMesh(PotionShape.Object);			// ìŠ¤íƒœí‹± ë©”ì‰¬ì— ê²€ ëª¨ì–‘ ì„¤ì •
 	}
 
 	LeverObject->SetRelativeScale3D(FVector(0.4, 0.2, 0.4));
@@ -53,8 +55,8 @@ void ALever::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Lever->OnComponentBeginOverlap.AddDynamic(this, &ALever::OnLeverOverlap);		// ¿À¹ö·¦ ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ³ ¼ö ÀÖµµ·Ï ¼³Á¤
-	Lever->OnComponentEndOverlap.AddDynamic(this, &ALever::OnLeverEndOverlap);		// ¿À¹ö·¦ ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ³ ¼ö ÀÖµµ·Ï ¼³Á¤
+	Lever->OnComponentBeginOverlap.AddDynamic(this, &ALever::OnLeverOverlap);		// ì˜¤ë²„ë© ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¬ ìˆ˜ ìˆë„ë¡ ì„¤ì •
+	Lever->OnComponentEndOverlap.AddDynamic(this, &ALever::OnLeverEndOverlap);		// ì˜¤ë²„ë© ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¬ ìˆ˜ ìˆë„ë¡ ì„¤ì •
 }
 
 // Called every frame
@@ -72,7 +74,7 @@ void ALever::Tick(float DeltaTime)
 				ARightHandMotionController* RightHand = Cast<ARightHandMotionController>(Character->RightHand);
 				if (RightHand)
 				{
-					if (RightHand->bisRightGrab)		// ÂüÀÌ¸é »óÈ£ÀÛ¿ë ½ÇÇà
+					if (RightHand->bisRightGrab)		// ì°¸ì´ë©´ ìƒí˜¸ì‘ìš© ì‹¤í–‰
 					{
 						FVector Cal = UKismetMathLibrary::Subtract_VectorVector(UKismetMathLibrary::InverseTransformLocation
 								(this->GetActorTransform(), TouchActor->GetActorLocation()), LeverScene->GetComponentLocation());
@@ -100,14 +102,14 @@ void ALever::Tick(float DeltaTime)
 
 
 		//AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		//if (Character)	// Interactorº¯¼ö¿¡ ¿À¸¥¼ÕÀÌ µé¾î¿ÍÀÖ´Âµ¥ ¿À¸¥¼ÕÀÇ ±×·¦¹öÆ°À» ¶¼¸é ÀÛ¿ëÀ» ÇÏÁö ¸øÇÏ°Ô ÇÑ´Ù.
+		//if (Character)	// Interactorë³€ìˆ˜ì— ì˜¤ë¥¸ì†ì´ ë“¤ì–´ì™€ìˆëŠ”ë° ì˜¤ë¥¸ì†ì˜ ê·¸ë©ë²„íŠ¼ì„ ë–¼ë©´ ì‘ìš©ì„ í•˜ì§€ ëª»í•˜ê²Œ í•œë‹¤.
 		//{
 		//	ARightHandMotionController* RightHand = Cast<ARightHandMotionController>(Interactor);
 		//	if (RightHand)
 		//	{
 		//		if(RightHand->bisRightGrab == false)
 		//			Interactor = nullptr;
-		//		else	// Grab»óÅÂ. »óÈ£ÀÛ¿ë
+		//		else	// Grabìƒíƒœ. ìƒí˜¸ì‘ìš©
 		//		{
 		//			FVector Cal = UKismetMathLibrary::Subtract_VectorVector(UKismetMathLibrary::InverseTransformLocation
 		//			(this->GetActorTransform(), Interactor->GetActorLocation()), LeverScene->GetComponentLocation());
@@ -121,7 +123,7 @@ void ALever::Tick(float DeltaTime)
 
 void ALever::OnLeverOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	// ¿À¸¥¼Õ°ú »óÈ£ÀÛ¿ë
+	// ì˜¤ë¥¸ì†ê³¼ ìƒí˜¸ì‘ìš©
 	TouchActor = OtherActor;
 
 	if (OtherActor->ActorHasTag("RightHand"))
@@ -144,7 +146,7 @@ void ALever::OnLeverOverlap(UPrimitiveComponent * OverlappedComp, AActor * Other
 
 void ALever::OnLeverEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	// ¿À¸¥¼Õ°ú »óÈ£ÀÛ¿ë
+	// ì˜¤ë¥¸ì†ê³¼ ìƒí˜¸ì‘ìš©
 	if (OtherActor->ActorHasTag("RightHand"))
 	{
 		TouchActor = nullptr;

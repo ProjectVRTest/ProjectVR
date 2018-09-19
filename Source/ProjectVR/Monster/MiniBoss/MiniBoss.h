@@ -52,10 +52,10 @@ public:
 		class UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UBehaviorTree* BehaviorTree;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-		class UCameraComponent* TargetCamera;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-		class AActor* Target; 
+		class AActor* Target;
+
+	class ACameraLocation* TargetCamera;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimMontage")
 		class UAnimMontage* AttackReverseMontage; //피격 애니메이션

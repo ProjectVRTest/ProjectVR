@@ -6,7 +6,7 @@
 
 AMotionControllerPC::AMotionControllerPC()
 {
-	static ConstructorHelpers::FObjectFinder<UHapticFeedbackEffect_Base>HandHapticEffect(TEXT("HapticFeedbackEffect_Curve'/Game/Assets/MyCharacter/Hand/HandHaptics.HandHaptics'"));
+	static ConstructorHelpers::FObjectFinder<UHapticFeedbackEffect_Base>HandHapticEffect(TEXT("HapticFeedbackEffect_Curve'/Game/Assets/CharacterEquipment/MyCharacter/Hand/HandHaptics.HandHaptics'"));
 
 	if (HandHapticEffect.Succeeded())
 	{

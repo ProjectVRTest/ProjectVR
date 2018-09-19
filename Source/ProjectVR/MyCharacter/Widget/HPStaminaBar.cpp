@@ -22,7 +22,7 @@ AHPStaminaBar::AHPStaminaBar()
 	// HP
 	HPBar = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HPBar"));
 	HPBar->SetupAttachment(HPScene);
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> HPBar_SM(TEXT("StaticMesh'/Game/Assets/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> HPBar_SM(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
 	if (HPBar_SM.Succeeded())
 	{
 		HPBar->SetStaticMesh(HPBar_SM.Object);
@@ -34,7 +34,7 @@ AHPStaminaBar::AHPStaminaBar()
 	// Stamina
 	StaminaBar = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SteminaBar"));
 	StaminaBar->SetupAttachment(SteminaScene);
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> StaminaBar_SM(TEXT("StaticMesh'/Game/Assets/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> StaminaBar_SM(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
 	if (HPBar_SM.Succeeded())
 	{
 		StaminaBar->SetStaticMesh(StaminaBar_SM.Object);

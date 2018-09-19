@@ -25,7 +25,7 @@ APlayerSword::APlayerSword()
 	SetRootComponent(SwordMesh);
 	SwordMesh->SetCollisionProfileName(TEXT("NoCollision"));		// 메쉬의 콜리전 상태값을 NoCollision으로 줌.
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/Equipment/Sword/Mesh/SM_Sword.SM_Sword'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Equipment/Sword/Mesh/SM_Sword.SM_Sword'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (SM_Sword.Succeeded())		// 검 메쉬를 찾았을 경우 실행
 	{
 		SwordMesh->SetStaticMesh(SM_Sword.Object);			// 스태틱 메쉬에 검 모양 설정

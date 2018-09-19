@@ -40,6 +40,8 @@
 #include "MyCharacter/Widget/Menu.h"									// 메뉴의 활성화 / 비활성화
 #include "Components/WidgetInteractionComponent.h"			// 위젯과의 상호작용
 
+#include "CameraLocation.h"
+
 // Sets default values
 AMotionControllerCharacter::AMotionControllerCharacter()
 {
@@ -86,6 +88,8 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	HeadBox->SetCollisionProfileName(TEXT("OverlapAll"));
 	HeadBox->bGenerateOverlapEvents = true;
 	HeadBox->ComponentTags.Add(FName("Head"));
+
+	CameraLocation = nullptr;
 
 	GetCharacterMovement()->MaxWalkSpeed = 280.0f;
 
@@ -143,6 +147,12 @@ void AMotionControllerCharacter::BeginPlay()
 		HeadBox->OnComponentBeginOverlap.AddDynamic(this, &AMotionControllerCharacter::OnHeadOverlap);		// 오버랩 이벤트를 발생시킬 수 있도록 설정
 	}
 
+	CameraLocation = GetWorld()->SpawnActor<ACameraLocation>(CameraLocation->StaticClass());
+
+	if (CameraLocation)
+	{
+		CameraLocation->AttachToComponent(Camera, AttachRules);
+	}
 	AttackPointSet();
 }
 
@@ -151,6 +161,8 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//GLog->Log(FString::Printf(TEXT("Camera X : %0.1f Y : %0.1f Z : %0.1f"), Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, Camera->GetComponentLocation().Z));
+//	GLog->Log(FString::Printf(TEXT("CameraLocation X : %0.1f Y : %0.1f Z : %0.1f"),CameraLocation->GetActorLocation().X, CameraLocation->GetActorLocation().Y, CameraLocation->GetActorLocation().Z));
 	if (CurrentHp > 100.0f)
 	{
 		CurrentHp = 100.0f;

@@ -35,7 +35,7 @@ ALeftHandMotionController::ALeftHandMotionController()
 	HandMesh->SetupAttachment(MotionController); //생성해준 HandMesh를 MotionController에 붙인다.
 
 												 //스켈레탈메쉬 컴포넌트에 스켈레탈을 넣어주기 위해 에디터 상에 있는 스켈레탈메쉬를 가져와서 SK_LeftHand에 넣어준다.
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>SK_LeftHand(TEXT("SkeletalMesh'/Game/Assets/MyCharacter/Hand/Mesh/MannequinHand_Right.MannequinHand_Right'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>SK_LeftHand(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/MyCharacter/Hand/Mesh/MannequinHand_Right.MannequinHand_Right'"));
 	if (SK_LeftHand.Succeeded()) //불러오는데 성공햇으면
 	{
 		HandMesh->SetSkeletalMesh(SK_LeftHand.Object); //스켈레탈메쉬컴포넌트의 스켈레탈메쉬에 앞에서 가져온 스켈레탈메쉬를 넣어준다.
@@ -83,27 +83,26 @@ ALeftHandMotionController::ALeftHandMotionController()
 	SphereMesh->SetRelativeScale3D(FVector(0.04f, 0.09f, 0.07f ));
 	SphereMesh->SetCollisionProfileName(TEXT("NoCollision"));
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface>M_Sphere(TEXT("Material'/Game/Assets/MyCharacter/Hand/Materials/NewMaterial.NewMaterial'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sphere(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/MyCharacter/Hand/Mesh/Sphere.Sphere'"));
+
+	if (SM_Sphere.Succeeded())
+	{
+		SphereMesh->SetStaticMesh(SM_Sphere.Object);
+	}
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>M_Sphere(TEXT("Material'/Game/Assets/CharacterEquipment/MyCharacter/Hand/Materials/NewMaterial.NewMaterial'"));
 
 	if (M_Sphere.Succeeded())
 	{
 		SphereMesh->SetMaterial(0, M_Sphere.Object);
 	}	
 
-	static ConstructorHelpers::FObjectFinder<UHapticFeedbackEffect_Base> HapticEffect(TEXT("HapticFeedbackEffect_Curve'/Game/Assets/MyCharacter/Hand/HandHaptics.HandHaptics'"));
+	static ConstructorHelpers::FObjectFinder<UHapticFeedbackEffect_Base> HapticEffect(TEXT("HapticFeedbackEffect_Curve'/Game/Assets/CharacterEquipment/MyCharacter/Hand/HandHaptics.HandHaptics'"));
 
 	if (HapticEffect.Succeeded())
 	{
 		VRHapticEffect = HapticEffect.Object;
-	}
-	
-
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sphere(TEXT("StaticMesh'/Game/Assets/MyCharacter/Hand/Mesh/Sphere.Sphere'"));
-
-	if (SM_Sphere.Succeeded())
-	{
-		SphereMesh->SetStaticMesh(SM_Sphere.Object);
-	}
+	}	
 	
 	//왼손의 애니메이션을 지정해주기 위해 에디터상에 있는 애니메이션블루프린트를 가져와서 ABP_Hand에 넣는다.
 	static ConstructorHelpers::FObjectFinder<UClass>ABP_Hand(TEXT("AnimBlueprint'/Game/Blueprints/MyCharacter/Hand/ABP_LeftHand.ABP_LeftHand_C'"));

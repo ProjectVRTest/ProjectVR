@@ -37,7 +37,7 @@ ADog::ADog()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MonsterMesh(TEXT("SkeletalMesh'/Game/Assets/Monster/Dog/Mesh2/MON_DOG_MESH.MON_DOG_MESH'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MonsterMesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/Dog/Mesh2/MON_DOG_MESH.MON_DOG_MESH'"));
 	if (MonsterMesh.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(MonsterMesh.Object);
@@ -63,7 +63,7 @@ ADog::ADog()
 		}		
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface>Monster_Material(TEXT("Material'/Game/Assets/Monster/Dog/Materials/M_Dog.M_Dog'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>Monster_Material(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Dog/Materials/M_Dog.M_Dog'"));
 	if (Monster_Material.Succeeded())
 	{
 		GetMesh()->SetMaterial(0, Monster_Material.Object);

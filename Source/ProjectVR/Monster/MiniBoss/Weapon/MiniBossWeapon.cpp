@@ -20,14 +20,14 @@ AMiniBossWeapon::AMiniBossWeapon()
 	SetRootComponent(SwordMesh);
 	SwordMesh->SetCollisionProfileName(TEXT("NoCollision"));		
 	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/Monster/MiniBoss/Weapon/Mesh/SM_MBWeapon.SM_MBWeapon'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Weapon/Mesh/SM_MBWeapon.SM_MBWeapon'"));
 
 	if (SM_Sword.Succeeded())
 	{
 		SwordMesh->SetStaticMesh(SM_Sword.Object);
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface>M_Sword(TEXT("Material'/Game/Assets/Monster/MiniBoss/Weapon/Materials/M_Weapon.M_Weapon'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>M_Sword(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Weapon/Materials/M_Weapon.M_Weapon'"));
 
 	if (M_Sword.Succeeded())
 	{
@@ -64,6 +64,8 @@ void AMiniBossWeapon::BeginPlay()
 void AMiniBossWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);	
+
+	GLog->Log(FString::Printf(TEXT("IsParryingAttack %d :"), IsParryingAttack));
 }
 
 void AMiniBossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

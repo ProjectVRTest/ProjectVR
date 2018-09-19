@@ -58,6 +58,8 @@ public:
 		class UStereoLayerComponent* Stereo;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class UBoxComponent* HeadBox;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+		class ACameraLocation* CameraLocation;
 
 	FTimerHandle DamageTimerHandle;
 	FTimerHandle HitBloodyTimerHandle;

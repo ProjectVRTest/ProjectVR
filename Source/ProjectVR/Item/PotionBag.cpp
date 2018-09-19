@@ -25,7 +25,7 @@ APotionBag::APotionBag()
 	PotionBagCollision->SetRelativeRotation(FRotator(0, 0, 90.0f));
 	PotionBagCollision->SetRelativeScale3D(FVector(2.4f, 2.8f, 2.5f));
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_PotionBag(TEXT("StaticMesh'/Game/Assets/Item/Mesh/PotionBags/Mesh/PotionBag.PotionBag'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_PotionBag(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Item/Mesh/PotionBags/Mesh/PotionBag.PotionBag'"));
 
 	if (SM_PotionBag.Succeeded())
 	{

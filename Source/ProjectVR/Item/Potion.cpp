@@ -22,7 +22,7 @@ APotion::APotion()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PotionMesh"));
 	SetRootComponent(Mesh);	
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Potion(TEXT("StaticMesh'/Game/Assets/Item/Mesh/Potion/Mesh/potion.potion'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Potion(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Item/Mesh/Potion/Mesh/potion.potion'"));
 
 	if (SM_Potion.Succeeded())
 	{

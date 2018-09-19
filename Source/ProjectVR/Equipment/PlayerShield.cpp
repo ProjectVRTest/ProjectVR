@@ -19,6 +19,7 @@
 #include "HandMotionController/LeftHandMotionController.h"
 #include "MyCharacter/MotionControllerCharacter.h"	// Setting Owner
 #include "MyCharacter/Widget/HPStaminaBar.h"			// Character State Bar
+
 // Sets default values
 APlayerShield::APlayerShield()
 {
@@ -28,7 +29,7 @@ APlayerShield::APlayerShield()
 	/* 스태틱 매쉬 컴포넌트 생성 */
 	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));
 	SetRootComponent(ShieldMesh);
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shield(TEXT("StaticMesh'/Game/Assets/Equipment/Shield/Mesh/SM_Shield.SM_Shield'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shield(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Equipment/Shield/Mesh/SM_Shield.SM_Shield'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (SM_Shield.Succeeded())		// 방패 메쉬를 찾았을 경우 실행
 	{
 		ShieldMesh->SetStaticMesh(SM_Shield.Object);		// 스태틱 메쉬에 방패 모양 설정
@@ -42,7 +43,7 @@ APlayerShield::APlayerShield()
 	StateBarScene = CreateDefaultSubobject<USceneComponent>(TEXT("StateScene"));
 	StateBarScene->SetupAttachment(ShieldMesh);
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingEffect(TEXT("ParticleSystem'/Game/Assets/StarterContent/Particles/P_Explosion.P_Explosion'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingEffect(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/StarterContent/Particles/P_Explosion.P_Explosion'"));
 	if (PT_ParryingEffect.Succeeded())
 	{
 		ParryingEffect = PT_ParryingEffect.Object;
@@ -80,9 +81,9 @@ void APlayerShield::BeginPlay()
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
-	////방패를 쉴드 씬 컴포넌트에 스폰시킨다.
+	//방패를 쉴드 씬 컴포넌트에 스폰시킨다.
 	StateBar = GetWorld()->SpawnActor<AHPStaminaBar>(StateBar->StaticClass(), StateBarScene->GetComponentLocation(), StateBarScene->GetComponentRotation(), SpawnActorOption);
-	////방패를 AttachRules를 토대로 쉴드 씬 컴포넌트에 붙인다.
+	//방패를 AttachRules를 토대로 쉴드 씬 컴포넌트에 붙인다.
 	StateBar->AttachToComponent(StateBarScene, AttachRules);
 	// 오너 설정
 	ShieldOwner = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -145,7 +146,6 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 						RumbleLeftController(5.0f);
 						MiniBossWeapon->IsParryingAttack = false;
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, MiniBoss->GetActorLocation());
-						//SweepResult.
 						GLog->Log(FString::Printf(TEXT("방패 패링")));
 						MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingStart;
 						MiniBoss->CurrentAnimState = EMiniBossAnimState::ParryingReady;

@@ -18,6 +18,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Kismet/KismetSystemLibrary.h"
+#include "MyCharacter/CameraLocation.h"
 #include "MyCharacter/MotionControllerCharacter.h"
 
 // Sets default values
@@ -26,7 +27,7 @@ AMiniBoss::AMiniBoss()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MiniBoss_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/Monster/MiniBoss/Mesh/MB_SK_Mesh.MB_SK_Mesh'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MiniBoss_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Mesh/MB_SK_Mesh.MB_SK_Mesh'"));
 
 	if (MiniBoss_SK_Mesh.Succeeded())
 	{
@@ -47,7 +48,7 @@ AMiniBoss::AMiniBoss()
 	PawnSensing->bSeePawns = true;
 	PawnSensing->SetPeripheralVisionAngle(30.0f);
 	PawnSensing->SightRadius = 2000.0f;
-	PawnSensing->SensingInterval = 0.1f;
+	PawnSensing->SensingInterval = 0.01f;
 
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree>MiniBoss_BT(TEXT("BehaviorTree'/Game/Blueprints/Monster/MiniBoss/AI/BT_MiniBoss.BT_MiniBoss'"));
 
@@ -76,13 +77,13 @@ AMiniBoss::AMiniBoss()
 	MaxHP = 100000.0f;
 	CurrentHP = MaxHP;
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/Monster/MiniBoss/Effect/BackDash/Materials/M_Opacity.M_Opacity'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/BackDash/Materials/M_Opacity.M_Opacity'"));
 	if (M_Opacity.Succeeded())
 	{
 		OpacityMaterials = M_Opacity.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultMaterials(TEXT("Material'/Game/Assets/Monster/MiniBoss/Materials/M_MiniBoss.M_MiniBoss'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Materials/M_MiniBoss.M_MiniBoss'"));
 	if (M_DefaultMaterials.Succeeded())
 	{
 		DefaultMaterials = M_DefaultMaterials.Object;
@@ -90,13 +91,13 @@ AMiniBoss::AMiniBoss()
 
 	AIControllerClass = AMiniBossAIController::StaticClass();
 	
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageStartEffect(TEXT("ParticleSystem'/Game/Assets/Monster/MiniBoss/Effect/BackDash/StartEffect.StartEffect'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageStartEffect(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/BackDash/StartEffect.StartEffect'"));
 	if (PT_AfterImageStartEffect.Succeeded())
 	{
 		AfterImageStartEffect = PT_AfterImageStartEffect.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageEndEffect(TEXT("ParticleSystem'/Game/Assets/Monster/MiniBoss/Effect/BackDash/EndEffect.EndEffect'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageEndEffect(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/BackDash/EndEffect.EndEffect'"));
 	if (PT_AfterImageEndEffect.Succeeded())
 	{
 		AfterImageEndEffect = PT_AfterImageEndEffect.Object;
@@ -163,7 +164,6 @@ void AMiniBoss::Tick(float DeltaTime)
 	GLog->Log(FString::Printf(TEXT("Origin %0.1f"), Origin.Size()));*/
 	//GLog->Log(FString::Printf(TEXT("Origin %d : \n BoxExtent : %d \n SphereRadius : %0.1f"),Origin.Size(),BoxExtent.Size(),SphereRadius));
 
-	//GLog->Log(FString::Printf(TEXT("ParryingFlag : %d"), ParryingFlag));
 	//GLog->Log(FString::Printf(TEXT("HP : %f"),CurrentHP));
 
 	//GLog->Log(FString::Printf(TEXT("%f"), GetCharacterMovement()->Velocity.Size()));
@@ -198,20 +198,19 @@ void AMiniBoss::OnSeeCharacter(APawn * Pawn)
 	if (Pawn->ActorHasTag("Character"))
 	{
 		AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
-
 		if (AI)
 		{
 			switch (CurrentState)
 			{
-			case EMiniBossState::Idle:
+			case EMiniBossState::Idle:			
 				if (!Target)
 				{
 					AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Pawn);
 
 					if (MyCharacter)
 					{
-						GLog->Log(FString::Printf(TEXT("CameraComponent In")));
-						AI->BBComponent->SetValueAsObject("PlayerCamera", Cast<UObject>(MyCharacter->Camera));
+						TargetCamera = MyCharacter->CameraLocation;
+						AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
 					}
 					AI->BBComponent->SetValueAsObject("Player", Pawn);
 					Target = Pawn;

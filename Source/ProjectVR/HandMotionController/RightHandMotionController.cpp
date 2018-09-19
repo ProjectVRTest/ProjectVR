@@ -44,7 +44,7 @@ ARightHandMotionController::ARightHandMotionController()
 	HandMesh->SetupAttachment(MotionController);
 
 	//HandMesh에 넣을 스켈레탈 메쉬를 에디터상에서 찾아서 SK_RightHand에 넣는다.
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>SK_RightHand(TEXT("SkeletalMesh'/Game/Assets/MyCharacter/Hand/Mesh/MannequinHand_Right.MannequinHand_Right'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>SK_RightHand(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/MyCharacter/Hand/Mesh/MannequinHand_Right.MannequinHand_Right'"));
 
 	if (SK_RightHand.Succeeded()) //성공적으로 찾앗는지 확인한다.
 	{
