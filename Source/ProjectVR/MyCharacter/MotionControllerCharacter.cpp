@@ -75,7 +75,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	{
 		Widget->SetWidgetClass(HitUI.Class);
 	}
-	
+
 	Widget->SetWidgetSpace(EWidgetSpace::World);
 	Widget->SetDrawSize(FVector2D(1000.0f, 1000.0f));
 	Widget->bVisible = true;
@@ -111,7 +111,7 @@ void AMotionControllerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	FName DeviceName = UHeadMountedDisplayFunctionLibrary::GetHMDDeviceName();
-	
+
 	GLog->Log(DeviceName.ToString());
 	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
 	{
@@ -123,16 +123,16 @@ void AMotionControllerCharacter::BeginPlay()
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
-	
+
 	LeftHand = GetWorld()->SpawnActor<ALeftHandMotionController>(LeftHand->StaticClass(), GetMesh()->GetComponentLocation(), GetMesh()->GetComponentRotation(), SpawnActorOption);
 
-	if(LeftHand)
+	if (LeftHand)
 	{
 		LeftHand->AttachToComponent(GetMesh(), AttachRules);
 	}
 
 	RightHand = GetWorld()->SpawnActor<ARightHandMotionController>(RightHand->StaticClass(), GetMesh()->GetComponentLocation(), GetMesh()->GetComponentRotation(), SpawnActorOption);
-	
+
 	if (RightHand)
 	{
 		RightHand->AttachToComponent(GetMesh(), AttachRules);
@@ -168,7 +168,7 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 	/*ADog** Dog = DogArray.GetData();
 	for (int i = 0; i <DogArray.Num(); i++)
 	{
-		UE_LOG(LogClass, Warning, TEXT("%d - %s"),i+1, *Dog[i]->GetName());
+	UE_LOG(LogClass, Warning, TEXT("%d - %s"),i+1, *Dog[i]->GetName());
 	}*/
 
 	//UE_LOG(LogClass, Warning, TEXT("Left2 ------ %f / %f / %f"), StandardAngle, Min, Max);
@@ -368,11 +368,11 @@ void AMotionControllerCharacter::GameMenu()
 		SpawnActorOption.Owner = this;
 		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		
-		FVector location = FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
-		FRotator rotator = FRotator(GetActorRotation().Pitch + 20.0f, GetActorRotation().Yaw + 180.0f, GetActorRotation().Roll);
+		// 메뉴를 플레이어가 보는 위치와 알맞은 각도에 생성
+		FVector location = FVector(Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, Camera->GetComponentLocation().Z);
+		FRotator rotator = FRotator(Camera->GetComponentRotation().Pitch + 20.0f, Camera->GetComponentRotation().Yaw + 180.0f, 0.0f);
 
-		Menu = GetWorld()->SpawnActor<AMenu>(Menu->StaticClass(), location + GetActorForwardVector() * 150,
+		Menu = GetWorld()->SpawnActor<AMenu>(Menu->StaticClass(), location + Camera->GetForwardVector() * 150,
 			rotator, SpawnActorOption);
 	}
 	else
@@ -380,7 +380,6 @@ void AMotionControllerCharacter::GameMenu()
 		Menu->Destroy();
 		Menu = nullptr;
 	}
-	UE_LOG(LogTemp, Log, TEXT("Menu Tween"));
 }
 
 void AMotionControllerCharacter::AttackPointSet()
@@ -402,7 +401,7 @@ void AMotionControllerCharacter::AttackPointSet()
 	{
 		AttackPoints.Add(AttackPoint);
 		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}	
+	}
 
 	CalculatePoint.X = InitPoint.X - 200.0f;
 	Point = CalculatePoint;
@@ -414,7 +413,7 @@ void AMotionControllerCharacter::AttackPointSet()
 	{
 		AttackPoints.Add(AttackPoint);
 		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}	
+	}
 
 	CalculatePoint = InitPoint;
 	CalculatePoint.Y = InitPoint.Y - 200.0f;
@@ -439,7 +438,7 @@ void AMotionControllerCharacter::AttackPointSet()
 	{
 		AttackPoints.Add(AttackPoint);
 		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}	
+	}
 
 	CalculatePoint = InitPoint;
 	CalculatePoint.X = InitPoint.X + 200.0f;
@@ -481,7 +480,7 @@ void AMotionControllerCharacter::AttackPointSet()
 	{
 		AttackPoints.Add(AttackPoint);
 		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}	
+	}
 
 	CalculatePoint = InitPoint;
 	CalculatePoint.X = InitPoint.X - 200.0f;
@@ -523,14 +522,14 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 		}
 
 		CurrentHp -= Damage;			// 현재 체력감소
-	
-		//ULeftHandWidget* HandWidget = Cast<ULeftHandWidget>
-		//	(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// 왼손 방패의 위젯을 ULeftHandWidget내의 함수를 사용할 수 있도록 캐스트한다.
 
-		//if (HandWidget)
-		//{
-		//	HandWidget->ReceiveDamage(Damage);			// 데미지를 받는다.
-		//}
+										//ULeftHandWidget* HandWidget = Cast<ULeftHandWidget>
+										//	(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// 왼손 방패의 위젯을 ULeftHandWidget내의 함수를 사용할 수 있도록 캐스트한다.
+
+										//if (HandWidget)
+										//{
+										//	HandWidget->ReceiveDamage(Damage);			// 데미지를 받는다.
+										//}
 
 		LeftHand->Shield->StateBar->GetDamage(Damage);
 		InvincibleTimeOn = true;		// 피격되면 즉시 무적시간 활성화
@@ -568,13 +567,13 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 	{
 		CurrentHp += 30;		// 회복량
 
-		//ULeftHandWidget* HandWidget = Cast<ULeftHandWidget>
-		//	(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// 왼손 방패의 위젯을 ULeftHandWidget내의 함수를 사용할 수 있도록 캐스트한다.
+								//ULeftHandWidget* HandWidget = Cast<ULeftHandWidget>
+								//	(LeftHand->Shield->CharacterStateWidget->GetUserWidgetObject());		// 왼손 방패의 위젯을 ULeftHandWidget내의 함수를 사용할 수 있도록 캐스트한다.
 
-		//if (HandWidget)
-		//{
-		//	HandWidget->GainHP(30);		// 회복
-		//}
+								//if (HandWidget)
+								//{
+								//	HandWidget->GainHP(30);		// 회복
+								//}
 	}
 
 	if (OtherComp->ComponentHasTag("DogAttackCollision"))
@@ -595,9 +594,9 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 				FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
 
 				Dog->AttachToComponent(RightController->AttachDogPosition, AttachRules);
-				
+
 				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);
-				
+
 
 				Dog->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 				Dog->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));

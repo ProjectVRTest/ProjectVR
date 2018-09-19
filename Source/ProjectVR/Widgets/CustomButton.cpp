@@ -16,7 +16,6 @@ UCustomButton::UCustomButton()
 		ButtonDefaults.ButtonStyle(CustomStyle.Object);
 	}
 	WidgetStyle = *ButtonDefaults._ButtonStyle;
-
 }
 
 #if WITH_EDITOR
