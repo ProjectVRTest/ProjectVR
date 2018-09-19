@@ -64,48 +64,11 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 							}
 							break;
 						case EMiniBossAnimState::Attack:
-
 							if (Distance > 500.0f && MiniBoss->AttackCompleteFlag)
 							{
+								MiniBoss->AttackCompleteFlag = false;
+								MiniBoss->IsAttack = false;
 								GLog->Log(FString::Printf(TEXT("Disatance 500.0 이상 , AttackCompleteFlag true")));
-							}
-							switch (MiniBoss->CurrentShortAttackState)
-							{
-							case EMiniBossShortAttackState::ShortAttackReady:
-								if (Distance > 500.0f && MiniBoss->AttackCompleteFlag)
-								{									
-									GLog->Log(FString::Printf(TEXT("ShorAttackReady")));
-									MiniBoss->AttackCompleteFlag = false;
-									MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
-									MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
-								
-									MiniBoss->CurrentState = EMiniBossState::Chase;									
-								}
-								break;
-							case EMiniBossShortAttackState::RightUpLeftDownReady:
-								break;
-							case EMiniBossShortAttackState::RightUpLeftDownStart:
-								break;
-							case EMiniBossShortAttackState::StabReady:
-								break;
-							case EMiniBossShortAttackState::StabStart:
-								break;
-							case EMiniBossShortAttackState::TwoHandWidthReady:
-								break;
-							case EMiniBossShortAttackState::TwoHandWidthStart:
-								break;
-							}	
-
-							if (MiniBoss->CurrentAttackState == EMiniBossAttackState::ComboAttack)
-							{
-								if (Distance > 500.0f &&MiniBoss->AttackCompleteFlag)
-								{
-									GLog->Log(FString::Printf(TEXT("ComboAttack")));
-									MiniBoss->AttackCompleteFlag = false;
-									MiniBoss->IsAttack = false;
-									MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
-									MiniBoss->CurrentState = EMiniBossState::Chase;
-								}
 							}
 							break;
 						case EMiniBossAnimState::BackWalk:
