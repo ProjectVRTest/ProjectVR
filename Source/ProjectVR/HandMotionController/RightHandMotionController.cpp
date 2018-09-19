@@ -70,6 +70,7 @@ ARightHandMotionController::ARightHandMotionController()
 
 	interaction = CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("Interaction"));
 	interaction->SetupAttachment(GrabSphere);
+	interaction->TraceChannel = ECollisionChannel::ECC_Visibility;
 
 	//오른손의 상호작용 영역을 표시해줄 컴포넌트인 SteamVRChaperone 컴포넌트를 생성해서 StemVRChaperone에 넣어준다.
 	SteamVRChaperone = CreateDefaultSubobject<USteamVRChaperoneComponent>(TEXT("SteamVRChaperone"));
@@ -96,7 +97,7 @@ ARightHandMotionController::ARightHandMotionController()
 		{
 			HandMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint); //손의 애니메이션모드를 블루프린트형으로 바꿔주고
 			HandMesh->SetAnimInstanceClass(RightHandAnimBlueprint); //위에서 찾은 애니메이션블루프린트를 꽂아준다.
-		}		
+		}
 	}
 
 	// 포션생성 위치
@@ -116,9 +117,12 @@ ARightHandMotionController::ARightHandMotionController()
 	SwordAttachScene->SetupAttachment(HandMesh);// 생성한 검 씬컴포넌트를 HandMesh에 붙인다.
 												//붙일 검의 방향을 조절해주기위해
 
-	
+
 	SwordAttachScene->SetRelativeRotation(FRotator(0, 60.993034f, -175.082443f)); //롤 방향으로 180도 돌리고
 	SwordAttachScene->SetRelativeLocation(FVector(3.238229f, 5.621831f, -3.814407f)); //x축으로 10만큼 이동시킨다.
+
+	interaction->InteractionDistance = 100.0f;
+	interaction->bShowDebug = true;
 
 	VisibleSwordFlag = true; //초기에는 검을 보여준다.		///////////////////////////////////////////////////////////////////////////////////
 	HandTouchActorFlag = true; //처음에는 오른손에 검이 붙여있으므로 true로 해준다
@@ -143,7 +147,7 @@ void ARightHandMotionController::BeginPlay()
 																									  //위치와 각도는 붙이는 타겟에 맞게끔 하고
 																									  //스케일은 스폰하는 월드에 맞게끔 계산하여 정한다.
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
-	
+
 
 	//현재 월드에 검을 스폰시킨다.
 	Sword = GetWorld()->SpawnActor<APlayerSword>(Sword->StaticClass(), SwordAttachScene->GetComponentLocation(), SwordAttachScene->GetComponentRotation(), SpawnActorOption);
@@ -233,7 +237,7 @@ void ARightHandMotionController::GrabActor()
 																														  //스케일은 스폰하는 월드에 맞게끔 계산하여 정한다.
 						FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
-						Potion=PotionBag->PotionPop();
+						Potion = PotionBag->PotionPop();
 						//현재 월드에 검을 스폰시킨다.
 						//Potion = GetWorld()->SpawnActor<APotion>(Potion->StaticClass(), PotionPosition->GetComponentLocation(),	PotionPosition->GetComponentRotation(), SpawnActorOption);
 
@@ -305,7 +309,7 @@ void ARightHandMotionController::ReleaseActor()
 		else if (AttachedActor->GetRootComponent()->GetAttachParent() == PotionPosition)
 		{
 			// 잡은 액터가 포션일 때 실행
-			if (AttachedActor->ActorHasTag("Potion")) 
+			if (AttachedActor->ActorHasTag("Potion"))
 			{
 				APotion* AttachPotion = Cast<APotion>(AttachedActor);
 				if (AttachPotion)
@@ -313,7 +317,7 @@ void ARightHandMotionController::ReleaseActor()
 					AttachPotion->BagInputFlag = true;
 					AttachPotion->Mesh->SetSimulatePhysics(true);
 					AttachedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);			// 잡은 물체와 뗀다					
-				}								
+				}
 			}
 		}
 		AttachedActor = nullptr;			// 현재 잡은 것이 없다.
@@ -393,6 +397,12 @@ void ARightHandMotionController::HandGrabState()
 void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	// 종류 : 포션박스, 머리, 문, 기타액터
+
+	// 메뉴의 박스와 충돌시 검을 지우고 손을 펴는 동작으로 바꿀예정
+	if (OtherComp->ComponentHasTag("HiddenGrips"))
+	{
+		UE_LOG(LogTemp, Log, TEXT("AeGukka"));
+	}
 
 	if (OtherActor->ActorHasTag("PotionBag"))		// 'PotionBox'라는 태그를 가진 액터일 때
 	{
