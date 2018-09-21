@@ -130,30 +130,26 @@ void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭
 
 void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag(TEXT("MiniBossWeapon")))
+	if (OtherActor->ActorHasTag(TEXT("MiniBossWeapon"))) //부딪힌 액터가 중간보스 무기인지 확인한다.
 	{
-		AMiniBossWeapon* MiniBossWeapon = Cast<AMiniBossWeapon>(OtherActor);
+		AMiniBossWeapon* MiniBossWeapon = Cast<AMiniBossWeapon>(OtherActor); //확인되면 중간보스 무기로 변환해서 저장한다.
 
-		if (MiniBossWeapon)
+		if (MiniBossWeapon) //변환이 성공하면
 		{
-			if (MiniBossWeapon->IsParryingAttack)
+			if (MiniBossWeapon->IsParryingAttack) //무기가 패링 가능한 상태인지 확인한다.
 			{
+				//패링가능한 상태라면 MiniBoss를 가지고 와서 저장하고
 				MiniBoss = Cast<AMiniBoss>(MiniBossWeapon->GetAttachParentActor());
-				if (MiniBoss)
+				if (MiniBoss)  //MiniBoss 형변환에 성공하면
 				{
-					if (IsActivation && ShieldPhysicsVelocityValue > 300.0f) //그립버튼을 누르고 방패의 선속도가 300이상일때 판정
+					if (IsActivation && ShieldPhysicsVelocityValue > 300.0f) //그립버튼을 누르고 방패의 선속도가 300이상인지 확인한다.
 					{
-						RumbleLeftController(5.0f);
+						RumbleLeftController(5.0f); //패드에 진동을 울려주고
 						MiniBossWeapon->IsParryingAttack = false;
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, MiniBoss->GetActorLocation());
 						GLog->Log(FString::Printf(TEXT("방패 패링")));
 						MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingStart;
-						MiniBoss->CurrentAnimState = EMiniBossAnimState::ParryingReady;
 					}
-				}
-				else
-				{
-					GLog->Log(FString::Printf(TEXT("Null")));
 				}
 			}
 		}

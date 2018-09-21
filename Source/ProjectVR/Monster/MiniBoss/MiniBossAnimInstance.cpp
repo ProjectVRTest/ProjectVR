@@ -45,6 +45,7 @@ void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		WalkStopFlag = MiniBoss->WalkStopFlag;
 		Yaw = MiniBoss->Yaw;
+		RotateYaw = MiniBoss->RotateYaw;
 		StabFlag = MiniBoss->StabFlag;
 		TwoHandWidthFlag = MiniBoss->TwoHandWidthFlag;
 		Speed = MiniBoss->GetCharacterMovement()->Velocity.Size();

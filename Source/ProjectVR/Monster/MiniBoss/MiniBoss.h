@@ -79,6 +79,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class AMiniBossWeapon* Sword;
 	float Yaw; //캐릭터가 좌우로 움직일때 판단해줄 값
+	float RotateYaw;
 	bool WalkStopFlag; 
 	bool IsAttack; //공격중인지 아닌지 판단
 	bool AttackCompleteFlag; //공격이 완료 됏는지 판단
