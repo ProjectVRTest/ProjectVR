@@ -157,7 +157,7 @@ void AMiniBoss::Tick(float DeltaTime)
 	FVector BoxExtent;
 	float SphereRadius;
 	UKismetSystemLibrary::GetComponentBounds(GetMesh(), Origin, BoxExtent, SphereRadius);
-
+	
 	//GLog->Log(FString::Printf(TEXT("%d"), AttackCompleteFlag));
 
 	/*GLog->Log(FString::Printf(TEXT("Origin X : %0.1f  Y : %0.1f Z : %0.1f"), Origin.X, Origin.Y, Origin.Z));

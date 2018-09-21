@@ -24,7 +24,7 @@ EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent
 				if (RandomState >= 3 && Distance < 300.0f)
 				{
 					MiniBoss->CurrentState = EMiniBossState::Battle;
-					MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;
+					MiniBoss->CurrentAnimState = EMiniBossAnimState::Rotate;
 					MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
 					MiniBoss->CurrentAttackState = EMiniBossAttackState::Idle;
 					MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;

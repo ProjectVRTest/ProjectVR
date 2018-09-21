@@ -30,7 +30,7 @@ void UAnimNotifyState_MBParryingArea::NotifyEnd(USkeletalMeshComponent * MeshCom
 
 	if (MiniBoss)
 	{
-		MiniBoss->Sword->IsParryingAttack = true;
+		MiniBoss->Sword->IsParryingAttack = false;
 		MiniBoss->ParryingFlag = false;
 	}
 }

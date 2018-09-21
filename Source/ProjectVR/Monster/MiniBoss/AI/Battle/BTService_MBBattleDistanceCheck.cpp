@@ -26,10 +26,13 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 			{
 				AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());		
 				if (MiniBoss)
-				{
-					LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->GetActorLocation());
+				{					
+					LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
 					CurrentRot = FMath::Lerp(MiniBoss->GetActorRotation(), LookAt, DeltaSeconds);
 
+					//GLog->Log(FString::Printf(TEXT("CurrentRot Yaw : %0.1f"), CurrentRot.Yaw));
+					//AI->BBComponent->SetValueAsRotator("LookAtRotator", LookAt);
+					//MiniBoss->RotateYaw = LookAt.Yaw;
 					//GLog->Log(FString::Printf(TEXT("%0.1f"), LookAt.Yaw));
 					//MiniBoss->SetActorRotation(CurrentRot);
 
@@ -40,8 +43,9 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 					FRotator XNormalRotator = UKismetMathLibrary::MakeRotFromX(NormalVector);
 					FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(TestRotator, XNormalRotator);
 					MiniBoss->Yaw = CompleteRotator.Yaw;
+					MiniBoss->RotateYaw = CompleteRotator.Yaw;
 
-					//GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), MiniBoss->Yaw));
+					//GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), CompleteRotator.Yaw));
 					if (!MiniBoss->CurrentFalling)
 					{
 						switch (MiniBoss->CurrentAnimState)
