@@ -154,6 +154,7 @@ void ADog::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsBool("bHasAttachActor", AttachActor);
 		AI->BBComponent->SetValueAsBool("bOnLand", bOnLand);
 		AI->BBComponent->SetValueAsBool("DeathFlag", bIsDeath);
+		AI->BBComponent->SetValueAsEnum("HP", CurrentHP);
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 	}
 

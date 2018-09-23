@@ -137,6 +137,9 @@ void ARightHandMotionController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// 오너 설정
+	HandOwner = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
 	FActorSpawnParameters SpawnActorOption; //액터를 스폰할때 쓰일 구조체 변수
 	SpawnActorOption.Owner = this; //스폰할 액터의 주인을 현재 클래스로 정한다.
 

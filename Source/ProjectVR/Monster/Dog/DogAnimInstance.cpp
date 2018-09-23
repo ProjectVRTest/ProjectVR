@@ -23,8 +23,8 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
 	ADog* RagdollDog = Cast<ADog>(TryGetPawnOwner());
-	FFindFloorResult FloorDistance;;
 
+	// 계산 중복 방지 - 공중판단 지움
 	if (RagdollDog && RagdollDog->IsValidLowLevelFast())
 	{
 		CurrentDogState = RagdollDog->CurrentDogState;
@@ -33,56 +33,10 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentDogJumpState = RagdollDog->CurrentDogJumpState;
 		CurrentDogCircleState = RagdollDog->CurrentDogCircleState;
 		CurrentDogAirState = RagdollDog->CurrentDogAirState;
-		onLand = RagdollDog->bOnLand;
-
-		CurrentFalling = RagdollDog->CurrentFalling;
-
-		if (CurrentFalling && PreviousFalling)
-		{
-			RagdollDog->CurrentDogJumpState = EDogJumpState::JumpRoof;
-		}
-
-		if (!CurrentFalling && PreviousFalling)
-		{
-			RagdollDog->GetCharacterMovement()->ComputeFloorDist(RagdollDog->GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34, 0);
-
-			if (FloorDistance.FloorDist < 3.0f)
-			{
-				RagdollDog->bOnLand = true;		// 땅에 있음
-
-				if (RagdollDog->bIsDeath)
-				{
-					RagdollDog->CurrentDogState = EDogState::Death;
-					RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
-					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
-
-					PreviousFalling = CurrentFalling;
-					return;
-				}
-				else if (RagdollDog->bIsDetach)
-				{
-					RagdollDog->CurrentDogState = EDogState::Hurled;
-					RagdollDog->CurrentDogAnimState = EDogAnimState::StandUp;
-					RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
-					RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
-
-					RagdollDog->bIsDetach = false;
-					RagdollDog->Landing = false;
-
-					PreviousFalling = CurrentFalling;
-					return;
-				}
-				else if (CurrentDogState == EDogState::Battle)				// 전투상태일때는 착지가능상태로 바꿔줌
-				{
-					RagdollDog->Landing = true;
-				}
-			}
-		}
-		PreviousFalling = CurrentFalling;
 	}
 }
 
+// 점프 공격
 void UDogAnimInstance::AnimNotify_JumpStart(UAnimNotify * Notify)
 {
 	ADog* RagdollDog = Cast<ADog>(TryGetPawnOwner());

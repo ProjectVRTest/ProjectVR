@@ -70,6 +70,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USceneComponent* SwordAttachScene;
 
+	// 오너
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class AMotionControllerCharacter* HandOwner;
+
+	// 상호작용
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UWidgetInteractionComponent* interaction;
 

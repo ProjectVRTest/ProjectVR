@@ -15,7 +15,7 @@ EBTNodeResult::Type UBTTask_D_B_J_SetBiteCollision::ExecuteTask(UBehaviorTreeCom
 
 		if (Dog)
 		{
-			Dog->DogAttackCollision->bGenerateOverlapEvents = true;
+			Dog->DogAttackCollision->bGenerateOverlapEvents = check;
 		}
 		return EBTNodeResult::Succeeded;
 	}

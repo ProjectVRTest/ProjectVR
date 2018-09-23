@@ -58,6 +58,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shield")
 		class USceneComponent* ShieldAttachScene;
 
+	// 오너
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class AMotionControllerCharacter* HandOwner;
+
 	// 상호작용
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UWidgetInteractionComponent* interaction;

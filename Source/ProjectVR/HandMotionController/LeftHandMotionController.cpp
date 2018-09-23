@@ -128,6 +128,9 @@ void ALeftHandMotionController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// 오너 설정
+	HandOwner = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
 	FActorSpawnParameters SpawnActorOption;//스폰할때의 옵션을 지정하기 위해 FActorSpawnParameters를 선언한다.
 	SpawnActorOption.Owner = this; //스폰할 액터의 소유자를 this로 지정한다.
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; //스폰하는 액터가 콜리전에 상관없이 항상 스폰되도록 지정한다.
