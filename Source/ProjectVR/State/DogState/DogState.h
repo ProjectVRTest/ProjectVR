@@ -117,3 +117,10 @@ enum class EDogCircleState : uint8
 	RightCircle = 1 UMETA(DisplayName = "RightCircle"),
 	Nothing = 3 UMETA(DisplayName = "Nothing")
 };
+
+UENUM(BlueprintType)
+enum class EDogAirState : uint8
+{
+	GetUp = 0 UMETA(DisplayName = "GetUp"),
+	Nothing = 1 UMETA(DisplayName = "Nothing")
+};

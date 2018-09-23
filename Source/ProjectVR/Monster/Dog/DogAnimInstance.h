@@ -28,6 +28,8 @@ public:
 		EDogJumpState CurrentDogJumpState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CircleState")
 		EDogCircleState CurrentDogCircleState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AirState")
+		EDogAirState CurrentDogAirState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		FRotator LookAtRotator;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpData")
