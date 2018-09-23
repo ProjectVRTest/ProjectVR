@@ -22,6 +22,8 @@ public:
 		EDogState CurrentDogState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimState")
 		EDogAnimState CurrentDogAnimState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleState")
+		EDogBattleState CurrentDogBattleState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpState")
 		EDogJumpState CurrentDogJumpState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CircleState")

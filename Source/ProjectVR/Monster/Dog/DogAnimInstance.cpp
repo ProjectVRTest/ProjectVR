@@ -29,6 +29,7 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		CurrentDogState = RagdollDog->CurrentDogState;
 		CurrentDogAnimState = RagdollDog->CurrentDogAnimState;
+		CurrentDogBattleState = RagdollDog->CurrentDogBattleState;
 		CurrentDogJumpState = RagdollDog->CurrentDogJumpState;
 		CurrentDogCircleState = RagdollDog->CurrentDogCircleState;
 		onLand = RagdollDog->bOnLand;
