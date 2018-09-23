@@ -8,7 +8,6 @@ void UBTTask_MBRotateState::InitializeFromAsset(UBehaviorTree & Asset)
 	Super::InitializeFromAsset(Asset);
 
 	bNotifyTick = true;
-	InitRotator.ZeroRotator;
 }
 
 EBTNodeResult::Type UBTTask_MBRotateState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
@@ -25,21 +24,9 @@ EBTNodeResult::Type UBTTask_MBRotateState::ExecuteTask(UBehaviorTreeComponent & 
 
 			if (MyCharacter)
 			{
-				FVector Velocity;
-				FRotator TestRotator;
-				Velocity =MiniBoss->GetCharacterMovement()->Velocity;
-				TestRotator = MiniBoss->GetActorRotation();
-				FVector NormalVector = UKismetMathLibrary::Normal(Velocity);
-				FRotator XNormalRotator = UKismetMathLibrary::MakeRotFromX(NormalVector);
-				FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(TestRotator, XNormalRotator);
-				//LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
-				//AI->BBComponent->SetValueAsRotator("LookAtRotator", LookAt);				
-
-				//float LookAtYaw = LookAt.Yaw;
-
-				//MiniBoss->RotateYaw = CompleteRotator.Yaw;
-
-				//GLog->Log(FString::Printf(TEXT("%0.1f"),LookAtYaw));
+				LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+				AI->BBComponent->SetValueAsRotator("LookAtRotator", LookAt);
+				MiniBoss->RotateYaw = LookAt.Yaw;
 			}
 		}		
 	}
@@ -53,11 +40,6 @@ void UBTTask_MBRotateState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 *
 
 	if (MiniBoss)
 	{
-		//GLog->Log(FString::Printf(TEXT("Angle")));
-		if (UKismetMathLibrary::EqualEqual_RotatorRotator(InitRotator, LookAt, 10.0f))
-		{
-			//GLog->Log(FString::Printf(TEXT("`Angle 10")));
-			//MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;
-		}
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }

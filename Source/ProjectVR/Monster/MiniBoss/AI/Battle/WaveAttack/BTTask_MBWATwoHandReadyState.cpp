@@ -5,6 +5,16 @@
 
 EBTNodeResult::Type UBTTask_MBWATwoHandReadyState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
-	GLog->Log(FString::Printf(TEXT("공격 패턴 2 가로베기 준비 상태 진입")));
+	AMiniBossAIController* AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
+
+	if (AI)
+	{
+		AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
+
+		if (MiniBoss)
+		{
+			MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::TwoHandWidthStart;
+		}
+	}
 	return EBTNodeResult::Succeeded;
 }
