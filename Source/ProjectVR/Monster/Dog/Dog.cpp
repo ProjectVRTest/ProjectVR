@@ -95,7 +95,6 @@ ADog::ADog()
 	PawnSensing->SensingInterval = 0.1f;
 
 	bIsAttack = false;
-	OnLandFlag = false;		// 물었다 떨어지고 나서 땅에 붙을때 실행되는 것들을 정의
 	bOnLand = true;			// 땅에 있는지
 	Landing = false;		// 착지인지아닌지
 
@@ -124,6 +123,8 @@ void ADog::BeginPlay()
 
 	CurrentDogState = EDogState::Idle;
 	CurrentDogAnimState = EDogAnimState::Idle;
+	CurrentDogBattleState = EDogBattleState::Nothing;
+	CurrentDogAirState = EDogAirState::Nothing;
 	CurrentDogJumpState = EDogJumpState::Nothing;
 	CurrentDogCircleState = EDogCircleState::Nothing;
 
@@ -138,40 +139,7 @@ void ADog::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// 틱으로 HP가 0미만인게 확인되면 평시상태로 죽음
-	if (CurrentHP < 0.0f && bOnLand)
-	{
-		DogAttackCollision->bGenerateOverlapEvents = false;
-		CurrentDogState = EDogState::Death;
-		CurrentDogAnimState = EDogAnimState::StandDeath;
-
-		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		if (Character->DogArray.Contains(this))
-			Character->DogArray.Remove(this);
-	}
-
-	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, GetCapsuleComponent()->GetComponentRotation().Yaw, 0.0f));
-
-	FFindFloorResult FloorDistance;;
-	GetCharacterMovement()->ComputeFloorDist(GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34, 0);
-
-	if (FloorDistance.FloorDist < 3.0f)
-		bOnLand = true;
-	else
-		bOnLand = false;
-
 	AI = Cast<ADogAIController>(GetController());
-
-	if (OnLandFlag && AI)
-	{
-		if (AI->BBComponent->GetValueAsFloat("DistanceWithLand") < 3.0f)
-		{
-			// 땅에 붙으면 실행됨 -> 날라가는 액션이 추가되면 #1, #2만 남겨두고 나머지는 태스크 추가해서 실행할 것
-			GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
-			GetCapsuleComponent()->SetSimulatePhysics(false);		// #1
-			OnLandFlag = false;		// #2
-		}
-	}
 
 	// 블랙보드에 매 틱마다 정보 전달
 	if (AI)
@@ -180,80 +148,15 @@ void ADog::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentDogAnimState", (uint8)CurrentDogAnimState);
 		AI->BBComponent->SetValueAsEnum("CurrentDogJumpState", (uint8)CurrentDogJumpState);
 		AI->BBComponent->SetValueAsEnum("CurrentDogCircleState", (uint8)CurrentDogCircleState);
-		AI->BBComponent->SetValueAsFloat("DistanceWithLand", FloorDistance.FloorDist);
+		AI->BBComponent->SetValueAsEnum("CurrentDogBattleState", (uint8)CurrentDogBattleState);
+		AI->BBComponent->SetValueAsEnum("CurrentDogAirState", (uint8)CurrentDogAirState);
 		AI->BBComponent->SetValueAsBool("bIsAttack", bIsAttack);
 		AI->BBComponent->SetValueAsBool("bHasAttachActor", AttachActor);
 		AI->BBComponent->SetValueAsBool("bOnLand", bOnLand);
-		AI->BBComponent->SetValueAsBool("Landing", Landing);
 		AI->BBComponent->SetValueAsBool("DeathFlag", bIsDeath);
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 	}
 
-	if (AttachActor)
-	{
-		// 위치 각도 조정
-		SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
-		SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-
-		bOnLand = false;		// 팔에 붙어있으니까 땅에 없음
-
-		FVector ForceVector = GetMesh()->GetPhysicsAngularVelocity();
-		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(AttachActor);
-
-		// 포인트 식으로 일정 횟수 누적되면 개가 떨어짐 8이 적당함 - 각도만 틀면 떨어지는것 방지
-		if (GetMesh()->GetPhysicsLinearVelocity().Size() >= 300.0f && GetMesh()->GetPhysicsAngularVelocity().Size() >= 400.0f)
-		{
-			point++;
-		}
-		else
-		{
-			if (point > 0 && prelinear < 300 && preangular < 400)		// 전 속도의 최소한계 - GetPhysicsVelocity는 역으로 이동하면 값이 작아짐 -> 전과 비교를해서 낙차가 작으면 포인트 감소
-				point--;
-		}
-
-		prelinear = GetMesh()->GetPhysicsLinearVelocity().Size();
-		preangular = GetMesh()->GetPhysicsAngularVelocity().Size();
-
-		if (point >= 8 || bpunchDetach)
-		{
-			CurrentDogState = EDogState::Hurled;
-			CurrentDogAnimState = EDogAnimState::Nothing;
-			CurrentDogJumpState = EDogJumpState::Nothing;
-			CurrentDogCircleState = EDogCircleState::Nothing;
-
-			point = 0;
-			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// 뗌
-			AttachActor = nullptr;		// 개의 붙은 액터 초기화
-			bIsAttack = false;			// 공격상태 아님/
-			bpunchDetach = false;
-			bIsDetach = true;
-
-			// 캐릭터의 오른손의 붙어있는 액터를 초기화
-			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-			if (Character)
-			{
-				Character->RightHand->AttachDog = nullptr;
-
-				// 날라가는 방향
-				FVector Direction = Character->Camera->GetUpVector() + Character->Camera->GetForwardVector();
-
-				// 날라가는 힘을 조절
-				GetCapsuleComponent()->SetPhysicsLinearVelocity(Direction* 500.0f);
-				GetCapsuleComponent()->SetPhysicsAngularVelocity(Direction* 500.0f);
-				GetCapsuleComponent()->SetSimulatePhysics(true);
-				GetCapsuleComponent()->AddForce(Direction * 500.0f);
-
-				OnLandFlag = true;		// 바닥에 닿았을 때 한번만 실행
-
-				// 물기 조건 초기화
-				Character->DogArray.Remove(this);
-				bInAttackplace = false;
-				once = false;
-				bIsAttack = false;
-				AttachActor = nullptr;
-			}
-		}
-	}
 }
 
 // Called to bind functionality to input

@@ -14,5 +14,5 @@ class PROJECTVR_API UButtonInteraction : public UWidgetInteractionComponent
 {
 	GENERATED_BODY()
 
-	
+		// 안씀 나중에 삭제할 것
 };
