@@ -14,7 +14,8 @@ class PROJECTVR_API UBTTask_D_B_J_SetBiteCollision : public UBTTask_BlackboardBa
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Activation / Inactivation")
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Activation / InActivation")
 		bool check;
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
