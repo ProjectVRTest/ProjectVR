@@ -17,32 +17,42 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 		
 		if (MiniBoss)
 		{
-			int RandomPattern = FMath::RandRange(1, 15);
-			
-			if (RandomPattern > 0 && RandomPattern <8)
+			float Distance = AI->BBComponent->GetValueAsFloat("Distance");
+
+			if (Distance < 300.0f)
 			{
-				GLog->Log(FString::Printf(TEXT("ShorAttack")));
-				MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
-				MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
-				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
-				MiniBoss->CurrentAttackState = EMiniBossAttackState::ShortAttack;
+				int RandomPattern = FMath::RandRange(1, 15);
+
+				if (RandomPattern > 0 && RandomPattern <8)
+				{
+					GLog->Log(FString::Printf(TEXT("ShorAttack")));
+					MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
+					MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
+					MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
+					MiniBoss->CurrentAttackState = EMiniBossAttackState::ShortAttack;
+				}
+				else if (RandomPattern > 7 && RandomPattern < 12)
+				{
+					MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
+					MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
+					MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::TwoHandWidthReady;
+					MiniBoss->CurrentAttackState = EMiniBossAttackState::WaveAttack;
+				}
+				else if (RandomPattern > 11)
+				{
+					AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 3.0f);
+					MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
+					MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
+					MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::ComboAttackStart;
+					MiniBoss->CurrentAttackState = EMiniBossAttackState::ComboAttack;
+				}
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
 			}
-			else if (RandomPattern > 7 && RandomPattern < 12)
+			else
 			{
-				MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
-				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
-				MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::TwoHandWidthReady;
-				MiniBoss->CurrentAttackState = EMiniBossAttackState::WaveAttack;
-			}
-			else if (RandomPattern > 11)
-			{
-				AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 3.0f);
-				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
-				MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
-				MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::ComboAttackStart;
-				MiniBoss->CurrentAttackState = EMiniBossAttackState::ComboAttack;
-			}
-			MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
+				MiniBoss->CurrentState = EMiniBossState::Chase;
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+			}			
 		}
 	}
 	return EBTNodeResult::Succeeded;
