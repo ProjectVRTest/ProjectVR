@@ -587,40 +587,4 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 								//	HandWidget->GainHP(30);		// 회복
 								//}
 	}
-
-	if (OtherComp->ComponentHasTag("DogAttackCollision"))
-	{
-
-		ARightHandMotionController* RightController = Cast<ARightHandMotionController>(RightHand);
-
-		if (!RightController->AttachDog)
-		{
-			ADog* Dog = Cast<ADog>(OtherActor);
-			if (Dog)
-			{
-				RightController->AttachDog = Dog;
-				Dog->bIsAttack = true;
-				Dog->DogAttackCollision->SetActive(false);
-
-				// KeepRelative : 손의 각도가 같으면 붙는 각도도 일정함
-				FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
-
-				Dog->AttachToComponent(RightController->AttachDogPosition, AttachRules);
-
-				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);
-
-
-				Dog->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-				Dog->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
-
-				Dog->CurrentDogState = EDogState::Bite;
-				Dog->CurrentDogAnimState = EDogAnimState::Nothing;
-				Dog->CurrentDogJumpState = EDogJumpState::Nothing;
-				Dog->CurrentDogCircleState = EDogCircleState::Nothing;
-
-				Dog->AttachActor = this;
-				Dog->DogAttackCollision->bGenerateOverlapEvents = true;
-			}
-		}
-	}
 }

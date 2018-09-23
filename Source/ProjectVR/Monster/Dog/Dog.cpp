@@ -128,6 +128,8 @@ void ADog::BeginPlay()
 	CurrentDogJumpState = EDogJumpState::Nothing;
 	CurrentDogCircleState = EDogCircleState::Nothing;
 
+	DogAttackCollision->OnComponentBeginOverlap.AddDynamic(this, &ADog::OnAttackCollisionOverlap);
+
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &ADog::OnSeePlayer);
@@ -150,8 +152,8 @@ void ADog::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentDogCircleState", (uint8)CurrentDogCircleState);
 		AI->BBComponent->SetValueAsEnum("CurrentDogBattleState", (uint8)CurrentDogBattleState);
 		AI->BBComponent->SetValueAsEnum("CurrentDogAirState", (uint8)CurrentDogAirState);
-		AI->BBComponent->SetValueAsBool("bIsAttack", bIsAttack);
-		AI->BBComponent->SetValueAsBool("bHasAttachActor", AttachActor);
+		AI->BBComponent->SetValueAsObject("AttachActor", AttachActor);
+		AI->BBComponent->SetValueAsBool("bIsBiting", bIsBiting);
 		AI->BBComponent->SetValueAsBool("bOnLand", bOnLand);
 		AI->BBComponent->SetValueAsBool("DeathFlag", bIsDeath);
 		AI->BBComponent->SetValueAsEnum("HP", CurrentHP);
@@ -189,6 +191,42 @@ void ADog::OnSeePlayer(APawn * Pawn)
 	}
 }
 
+
+void ADog::OnAttackCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	if (OtherComp->ComponentHasTag("Head"))
+	{
+		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+		if (Character)
+		{
+			ARightHandMotionController* RightController = Cast<ARightHandMotionController>(Character->RightHand);
+
+			if (!RightController->AttachDog)
+			{
+				ADog* Dog = Cast<ADog>(OtherActor);
+				if (Dog)
+				{
+					RightController->AttachDog = this;
+
+					Dog->DogAttackCollision->bGenerateOverlapEvents = false;			// 입 콜리전 비활성화
+
+					// KeepRelative : 손의 각도가 같으면 붙는 각도도 일정함
+					FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
+
+					Dog->AttachToComponent(RightController->AttachDogPosition, AttachRules);
+
+					Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);			// Neck이하는 모조리 피직스 부여
+
+					Dog->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+					Dog->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+
+					Dog->AttachActor = RightController;
+				}
+			}
+		}
+	}
+}
 
 float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {

@@ -31,6 +31,7 @@ EBTNodeResult::Type UBTTask_D_B_A_SituationCheck::ExecuteTask(UBehaviorTreeCompo
 	if (AI)
 	{
 		Dog = Cast<ADog>(AI->GetPawn());
+		Dog->AttachActor = NULL;					// 공중 상태이므로 현재 물고있는 액터 존재안함
 	}
 	return EBTNodeResult::InProgress;			// Tick
 }
@@ -55,6 +56,8 @@ void UBTTask_D_B_A_SituationCheck::TickTask(UBehaviorTreeComponent & OwnerComp, 
 			{
 				if (AI->BBComponent->GetValueAsInt("HP") <= 0)		// 커스텀 대기시간(죽음) <= 0)
 					bIsDeath = true;		// 죽음
+				else
+					bIsDeath = false;		// 생존
 
 				if (bIsDeath)
 				{
@@ -65,6 +68,7 @@ void UBTTask_D_B_A_SituationCheck::TickTask(UBehaviorTreeComponent & OwnerComp, 
 				{
 					Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);		// 동작가능하게 함
 					Dog->GetCapsuleComponent()->SetSimulatePhysics(false);				// 동작 가능하게 함
+
 					AI->BBComponent->SetValueAsFloat("CustomWaitTime", 0.3f);		// 커스텀 대기시간(일어나는시간)
 					Dog->CurrentDogAirState = EDogAirState::GetUp;
 					FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);				// 틱 종료

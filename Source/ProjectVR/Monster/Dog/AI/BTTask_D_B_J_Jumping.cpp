@@ -56,13 +56,12 @@ void UBTTask_D_B_J_Jumping::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 *
 			Dog->CurrentDogJumpState = EDogJumpState::JumpRoof;
 
 			// 개가 플레이어를 물었는지를 판단하고 Biting 상태로 바꿔줌
-			// 플레이어의 머리와 트리거됐다는 플래그를 받음
-			// 플래그가 True일 때 
-			// {
-			// 입 콜리전 비활성화
-			// Dog->CurrentDogBattleState = EDogBattleState::Biting;
-			// FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);				// 틱 종료
-			// }
+			if (AI->BBComponent->GetValueAsBool("bIsBiting"))
+			{
+				Dog->DogAttackCollision->bGenerateOverlapEvents = false;			// 입 콜리전 비활성화
+				Dog->CurrentDogBattleState = EDogBattleState::Biting;
+				FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);				// 틱 종료
+			}
 		}
 
 		// 땅에 착지한 상태

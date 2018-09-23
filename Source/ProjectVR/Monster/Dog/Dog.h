@@ -68,6 +68,7 @@ public:
 	bool bIsDetach;
 	bool bOnLand;
 	bool Landing;
+	bool bIsBiting;					// 물었는지를 판단
 
 	bool bIsLeftWander;
 	bool bIsRightWander;
@@ -83,6 +84,10 @@ public:
 
 	int point;
 	float prelinear, preangular;
+
+	UFUNCTION()
+		void OnAttackCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 데미지를 전달하기위한 함수
 
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// 데미지 받기
