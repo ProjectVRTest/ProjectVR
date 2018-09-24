@@ -29,7 +29,13 @@ EBTNodeResult::Type UBTTask_D_B_B_Biting::ExecuteTask(UBehaviorTreeComponent & O
 	if (AI)
 	{
 		Dog = Cast<ADog>(AI->GetPawn());
+
+		if (AI->BBComponent->GetValueAsObject("AttachActor"))
+			RightController = Cast<ARightHandMotionController>(AI->BBComponent->GetValueAsObject("AttachActor"));
+		if (RightController)
+			Player = Cast<AMotionControllerCharacter>(RightController->HandOwner);
 	}
+
 	return EBTNodeResult::InProgress;			// Tick
 }
 
@@ -37,36 +43,27 @@ void UBTTask_D_B_B_Biting::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * 
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
-	if (Dog->AttachActor)
+	if (Dog->AttachActor && Player)
 	{
 		// 일정 스택 이상일 때와 체력이 0이하일 때, 떼어내는 조건
-		if (AI->BBComponent->GetValueAsInt("DetachStack") >= MaxStack || AI->BBComponent->GetValueAsFloat("HP") <= 0)
+		if (RightController->stack >= MaxStack || AI->BBComponent->GetValueAsFloat("HP") <= 0)
 		{
-			if (AI->BBComponent->GetValueAsObject("AttachActor"))
-			{
-				ARightHandMotionController* RightController = Cast<ARightHandMotionController>(AI->BBComponent->GetValueAsObject("AttachActor"));
-				if (RightController)
-				{
-					AMotionControllerCharacter* Player = Cast<AMotionControllerCharacter>(RightController->HandOwner);
-					if (Player)
-					{
-						// 날라가는 방향
-						FVector Direction = Player->Camera->GetUpVector() + Player->Camera->GetForwardVector();
+			// 날라가면 다음 개가 공격할 수 있도록 배열에서 뺌
+			if (Player->DogArray.Find(Dog))			// 배열에 개가 있으면
+				Player->DogArray.Remove(Dog);		// 제거
 
-						// 날라가는 힘을 조절
-						Dog->GetCapsuleComponent()->SetPhysicsLinearVelocity(Direction* 500.0f);
-						Dog->GetCapsuleComponent()->SetPhysicsAngularVelocity(Direction* 500.0f);
-						Dog->GetCapsuleComponent()->SetSimulatePhysics(true);
-						Dog->GetCapsuleComponent()->AddForce(Direction * 500.0f);
+			// 날라가는 방향
+			FVector Direction = Player->Camera->GetUpVector() + Player->Camera->GetForwardVector();
 
-						Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);		// 힘 빼줌
-						Dog->CurrentDogBattleState = EDogBattleState::Air;				// 공중 상태
-						FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);				// 틱 종료
-					}
-				}
-			}
+			// 날라가는 힘을 조절
+			Dog->GetCapsuleComponent()->SetPhysicsLinearVelocity(Direction* 500.0f);
+			Dog->GetCapsuleComponent()->SetPhysicsAngularVelocity(Direction* 500.0f);
+			Dog->GetCapsuleComponent()->SetSimulatePhysics(true);
+			Dog->GetCapsuleComponent()->AddForce(Direction * 500.0f);
 
-
+			Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);		// 힘 빼줌
+			Dog->CurrentDogBattleState = EDogBattleState::Air;				// 공중 상태
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);				// 틱 종료
 		}
 	}
 }

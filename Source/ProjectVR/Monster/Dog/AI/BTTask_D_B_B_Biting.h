@@ -17,6 +17,8 @@ class PROJECTVR_API UBTTask_D_B_B_Biting : public UBTTask_BlackboardBase
 public:
 	class ADogAIController* AI;
 	class ADog* Dog;
+	class ARightHandMotionController* RightController;
+	class AMotionControllerCharacter* Player;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stack")
 		int MaxStack;

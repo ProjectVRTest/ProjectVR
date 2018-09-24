@@ -82,6 +82,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sword")
 		class APlayerSword* Sword;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
+		int stack;				// 개를 떨어뜨리기위한 스택
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
+		float prelinear;				// 개를 떨어뜨리기위한 스택
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
+		float preangular;				// 개를 떨어뜨리기위한 스택
+
 	//오른손에 붙인 검이 보이는지 안보이는지 판단해줄 변수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sword")
 		bool VisibleSwordFlag;

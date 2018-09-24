@@ -28,6 +28,10 @@
 
 #include "Components/WidgetInteractionComponent.h"
 
+#include "Monster/Dog/Dog.h"
+#include "Monster/Dog/DogAIController.h"
+
+
 // Sets default values
 ARightHandMotionController::ARightHandMotionController()
 {
@@ -199,6 +203,20 @@ void ARightHandMotionController::Tick(float DeltaTime)
 				HandState = E_HandState::Open; //오픈상태로 바꾼다.
 			}
 		}
+	}
+
+	if (AttachDog)
+	{
+		// 포인트 식으로 일정 횟수 누적되면 개가 떨어짐 8이 적당함 - 각도만 틀면 떨어지는것 방지
+		if (HandMesh->GetPhysicsLinearVelocity().Size() >= 300.0f && HandMesh->GetPhysicsAngularVelocity().Size() >= 400.0f)
+			stack++;
+		else
+			// 전 속도의 최소한계 - GetPhysicsVelocity는 역으로 이동하면 값이 작아짐 -> 전과 비교를해서 낙차가 작으면 포인트 감소
+			if (stack > 0 && prelinear < 300 && preangular < 400)
+				stack--;
+
+		prelinear = HandMesh->GetPhysicsLinearVelocity().Size() - HandOwner->GetVelocity().Size();
+		preangular = HandMesh->GetPhysicsAngularVelocity().Size();
 	}
 }
 

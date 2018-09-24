@@ -342,7 +342,7 @@ void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCh
 	if (RagdollDog->bAttack)
 	{
 		RagdollDog->CurrentDogState = EDogState::Battle;
-		RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
+		RagdollDog->CurrentDogBattleState = EDogBattleState::JumpAttack;
 
 		if (!RagdollDog->bIsAttack)
 		{
