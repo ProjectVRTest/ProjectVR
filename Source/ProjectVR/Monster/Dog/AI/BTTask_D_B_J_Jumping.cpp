@@ -8,6 +8,7 @@
 #include "Components/BoxComponent.h"									// 입 콜리전 활성화/비활성화를 위한 컴포넌트
 #include "Components/SkeletalMeshComponent.h"						// 개의 래그돌화를 위해서 필요한 컴포넌트
 #include "BehaviorTree/BlackboardComponent.h"							// 커스텀 대기시간
+#include "MyCharacter/MotionControllerCharacter.h"
 
 void UBTTask_D_B_J_Jumping::InitializeFromAsset(UBehaviorTree & Asset)
 {
@@ -30,6 +31,8 @@ EBTNodeResult::Type UBTTask_D_B_J_Jumping::ExecuteTask(UBehaviorTreeComponent & 
 	if (AI)
 	{
 		Dog = Cast<ADog>(AI->GetPawn());
+		AActor* Player = Cast<AActor>(AI->BBComponent->GetValueAsObject(TEXT("Player")));
+		MyCharacter = Cast<AMotionControllerCharacter>(Player);
 	}
 	return EBTNodeResult::InProgress;			// Tick
 }
@@ -41,7 +44,7 @@ void UBTTask_D_B_J_Jumping::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 *
 	if (Dog)
 	{
 		// 체력 검사
-		if (AI->BBComponent->GetValueAsInt("HP") <= 0)		// 커스텀 대기시간(죽음) <= 0)
+		if (AI->BBComponent->GetValueAsFloat("HP") <= 0.0f)		// 커스텀 대기시간(죽음) <= 0)
 		{
 			bIsDeath = true;		// 죽음
 			Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);			// Neck이하는 모조리 피직스를 줌
@@ -59,6 +62,7 @@ void UBTTask_D_B_J_Jumping::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 *
 			if (AI->BBComponent->GetValueAsBool("bIsBiting"))
 			{
 				Dog->DogAttackCollision->bGenerateOverlapEvents = false;			// 입 콜리전 비활성화
+				Dog->CurrentDogState = EDogState::Battle;
 				Dog->CurrentDogBattleState = EDogBattleState::Biting;
 				FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);				// 틱 종료
 			}
@@ -70,7 +74,7 @@ void UBTTask_D_B_J_Jumping::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 *
 			Dog->GetCharacterMovement()->ComputeFloorDist(Dog->GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34.0f);
 
 			// 거리차가 만족하면 실행
-			if (FloorDistance.FloorDist < 230.0f)
+			if (FloorDistance.FloorDist < 2.3f)
 			{
 				if (bIsDeath)
 				{
@@ -79,10 +83,13 @@ void UBTTask_D_B_J_Jumping::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 *
 				}
 				else
 				{
-					AI->BBComponent->SetValueAsFloat("CustomWaitTime", 0.3f);		// 커스텀 대기시간(착지)
+					if (MyCharacter->DogArray.Contains(Dog))			// 배열에 개가 있으면
+					{
+						MyCharacter->DogArray.Remove(Dog);		// 제거
+					}
+					AI->BBComponent->SetValueAsFloat("CustomWaitTime", 1.0f);		// 커스텀 대기시간(착지)
 					Dog->DogAttackCollision->bGenerateOverlapEvents = false;
 					Dog->CurrentDogJumpState = EDogJumpState::JumpEnd;				// 착지
-					Dog->CurrentDogBattleState = EDogBattleState::Circle;					// 다시 배회상태
 					FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);				// 틱 종료
 				}
 			}

@@ -95,7 +95,7 @@ UENUM(BlueprintType)
 enum class EDogBattleState : uint8
 {
 	Circle = 0 UMETA(DisplayName = "Circle"),
-	JumpAttack = 1 UMETA(DisplayName = "JumpStart"),
+	JumpAttack = 1 UMETA(DisplayName = "JumpAttack"),
 	Biting = 2 UMETA(DisplayName = "Biting"),
 	Air = 3 UMETA(DisplayName = "Air"),
 	Nothing = 4 UMETA(DisplayName = "Nothing")

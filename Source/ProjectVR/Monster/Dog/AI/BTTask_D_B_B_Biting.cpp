@@ -45,12 +45,18 @@ void UBTTask_D_B_B_Biting::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * 
 
 	if (Dog->AttachActor && Player)
 	{
+
+		Dog->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+		Dog->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+
 		// 일정 스택 이상일 때와 체력이 0이하일 때, 떼어내는 조건
 		if (RightController->stack >= MaxStack || AI->BBComponent->GetValueAsFloat("HP") <= 0)
 		{
 			// 날라가면 다음 개가 공격할 수 있도록 배열에서 뺌
-			if (Player->DogArray.Find(Dog))			// 배열에 개가 있으면
-				Player->DogArray.Remove(Dog);		// 제거
+			if (Player->DogArray.Contains(Dog))			// 배열에 개가 있으면
+				Player->DogArray.Remove(Dog);				// 제거
+
+			Dog->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// 뗌
 
 			// 날라가는 방향
 			FVector Direction = Player->Camera->GetUpVector() + Player->Camera->GetForwardVector();
@@ -63,6 +69,11 @@ void UBTTask_D_B_B_Biting::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * 
 
 			Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);		// 힘 빼줌
 			Dog->CurrentDogBattleState = EDogBattleState::Air;				// 공중 상태
+			
+			AI->BBComponent->SetValueAsBool("bIsBiting", false);
+			RightController->stack = 0;
+			RightController->AttachDog = nullptr;
+
 			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);				// 틱 종료
 		}
 	}

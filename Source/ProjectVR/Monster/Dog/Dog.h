@@ -61,7 +61,7 @@ public:
 		class UBoxComponent* DogAttackCollision;
 
 	bool CurrentFalling;
-	bool bIsAttack;
+
 	bool OnLandFlag;
 	bool bpunchDetach;
 	bool bIsDeath;

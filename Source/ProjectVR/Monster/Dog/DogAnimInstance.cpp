@@ -47,7 +47,6 @@ void UDogAnimInstance::AnimNotify_JumpStart(UAnimNotify * Notify)
 
 		if (Target)
 		{
-			RagdollDog->bIsAttack = true;
 			RagdollDog->DogAttackCollision->SetActive(true);
 			FVector LaunchVector;
 			FVector GoalVector = Target->Camera->GetComponentLocation();

@@ -15,6 +15,8 @@ class PROJECTVR_API UBTTask_D_B_J_Jumping : public UBTTask_BlackboardBase
 	GENERATED_BODY()
 	
 public:
+	class AMotionControllerCharacter* MyCharacter;
+
 	class ADogAIController* AI;
 	class ADog* Dog;
 

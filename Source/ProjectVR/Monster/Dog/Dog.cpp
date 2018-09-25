@@ -42,7 +42,7 @@ ADog::ADog()
 	{
 		GetMesh()->SetSkeletalMesh(MonsterMesh.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree>Monster_BehaviorTree(TEXT("BehaviorTree'/Game/Blueprints/Monster/Dog/AI/RagdollDogBT.RagdollDogBT'"));
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree>Monster_BehaviorTree(TEXT("BehaviorTree'/Game/Blueprints/Monster/Dog/AI/RagdollDogBT_2.RagdollDogBT_2'"));
 	if (Monster_BehaviorTree.Succeeded())
 	{
 		BehaviorTree = Monster_BehaviorTree.Object;
@@ -50,17 +50,17 @@ ADog::ADog()
 
 	//기존에 사용 하던 UAnimBlueprint는 패키징 이후에 엔진이 찾을수 없는것으로 판단
 	//새롭게 UClass로 오브젝트를 찾고 꽂아 넣는 형식으로 바꿈
-	static ConstructorHelpers::FObjectFinder<UClass>Monster_AnimBlueprint(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Dog/Blueprints2/ABP_Dog.ABP_Dog_C'"));
+	static ConstructorHelpers::FObjectFinder<UClass>Monster_AnimBlueprint(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Dog/Blueprints2/ABP_Dog_3.ABP_Dog_3_C'"));
 
 	if (Monster_AnimBlueprint.Succeeded())
 	{
 		UClass* DogAnimBlueprint = Monster_AnimBlueprint.Object;
-		
+
 		if (DogAnimBlueprint)
 		{
 			GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 			GetMesh()->SetAnimInstanceClass(DogAnimBlueprint);
-		}		
+		}
 	}
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface>Monster_Material(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Dog/Materials/M_Dog.M_Dog'"));
@@ -82,8 +82,8 @@ ADog::ADog()
 	GetMesh()->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 
 	DogAttackCollision->SetCollisionProfileName(TEXT("OverlapAll"));
-	DogAttackCollision->SetRelativeLocation(FVector(10.0f, -8.0f, 2.0f));
-	DogAttackCollision->SetRelativeScale3D(FVector(0.8f, 0.8f, 0.8f));
+	DogAttackCollision->SetRelativeLocation(FVector(10.0f, -10.0f, 0.0f));
+	DogAttackCollision->SetRelativeScale3D(FVector(0.6f, 0.6f, 0.6f));
 	DogAttackCollision->SetActive(false);
 	DogAttackCollision->ComponentTags.Add("DogAttackCollision");
 	DogAttackCollision->bGenerateOverlapEvents = false;
@@ -94,7 +94,6 @@ ADog::ADog()
 	PawnSensing->SightRadius = 1200.0f;
 	PawnSensing->SensingInterval = 0.1f;
 
-	bIsAttack = false;
 	bOnLand = true;			// 땅에 있는지
 	Landing = false;		// 착지인지아닌지
 
@@ -142,7 +141,9 @@ void ADog::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	AI = Cast<ADogAIController>(GetController());
-
+	FFindFloorResult FloorDistance;
+	GetCharacterMovement()->ComputeFloorDist(GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34.0f);
+	
 	// 블랙보드에 매 틱마다 정보 전달
 	if (AI)
 	{
@@ -153,10 +154,9 @@ void ADog::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentDogBattleState", (uint8)CurrentDogBattleState);
 		AI->BBComponent->SetValueAsEnum("CurrentDogAirState", (uint8)CurrentDogAirState);
 		AI->BBComponent->SetValueAsObject("AttachActor", AttachActor);
-		AI->BBComponent->SetValueAsBool("bIsBiting", bIsBiting);
 		AI->BBComponent->SetValueAsBool("bOnLand", bOnLand);
 		AI->BBComponent->SetValueAsBool("DeathFlag", bIsDeath);
-		AI->BBComponent->SetValueAsEnum("HP", CurrentHP);
+		AI->BBComponent->SetValueAsFloat("HP", CurrentHP);
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 	}
 
@@ -178,7 +178,7 @@ void ADog::OnSeePlayer(APawn * Pawn)
 	{
 		ADogAIController* AI = Cast<ADogAIController>(GetController());
 
-		if ( AI && !AI->BBComponent->GetValueAsObject("Player"))
+		if (AI && !AI->BBComponent->GetValueAsObject("Player"))
 		{
 			Target = Pawn;
 			CurrentDogState = EDogState::Chase;
@@ -204,25 +204,22 @@ void ADog::OnAttackCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor
 
 			if (!RightController->AttachDog)
 			{
-				ADog* Dog = Cast<ADog>(OtherActor);
-				if (Dog)
-				{
-					RightController->AttachDog = this;
+				RightController->AttachDog = this;
 
-					Dog->DogAttackCollision->bGenerateOverlapEvents = false;			// 입 콜리전 비활성화
+				DogAttackCollision->bGenerateOverlapEvents = false;			// 입 콜리전 비활성화
 
-					// KeepRelative : 손의 각도가 같으면 붙는 각도도 일정함
-					FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
+				// KeepRelative : 손의 각도가 같으면 붙는 각도도 일정함
+				FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
 
-					Dog->AttachToComponent(RightController->AttachDogPosition, AttachRules);
+				AttachToComponent(RightController->AttachDogPosition, AttachRules);
 
-					Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);			// Neck이하는 모조리 피직스 부여
+				GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);			// Neck이하는 모조리 피직스 부여
 
-					Dog->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-					Dog->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+				SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+				SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 
-					Dog->AttachActor = RightController;
-				}
+				AttachActor = RightController;
+				AI->BBComponent->SetValueAsBool("bIsBiting", true);
 			}
 		}
 	}
