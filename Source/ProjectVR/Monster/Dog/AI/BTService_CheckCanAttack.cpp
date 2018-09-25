@@ -40,16 +40,10 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			UnAttackableRange(MyCharacter, RagdollDog);
 			return;
 		}
-		if (RagdollDog->AttachActor)
-		{
 
-			return;
-		}
 
 		if (RagdollDog && MyCharacter)
 		{
-			RagdollDog->bInAttackplace = false;
-
 			float StandardAngle = MyCharacter->Camera->GetComponentRotation().Yaw + 180.0f;		// 플레이어 기준 각도
 			float MonAngle = RagdollDog->GetActorRotation().Yaw + 180.0f;	// 개 기준 각도
 
@@ -313,8 +307,6 @@ void UBTService_CheckCanAttack::SetRandomCircle(ADog * RagdollDog)
 
 void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCharacter, ADog * RagdollDog)
 {
-	RagdollDog->bInAttackplace = true;
-
 	if (!MyCharacter->DogArray.Contains(RagdollDog))			// 배열에 개가 없으면
 		MyCharacter->DogArray.Add(RagdollDog);					// 추가;
 	
@@ -331,9 +323,11 @@ void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCh
 		}
 		return;
 	}
-		else
-			RagdollDog->bAttack = true;
-	
+	else
+	{
+		RagdollDog->bAttack = true;
+		UE_LOG(LogTemp, Log, TEXT("%s &&&&&&&&&&&&&&&&&&&&&&&&&&"), *RagdollDog->GetName());
+	}
 
 	if (RagdollDog->bAttack)
 	{
@@ -374,13 +368,12 @@ void UBTService_CheckCanAttack::UnAttackableRange(AMotionControllerCharacter * M
 {
 	if (!RagdollDog->AttachActor)		// 물고있을 때는 다른 개들이 물지 못하도록 배열삭제를 막음
 	{
-		RagdollDog->bInAttackplace = false;
-		//RagdollDog->once = false;
-
 		if (MyCharacter->DogArray.Contains(RagdollDog))			// 배열에 개가 있으면
+		{
 			MyCharacter->DogArray.Remove(RagdollDog);			// 제거
-		//if (MyCharacter->DogArray.Find(RagdollDog))			// 배열에 개가 있으면
-		//	MyCharacter->DogArray.Remove(RagdollDog);		// 제거
+		}
+
 	}
 }
 
+// UE_LOG(LogTemp, Log, TEXT("mmmmmmmmmmmmmmmmmmmm"));

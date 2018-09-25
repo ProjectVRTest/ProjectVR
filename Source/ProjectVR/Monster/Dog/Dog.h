@@ -73,7 +73,6 @@ public:
 	bool bIsLeftWander;
 	bool bIsRightWander;
 
-	bool bInAttackplace;
 
 	// TEST
 	bool once; // 서비스에서 배열에 딱 한번 들어가게 하기위해서 하는 것

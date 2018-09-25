@@ -49,7 +49,7 @@ void UBTTask_D_B_A_SituationCheck::TickTask(UBehaviorTreeComponent & OwnerComp, 
 		Dog->GetCharacterMovement()->ComputeFloorDist(Dog->GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34.0f);
 
 		// 거리차가 만족하면 실행
-		if (FloorDistance.FloorDist < 2.5f)
+		if (FloorDistance.FloorDist < 3.0f)
 		{
 			if (AI->BBComponent->GetValueAsFloat("HP") <= 0)		// 커스텀 대기시간(죽음) <= 0)
 				bIsDeath = true;		// 죽음
@@ -63,7 +63,8 @@ void UBTTask_D_B_A_SituationCheck::TickTask(UBehaviorTreeComponent & OwnerComp, 
 			{
 				Dog->GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, LookAt.Yaw, 0.0f));
 				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Head", true, true);		// 동작가능하게 함
-				Dog->GetCapsuleComponent()->SetSimulatePhysics(true);				// 동작 가능하게 함
+				Dog->GetMesh()->SetSimulatePhysics(true);
+				Dog->GetCapsuleComponent()->SetSimulatePhysics(false);				// 동작 가능하게 함
 				AI->BBComponent->SetValueAsFloat("CustomWaitTime", 2.5f);		// 커스텀 대기시간(죽음)
 				FinishLatentTask(OwnerComp, EBTNodeResult::Failed);				// 틱 종료
 			}

@@ -265,9 +265,10 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 {
 	if (OtherActor->ActorHasTag("Dog"))
 	{
+		
 		ADog* RagdollDog = Cast<ADog>(OtherActor);
 
-		if (RagdollDog && RagdollDog->AttachActor)		// 개가 물고 있지 않으면 왼손과 어떤 상호작용을 해도 무시할 수 있어야 함
+		if (HandOwner->RightHand->AttachDog == RagdollDog)	// 개가 물고 있지 않으면 왼손과 어떤 상호작용을 해도 무시할 수 있어야 함
 		{
 			if (GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
 			{

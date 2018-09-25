@@ -102,8 +102,6 @@ ADog::ADog()
 	bIsDeath = false;
 	bIsDetach = false;
 
-	bInAttackplace = false;
-
 	AttackWaite = false;
 
 	GetMesh()->SetSimulatePhysics(false);

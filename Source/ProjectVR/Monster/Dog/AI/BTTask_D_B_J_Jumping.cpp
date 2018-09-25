@@ -34,6 +34,9 @@ EBTNodeResult::Type UBTTask_D_B_J_Jumping::ExecuteTask(UBehaviorTreeComponent & 
 		AActor* Player = Cast<AActor>(AI->BBComponent->GetValueAsObject(TEXT("Player")));
 		MyCharacter = Cast<AMotionControllerCharacter>(Player);
 	}
+	// 공중 상태 초기화
+	CurrentFalling = false;
+	PreviousFalling = false;
 	return EBTNodeResult::InProgress;			// Tick
 }
 
@@ -48,6 +51,8 @@ void UBTTask_D_B_J_Jumping::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 *
 		{
 			bIsDeath = true;		// 죽음
 			Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);			// Neck이하는 모조리 피직스를 줌
+			AI->BBComponent->SetValueAsFloat("CustomWaitTime", 2.5f);		// 커스텀 대기시간(죽음)
+			FinishLatentTask(OwnerComp, EBTNodeResult::Failed);				// 틱 종료
 		}
 
 		FFindFloorResult FloorDistance;
@@ -74,27 +79,18 @@ void UBTTask_D_B_J_Jumping::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 *
 			Dog->GetCharacterMovement()->ComputeFloorDist(Dog->GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34.0f);
 
 			// 거리차가 만족하면 실행
-			if (FloorDistance.FloorDist < 2.3f)
+			if (FloorDistance.FloorDist < 3.0f)
 			{
-				if (bIsDeath)
-				{
-					AI->BBComponent->SetValueAsFloat("CustomWaitTime", 0.0f);		// 커스텀 대기시간(죽음)
-					FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);				// 틱 종료
-				}
-				else
-				{
-					if (MyCharacter->DogArray.Contains(Dog))			// 배열에 개가 있으면
-					{
-						MyCharacter->DogArray.Remove(Dog);		// 제거
-					}
-					AI->BBComponent->SetValueAsFloat("CustomWaitTime", 1.0f);		// 커스텀 대기시간(착지)
-					Dog->DogAttackCollision->bGenerateOverlapEvents = false;
-					Dog->CurrentDogJumpState = EDogJumpState::JumpEnd;				// 착지
-					FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);				// 틱 종료
-				}
+				AI->BBComponent->SetValueAsFloat("CustomWaitTime", 0.5f);		// 커스텀 대기시간(착지)
+				Dog->DogAttackCollision->bGenerateOverlapEvents = false;
+				Dog->CurrentDogJumpState = EDogJumpState::JumpEnd;				// 착지
+				CurrentFalling = false;
+				PreviousFalling = false;
+				FinishLatentTask(OwnerComp, EBTNodeResult::Failed);				// 틱 종료
+				
 			}
 		}
-
+		
 		PreviousFalling = CurrentFalling;
 	}
 }

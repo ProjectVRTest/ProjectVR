@@ -177,11 +177,11 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 		DogArray.Shrink();	// 메모리 최적화
 	}
 
-	ADog** Dog = DogArray.GetData();
+	/*ADog** Dog = DogArray.GetData();
 	for (int i = 0; i <DogArray.Num(); i++)
 	{
 	UE_LOG(LogClass, Warning, TEXT("%d - %s"),i+1, *Dog[i]->GetName());
-	}
+	}*/
 
 	//UE_LOG(LogClass, Warning, TEXT("Left2 ------ %f / %f / %f"), StandardAngle, Min, Max);
 	//if (SpringArm)

@@ -68,6 +68,7 @@ void UBTTask_D_B_B_Biting::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * 
 			Dog->GetCapsuleComponent()->AddForce(Direction * 500.0f);
 
 			Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);		// Èû »©ÁÜ
+			Dog->CurrentDogState = EDogState::Battle;
 			Dog->CurrentDogBattleState = EDogBattleState::Air;				// °øÁß »óÅÂ
 			
 			AI->BBComponent->SetValueAsBool("bIsBiting", false);
