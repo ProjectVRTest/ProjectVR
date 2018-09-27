@@ -22,7 +22,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UStaticMeshComponent* SwordMesh;				// 메쉬에 검을 붙일 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -35,8 +35,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
 		class AMotionControllerCharacter* SwordOwner;			// 오너 설정
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
-		float SwordPhysicsVelocityValue;			// 운동값
+
+	// 칼의 운동 값
+	FVector SwordCurrentPosistion, SwordMoveDelta, SwordPreviousPosistion, SwordMoveVelocity;
 
 	bool IsActivation;
 	

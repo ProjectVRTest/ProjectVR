@@ -163,7 +163,13 @@ void ALeftHandMotionController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//UE_LOG(LogTemp, Log, TEXT("%f"), GrabSphere->GetPhysicsLinearVelocity().Size());
+	if (HandOwner)
+	{
+		HandCurrentPosistion = GrabSphere->GetComponentLocation() - GetActorLocation();
+		HandMoveDelta = HandCurrentPosistion - HandPreviousPosistion;
+		HandMoveVelocity = HandMoveDelta / DeltaTime;
+		HandPreviousPosistion = HandCurrentPosistion;
+	}
 
 	//틱을 돌때마다 근처에 액터가 있는지, 붙은 액터가 있는지, 그립을 누른 상태인지 판별해서
 	//손의 애니메이션 상태를 업데이트 한다.
@@ -270,7 +276,7 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 
 		if (HandOwner->RightHand->AttachDog == RagdollDog)	// 개가 물고 있지 않으면 왼손과 어떤 상호작용을 해도 무시할 수 있어야 함
 		{
-			if (GrabSphere->GetPhysicsLinearVelocity().Size() >= 350.0f)
+			if (HandMoveVelocity.Size() >= 250.0f)
 			{
 				AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 

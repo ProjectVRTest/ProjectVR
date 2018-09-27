@@ -62,6 +62,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class AMotionControllerCharacter* HandOwner;
 
+	// 왼손의 운동 값
+	FVector HandCurrentPosistion, HandMoveDelta, HandPreviousPosistion, HandMoveVelocity;
+
 	// 상호작용
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UWidgetInteractionComponent* interaction;

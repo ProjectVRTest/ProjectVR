@@ -141,8 +141,6 @@ void ADog::Tick(float DeltaTime)
 	AI = Cast<ADogAIController>(GetController());
 	FFindFloorResult FloorDistance;
 	GetCharacterMovement()->ComputeFloorDist(GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34.0f);
-	
-	UE_LOG(LogTemp, Log, TEXT("------------- %f"), FloorDistance.FloorDist);
 
 	// 블랙보드에 매 틱마다 정보 전달
 	if (AI)
@@ -234,6 +232,7 @@ float ADog::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControll
 		return 0;
 	}
 
+	UE_LOG(LogTemp, Log, TEXT("------------- %s"),*DamageCauser->GetName());
 	CurrentHP -= Damage;
 
 	if (CurrentHP < 0.0f)
