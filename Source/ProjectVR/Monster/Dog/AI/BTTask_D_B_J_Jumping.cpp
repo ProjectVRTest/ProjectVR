@@ -51,6 +51,8 @@ void UBTTask_D_B_J_Jumping::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 *
 		{
 			bIsDeath = true;		// 죽음
 			Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);			// Neck이하는 모조리 피직스를 줌
+			Dog->GetMesh()->SetSimulatePhysics(true);
+			Dog->GetCapsuleComponent()->SetSimulatePhysics(false);				// 동작 가능하게 함
 			AI->BBComponent->SetValueAsFloat("CustomWaitTime", 2.5f);		// 커스텀 대기시간(죽음)
 			FinishLatentTask(OwnerComp, EBTNodeResult::Failed);				// 틱 종료
 		}

@@ -33,6 +33,7 @@ void UDogAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentDogJumpState = RagdollDog->CurrentDogJumpState;
 		CurrentDogCircleState = RagdollDog->CurrentDogCircleState;
 		CurrentDogAirState = RagdollDog->CurrentDogAirState;
+		height = RagdollDog->height;
 	}
 }
 

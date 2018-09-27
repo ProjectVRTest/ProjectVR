@@ -33,11 +33,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		FRotator LookAtRotator;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpData")
+		float height;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpData")
 		bool CurrentFalling;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpData")
 		bool PreviousFalling;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		bool onLand;
+
+
 
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeInitializeAnimation() override;
