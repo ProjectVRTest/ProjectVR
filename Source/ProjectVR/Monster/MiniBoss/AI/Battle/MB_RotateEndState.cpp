@@ -14,7 +14,7 @@ EBTNodeResult::Type UMB_RotateEndState::ExecuteTask(UBehaviorTreeComponent & Own
 
 		if (MiniBoss)
 		{
-			MiniBoss->SetActorRotation(MiniBoss->GetActorRotation() + AddRotator);
+			MiniBoss->RotateYaw = 0;
 		}
 	}
 

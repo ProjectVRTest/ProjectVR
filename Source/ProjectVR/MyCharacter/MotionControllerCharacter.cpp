@@ -116,10 +116,9 @@ void AMotionControllerCharacter::BeginPlay()
 
 	FName DeviceName = UHeadMountedDisplayFunctionLibrary::GetHMDDeviceName();
 
-	GLog->Log(DeviceName.ToString());
 	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
 	{
-		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Eye);
+		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
 	}
 
 	FActorSpawnParameters SpawnActorOption;
@@ -404,99 +403,6 @@ void AMotionControllerCharacter::AttackPointSet()
 
 	CalculatePoint = InitPoint;
 	CalculatePoint.X = InitPoint.X + 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint.X = InitPoint.X - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.Y = InitPoint.Y - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint.Y = InitPoint.Y + 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X + 200.0f;
-	CalculatePoint.Y = InitPoint.Y - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X + 200.0f;
-	CalculatePoint.Y = InitPoint.Y + 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X - 200.0f;
-	CalculatePoint.Y = InitPoint.Y - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X - 200.0f;
-	CalculatePoint.Y = InitPoint.Y + 200.0f;
 	Point = CalculatePoint;
 	Point.Z = Point.Z - 248.0f;
 

@@ -77,14 +77,13 @@ void UBTTask_MBBackWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8
 	{
 		int RandomLeftRightForce = FMath::RandRange(-1, 1);
 		MiniBoss->GetCharacterMovement()->AddImpulse((MiniBoss->GetActorForwardVector()*-500.0f)+MiniBoss->GetActorUpVector()*2.0f+(MiniBoss->GetActorRightVector()*500.0f*RandomLeftRightForce), true);
-		if (SumDelta > 0.5)
+		if (SumDelta > 0.8f)
 		{
 			MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
 			AfterImageOff();
 			GetWorld()->GetTimerManager().ClearTimer(AfterImageStartTimer);
 			GetWorld()->GetTimerManager().ClearTimer(AfterImageEndTimer);
-			MiniBoss->CurrentState = EMiniBossState::Chase;
-			MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+			MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::SwordWaveStart;
 			
 			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);			
 		}		
@@ -124,7 +123,7 @@ void UBTTask_MBBackWalkState::AfterImageOff()
 	if (MiniBoss)
 	{
 		MiniBoss->GetMesh()->SetMaterial(0, MiniBoss->DefaultMaterials);
-		MiniBoss->Sword->SwordMesh->SetMaterial(0, MiniBoss->DefaultMaterials);
+		MiniBoss->Sword->SwordMesh->SetMaterial(0, MiniBoss->Sword->DefaultMaterials);
 		IsAfterEffectOn = false;
 		AfterImageEnd->Deactivate();
 	}

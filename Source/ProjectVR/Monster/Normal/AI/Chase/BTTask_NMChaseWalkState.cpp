@@ -17,8 +17,8 @@ EBTNodeResult::Type UBTTask_NMChaseWalkState::ExecuteTask(UBehaviorTreeComponent
 		
 		if (MyCharacter)
 		{
-			FVector MovePoint = UNavigationSystem::GetRandomPointInNavigableRadius(GetWorld(), MyCharacter->Camera->GetComponentLocation(), 300.0f);
-			AI->BBComponent->SetValueAsObject("MovePoint", MyCharacter);
+			//FVector MovePoint = UNavigationSystem::GetRandomPointInNavigableRadius(GetWorld(), MyCharacter->Camera->GetComponentLocation(), 300.0f);
+			//AI->BBComponent->SetValueAsObject("MovePoint", MyCharacter);
 		}
 	}
 	return EBTNodeResult::Succeeded;

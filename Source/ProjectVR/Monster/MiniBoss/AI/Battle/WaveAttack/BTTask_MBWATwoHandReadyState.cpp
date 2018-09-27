@@ -13,7 +13,7 @@ EBTNodeResult::Type UBTTask_MBWATwoHandReadyState::ExecuteTask(UBehaviorTreeComp
 
 		if (MiniBoss)
 		{
-			MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::TwoHandWidthStart;
+			MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::WavebackWalk;
 		}
 	}
 	return EBTNodeResult::Succeeded;

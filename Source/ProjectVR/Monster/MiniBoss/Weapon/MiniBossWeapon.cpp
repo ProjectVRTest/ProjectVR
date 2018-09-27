@@ -43,6 +43,17 @@ AMiniBossWeapon::AMiniBossWeapon()
 
 	IsWeaponAttack = false;
 	IsParryingAttack = false;
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Weapon/Materials/M_Weapon.M_Weapon'"));
+	if (M_DefaultMaterials.Succeeded())
+	{
+		DefaultMaterials = M_DefaultMaterials.Object;
+	}
+
+	SpawnSwordWaveLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnSwordWaveLocation"));
+	SpawnSwordWaveLocation->SetupAttachment(SwordMesh);
+	SpawnSwordWaveLocation->SetRelativeLocation(FVector(162.0f, 5.8f, 0));
+
 	SwordCollision->bHiddenInGame = false;
 	Tags.Add(FName(TEXT("MiniBossWeapon")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));

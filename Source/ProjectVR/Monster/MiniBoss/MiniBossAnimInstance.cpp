@@ -1,9 +1,9 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MiniBossAnimInstance.h"
-#include "Monster/MiniBoss/MiniBoss.h"
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
+#include "Monster/MiniBoss/MiniBoss.h" //중간보스 헤더파일
+#include "Kismet/GameplayStatics.h" 
+#include "Kismet/KismetMathLibrary.h" //각종 수학 관련 함수 헤더파일
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "MyCharacter/MotionControllerCharacter.h"
@@ -12,7 +12,9 @@
 #include "MyTargetPoint.h"
 #include "TimerManager.h"
 #include "MyCharacter/MotionControllerPC.h"
-#include "Math/RandomStream.h"
+
+#include "Monster/MiniBoss/Weapon/SwordWave/SwordWave.h"
+#include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
 
 #define LEFT 1
 #define STRAIGHT 2
@@ -177,5 +179,23 @@ void UMiniBossAnimInstance::AnimNotify_GroundFrictionDefault(UAnimNotify * Notif
 	if (MiniBoss)
 	{
 		MiniBoss->GetCharacterMovement()->GroundFriction = 8.0f;	
+	}
+}
+
+void UMiniBossAnimInstance::AnimNotify_SwordWaveSpawn(UAnimNotify * Notify)
+{
+	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
+	
+	if (MiniBoss)
+	{
+		AMiniBossWeapon* MiniBossWeapon = MiniBoss->Sword;
+
+		if (MiniBossWeapon)
+		{
+			FActorSpawnParameters SpawnActorOption;
+			SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+			ASwordWave* SwordWave = GetWorld()->SpawnActor<ASwordWave>(SwordWave->StaticClass(), MiniBossWeapon->SpawnSwordWaveLocation->GetComponentLocation(), MiniBoss->GetActorRotation(),SpawnActorOption);
+			SwordWave->Homing(MiniBoss->TargetCamera);
+		}		
 	}
 }

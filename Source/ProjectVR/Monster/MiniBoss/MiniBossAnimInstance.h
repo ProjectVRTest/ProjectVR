@@ -69,4 +69,6 @@ public:
 		void AnimNotify_DashEnd(UAnimNotify* Notify);
 	UFUNCTION(BlueprintCallable, Category = "AI")
 		void AnimNotify_GroundFrictionDefault(UAnimNotify* Notify);
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		void AnimNotify_SwordWaveSpawn(UAnimNotify* Notify);
 };

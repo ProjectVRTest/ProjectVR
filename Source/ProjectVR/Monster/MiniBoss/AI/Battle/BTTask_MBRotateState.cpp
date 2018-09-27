@@ -2,6 +2,7 @@
 
 #include "BTTask_MBRotateState.h"
 #include "Headers/MiniBossAIHeader.h"
+#include "MyCharacter/CameraLocation.h"
 
 void UBTTask_MBRotateState::InitializeFromAsset(UBehaviorTree & Asset)
 {
@@ -20,13 +21,14 @@ EBTNodeResult::Type UBTTask_MBRotateState::ExecuteTask(UBehaviorTreeComponent & 
 
 		if (MiniBoss)
 		{
-			MyCharacter = Cast<AMotionControllerCharacter>(AI->BBComponent->GetValueAsObject("Player"));
+			ACameraLocation* CameraLocation = Cast<ACameraLocation>(AI->BBComponent->GetValueAsObject("PlayerCamera"));
 
-			if (MyCharacter)
+			if (CameraLocation)
 			{
-				LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+				LookAt= UKismetMathLibrary::NormalizedDeltaRotator(MiniBoss->GetActorRotation(), UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), CameraLocation->GetActorLocation()));
 				AI->BBComponent->SetValueAsRotator("LookAtRotator", LookAt);
-				MiniBoss->RotateYaw = LookAt.Yaw;
+				MiniBoss->RotateYaw = LookAt.Yaw*-1.0f;
+				GLog->Log(FString::Printf(TEXT("RotateYaw %f"), MiniBoss->RotateYaw));
 			}
 		}		
 	}

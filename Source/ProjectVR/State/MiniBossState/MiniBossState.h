@@ -81,8 +81,9 @@ enum class EMiniBossWaveAttackState : uint8
 	Idle = 0 UMETA(DisplayName = "Idle"),
 	TwoHandWidthReady = 1 UMETA(DisplayName = "TwoHandWidthReady"),
 	TwoHandWidthStart = 2 UMETA(DisplayName = "TwoHandWidthStart"),
-	SwordWaveReady = 3 UMETA(DisplayName = "SwordWaveReady"),
-	SwordWaveStart = 4 UMETA(DisplayName = "SwordWaveStart")
+	WavebackWalk = 3 UMETA(DisplayName = "WavebackWalk"),
+	SwordWaveReady = 4 UMETA(DisplayName = "SwordWaveReady"),
+	SwordWaveStart = 5 UMETA(DisplayName = "SwordWaveStart")
 };
 
 UENUM(BlueprintType)
@@ -96,7 +97,8 @@ UENUM(BlueprintType)
 enum class EMiniBossBackAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
-	BackAttackStart = 1 UMETA(DisplayName = "BackAttackStart")
+	LeftBackAttackStart = 1 UMETA(DisplayName = "LeftBackAttackStart"),
+	RightBackAttackStart = 2 UMETA(DisplayName = "RightBackAttackStart")
 };
 
 UENUM(BlueprintType)

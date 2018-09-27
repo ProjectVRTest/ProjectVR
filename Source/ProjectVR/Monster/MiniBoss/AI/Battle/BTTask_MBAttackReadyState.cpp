@@ -21,11 +21,10 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 
 			if (Distance < 300.0f)
 			{
-				int RandomPattern = FMath::RandRange(1, 15);
+				int RandomPattern = FMath::RandRange(1, 7);
 
 				if (RandomPattern > 0 && RandomPattern <8)
 				{
-					GLog->Log(FString::Printf(TEXT("ShorAttack")));
 					MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
 					MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
 					MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
