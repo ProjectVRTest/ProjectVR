@@ -60,6 +60,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class UBoxComponent* DogAttackCollision;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "JumpData")
+		float height;
+
 	bool CurrentFalling;
 
 	bool OnLandFlag;
