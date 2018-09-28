@@ -15,6 +15,9 @@
 
 #include "Monster/MiniBoss/Weapon/SwordWave/SwordWave.h"
 #include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
+#include "Components/StaticMeshComponent.h"
+#include "MyCharacter/CameraLocation.h"
+#include "Weapon/SwordWave/SwordWaveTarget.h"
 
 #define LEFT 1
 #define STRAIGHT 2
@@ -190,12 +193,33 @@ void UMiniBossAnimInstance::AnimNotify_SwordWaveSpawn(UAnimNotify * Notify)
 	{
 		AMiniBossWeapon* MiniBossWeapon = MiniBoss->Sword;
 
+		FActorSpawnParameters SpawnActorOption;
+		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
 		if (MiniBossWeapon)
 		{
-			FActorSpawnParameters SpawnActorOption;
-			SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-			ASwordWave* SwordWave = GetWorld()->SpawnActor<ASwordWave>(SwordWave->StaticClass(), MiniBossWeapon->SpawnSwordWaveLocation->GetComponentLocation(), MiniBoss->GetActorRotation(),SpawnActorOption);
-			SwordWave->Homing(MiniBoss->TargetCamera);
-		}		
+			FVector LockonTargetLocation = MiniBoss->TargetCamera->GetActorLocation();
+
+			ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation,FRotator::ZeroRotator);
+		
+			ASwordWave* SwordWave = GetWorld()->SpawnActor<ASwordWave>(SwordWave->StaticClass(), MiniBoss->SwordWaveSpawn->GetComponentLocation(), MiniBoss->GetActorRotation(), SpawnActorOption);
+						
+			switch (MiniBoss->SwordWaveCount)
+			{
+			case 1:
+				MiniBoss->SwordWaveCount += 1;
+				break;
+			case 2:
+				FRotator NewRotator;
+				NewRotator.Roll = 90.0f;
+				NewRotator.Pitch = -20.0f;
+				NewRotator.Yaw = 90.0f;				
+				SwordWave->SwordWaveRotatorModify(NewRotator);
+				MiniBoss->SwordWaveCount = 1;
+				break;
+			}
+
+			SwordWave->Homing(SwordWaveTarget);
+		}	
 	}
 }

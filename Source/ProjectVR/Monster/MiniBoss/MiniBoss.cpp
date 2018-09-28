@@ -103,6 +103,11 @@ AMiniBoss::AMiniBoss()
 	{
 		AfterImageEndEffect = PT_AfterImageEndEffect.Object;
 	}
+	SwordWaveCount = 1;
+
+	SwordWaveSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("SwordWaveSpawn"));
+	SwordWaveSpawn->SetupAttachment(GetRootComponent());
+	SwordWaveSpawn->SetRelativeLocation(FVector(80.0f, 0, 50.0f));
 
 	static ConstructorHelpers::FObjectFinder<UClass>ABP_MiniBos(TEXT("AnimBlueprint'/Game/Blueprints/Monster/MiniBoss/Blueprints/ABP_MiniBoss.ABP_MiniBoss_C'"));
 

@@ -99,6 +99,7 @@ void ANormalMonster::BeginPlay()
 		PawnSensing->OnSeePawn.AddDynamic(this, &ANormalMonster::OnSeeCharacter);
 	}
 
+	
 }
 
 // Called every frame
@@ -124,8 +125,6 @@ void ANormalMonster::Tick(float DeltaTime)
 void ANormalMonster::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-
 }
 
 void ANormalMonster::OnSeeCharacter(APawn * Pawn)
@@ -146,16 +145,16 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 				{
 					Target = Pawn;
 					AI->BBComponent->SetValueAsObject("Player", Pawn);
-					CurrentState = ENormalMonsterState::Chase;
-
 					if (MonsterKind == ENormalMonsterKind::SwordMan)
 					{
+						CurrentState = ENormalMonsterState::Chase;
 						CurrentAnimState = ENormalMonsterAnimState::Wait;
 					}
 					else
 					{
-						CurrentAnimState = ENormalMonsterAnimState::Walk;
-					}
+						CurrentState = ENormalMonsterState::Battle;
+						CurrentAnimState = ENormalMonsterAnimState::Wait;
+					}				
 				}
 			}
 		}

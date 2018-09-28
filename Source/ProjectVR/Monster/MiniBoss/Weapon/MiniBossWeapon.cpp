@@ -50,10 +50,6 @@ AMiniBossWeapon::AMiniBossWeapon()
 		DefaultMaterials = M_DefaultMaterials.Object;
 	}
 
-	SpawnSwordWaveLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnSwordWaveLocation"));
-	SpawnSwordWaveLocation->SetupAttachment(SwordMesh);
-	SpawnSwordWaveLocation->SetRelativeLocation(FVector(162.0f, 5.8f, 0));
-
 	SwordCollision->bHiddenInGame = false;
 	Tags.Add(FName(TEXT("MiniBossWeapon")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
