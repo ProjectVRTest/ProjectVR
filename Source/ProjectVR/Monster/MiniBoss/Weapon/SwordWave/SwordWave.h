@@ -24,14 +24,25 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class USphereComponent* Sphere;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UProjectileMovementComponent* Projecttile;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* SwordWaveExplosion;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystemComponent* SwordWaveTailComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* SwordWaveTail;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* SwordWaveGround;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UBoxComponent* SwordWaveHit;
 	UFUNCTION()
-		void Homing(class ACameraLocation* Target);
+		void Homing(class AActor* Target);
 	UFUNCTION()
-		void SwordWaveBeginOverlap(AActor * OverlappedActor, AActor * OtherActor);
+		void SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	UFUNCTION()
+		void SwordWaveRotatorModify(FRotator NewRotator);
 };

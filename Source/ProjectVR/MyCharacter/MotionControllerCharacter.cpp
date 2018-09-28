@@ -60,7 +60,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	SpringArm->TargetArmLength = 1.0f;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(SpringArm);
+	Camera->SetupAttachment(SpringArm);	
 
 	Stereo = CreateDefaultSubobject<UStereoLayerComponent>(TEXT("StereoB"));
 	Stereo->SetupAttachment(Camera);
@@ -118,7 +118,7 @@ void AMotionControllerCharacter::BeginPlay()
 
 	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
 	{
-		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
+		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Eye);
 	}
 
 	FActorSpawnParameters SpawnActorOption;

@@ -77,7 +77,7 @@ void UBTTask_MBBackWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8
 	{
 		int RandomLeftRightForce = FMath::RandRange(-1, 1);
 		MiniBoss->GetCharacterMovement()->AddImpulse((MiniBoss->GetActorForwardVector()*-500.0f)+MiniBoss->GetActorUpVector()*2.0f+(MiniBoss->GetActorRightVector()*500.0f*RandomLeftRightForce), true);
-		if (SumDelta > 0.8f)
+		if (SumDelta > 1.0f)
 		{
 			MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
 			AfterImageOff();
