@@ -22,18 +22,26 @@ public:
 		EDogState CurrentDogState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimState")
 		EDogAnimState CurrentDogAnimState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleState")
+		EDogBattleState CurrentDogBattleState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpState")
 		EDogJumpState CurrentDogJumpState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CircleState")
 		EDogCircleState CurrentDogCircleState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AirState")
+		EDogAirState CurrentDogAirState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		FRotator LookAtRotator;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpData")
+		float height;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpData")
 		bool CurrentFalling;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JumpData")
 		bool PreviousFalling;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		bool onLand;
+
+
 
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeInitializeAnimation() override;

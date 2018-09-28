@@ -16,7 +16,6 @@ class PROJECTVR_API UBTTask_MBRotateState : public UBTTask_BlackboardBase
 private:
 	class AMiniBoss * MiniBoss;
 	class AMotionControllerCharacter* MyCharacter;
-	FRotator InitRotator;
 	FRotator LookAt;
 	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);

@@ -37,9 +37,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EDogAnimState CurrentDogAnimState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EDogBattleState CurrentDogBattleState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EDogJumpState CurrentDogJumpState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EDogCircleState CurrentDogCircleState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EDogAirState CurrentDogAirState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;
@@ -56,19 +60,22 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class UBoxComponent* DogAttackCollision;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "JumpData")
+		float height;
+
 	bool CurrentFalling;
-	bool bIsAttack;
+
 	bool OnLandFlag;
 	bool bpunchDetach;
 	bool bIsDeath;
 	bool bIsDetach;
 	bool bOnLand;
 	bool Landing;
+	bool bIsBiting;					// 물었는지를 판단
 
 	bool bIsLeftWander;
 	bool bIsRightWander;
 
-	bool bInAttackplace;
 
 	// TEST
 	bool once; // 서비스에서 배열에 딱 한번 들어가게 하기위해서 하는 것
@@ -79,6 +86,10 @@ public:
 
 	int point;
 	float prelinear, preangular;
+
+	UFUNCTION()
+		void OnAttackCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 데미지를 전달하기위한 함수
 
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// 데미지 받기

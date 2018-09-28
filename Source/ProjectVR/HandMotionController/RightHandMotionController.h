@@ -70,12 +70,24 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USceneComponent* SwordAttachScene;
 
+	// 오너
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class AMotionControllerCharacter* HandOwner;
+
+	// 상호작용
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UWidgetInteractionComponent* interaction;
 
 	//오른손에 붙일 검클래스
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sword")
 		class APlayerSword* Sword;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
+		int stack;				// 개를 떨어뜨리기위한 스택
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
+		float prelinear;				// 개를 떨어뜨리기위한 스택
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
+		float preangular;				// 개를 떨어뜨리기위한 스택
 
 	//오른손에 붙인 검이 보이는지 안보이는지 판단해줄 변수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sword")

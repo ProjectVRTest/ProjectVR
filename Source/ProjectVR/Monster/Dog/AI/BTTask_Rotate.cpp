@@ -38,7 +38,6 @@ EBTNodeResult::Type UBTTask_Rotate::ExecuteTask(UBehaviorTreeComponent & OwnerCo
 					// 플레이어가 볼수없는 각도가 존재할수 있으니까 연속적으로 회전하는것이 무의미하므로 바로 회전시킴
 					LookAt.Pitch = 0;
 					RagdollDog->SetActorRotation(LookAt);	// 바로 회전
-					RagdollDog->bIsAttack = false;
 
 					return EBTNodeResult::Succeeded;
 				}

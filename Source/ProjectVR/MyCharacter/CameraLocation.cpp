@@ -11,8 +11,7 @@ ACameraLocation::ACameraLocation()
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	SetRootComponent(Sphere);
-
-	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Sphere->SetCollisionProfileName("OverlapAll");	
 }
 
 // Called when the game starts or when spawned

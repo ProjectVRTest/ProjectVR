@@ -34,4 +34,8 @@ public:
 		bool IsWeaponAttack;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool IsParryingAttack;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UMaterialInterface* DefaultMaterials;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class USceneComponent* SpawnSwordWaveLocation;
 };

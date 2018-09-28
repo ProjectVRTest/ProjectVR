@@ -39,11 +39,10 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 					Velocity = MiniBoss->GetCharacterMovement()->Velocity;
 					TestRotator = MiniBoss->GetActorRotation();
 
-					FVector NormalVector = UKismetMathLibrary::Normal(Velocity);
+					FVector NormalVector = UKismetMathLibrary::Normal(Velocity); 
 					FRotator XNormalRotator = UKismetMathLibrary::MakeRotFromX(NormalVector);
 					FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(TestRotator, XNormalRotator);
 					MiniBoss->Yaw = CompleteRotator.Yaw;
-					MiniBoss->RotateYaw = CompleteRotator.Yaw;
 
 					//GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), CompleteRotator.Yaw));
 					if (!MiniBoss->CurrentFalling)

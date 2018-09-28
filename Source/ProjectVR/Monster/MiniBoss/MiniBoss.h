@@ -54,8 +54,8 @@ public:
 		class UBehaviorTree* BehaviorTree;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 		class AActor* Target;
-
-	class ACameraLocation* TargetCamera;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+		class ACameraLocation* TargetCamera;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimMontage")
 		class UAnimMontage* AttackReverseMontage; //피격 애니메이션
@@ -69,15 +69,17 @@ public:
 		float MaxHP; //최대 HP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float CurrentHP; //현재 HP
-	class UMaterialInterface* OpacityMaterials;
-	class UMaterialInterface* DefaultMaterials;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
+		class UMaterialInterface* OpacityMaterials;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
+		class UMaterialInterface* DefaultMaterials;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* AfterImageStartEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
-		class UParticleSystem* AfterImageEndEffect;
+		class UParticleSystem* AfterImageEndEffect;	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class AMiniBossWeapon* Sword;
+
 	float Yaw; //캐릭터가 좌우로 움직일때 판단해줄 값
 	float RotateYaw;
 	bool WalkStopFlag; 

@@ -20,6 +20,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "MyCharacter/CameraLocation.h"
 #include "MyCharacter/MotionControllerCharacter.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AMiniBoss::AMiniBoss()

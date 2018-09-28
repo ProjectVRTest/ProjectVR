@@ -21,7 +21,6 @@ EBTNodeResult::Type UBTTask_SetJumpStart::ExecuteTask(UBehaviorTreeComponent & O
 			{
 				if (Dog->CurrentDogJumpState == EDogJumpState::Nothing)
 				{
-					Dog->bIsAttack = true;
 					Dog->CurrentDogJumpState = EDogJumpState::JumpStart;
 					return EBTNodeResult::Succeeded;
 				}

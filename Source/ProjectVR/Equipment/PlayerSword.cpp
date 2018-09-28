@@ -13,6 +13,7 @@
 #include "Haptics/HapticFeedbackEffect_Base.h"
 #include "MyCharacter/MotionControllerPC.h"
 #include "HandMotionController/RightHandMotionController.h"
+#include "Monster/Dog/Dog.h"
 
 // Sets default values
 APlayerSword::APlayerSword()
@@ -76,22 +77,33 @@ void APlayerSword::Tick(float DeltaTime)
 	// 매 틱마다 캐릭터의 운동값을 뺌
 	if (SwordOwner)
 	{
-		SwordPhysicsVelocityValue = SwordCollision->GetPhysicsLinearVelocity().Size() - SwordOwner->GetVelocity().Size();
+		SwordCurrentPosistion = SwordCollision->GetComponentLocation() - GetActorLocation();
+		SwordMoveDelta = SwordCurrentPosistion - SwordPreviousPosistion;
+		SwordMoveVelocity = SwordMoveDelta / DeltaTime;
+		SwordPreviousPosistion = SwordCurrentPosistion;
 	}	
 }
 
 void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)		// 오버랩이벤트시 실행할 것들
 {
+	if (OtherActor->ActorHasTag("Dog"))
+	{
+		ADog* Dog = Cast<ADog>(OtherActor);
+
+		if (SwordOwner->RightHand->AttachDog == Dog)
+			return;
+	}
+
 	if (OtherActor->ActorHasTag("Monster"))		// 오버랩된 액터가 'Monster'라는 태그를 가지고 있으면 실행
 	{
 		if (Timer >= 0.5f)			// 타이머가 0.5 이상의 수를 가지고 있을 때 실행 (조건1)
 		{
-			if (IsActivation && SwordPhysicsVelocityValue >= 300.0f) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
+			if (IsActivation && SwordMoveVelocity.Size() >= 1500) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
 			{
 				Timer = 0.0f;		// 공격 판정이 일어났을 때 타이머 0으로
-
-				if (SwordPhysicsVelocityValue <= 300)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
+				
+				if (SwordMoveVelocity.Size() <= 1500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
 				{					
 					RumbleRightController(0.5f);
 					Damage = 10.0f;

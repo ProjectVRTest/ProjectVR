@@ -34,20 +34,16 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 		{
 			RagdollDog->CurrentDogState = EDogState::Chase;
 			RagdollDog->CurrentDogAnimState = EDogAnimState::Run;
+			RagdollDog->CurrentDogBattleState = EDogBattleState::Nothing;
 			RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
 			RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
 			UnAttackableRange(MyCharacter, RagdollDog);
 			return;
 		}
 
-		if ( RagdollDog->AttachActor || RagdollDog->bIsAttack)
-		{
-			return;
-		}
+
 		if (RagdollDog && MyCharacter)
 		{
-			RagdollDog->bInAttackplace = false;
-
 			float StandardAngle = MyCharacter->Camera->GetComponentRotation().Yaw + 180.0f;		// 플레이어 기준 각도
 			float MonAngle = RagdollDog->GetActorRotation().Yaw + 180.0f;	// 개 기준 각도
 
@@ -311,17 +307,9 @@ void UBTService_CheckCanAttack::SetRandomCircle(ADog * RagdollDog)
 
 void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCharacter, ADog * RagdollDog)
 {
-	UE_LOG(LogTemp, Log, TEXT("Attack Attack Attack"));
-
-	RagdollDog->bInAttackplace = true;
-	RagdollDog->bAttack = false;
-
-	if (!RagdollDog->once)
-	{
-		MyCharacter->DogArray.Add(RagdollDog);
-		RagdollDog->once = true;
-	}
-
+	if (!MyCharacter->DogArray.Contains(RagdollDog))			// 배열에 개가 없으면
+		MyCharacter->DogArray.Add(RagdollDog);					// 추가;
+	
 	ADog** Dogs = MyCharacter->DogArray.GetData();
 
 	if (Dogs[0] != RagdollDog)		// 자기랑 아닌거랑 비교
@@ -335,19 +323,17 @@ void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCh
 		}
 		return;
 	}
-		else
-			RagdollDog->bAttack = true;
-	
+	else
+	{
+		RagdollDog->bAttack = true;
+		UE_LOG(LogTemp, Log, TEXT("%s &&&&&&&&&&&&&&&&&&&&&&&&&&"), *RagdollDog->GetName());
+	}
 
 	if (RagdollDog->bAttack)
 	{
 		RagdollDog->CurrentDogState = EDogState::Battle;
-		RagdollDog->CurrentDogAnimState = EDogAnimState::JumpAttack;
-
-		if (!RagdollDog->bIsAttack)
-		{
-			RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;		// SetJumpStart에서 JumpStart로 자동 세팅
-		}
+		RagdollDog->CurrentDogBattleState = EDogBattleState::JumpAttack;
+		RagdollDog->CurrentDogJumpState = EDogJumpState::JumpStart;
 		RagdollDog->GetCharacterMovement()->MaxWalkSpeed = 550.0f;
 	}
 }
@@ -355,9 +341,12 @@ void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCh
 void UBTService_CheckCanAttack::LeftRange(ADogAIController* AI, ADog * RagdollDog)
 {
 	AI->BBComponent->SetValueAsInt("RotateCheck", 2);
-	RagdollDog->CurrentDogState = EDogState::Circle;
-	RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
+
+	RagdollDog->CurrentDogState = EDogState::Battle;
+	RagdollDog->CurrentDogBattleState = EDogBattleState::Circle;
+	RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
 	RagdollDog->CurrentDogCircleState = EDogCircleState::LeftCircle;
+
 	RagdollDog->bIsLeftWander = false;
 	RagdollDog->bIsRightWander = true;
 }
@@ -365,9 +354,12 @@ void UBTService_CheckCanAttack::LeftRange(ADogAIController* AI, ADog * RagdollDo
 void UBTService_CheckCanAttack::RightRange(ADogAIController * AI, ADog * RagdollDog)
 {
 	AI->BBComponent->SetValueAsInt("RotateCheck", 1);
-	RagdollDog->CurrentDogState = EDogState::Circle;
-	RagdollDog->CurrentDogAnimState = EDogAnimState::SideWalk;
+
+	RagdollDog->CurrentDogState = EDogState::Battle;
+	RagdollDog->CurrentDogBattleState = EDogBattleState::Circle;
+	RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
 	RagdollDog->CurrentDogCircleState = EDogCircleState::RightCircle;
+
 	RagdollDog->bIsLeftWander = true;
 	RagdollDog->bIsRightWander = false;
 }
@@ -376,12 +368,12 @@ void UBTService_CheckCanAttack::UnAttackableRange(AMotionControllerCharacter * M
 {
 	if (!RagdollDog->AttachActor)		// 물고있을 때는 다른 개들이 물지 못하도록 배열삭제를 막음
 	{
-		RagdollDog->bInAttackplace = false;
-		RagdollDog->once = false;
-		RagdollDog->bIsAttack = false;
+		if (MyCharacter->DogArray.Contains(RagdollDog))			// 배열에 개가 있으면
+		{
+			MyCharacter->DogArray.Remove(RagdollDog);			// 제거
+		}
 
-		if (MyCharacter->DogArray.Find(RagdollDog))			// 배열에 개가 있으면
-			MyCharacter->DogArray.Remove(RagdollDog);		// 제거
 	}
 }
 
+// UE_LOG(LogTemp, Log, TEXT("mmmmmmmmmmmmmmmmmmmm"));

@@ -83,7 +83,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	Widget->bVisible = true;
 
 	HeadBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HeadBox"));
-	HeadBox->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
+	HeadBox->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 	HeadBox->SetupAttachment(Camera);
 	HeadBox->SetCollisionProfileName(TEXT("OverlapAll"));
 	HeadBox->bGenerateOverlapEvents = true;
@@ -116,10 +116,9 @@ void AMotionControllerCharacter::BeginPlay()
 
 	FName DeviceName = UHeadMountedDisplayFunctionLibrary::GetHMDDeviceName();
 
-	GLog->Log(DeviceName.ToString());
 	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
 	{
-		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Eye);
+		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
 	}
 
 	FActorSpawnParameters SpawnActorOption;
@@ -414,99 +413,6 @@ void AMotionControllerCharacter::AttackPointSet()
 		AttackPoints.Add(AttackPoint);
 		AttackPoint->AttachToComponent(Camera, AttachRules);
 	}
-
-	CalculatePoint.X = InitPoint.X - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.Y = InitPoint.Y - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint.Y = InitPoint.Y + 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X + 200.0f;
-	CalculatePoint.Y = InitPoint.Y - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X + 200.0f;
-	CalculatePoint.Y = InitPoint.Y + 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X - 200.0f;
-	CalculatePoint.Y = InitPoint.Y - 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X - 200.0f;
-	CalculatePoint.Y = InitPoint.Y + 200.0f;
-	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
-
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
-
-	if (AttackPoint)
-	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
-	}
 }
 
 void AMotionControllerCharacter::SetAllowBreathe()
@@ -586,41 +492,5 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 								//{
 								//	HandWidget->GainHP(30);		// 회복
 								//}
-	}
-
-	if (OtherComp->ComponentHasTag("DogAttackCollision"))
-	{
-
-		ARightHandMotionController* RightController = Cast<ARightHandMotionController>(RightHand);
-
-		if (!RightController->AttachDog)
-		{
-			ADog* Dog = Cast<ADog>(OtherActor);
-			if (Dog)
-			{
-				RightController->AttachDog = Dog;
-				Dog->bIsAttack = true;
-				Dog->DogAttackCollision->SetActive(false);
-
-				// KeepRelative : 손의 각도가 같으면 붙는 각도도 일정함
-				FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
-
-				Dog->AttachToComponent(RightController->AttachDogPosition, AttachRules);
-
-				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);
-
-
-				Dog->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-				Dog->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
-
-				Dog->CurrentDogState = EDogState::Bite;
-				Dog->CurrentDogAnimState = EDogAnimState::Nothing;
-				Dog->CurrentDogJumpState = EDogJumpState::Nothing;
-				Dog->CurrentDogCircleState = EDogCircleState::Nothing;
-
-				Dog->AttachActor = this;
-				Dog->DogAttackCollision->bGenerateOverlapEvents = true;
-			}
-		}
 	}
 }

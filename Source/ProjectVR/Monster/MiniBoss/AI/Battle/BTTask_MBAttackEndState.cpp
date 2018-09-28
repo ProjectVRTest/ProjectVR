@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTTask_MBAttackEndState.h"
 #include "Headers/MiniBossAIHeader.h"
+#include "MyCharacter/CameraLocation.h"
 
 EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
@@ -17,11 +18,27 @@ EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent
 
 		if (MiniBoss)
 		{
-			if (MiniBoss->CurrentShortAttackState != EMiniBossShortAttackState::StabReady)
-			{
-				int RandomState = FMath::RandRange(1, 10);
+			ACameraLocation* CameraLocation = Cast<ACameraLocation>(AI->BBComponent->GetValueAsObject("PlayerCamera"));
 
-				if (RandomState >= 3 && Distance < 300.0f)
+			FRotator LookAt = UKismetMathLibrary::NormalizedDeltaRotator(MiniBoss->GetActorRotation(), UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), CameraLocation->GetActorLocation()));
+
+			//float BackAttackYawValue = UKismetMathLibrary::Abs(LookAt.Yaw);
+			
+
+			if (-180.0f < LookAt.Yaw && LookAt.Yaw < -150.0f)
+			{
+				if (Distance < 300.0f)
+				{
+					MiniBoss->CurrentState = EMiniBossState::Battle;
+					MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
+					MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
+					MiniBoss->CurrentAttackState = EMiniBossAttackState::BackAttack;
+					MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
+					MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
+					MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
+					MiniBoss->CurrentBackAttackState = EMiniBossBackAttackState::LeftBackAttackStart;
+				}
+				else
 				{
 					MiniBoss->CurrentState = EMiniBossState::Battle;
 					MiniBoss->CurrentAnimState = EMiniBossAnimState::Rotate;
@@ -32,10 +49,24 @@ EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent
 					MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
 					MiniBoss->CurrentBackAttackState = EMiniBossBackAttackState::Idle;
 				}
+			}
+			else if (150.0f < LookAt.Yaw && LookAt.Yaw < 180.0f)
+			{
+				if (Distance < 300.0f)
+				{
+					MiniBoss->CurrentState = EMiniBossState::Battle;
+					MiniBoss->CurrentAnimState = EMiniBossAnimState::Attack;
+					MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
+					MiniBoss->CurrentAttackState = EMiniBossAttackState::BackAttack;
+					MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
+					MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
+					MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
+					MiniBoss->CurrentBackAttackState = EMiniBossBackAttackState::RightBackAttackStart;
+				}
 				else
 				{
 					MiniBoss->CurrentState = EMiniBossState::Battle;
-					MiniBoss->CurrentAnimState = EMiniBossAnimState::BackWalk;
+					MiniBoss->CurrentAnimState = EMiniBossAnimState::Rotate;
 					MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
 					MiniBoss->CurrentAttackState = EMiniBossAttackState::Idle;
 					MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
@@ -43,6 +74,28 @@ EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent
 					MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
 					MiniBoss->CurrentBackAttackState = EMiniBossBackAttackState::Idle;
 				}
+			}		
+			else if (-50.0f < LookAt.Yaw && LookAt.Yaw < 50.0f)
+			{
+				MiniBoss->CurrentState = EMiniBossState::Battle;
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;
+				MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
+				MiniBoss->CurrentAttackState = EMiniBossAttackState::Idle;
+				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
+				MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
+				MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
+				MiniBoss->CurrentBackAttackState = EMiniBossBackAttackState::Idle;
+			}
+			else
+			{
+				MiniBoss->CurrentState = EMiniBossState::Battle;
+				MiniBoss->CurrentAnimState = EMiniBossAnimState::Rotate;
+				MiniBoss->CurrentJumpState = EMiniBossJumpState::Idle;
+				MiniBoss->CurrentAttackState = EMiniBossAttackState::Idle;
+				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::Idle;
+				MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::Idle;
+				MiniBoss->CurrentComboAttackState = EMiniBossComboAttackState::Idle;
+				MiniBoss->CurrentBackAttackState = EMiniBossBackAttackState::Idle;
 			}
 		}
 	}
