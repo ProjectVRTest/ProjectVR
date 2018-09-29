@@ -14,7 +14,7 @@ ANMWeaponSword::ANMWeaponSword()
 
 	SwordMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwordMesh"));
 	SetRootComponent(SwordMesh);
-	
+	SwordMesh->SetCollisionProfileName("OverlapAll");
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Sword/SM_NormalMonsterSword.SM_NormalMonsterSword'"));
 
 	if (SM_Sword.Succeeded())

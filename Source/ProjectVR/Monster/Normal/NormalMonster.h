@@ -54,13 +54,31 @@ public:
 		TArray<class AMyTargetPoint*> PatrolPoints;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class AActor* Target;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
+		class UStaticMeshComponent* QuiverComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
+		class UStaticMesh* QuiverMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
+		class UStaticMeshComponent* NMArrowComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
+		class USceneComponent* ArrowSpawnLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
+		class UStaticMesh* ArrowMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+		class ANMWeaponSword* Sword;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+		class ANMWeaponBow* Bow;
 	float Yaw; //캐릭터 회전에 쓰일 Yaw값
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float MaxHP; //최대 HP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float CurrentHP; //현재 HP
 	bool NMAttackEndFlag;
+
+	UFUNCTION()
+		void SpawnArrowMesh();
+	UFUNCTION()
+		void DeleteArrowMesh();
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn);
 

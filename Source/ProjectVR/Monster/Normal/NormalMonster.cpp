@@ -15,6 +15,12 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Weapon/Bow/NMWeaponBow.h"
+#include "Weapon/Sword/NMWeaponSword.h"
+
+#include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
+
 // Sets default values
 ANormalMonster::ANormalMonster()
 {
@@ -57,6 +63,29 @@ ANormalMonster::ANormalMonster()
 		ArcherBehaviorTree = NormalArcherMonster_BT.Object;
 	}
 
+	QuiverComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("QuiverComponent"));
+	QuiverComponent->SetupAttachment(GetMesh(),TEXT("QuiverSocket"));
+	
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Quiver(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Bow/Arrow/Mesh/SM_Quiver.SM_Quiver'"));
+
+	if (SM_Quiver.Succeeded())
+	{
+		QuiverMesh = SM_Quiver.Object;
+	}
+
+	NMArrowComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("NMArrowComponent"));
+	NMArrowComponent->SetupAttachment(GetMesh(), TEXT("ArrowSocket"));
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Arrow(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Bow/Arrow/Mesh/SM_Arrow.SM_Arrow'"));
+
+	if (SM_Arrow.Succeeded())
+	{
+		ArrowMesh = SM_Arrow.Object;
+	}
+
+	ArrowSpawnLocation = CreateDefaultSubobject<USceneComponent>(TEXT("ArrowSpawnLocation"));
+	ArrowSpawnLocation->SetupAttachment(GetRootComponent());
+	ArrowSpawnLocation->SetRelativeScale3D(FVector(-8.0f,90.0f,134.0f));
 	MaxHP = 100;
 	CurrentHP = MaxHP;
 
@@ -89,6 +118,12 @@ void ANormalMonster::BeginPlay()
 	Super::BeginPlay();
 	ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
 
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.Owner = this;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
 	if (AI)
 	{
 		AI->BBComponent->SetValueAsEnum(TEXT("MonsterKind"), (uint8)MonsterKind);
@@ -99,6 +134,27 @@ void ANormalMonster::BeginPlay()
 		PawnSensing->OnSeePawn.AddDynamic(this, &ANormalMonster::OnSeeCharacter);
 	}
 
+	switch (MonsterKind)
+	{
+	case ENormalMonsterKind::SwordMan:
+		Sword = GetWorld()->SpawnActor<ANMWeaponSword>(Sword->StaticClass(), SpawnActorOption);
+		if (Sword)
+		{
+			Sword->AttachToComponent(GetMesh(), AttachRules, TEXT("SwordSocket"));
+		}
+		break;
+	case ENormalMonsterKind::Archer:
+		Bow = GetWorld()->SpawnActor<ANMWeaponBow>(Bow->StaticClass(), SpawnActorOption);
+		if (Bow)
+		{
+			Bow->AttachToComponent(GetMesh(), AttachRules, TEXT("BowSocket"));
+			if (QuiverMesh)
+			{
+				QuiverComponent->SetStaticMesh(QuiverMesh);
+			}
+		}		
+		break;
+	}
 	
 }
 
@@ -127,6 +183,16 @@ void ANormalMonster::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void ANormalMonster::SpawnArrowMesh()
+{
+	NMArrowComponent->SetStaticMesh(ArrowMesh);
+}
+
+void ANormalMonster::DeleteArrowMesh()
+{
+	NMArrowComponent->SetStaticMesh(nullptr);
+}
+
 void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 {
 	if (Pawn->ActorHasTag("Character"))
@@ -152,8 +218,8 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 					}
 					else
 					{
-						CurrentState = ENormalMonsterState::Battle;
-						CurrentAnimState = ENormalMonsterAnimState::Wait;
+						CurrentState = ENormalMonsterState::Chase;
+						CurrentAnimState = ENormalMonsterAnimState::Walk;
 					}				
 				}
 			}

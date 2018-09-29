@@ -27,6 +27,8 @@ public:
 		ENormalMonsterStabAttackState SetStabAttackState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		ENormalMonsterComboAttackState SetComboAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		ENormalMonsterArcherAttackState SetArcherAttackState;
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	

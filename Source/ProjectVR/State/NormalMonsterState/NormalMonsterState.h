@@ -52,7 +52,8 @@ enum class ENormalMonsterAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
 	StabAttack = 1 UMETA(DisplayName = "StabAttack"),	
-	ComboAttack = 2 UMETA(DisplayName = "ComboAttack")	
+	ComboAttack = 2 UMETA(DisplayName = "ComboAttack")	,
+	BowAttack = 3 UMETA(DisplayName = "BowAttack")
 };
 
 UENUM(BlueprintType)

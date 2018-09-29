@@ -19,6 +19,7 @@ EBTNodeResult::Type UBTTask_NMSetState::ExecuteTask(UBehaviorTreeComponent & Own
 			NormalMonster->CurrentAttackState = SetAttackState;
 			NormalMonster->CurrentStabAttackState = SetStabAttackState;
 			NormalMonster->CurrentComboAttackState = SetComboAttackState;
+			NormalMonster->CurrentArcherAttackState = SetArcherAttackState;
 		}
 	}
 	return EBTNodeResult::Succeeded;

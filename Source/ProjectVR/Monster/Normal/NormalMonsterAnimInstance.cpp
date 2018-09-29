@@ -2,6 +2,7 @@
 
 #include "NormalMonsterAnimInstance.h"
 #include "NormalMonster.h"
+#include "Monster/Normal/Weapon/Bow/NMWeaponArrow.h"
 
 void UNormalMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
@@ -28,5 +29,25 @@ void UNormalMonsterAnimInstance::AnimNotify_AttackEnd(UAnimNotify * Notify)
 	if (NormalMonster)
 	{
 		NormalMonster->NMAttackEndFlag = true;
+	}
+}
+
+void UNormalMonsterAnimInstance::AnimNotify_ArrowSpawn(UAnimNotify * Notify)
+{
+	ANormalMonster* NormalMonster = Cast<ANormalMonster>(TryGetPawnOwner());
+
+	if (NormalMonster)
+	{
+		NormalMonster->SpawnArrowMesh();
+	}
+}
+
+void UNormalMonsterAnimInstance::AnimNotify_ArrowDestroy(UAnimNotify * Notify)
+{
+	ANormalMonster* NormalMonster = Cast<ANormalMonster>(TryGetPawnOwner());
+
+	if (NormalMonster)
+	{
+		NormalMonster->DeleteArrowMesh();
 	}
 }

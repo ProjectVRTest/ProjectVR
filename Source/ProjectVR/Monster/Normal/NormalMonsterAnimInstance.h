@@ -34,4 +34,8 @@ public:
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;	
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 		void AnimNotify_AttackEnd(UAnimNotify* Notify);
+	UFUNCTION(BlueprintCallable, Category = "Bow")
+		void AnimNotify_ArrowSpawn(UAnimNotify* Notify);
+	UFUNCTION(BlueprintCallable, Category = "Bow")
+		void AnimNotify_ArrowDestroy(UAnimNotify* Notify);
 };

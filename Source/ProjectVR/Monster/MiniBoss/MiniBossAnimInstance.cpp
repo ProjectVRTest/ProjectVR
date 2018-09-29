@@ -129,7 +129,7 @@ void UMiniBossAnimInstance::AnimNotify_DashStart(UAnimNotify * Notify)
 	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
 	FVector LaunchVector;
 	FVector RandomYawVector;
-	FRotator RandomRotator=FRotator::ZeroRotator;
+	FRotator RandomRotator = FRotator::ZeroRotator;
 	int RandomYaw = FMath::RandRange(1, 3);
 	if (MiniBoss)
 	{
@@ -153,22 +153,22 @@ void UMiniBossAnimInstance::AnimNotify_DashStart(UAnimNotify * Notify)
 			MiniBoss->GetCharacterMovement()->GroundFriction = 1.5f;
 			MiniBoss->GetMesh()->SetMaterial(0, MiniBoss->OpacityMaterials);
 			FVector DistanceVector = UKismetMathLibrary::Subtract_VectorVector(MiniBoss->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
-			LaunchVector = (DistanceVector.Size() * MiniBoss->GetActorForwardVector()*2.5f)+ MiniBoss->GetActorUpVector()*100.0f;
+			LaunchVector = (DistanceVector.Size() * MiniBoss->GetActorForwardVector()*2.5f) + MiniBoss->GetActorUpVector()*100.0f;
 			//GLog->Log(FString::Printf(TEXT("Y : %d"), RandomYaw));
 			MiniBoss->LaunchCharacter(LaunchVector, true, true);
 		}
-		
-		
+
+
 		//MiniBoss->GetCharacterMovement()->AddImpulse((MiniBoss->GetActorForwardVector()*1000.0f) + MiniBoss->GetActorUpVector()*10.0f, true);
 
-		
+
 	}
 }
 
 void UMiniBossAnimInstance::AnimNotify_DashEnd(UAnimNotify * Notify)
 {
 	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
-	
+
 	if (MiniBoss)
 	{
 		MiniBoss->GetMesh()->SetMaterial(0, MiniBoss->DefaultMaterials);
@@ -181,45 +181,39 @@ void UMiniBossAnimInstance::AnimNotify_GroundFrictionDefault(UAnimNotify * Notif
 
 	if (MiniBoss)
 	{
-		MiniBoss->GetCharacterMovement()->GroundFriction = 8.0f;	
+		MiniBoss->GetCharacterMovement()->GroundFriction = 8.0f;
 	}
 }
 
 void UMiniBossAnimInstance::AnimNotify_SwordWaveSpawn(UAnimNotify * Notify)
 {
 	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
-	
+
 	if (MiniBoss)
 	{
-		AMiniBossWeapon* MiniBossWeapon = MiniBoss->Sword;
-
 		FActorSpawnParameters SpawnActorOption;
 		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-		if (MiniBossWeapon)
+		FVector LockonTargetLocation = MiniBoss->TargetCamera->GetActorLocation();
+
+		ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
+
+		ASwordWave* SwordWave = GetWorld()->SpawnActor<ASwordWave>(SwordWave->StaticClass(), MiniBoss->SwordWaveSpawn->GetComponentLocation(), MiniBoss->GetActorRotation(), SpawnActorOption);
+
+		switch (MiniBoss->SwordWaveCount)
 		{
-			FVector LockonTargetLocation = MiniBoss->TargetCamera->GetActorLocation();
-
-			ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation,FRotator::ZeroRotator);
-		
-			ASwordWave* SwordWave = GetWorld()->SpawnActor<ASwordWave>(SwordWave->StaticClass(), MiniBoss->SwordWaveSpawn->GetComponentLocation(), MiniBoss->GetActorRotation(), SpawnActorOption);
-						
-			switch (MiniBoss->SwordWaveCount)
-			{
-			case 1:
-				MiniBoss->SwordWaveCount += 1;
-				break;
-			case 2:
-				FRotator NewRotator;
-				NewRotator.Roll = 90.0f;
-				NewRotator.Pitch = -20.0f;
-				NewRotator.Yaw = 90.0f;				
-				SwordWave->SwordWaveRotatorModify(NewRotator);
-				MiniBoss->SwordWaveCount = 1;
-				break;
-			}
-
-			SwordWave->Homing(SwordWaveTarget);
-		}	
+		case 1:
+			MiniBoss->SwordWaveCount += 1;
+			break;
+		case 2:
+			FRotator NewRotator;
+			NewRotator.Roll = 90.0f;
+			NewRotator.Pitch = -20.0f;
+			NewRotator.Yaw = 90.0f;
+			SwordWave->SwordWaveRotatorModify(NewRotator);
+			MiniBoss->SwordWaveCount = 1;
+			break;
+		}
+		SwordWave->Homing(SwordWaveTarget);
 	}
 }
