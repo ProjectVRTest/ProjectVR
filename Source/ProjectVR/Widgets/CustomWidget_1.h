@@ -18,9 +18,12 @@ class PROJECTVR_API UCustomWidget_1 : public UUserWidget
 
 	UPROPERTY()
 		class UCustomButton* CB_1;
+	UPROPERTY()
+		class UCustomButton* CB_2;
 
 	UFUNCTION()
-		void OnClickedCheck();
-	
+		void OnClickedCB_1();
+	UFUNCTION()
+		void OnClickedCB_2();
 	
 };

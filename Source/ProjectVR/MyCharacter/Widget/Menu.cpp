@@ -18,11 +18,12 @@ AMenu::AMenu()
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	Scene->SetupAttachment(RootComponent);
 
-	RangeBox = CreateDefaultSubobject<UBoxComponent>(TEXT("RangeBox"));
-	RangeBox->SetupAttachment(Scene);
-
 	Menu = CreateDefaultSubobject<UWidgetComponent>(TEXT("Menu"));
 	Menu->SetupAttachment(Scene);
+
+	RangeBox = CreateDefaultSubobject<UBoxComponent>(TEXT("RangeBox"));
+	RangeBox->SetupAttachment(Menu);
+
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> BP_Widget(TEXT("WidgetBlueprint'/Game/Blueprints/UI/Menu/MenuTest.MenuTest_C'"));
 	if (BP_Widget.Succeeded())
@@ -30,6 +31,9 @@ AMenu::AMenu()
 		Menu->SetWidgetClass(BP_Widget.Class);
 	}
 
+	Menu->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
+	Menu->SetDrawSize(FVector2D(630.0f, 210.0f));
+	Menu->SetBlendMode(EWidgetBlendMode::Transparent);
 	// 타겟을 잡으면서 손과 오버랩되는 조건
 	RangeBox->SetCollisionProfileName("Custom...");
 	RangeBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -43,10 +47,13 @@ AMenu::AMenu()
 	RangeBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Vehicle, ECollisionResponse::ECR_Overlap);
 	RangeBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Ignore);
 
-	RangeBox->SetRelativeScale3D(FVector(1.3f, 1.5f, 1.0f));
-	RangeBox->SetRelativeLocation(FVector(0.0f, 0.0f, -50.0f));
+	RangeBox->SetRelativeScale3D(FVector(2.0f, 5.7f, 2.7f));
+	RangeBox->SetRelativeLocation(FVector(50.0f, 0.0f, 0.0f));
 	RangeBox->bHiddenInGame = false;
-	RangeBox->ComponentTags.Add("HiddenGrips");
+
+	RangeBox->ComponentTags.Add(FName(TEXT("GrabRange")));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned

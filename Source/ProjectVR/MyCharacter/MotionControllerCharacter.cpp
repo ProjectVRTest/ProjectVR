@@ -160,6 +160,8 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//UE_LOG(LogTemp, Log, TEXT("%f"), UKismetMathLibrary::Atan2(Cal.Z, Cal.X));
+
 	//GLog->Log(FString::Printf(TEXT("Camera X : %0.1f Y : %0.1f Z : %0.1f"), Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, Camera->GetComponentLocation().Z));
 //	GLog->Log(FString::Printf(TEXT("CameraLocation X : %0.1f Y : %0.1f Z : %0.1f"),CameraLocation->GetActorLocation().X, CameraLocation->GetActorLocation().Y, CameraLocation->GetActorLocation().Z));
 	if (CurrentHp > 100.0f)
@@ -380,10 +382,11 @@ void AMotionControllerCharacter::GameMenu()
 		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		// 메뉴를 플레이어가 보는 위치와 알맞은 각도에 생성
-		FVector location = FVector(Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, Camera->GetComponentLocation().Z);
+		FVector location = FVector(Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, GetActorLocation().Z);
 		FRotator rotator = FRotator(Camera->GetComponentRotation().Pitch + 20.0f, Camera->GetComponentRotation().Yaw + 180.0f, 0.0f);
-
-		Menu = GetWorld()->SpawnActor<AMenu>(Menu->StaticClass(), location + Camera->GetForwardVector() * 150,
+		FVector CameraForwardVectorzeroHeight = FVector(Camera->GetForwardVector().X, Camera->GetForwardVector().Y, 0.0f);
+		
+		Menu = GetWorld()->SpawnActor<AMenu>(Menu->StaticClass(), location + CameraForwardVectorzeroHeight.GetSafeNormal() * 70.0f,
 			rotator, SpawnActorOption);
 	}
 	else

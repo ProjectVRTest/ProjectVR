@@ -343,6 +343,10 @@ void ARightHandMotionController::ReleaseActor()
 		}
 		AttachedActor = nullptr;			// 현재 잡은 것이 없다.
 	}
+	else
+	{
+		HandOpenState();
+	}
 }
 
 AActor * ARightHandMotionController::GetActorNearHand()
@@ -395,7 +399,7 @@ void ARightHandMotionController::HandNomalState()
 	HandTouchActorFlag = false;
 	WantToGrip = true;
 	VisibleSwordFlag = true;
-	Sword->SetActorHiddenInGame(false); //검을 숨김
+	Sword->SetActorHiddenInGame(false); // 검 보이게함
 	AttachedActor = nullptr;		// 포션이 삭제되므로 손에 붙은 액터를 null값으로 바꾼다.
 }
 
@@ -420,9 +424,10 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 	// 종류 : 포션박스, 머리, 문, 기타액터
 
 	// 메뉴의 박스와 충돌시 검을 지우고 손을 펴는 동작으로 바꿀예정
-	if (OtherComp->ComponentHasTag("HiddenGrips"))
+	if (OtherComp->ComponentHasTag("GrabRange"))
 	{
-		UE_LOG(LogTemp, Log, TEXT("AeGukka"));
+		HandOpenState();
+		return;
 	}
 
 	if (OtherActor->ActorHasTag("PotionBag"))		// 'PotionBox'라는 태그를 가진 액터일 때
@@ -448,6 +453,13 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 
 void ARightHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
+	// 메뉴의 박스와 충돌시 검을 지우고 손을 펴는 동작으로 바꿀예정
+	if (OtherComp->ComponentHasTag("GrabRange"))
+	{
+		HandNomalState();
+		return;
+	}
+
 	if (OtherActor->ActorHasTag("DisregardForRightHand"))
 		return;
 
