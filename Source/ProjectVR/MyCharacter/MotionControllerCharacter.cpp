@@ -104,6 +104,8 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	DashPower = 800.0f;
 	GrabState = E_HandState::Open;		// 나중에 무기 투명화 처리하면 그랩상태로 바꿔야함
 
+	HeadBox->ComponentTags.Add(FName(TEXT("DisregardForLeftHand")));
+	HeadBox->ComponentTags.Add(FName(TEXT("DisregardForRightHand")));
 	Tags.Add(FName("Character"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));

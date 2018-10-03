@@ -343,9 +343,10 @@ void ARightHandMotionController::ReleaseActor()
 		}
 		AttachedActor = nullptr;			// 현재 잡은 것이 없다.
 	}
-	else
+	else			// 메뉴에서 그랩 후 릴리즈하면 아무것도 없는 오픈상태여야하기 때문에 잡힌 것이 없을 때 진행
 	{
-		HandOpenState();
+		if(Sword->bHidden)		// 칼이 숨겨져 있을 때(메뉴 범위에 손이 들어가있을 때)
+			HandOpenState();		// 릴리즈 시 오픈상태로 변환
 	}
 }
 
@@ -421,9 +422,14 @@ void ARightHandMotionController::HandGrabState()
 
 void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+	if (OtherComp)
+		UE_LOG(LogTemp, Log, TEXT("%s"), *OtherComp->GetName());
 	// 종류 : 포션박스, 머리, 문, 기타액터
+	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
+	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
+		return;
 
-	// 메뉴의 박스와 충돌시 검을 지우고 손을 펴는 동작으로 바꿀예정
+	// 메뉴의 공간 범위안에 들어가면 검을 지우는 오픈상태로 되게 함
 	if (OtherComp->ComponentHasTag("GrabRange"))
 	{
 		HandOpenState();
@@ -453,7 +459,11 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 
 void ARightHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	// 메뉴의 박스와 충돌시 검을 지우고 손을 펴는 동작으로 바꿀예정
+	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
+	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
+		return;
+
+	// 메뉴의 공간 범위를 나가게되면 검을 든 보통상태로 있게 함
 	if (OtherComp->ComponentHasTag("GrabRange"))
 	{
 		HandNomalState();
