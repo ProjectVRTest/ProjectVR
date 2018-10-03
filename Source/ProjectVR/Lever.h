@@ -38,6 +38,9 @@ public:
 	UPROPERTY()
 		class AActor* TouchActor;
 
+	FVector Pre;
+	FVector Cur;
+
 	UFUNCTION()
 		void OnLeverOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 오른손과 상호작용하기 위해서 만듦

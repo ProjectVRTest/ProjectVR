@@ -55,6 +55,9 @@ void ALever::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Cur = FVector::ZeroVector;
+	Pre = FVector::ZeroVector;
+
 	Lever->OnComponentBeginOverlap.AddDynamic(this, &ALever::OnLeverOverlap);		// 오버랩 이벤트를 발생시킬 수 있도록 설정
 	Lever->OnComponentEndOverlap.AddDynamic(this, &ALever::OnLeverEndOverlap);		// 오버랩 이벤트를 발생시킬 수 있도록 설정
 }
@@ -71,53 +74,23 @@ void ALever::Tick(float DeltaTime)
 			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 			if (Character)
 			{
-				ARightHandMotionController* RightHand = Cast<ARightHandMotionController>(Character->RightHand);
+				ARightHandMotionController* RightHand = Cast<ARightHandMotionController>(TouchActor);
 				if (RightHand)
 				{
 					if (RightHand->bisRightGrab)		// 참이면 상호작용 실행
 					{
-						FVector Cal = UKismetMathLibrary::Subtract_VectorVector(UKismetMathLibrary::InverseTransformLocation
-								(this->GetActorTransform(), TouchActor->GetActorLocation()), LeverScene->GetComponentLocation());
-						
-						LeverScene->SetRelativeRotation(FRotator(UKismetMathLibrary::Clamp(UKismetMathLibrary::Atan2(Cal.Z, Cal.X), 0.0f, 90.0f), 0.0f, 0.0f));
+						FVector Cal = UKismetMathLibrary::InverseTransformLocation
+						(GetActorTransform(), RightHand->GetActorLocation());
+						Cal = Cal - LeverScene->GetComponentLocation();
+						float Degree = UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(Cal.X, Cal.Z));
+						LeverScene->SetRelativeRotation(FRotator(Degree, 0.0f, 0.0f));
 
 
-						UE_LOG(LogTemp, Log, TEXT("%f"), UKismetMathLibrary::Atan2(Cal.Z, Cal.X));
+						UE_LOG(LogTemp, Log, TEXT("%f / %f / %f //// %f / %f / %f"), RightHand->GetActorLocation().X, RightHand->GetActorLocation().Y, RightHand->GetActorLocation().Z, Cal.X, Cal.Y, Cal.Z);
 					}
 				}
 			}
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		//AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		//if (Character)	// Interactor변수에 오른손이 들어와있는데 오른손의 그랩버튼을 떼면 작용을 하지 못하게 한다.
-		//{
-		//	ARightHandMotionController* RightHand = Cast<ARightHandMotionController>(Interactor);
-		//	if (RightHand)
-		//	{
-		//		if(RightHand->bisRightGrab == false)
-		//			Interactor = nullptr;
-		//		else	// Grab상태. 상호작용
-		//		{
-		//			FVector Cal = UKismetMathLibrary::Subtract_VectorVector(UKismetMathLibrary::InverseTransformLocation
-		//			(this->GetActorTransform(), Interactor->GetActorLocation()), LeverScene->GetComponentLocation());
-
-		//			LeverScene->SetRelativeRotation(FRotator(0.0f, UKismetMathLibrary::Clamp(UKismetMathLibrary::Atan2(Cal.Z, Cal.X), 0.0f, 90.0f), 0.0f));
-		//		}
-		//	}
-		//}
 	}
 }
 
@@ -146,13 +119,13 @@ void ALever::OnLeverOverlap(UPrimitiveComponent * OverlappedComp, AActor * Other
 
 void ALever::OnLeverEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	// 오른손과 상호작용
-	if (OtherActor->ActorHasTag("RightHand"))
-	{
-		TouchActor = nullptr;
-		if (Interactor)
-			Interactor = nullptr;
-		UE_LOG(LogTemp, Log, TEXT("interactor with righthand out"));
-	}
+	//// 오른손과 상호작용
+	//if (OtherActor->ActorHasTag("RightHand"))
+	//{
+	//	TouchActor = nullptr;
+	//	if (Interactor)
+	//		Interactor = nullptr;
+	//	UE_LOG(LogTemp, Log, TEXT("interactor with righthand out"));
+	//}
 }
 

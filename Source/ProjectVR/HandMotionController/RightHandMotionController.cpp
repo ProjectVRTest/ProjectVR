@@ -235,6 +235,7 @@ void ARightHandMotionController::GrabActor()
 			Sword->SetActorHiddenInGame(true);	// 검을 숨김 -> GrabActor함수로 인해 근처에 액터가 있을 때 검을 보이지 않게 한다.
 			if (NearestMesh->ActorHasTag("Door"))
 			{
+				UE_LOG(LogTemp, Log, TEXT("eeeeeeeeeeeeeeeeeeeeeeeeeee"));
 				// 문을 여는 것이라면 붙일 수는 있겠지만, 손을 따라다니지는 않는다.
 			}
 			else if (NearestMesh->ActorHasTag("PotionBag"))
@@ -422,8 +423,6 @@ void ARightHandMotionController::HandGrabState()
 
 void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherComp)
-		UE_LOG(LogTemp, Log, TEXT("%s"), *OtherComp->GetName());
 	// 종류 : 포션박스, 머리, 문, 기타액터
 	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
 	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
