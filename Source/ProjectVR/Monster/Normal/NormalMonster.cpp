@@ -85,6 +85,7 @@ ANormalMonster::ANormalMonster()
 
 	ArrowSpawnLocation = CreateDefaultSubobject<USceneComponent>(TEXT("ArrowSpawnLocation"));
 	ArrowSpawnLocation->SetupAttachment(GetRootComponent());
+	ArrowSpawnLocation->SetRelativeLocation(FVector(90.0f, 8.0f, 50.0f));
 	ArrowSpawnLocation->SetRelativeScale3D(FVector(-8.0f,90.0f,134.0f));
 	MaxHP = 100;
 	CurrentHP = MaxHP;

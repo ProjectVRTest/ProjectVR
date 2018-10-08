@@ -10,6 +10,9 @@ ASwordWaveTarget::ASwordWaveTarget()
 	PrimaryActorTick.bCanEverTick = true;
 
 	InitialLifeSpan = 4.0f;
+
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned

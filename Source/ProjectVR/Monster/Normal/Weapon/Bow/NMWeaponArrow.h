@@ -18,6 +18,8 @@ public:
 		class UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UProjectileMovementComponent* Projecttile;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UBoxComponent* ArrowHit;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,6 +28,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
+	UFUNCTION()
+	void ArrowBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION()
+		void Homing(class AActor* Target);
 	
 };

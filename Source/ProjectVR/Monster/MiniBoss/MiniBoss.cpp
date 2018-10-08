@@ -104,6 +104,7 @@ AMiniBoss::AMiniBoss()
 		AfterImageEndEffect = PT_AfterImageEndEffect.Object;
 	}
 	SwordWaveCount = 1;
+	ParryingPointCount = 0;
 
 	SwordWaveSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("SwordWaveSpawn"));
 	SwordWaveSpawn->SetupAttachment(GetRootComponent());

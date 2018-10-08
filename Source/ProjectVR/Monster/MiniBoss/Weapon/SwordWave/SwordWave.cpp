@@ -32,6 +32,7 @@ ASwordWave::ASwordWave()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Sphere);
 	Mesh->SetupAttachment(Sphere);
+	Mesh->SetCollisionProfileName("NoCollision");
 	Mesh->SetRelativeRotation(FRotator(-90.0f, 0, 180.0f));
 	Mesh->SetRelativeScale3D(FVector(0.5f, 2.5f, 5.0f));
 	

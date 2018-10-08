@@ -82,6 +82,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class USceneComponent* SwordWaveSpawn;
 	int SwordWaveCount;
+	int ParryingPointCount;
 	float Yaw; //캐릭터가 좌우로 움직일때 판단해줄 값
 	float RotateYaw;
 	bool WalkStopFlag; 

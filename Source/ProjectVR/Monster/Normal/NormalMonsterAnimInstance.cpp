@@ -3,6 +3,7 @@
 #include "NormalMonsterAnimInstance.h"
 #include "NormalMonster.h"
 #include "Monster/Normal/Weapon/Bow/NMWeaponArrow.h"
+#include "Monster/Normal/Weapon/Bow/NMWeaponArrow.h"
 
 void UNormalMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
@@ -48,6 +49,13 @@ void UNormalMonsterAnimInstance::AnimNotify_ArrowDestroy(UAnimNotify * Notify)
 
 	if (NormalMonster)
 	{
+		FActorSpawnParameters SpawnActorOption;
+		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
 		NormalMonster->DeleteArrowMesh();
+
+		ANMWeaponArrow* NMArrow = GetWorld()->SpawnActor<ANMWeaponArrow>(NMArrow->StaticClass(),NormalMonster->ArrowSpawnLocation->GetComponentLocation(),NormalMonster->GetActorRotation(), SpawnActorOption);
+
+		NMArrow->Homing(NormalMonster->Target);
 	}
 }

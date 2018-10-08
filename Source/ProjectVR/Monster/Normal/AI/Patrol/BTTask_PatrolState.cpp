@@ -12,21 +12,18 @@ EBTNodeResult::Type UBTTask_PatrolState::ExecuteTask(UBehaviorTreeComponent & Ow
 		ANormalMonster* NormalMonster = Cast<ANormalMonster>(AI->GetPawn());
 
 		if (NormalMonster)
-		{
-			GLog->Log(FString::Printf(TEXT("0")));
+		{			
 			PatrolPoints = NormalMonster->PatrolPoints;
 
 			int PatrolPointsLenth = PatrolPoints.Num();
 
 			if (PatrolPointsLenth<1)
 			{
-				GLog->Log(FString::Printf(TEXT("1")));
 				NormalMonster->CurrentState = ENormalMonsterState::Idle;
 				NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Wait;
 			}
 			else
-			{
-				GLog->Log(FString::Printf(TEXT("2")));
+			{				
 				int RandomPatrolPoint = FMath::RandRange(0, PatrolPointsLenth-1);
 				PatrolPoint = PatrolPoints[RandomPatrolPoint];	
 				AI->BBComponent->SetValueAsObject("PatrolPoint", PatrolPoint);
