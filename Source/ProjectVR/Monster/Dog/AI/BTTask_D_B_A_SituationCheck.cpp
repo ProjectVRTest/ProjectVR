@@ -79,6 +79,10 @@ void UBTTask_D_B_A_SituationCheck::TickTask(UBehaviorTreeComponent & OwnerComp, 
 				FinishLatentTask(OwnerComp, EBTNodeResult::Failed);				// 틱 종료
 			}
 		}
-
+		else if (FloorDistance.FloorDist > 1100.0f)			// 개가 떨어지고나서 혹시 바로 앞에 떨어지는것 방지
+		{
+			Dog->GetCapsuleComponent()->SetCollisionProfileName("IgnoreOnlyPawn");	
+			UE_LOG(LogTemp, Log, TEXT("@@ %f"), FloorDistance.FloorDist);
+		}
 	}
 }

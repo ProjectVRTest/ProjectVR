@@ -50,32 +50,34 @@ void UBTService_MBBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 						switch (MiniBoss->CurrentAnimState)
 						{
 						case EMiniBossAnimState::Walk:
-							if (Distance > 500.0f)
-							{
-								MiniBoss->WalkStopFlag = false;
-								MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
-								MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
-								MiniBoss->CurrentState = EMiniBossState::Chase;								
-							}
-							else if (Distance < 300.0f && !MiniBoss->IsAttack)
-							{
-								//GLog->Log(FString::Printf(TEXT("Walk -> Attack")));
-								//MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
-								MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;		
-								MiniBoss->CurrentState = EMiniBossState::Battle;
-								MiniBoss->IsAttack = true; //공격중이란것을 나타냄
-							}
-							break;
+							//if (Distance > 500.0f)
+							//{
+							//	MiniBoss->WalkStopFlag = false;
+							//	MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
+							//	MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
+							//	MiniBoss->CurrentState = EMiniBossState::Chase;								
+							//}
+							//else if (Distance < 300.0f && !MiniBoss->IsAttack)
+							//{
+							//	MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;		
+							//	MiniBoss->CurrentState = EMiniBossState::Battle;
+							//	MiniBoss->IsAttack = true; //공격중이란것을 나타냄
+							//}
+							//break;
 						case EMiniBossAnimState::Attack:
 							if (Distance > 500.0f && MiniBoss->AttackCompleteFlag)
 							{
 								MiniBoss->AttackCompleteFlag = false;
 								MiniBoss->IsAttack = false;
-								GLog->Log(FString::Printf(TEXT("Disatance 500.0 이상 , AttackCompleteFlag true")));
+							}
+
+							switch (MiniBoss->CurrentAttackState)
+							{
+							case EMiniBossAttackState::ParryingState:
+								break;
 							}
 							break;
 						case EMiniBossAnimState::BackWalk:
-							//GLog->Log(FString::Printf(TEXT("BackWalk")));
 							break;
 						}
 					}						

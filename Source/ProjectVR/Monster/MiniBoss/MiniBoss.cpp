@@ -21,6 +21,7 @@
 #include "MyCharacter/CameraLocation.h"
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "MiniBossParryingPoint.h"
 
 // Sets default values
 AMiniBoss::AMiniBoss()
@@ -174,7 +175,7 @@ void AMiniBoss::Tick(float DeltaTime)
 	//GLog->Log(FString::Printf(TEXT("HP : %f"),CurrentHP));
 
 	//GLog->Log(FString::Printf(TEXT("%f"), GetCharacterMovement()->Velocity.Size()));
-
+	//GLog->Log(FString::Printf(TEXT("ParryingPointCount : %d"), ParryingPointCount));
 	if (AI)
 	{
 		AI->BBComponent->SetValueAsEnum("CurrentState", (uint8)CurrentState);
@@ -198,6 +199,65 @@ void AMiniBoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AMiniBoss::ParryingPointSet(int ParryingSetCount)
+{
+	if (ParryingSetCount > 0)
+	{
+		AMiniBossParryingPoint * MiniBossParryingPoint;
+		FActorSpawnParameters SpawnActorOption;
+		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+		FName RightArmsParryingPoint = TEXT("RightArmsParryingPoint");
+		FName RightUpperArmsParryingPoint = TEXT("RightUpperArmsParryingPoint");
+		FName LeftArmsParryingPoint = TEXT("LeftArmsParryingPoint");
+		FName LeftUpperArmsParryingPoint = TEXT("LeftUpperArmsParryingPoint");
+		FName SpineMiddleParryingPoint = TEXT("SpineMiddleParryingPoint");
+		FName LeftKneeParryingPoint = TEXT("LeftKneeParryingPoint");
+		FName RightKneeParryingPoint = TEXT("RightKneeParryingPoint");
+		//ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
+
+		//ASwordWave* SwordWave = GetWorld()->SpawnActor<ASwordWave>(SwordWave->StaticClass(), MiniBoss->SwordWaveSpawn->GetComponentLocation(), MiniBoss->GetActorRotation(), SpawnActorOption);
+
+		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("RightArmsParryingPoint")));
+
+		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("RightUpperArmsParryingPoint")));
+
+		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("LeftArmsParryingPoint")));
+
+		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("LeftUpperArmsParryingPoint")));
+
+		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("SpineMiddleParryingPoint")));
+
+		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("LeftKneeParryingPoint")));
+
+		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("RightKneeParryingPoint")));
+		/*switch (ParryingSetCount)
+		{
+		case 1:			
+			MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(),GetActorLocation(),GetActorRotation(),SpawnActorOption);
+			MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("RightArmsParryingPoint")));
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		}*/
+	}	
 }
 
 void AMiniBoss::OnSeeCharacter(APawn * Pawn)

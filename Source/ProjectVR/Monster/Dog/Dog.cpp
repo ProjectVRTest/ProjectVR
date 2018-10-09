@@ -81,6 +81,8 @@ ADog::ADog()
 	GetMesh()->SetRelativeLocation(FVector(-20.0f, 0.0f, -55.0f));
 	GetMesh()->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 
+	GetCapsuleComponent()->SetCollisionProfileName("IgnoreOnlyPawn");
+
 	DogAttackCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 	DogAttackCollision->SetRelativeLocation(FVector(10.0f, -10.0f, 0.0f));
 	DogAttackCollision->SetRelativeScale3D(FVector(0.6f, 0.6f, 0.6f));
@@ -217,6 +219,7 @@ void ADog::OnAttackCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor
 				SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 				SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 
+				GetCapsuleComponent()->SetCollisionProfileName("OverlapAll");			// 팔을 물고나서 땅에 충돌하는 것을 방지 -> 목이 늘어나고 위치가 불안정했음
 				AttachActor = RightController;
 				AI->BBComponent->SetValueAsBool("bIsBiting", true);
 			}

@@ -56,6 +56,7 @@ void UBTTask_D_B_B_Biting::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * 
 			if (Player->DogArray.Contains(Dog))			// 배열에 개가 있으면
 				Player->DogArray.Remove(Dog);				// 제거
 
+			
 			Dog->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);		// 뗌
 
 			// 날라가는 방향

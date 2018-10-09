@@ -81,17 +81,22 @@ public:
 		class AMiniBossWeapon* Sword;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class USceneComponent* SwordWaveSpawn;
-	int SwordWaveCount;
-	int ParryingPointCount;
-	float Yaw; //캐릭터가 좌우로 움직일때 판단해줄 값
-	float RotateYaw;
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category = "SwordWave")
+		int SwordWaveCount;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
+		int ParryingPointCount; 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
+		float Yaw; //캐릭터가 좌우로 움직일때 판단해줄 값
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Rotate")
+		float RotateYaw;
 	bool WalkStopFlag; 
 	bool IsAttack; //공격중인지 아닌지 판단
 	bool AttackCompleteFlag; //공격이 완료 됏는지 판단
 	bool StabFlag; //찌르기 애니메이션의 재생을 판단해줄 변수로 true이면 찌르기 노콤보 애니메이션이 재생되고, false이면 찌르기 콤보 애니메이션이 재생된다.
 	bool TwoHandWidthFlag; //가로베기 애니메이션의 재생을 판단해줄 변수로 true이면 가로베기 노콤보 애니메이션이 재생되고, false이면 가로베기 콤보 애니메이션이 재생된다.
 
-
+	UFUNCTION()
+		void ParryingPointSet(int ParryingSetCount);
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn); //캐릭터를 감지하면 실행해줄 함수
 	UFUNCTION()
