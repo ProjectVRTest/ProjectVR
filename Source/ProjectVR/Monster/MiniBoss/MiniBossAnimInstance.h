@@ -42,8 +42,6 @@ public:
 		float Yaw;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Yaw")
 		float RotateYaw;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Walk")
-		bool WalkStopFlag;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
 		bool StabFlag;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")

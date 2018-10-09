@@ -4,24 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "MiniBossAIController.generated.h"
+#include "BossAIController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTVR_API AMiniBossAIController : public AAIController
+class PROJECTVR_API ABossAIController : public AAIController
 {
 	GENERATED_BODY()
 public:
-	AMiniBossAIController();
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 		class UBehaviorTreeComponent* BTComponent;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 		class UBlackboardComponent* BBComponent;
 
+	ABossAIController();
 	UFUNCTION()
-		virtual void Possess(APawn* InPawn) override;	
+		virtual void Possess(APawn* InPawn) override;
+	
+	
+	
 };

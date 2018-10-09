@@ -84,8 +84,10 @@ public:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category = "SwordWave")
 		int SwordWaveCount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
-		int ParryingPointCount; 
+		int ParryingPointMaxCount; //HP에 따라서 확정된 패링카운트 갯수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
+		int ParryingPointCount; //현재 기록된 패링카운트 갯수
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BattleWalk")
 		float Yaw; //캐릭터가 좌우로 움직일때 판단해줄 값
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Rotate")
 		float RotateYaw;
@@ -95,8 +97,14 @@ public:
 	bool StabFlag; //찌르기 애니메이션의 재생을 판단해줄 변수로 true이면 찌르기 노콤보 애니메이션이 재생되고, false이면 찌르기 콤보 애니메이션이 재생된다.
 	bool TwoHandWidthFlag; //가로베기 애니메이션의 재생을 판단해줄 변수로 true이면 가로베기 노콤보 애니메이션이 재생되고, false이면 가로베기 콤보 애니메이션이 재생된다.
 
+	TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열
+
 	UFUNCTION()
-		void ParryingPointSet(int ParryingSetCount);
+		void ParryingPointInit(); //패링포인트 배열에 패링포인트소켓이름을 저장해주는 함수
+	UFUNCTION()
+		void ParryingPointSet(); //패링포인트를 중간보스의 HP상태에 따라 스폰해주는 함수
+	UFUNCTION()
+		void ParryingPointValueSet(int ParryingCount); //HP가 50%이하인경우 지정한 패링포인트 수만큼 랜덤하게 스폰해주는 함수
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn); //캐릭터를 감지하면 실행해줄 함수
 	UFUNCTION()

@@ -39,7 +39,7 @@ AMiniBossParryingPoint::AMiniBossParryingPoint()
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 
 	IsAttackMiniBossWeapon = false;
-	//InitialLifeSpan = 3.0f; //검기 수명
+	InitialLifeSpan = 2.0f; //패링포인트 수명
 }
 
 // Called when the game starts or when spawned
@@ -70,11 +70,14 @@ void AMiniBossParryingPoint::ParryingPointBeginOverlap(UPrimitiveComponent* Over
 		{
 			AMiniBoss* MiniBoss = Cast<AMiniBoss>(GetAttachParentActor());
 			
-			if (MiniBoss && !IsAttackMiniBossWeapon)
+			if (PlayerSword->SwordMoveVelocity.Size() >= 1500)
 			{
-				IsAttackMiniBossWeapon = true;
-				MiniBoss->ParryingPointCount++;				
-			}
+				if (MiniBoss && !IsAttackMiniBossWeapon)
+				{
+					IsAttackMiniBossWeapon = true;
+					MiniBoss->ParryingPointCount++;
+				}
+			}			
 		}		
 	}
 }

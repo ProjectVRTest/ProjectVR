@@ -149,7 +149,7 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 						MiniBossWeapon->IsParryingAttack = false;
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, MiniBoss->GetActorLocation());
 						GLog->Log(FString::Printf(TEXT("방패 패링")));
-						MiniBoss->ParryingPointSet(1);						
+						MiniBoss->ParryingPointSet();//패링 포인트를 스폰(HP에 따라)						
 						MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingStart;		 
 						MiniBoss->CurrentAttackState = EMiniBossAttackState::ParryingState;
 					}
