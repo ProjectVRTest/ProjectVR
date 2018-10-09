@@ -180,6 +180,8 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 		DogArray.Shrink();	// 메모리 최적화
 	}
 
+	//UE_LOG(LogTemp, Log, TEXT("-- %f / %f / %f"), Camera->GetForwardVector().X, Camera->GetForwardVector().Y, Camera->GetForwardVector().Z);
+	//UE_LOG(LogTemp, Log, TEXT("== %f / %f / %f"), Camera->GetUpVector().X, Camera->GetUpVector().Y, Camera->GetUpVector().Z);
 	/*ADog** Dog = DogArray.GetData();
 	for (int i = 0; i <DogArray.Num(); i++)
 	{
