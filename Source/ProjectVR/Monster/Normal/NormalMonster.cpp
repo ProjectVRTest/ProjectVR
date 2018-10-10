@@ -42,6 +42,13 @@ ANormalMonster::ANormalMonster()
 	CurrentIdleState = ENormalMonsterIdleState::Wait;
 	CurrentAttackState = ENormalMonsterAttackState::Idle;
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>NMAttackReverse_Montage(TEXT("AnimMontage'/Game/Blueprints/Monster/Normal/Animation/NM_Attack_Reverse.NM_Attack_Reverse'"));
+
+	if (NMAttackReverse_Montage.Succeeded())
+	{
+		NMAttackReverseMontage = NMAttackReverse_Montage.Object;
+	}
+
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
 	PawnSensing->bSeePawns = true;
@@ -56,11 +63,18 @@ ANormalMonster::ANormalMonster()
 		SwordBehaviorTree = NormalSwordMonster_BT.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree>NormalArcherMonster_BT(TEXT("BehaviorTree'/Game/Blueprints/Monster/Normal/AI/BT_NormalArcherMonster.BT_NormalArcherMonster'"));
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree>NormalMoveArcherMonster_BT(TEXT("BehaviorTree'/Game/Blueprints/Monster/Normal/AI/BT_NormalMoveArcherMonster.BT_NormalMoveArcherMonster'"));
 
-	if (NormalArcherMonster_BT.Succeeded())
+	if (NormalMoveArcherMonster_BT.Succeeded())
 	{
-		ArcherBehaviorTree = NormalArcherMonster_BT.Object;
+		MoveArcherBehaviorTree = NormalMoveArcherMonster_BT.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree>NormalDontMoveArcherMonster_BT(TEXT("BehaviorTree'/Game/Blueprints/Monster/Normal/AI/BT_NormalDontMoveArcherMonster.BT_NormalDontMoveArcherMonster'"));
+
+	if (NormalDontMoveArcherMonster_BT.Succeeded())
+	{
+		DontMoveArcherBehaviorTree = NormalDontMoveArcherMonster_BT.Object;
 	}
 
 	QuiverComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("QuiverComponent"));
@@ -144,7 +158,7 @@ void ANormalMonster::BeginPlay()
 			Sword->AttachToComponent(GetMesh(), AttachRules, TEXT("SwordSocket"));
 		}
 		break;
-	case ENormalMonsterKind::Archer:
+	case ENormalMonsterKind::MoveArcher:
 		Bow = GetWorld()->SpawnActor<ANMWeaponBow>(Bow->StaticClass(), SpawnActorOption);
 		if (Bow)
 		{
@@ -154,6 +168,17 @@ void ANormalMonster::BeginPlay()
 				QuiverComponent->SetStaticMesh(QuiverMesh);
 			}
 		}		
+		break;
+	case ENormalMonsterKind::DontMoveArcher:
+		Bow = GetWorld()->SpawnActor<ANMWeaponBow>(Bow->StaticClass(), SpawnActorOption);
+		if (Bow)
+		{
+			Bow->AttachToComponent(GetMesh(), AttachRules, TEXT("BowSocket"));
+			if (QuiverMesh)
+			{
+				QuiverComponent->SetStaticMesh(QuiverMesh);
+			}
+		}
 		break;
 	}
 	
@@ -212,16 +237,22 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 				{
 					Target = Pawn;
 					AI->BBComponent->SetValueAsObject("Player", Pawn);
-					if (MonsterKind == ENormalMonsterKind::SwordMan)
+
+					switch (MonsterKind)
 					{
-						CurrentState = ENormalMonsterState::Chase;
+					case ENormalMonsterKind::SwordMan:
 						CurrentAnimState = ENormalMonsterAnimState::Wait;
-					}
-					else
-					{
 						CurrentState = ENormalMonsterState::Chase;
+						break;
+					case ENormalMonsterKind::MoveArcher:
 						CurrentAnimState = ENormalMonsterAnimState::Walk;
-					}				
+						CurrentState = ENormalMonsterState::Chase;
+						break;
+					case ENormalMonsterKind::DontMoveArcher:						
+						CurrentAnimState = ENormalMonsterAnimState::Wait;
+						CurrentState = ENormalMonsterState::Battle;
+						break;
+					}					
 				}
 			}
 		}
@@ -257,8 +288,10 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 					case ENormalMonsterKind::SwordMan:
 						CurrentAnimState = ENormalMonsterAnimState::Wait;
 						break;
-					case ENormalMonsterKind::Archer:
+					case ENormalMonsterKind::MoveArcher:
 						CurrentAnimState = ENormalMonsterAnimState::Walk;
+						break;
+					case ENormalMonsterKind::DontMoveArcher:
 						break;
 					}					
 				}		

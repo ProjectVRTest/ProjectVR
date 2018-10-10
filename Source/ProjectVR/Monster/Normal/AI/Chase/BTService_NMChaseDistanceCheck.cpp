@@ -31,7 +31,7 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 			switch(NormalMonster->MonsterKind)
 			{
 			case ENormalMonsterKind::SwordMan:
-				if (Distance < 400.0f)
+				if (Distance < 200.0f)
 				{
 					if (NormalMonster->CurrentAnimState == ENormalMonsterAnimState::RageAttack)
 					{
@@ -65,14 +65,14 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 					case ENormalMonsterAnimState::Run:
 						break;
 					case ENormalMonsterAnimState::RageRun:
-						if (Distance < 500.0f)
+						if (Distance < 300.0f)
 						{
 							//	GLog->Log(FString::Printf(TEXT("Chase RageRun Distance 500.0f 미만")));
 							NormalMonster->CurrentAnimState = ENormalMonsterAnimState::RageAttack;
 						}
 						break;
 					case ENormalMonsterAnimState::RageAttack:
-						if (Distance > 400.0f)
+						if (Distance > 200.0f)
 						{
 							//GLog->Log(FString::Printf(TEXT("RageAttack Walk")));						
 							if (!GetWorld()->GetTimerManager().TimerExists(RageAttackTimer)) //타이머가 현재 활성화 되어 있는지 확인해준다.
@@ -101,7 +101,7 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 					}
 				}
 				break;
-			case ENormalMonsterKind::Archer:
+			case ENormalMonsterKind::MoveArcher:
 				if (Distance < 1500.0f)
 				{
 					NormalMonster->CurrentArcherAttackState = ENormalMonsterArcherAttackState::ArcherAttackReady;

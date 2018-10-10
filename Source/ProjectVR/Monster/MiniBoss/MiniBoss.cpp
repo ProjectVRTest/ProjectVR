@@ -62,7 +62,7 @@ AMiniBoss::AMiniBoss()
 	TargetCamera = nullptr;
 	Target = nullptr;
 
-	static ConstructorHelpers::FObjectFinder<UAnimMontage>AttackReverse_Montage(TEXT("AnimMontage'/Game/Blueprints/Monster/MiniBoss/Animation/AM_AttackReverse.AM_AttackReverse'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>AttackReverse_Montage(TEXT("AnimMontage'/Game/Blueprints/Monster/MiniBoss/Animation/AM_MB_AttackReverse.AM_MB_AttackReverse'"));
 
 	if (AttackReverse_Montage.Succeeded())
 	{
@@ -76,7 +76,7 @@ AMiniBoss::AMiniBoss()
 	IsAttack = false; //공격할수 있게 해줌
 	StabFlag = false;
 	TwoHandWidthFlag = false;
-	MaxHP = 100.0f;
+	MaxHP = 200.0f;
 	CurrentHP = MaxHP;
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/BackDash/Materials/M_Opacity.M_Opacity'"));
@@ -199,6 +199,7 @@ void AMiniBoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+//패링포인트배열에 패링포인트소켓이름을 저장한다.
 void AMiniBoss::ParryingPointInit()
 {	
 	ParryingPoints.Add(TEXT("RightArmsParryingPoint"));
@@ -232,7 +233,7 @@ void AMiniBoss::ParryingPointSet()
 		//위에서 랜덤하게 받은 수만큼 반복하면서
 		for (int i = 0; i < RandomParryingPointSpawn; i++)
 		{
-			//5개의 패링 점중에서 랜덤한곳에 스폰시켜 주기 위해 0~4까지의 랜덤수를 받는다.
+			//7개의 패링 점중에서 랜덤한곳에 스폰시켜 주기 위해 0~6까지의 랜덤수를 받는다.
 			RandomParryingPointName = FMath::RandRange(0, 6); 
 
 			//이미 스폰한곳은 다시 스폰하지 않기 위해서 그 전랜덤수와 현재 랜덤수를 비교하고
@@ -272,6 +273,7 @@ void AMiniBoss::ParryingPointSet()
 void AMiniBoss::ParryingPointValueSet(int ParryingCount)
 {
 	int RandomParryingPointName;
+	ParryingPointMaxCount = ParryingCount;
 	int* RandomPointNotOverlap = new int[ParryingCount];
 	bool RandomFlag;
 

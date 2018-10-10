@@ -13,7 +13,7 @@ EBTNodeResult::Type UBTTask_NMComboAttackReadyState::ExecuteTask(UBehaviorTreeCo
 
 		if (NormalMonster)
 		{
-			AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 0.4f);
+			AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 0.3f);
 			NormalMonster->CurrentComboAttackState = ENormalMonsterComboAttackState::ComboAttackStart;
 		}
 	}

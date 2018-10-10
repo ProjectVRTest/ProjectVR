@@ -15,24 +15,8 @@ EBTNodeResult::Type UBTTask_NMStabAttackStartState::ExecuteTask(UBehaviorTreeCom
 
 		if (NormalMonster)
 		{
-			if (Distance < 400.0f)
-			{
-				//콤보 공격 시작
-				GLog->Log(FString::Printf(TEXT("3.5m 아래 진입")));
-				AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 1.3f);
-				AI->BBComponent->SetValueAsFloat("ReverseAnimationWaitTime", 0);
-				NormalMonster->CurrentStabAttackState = ENormalMonsterStabAttackState::ClipplingAttackReady;
-			}
-			else
-			{
-				NormalMonster->CurrentStabAttackState = ENormalMonsterStabAttackState::Idle;
-				NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Walk;
-				NormalMonster->CurrentState = ENormalMonsterState::Chase;
-
-				//AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 0);
-				//AI->BBComponent->SetValueAsFloat("ReverseAnimationWaitTime", 0);
-				//단타로 끝냄 찌르기에서 대기 상태로 돌아가는 몽타주 필요
-			}			
+			AI->BBComponent->SetValueAsFloat("ReverseAnimationWaitTime", 0.5f); //리버스 애니메이션 재생시간을 설정해주고	
+			NormalMonster->PlayAnimMontage(NormalMonster->NMAttackReverseMontage, 1.0f, TEXT("StabReverse"));			
 		}		
 	}
 	return EBTNodeResult::Succeeded;

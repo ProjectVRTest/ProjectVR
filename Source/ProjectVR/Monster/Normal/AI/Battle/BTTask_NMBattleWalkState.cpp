@@ -52,7 +52,7 @@ void UBTTask_NMBattleWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uin
 		{
 			NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Wait;
 		}
-		else if (RandomMovePattern > 9 && RandomMovePattern < 15)
+		else if (RandomMovePattern > 9 && RandomMovePattern <= 15)
 		{
 			NormalMonster->CurrentState = ENormalMonsterState::Chase;
 			NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Wait;

@@ -58,7 +58,7 @@ public:
 		class ACameraLocation* TargetCamera;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimMontage")
-		class UAnimMontage* AttackReverseMontage; //피격 애니메이션
+		class UAnimMontage* AttackReverseMontage; //단타 공격 회복 애니메이션 몽타주
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
 		bool CurrentFalling; //캐릭터가 현재 추락하고 있는지 확인해줄 변수 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
