@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTTask_MBParryingLoopState.h"
 #include "Headers/MiniBossAIHeader.h"
@@ -8,7 +8,6 @@ void UBTTask_MBParryingLoopState::InitializeFromAsset(UBehaviorTree & Asset)
 	Super::InitializeFromAsset(Asset);
 
 	bNotifyTick = true;
-	CountAttackFlag = false;
 }
 
 EBTNodeResult::Type UBTTask_MBParryingLoopState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
@@ -17,7 +16,8 @@ EBTNodeResult::Type UBTTask_MBParryingLoopState::ExecuteTask(UBehaviorTreeCompon
 
 	if (AI)
 	{
-		AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
+		CountAttackFlag = false;
+		MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
 
 		if (MiniBoss)
 		{
@@ -31,9 +31,27 @@ void UBTTask_MBParryingLoopState::TickTask(UBehaviorTreeComponent & OwnerComp, u
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
+	if (MiniBoss)
+	{
+		if (MiniBoss->ParryingPointCount > 2)
+		{
+			MiniBoss->ParryingPointCount = 0;
+			MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingSuccess;
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		}
+
+		if (CountAttackFlag)
+		{
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		}
+	}
 }
 
 void UBTTask_MBParryingLoopState::CountAttack()
 {
-
+	if (MiniBoss)
+	{
+		MiniBoss->CurrentParryingState = EMiniBossParryingState::CountAttack;
+		CountAttackFlag = true;
+	}
 }

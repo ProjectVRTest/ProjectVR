@@ -17,14 +17,14 @@ EBTNodeResult::Type UBTTask_NMAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 
 			if (RandomPattern > 0 && RandomPattern < 7) // 60
 			{
-				AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 1.8f);
+				AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 0.8f);
 				NormalMonster->CurrentComboAttackState = ENormalMonsterComboAttackState::Idle;
 				NormalMonster->CurrentStabAttackState = ENormalMonsterStabAttackState::StabAttackReady;
 				NormalMonster->CurrentAttackState = ENormalMonsterAttackState::StabAttack;
 			}
 			else
 			{
-				AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 3.7f);
+				AI->BBComponent->SetValueAsFloat("AttackAnimationWaitTime", 2.6f);
 				NormalMonster->CurrentStabAttackState = ENormalMonsterStabAttackState::Idle;
 				NormalMonster->CurrentComboAttackState = ENormalMonsterComboAttackState::ComboAttackReady;
 				NormalMonster->CurrentAttackState = ENormalMonsterAttackState::ComboAttack;

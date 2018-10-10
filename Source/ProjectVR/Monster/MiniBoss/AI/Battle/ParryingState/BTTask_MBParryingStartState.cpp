@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTTask_MBParryingStartState.h"
 #include "Headers/MiniBossAIHeader.h"
@@ -13,6 +13,7 @@ EBTNodeResult::Type UBTTask_MBParryingStartState::ExecuteTask(UBehaviorTreeCompo
 
 		if (MiniBoss)
 		{
+			GLog->Log(FString::Printf(TEXT("패링 시작 진입")));
 			MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingLoop;
 		}
 	}

@@ -21,6 +21,6 @@ private:
 
 public:
 	FTimerHandle ParryingTimeTimer;
-
 	bool CountAttackFlag;
+	class AMiniBoss* MiniBoss;
 };

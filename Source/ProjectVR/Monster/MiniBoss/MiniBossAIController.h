@@ -14,7 +14,6 @@ class PROJECTVR_API AMiniBossAIController : public AAIController
 {
 	GENERATED_BODY()
 public:
-	
 	AMiniBossAIController();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")

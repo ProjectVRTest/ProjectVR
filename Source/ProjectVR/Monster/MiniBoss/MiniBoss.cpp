@@ -21,6 +21,7 @@
 #include "MyCharacter/CameraLocation.h"
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "MiniBossParryingPoint.h"
 
 // Sets default values
 AMiniBoss::AMiniBoss()
@@ -61,7 +62,7 @@ AMiniBoss::AMiniBoss()
 	TargetCamera = nullptr;
 	Target = nullptr;
 
-	static ConstructorHelpers::FObjectFinder<UAnimMontage>AttackReverse_Montage(TEXT("AnimMontage'/Game/Blueprints/Monster/MiniBoss/Animation/AM_AttackReverse.AM_AttackReverse'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>AttackReverse_Montage(TEXT("AnimMontage'/Game/Blueprints/Monster/MiniBoss/Animation/AM_MB_AttackReverse.AM_MB_AttackReverse'"));
 
 	if (AttackReverse_Montage.Succeeded())
 	{
@@ -75,7 +76,7 @@ AMiniBoss::AMiniBoss()
 	IsAttack = false; //공격할수 있게 해줌
 	StabFlag = false;
 	TwoHandWidthFlag = false;
-	MaxHP = 100000.0f;
+	MaxHP = 200.0f;
 	CurrentHP = MaxHP;
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/BackDash/Materials/M_Opacity.M_Opacity'"));
@@ -104,6 +105,7 @@ AMiniBoss::AMiniBoss()
 		AfterImageEndEffect = PT_AfterImageEndEffect.Object;
 	}
 	SwordWaveCount = 1;
+	ParryingPointMaxCount = 0;
 	ParryingPointCount = 0;
 
 	SwordWaveSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("SwordWaveSpawn"));
@@ -133,8 +135,9 @@ AMiniBoss::AMiniBoss()
 void AMiniBoss::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	
+
+	ParryingPointInit();
+
 	FActorSpawnParameters SpawnActorOption;
 	SpawnActorOption.Owner = this;
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -158,13 +161,9 @@ void AMiniBoss::BeginPlay()
 void AMiniBoss::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
-	FVector Origin;
-	FVector BoxExtent;
-	float SphereRadius;
-	UKismetSystemLibrary::GetComponentBounds(GetMesh(), Origin, BoxExtent, SphereRadius);
-	
+		
 	//GLog->Log(FString::Printf(TEXT("%d"), AttackCompleteFlag));
 
 	/*GLog->Log(FString::Printf(TEXT("Origin X : %0.1f  Y : %0.1f Z : %0.1f"), Origin.X, Origin.Y, Origin.Z));
@@ -174,7 +173,7 @@ void AMiniBoss::Tick(float DeltaTime)
 	//GLog->Log(FString::Printf(TEXT("HP : %f"),CurrentHP));
 
 	//GLog->Log(FString::Printf(TEXT("%f"), GetCharacterMovement()->Velocity.Size()));
-
+	//GLog->Log(FString::Printf(TEXT("ParryingPointCount : %d"), ParryingPointCount));
 	if (AI)
 	{
 		AI->BBComponent->SetValueAsEnum("CurrentState", (uint8)CurrentState);
@@ -198,6 +197,133 @@ void AMiniBoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+//패링포인트배열에 패링포인트소켓이름을 저장한다.
+void AMiniBoss::ParryingPointInit()
+{	
+	ParryingPoints.Add(TEXT("RightArmsParryingPoint"));
+	ParryingPoints.Add(TEXT("RightUpperArmsParryingPoint"));
+	ParryingPoints.Add(TEXT("LeftArmsParryingPoint"));
+	ParryingPoints.Add(TEXT("LeftUpperArmsParryingPoint"));
+	ParryingPoints.Add(TEXT("SpineMiddleParryingPoint"));
+	ParryingPoints.Add(TEXT("LeftKneeParryingPoint"));
+	ParryingPoints.Add(TEXT("RightKneeParryingPoint"));
+}
+
+void AMiniBoss::ParryingPointSet()
+{
+	float HPPercent = CurrentHP / MaxHP;
+	int PreviousParryingPointName =-1;
+	int RandomParryingPointName;
+
+	AMiniBossParryingPoint * MiniBossParryingPoint;
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+	
+	if (HPPercent > 0.5f && HPPercent <= 1.0f) //HP가 50~100% 일때
+	{		
+		//패링 점을 1~2개 생성하기 위해 1~2만큼 랜덤하게 수를 받는다.
+		int RandomParryingPointSpawn = FMath::RandRange(1, 2); 
+		
+		ParryingPointMaxCount = RandomParryingPointSpawn; //패링 점이 최대 몇개 인지 저장해둔다.
+
+		//위에서 랜덤하게 받은 수만큼 반복하면서
+		for (int i = 0; i < RandomParryingPointSpawn; i++)
+		{
+			//7개의 패링 점중에서 랜덤한곳에 스폰시켜 주기 위해 0~6까지의 랜덤수를 받는다.
+			RandomParryingPointName = FMath::RandRange(0, 6); 
+
+			//이미 스폰한곳은 다시 스폰하지 않기 위해서 그 전랜덤수와 현재 랜덤수를 비교하고
+			if (RandomParryingPointName == PreviousParryingPointName)
+			{
+				i--; //똑같은 수가 있으면 다시 받아서 다른수가 나오게 한다.
+				continue;
+			}
+
+			//전 랜덤수와 현재 랜덤수가 다르다면 패링점을 월드에 스폰해주고
+			MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+
+			//스폰한 패링점을 붙여줄 위치를 위에서 받은 RandomParryingPointName을 이용해서 ParryingPoint에서 꺼내오고
+			FName ParryingPointSpawnLocation = ParryingPoints[RandomParryingPointName];
+
+			//그곳에 앞에서 스폰한 패링포인트를 붙여준다.
+			MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, ParryingPointSpawnLocation);
+
+			//전 랜덤수에 현재 랜덤수를 저장해둬서 스폰한곳이 다시 안나오게 해준다.
+			PreviousParryingPointName = RandomParryingPointName;
+		}
+	} //HP가 50%미만 이면 각 HP비율에 맞게 패링 점을 스폰한다.
+	else if (HPPercent > 0.4f &&HPPercent <= 0.5f)
+	{
+		ParryingPointValueSet(3); //3개 랜덤하게 스폰
+	}
+	else if (HPPercent > 0.3f && HPPercent <= 0.4f)
+	{
+		ParryingPointValueSet(5); //5개 랜덤하게 스폰
+	}
+	else if (HPPercent > 0 && HPPercent <= 0.3f)
+	{
+		ParryingPointValueSet(7); //7개 랜덤하게 스폰
+	}
+}
+
+void AMiniBoss::ParryingPointValueSet(int ParryingCount)
+{
+	int RandomParryingPointName;
+	ParryingPointMaxCount = ParryingCount;
+	int* RandomPointNotOverlap = new int[ParryingCount];
+	bool RandomFlag;
+
+	for (int k = 0; k < ParryingCount; k++)
+	{
+		RandomPointNotOverlap[k] = -1;
+	}	
+
+	AMiniBossParryingPoint * MiniBossParryingPoint;
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+		
+	for (int i = 0; i < ParryingCount; i++)
+	{
+		RandomParryingPointName = FMath::RandRange(0, 6);
+		RandomFlag = true;
+
+		for (int j = 0; j < ParryingCount; j++)
+		{
+			if (RandomPointNotOverlap[j] == RandomParryingPointName)
+			{
+				i--;
+				RandomFlag = false;
+			}
+		}
+		
+		if (RandomFlag)
+		{
+			RandomPointNotOverlap[i] = RandomParryingPointName;
+		}
+	}
+
+	for (int j = 0; j < ParryingCount; j++)
+	{
+		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+
+		FName ParryingPointSpawnLocation = ParryingPoints[RandomPointNotOverlap[j]];
+		GLog->Log(FString::Printf(TEXT("%d"), RandomPointNotOverlap[j]));
+		GLog->Log(ParryingPointSpawnLocation.ToString());
+
+		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, ParryingPointSpawnLocation);
+	}
+
+	/*if (RandomPointNotOverlap != nullptr)
+	{
+		free(RandomPointNotOverlap);
+		RandomPointNotOverlap = nullptr;
+	}	*/
 }
 
 void AMiniBoss::OnSeeCharacter(APawn * Pawn)
@@ -243,9 +369,7 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
 	CurrentHP -= Damage;
-
-	//UE_LOG(LogClass, Warning, TEXT("%s"), *EventInstigator->GetPawn()->GetName());
-
+	GLog->Log(FString::Printf(TEXT("HPPercent : %f"), CurrentHP / MaxHP));
 	if (CurrentHP < 0)
 	{
 		CurrentHP = 0;
@@ -255,7 +379,6 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 	if (ParryingFlag)
 	{
 		IsParrying = true;
-		//CurrentAnimState = EMiniBossAnimState::ParryingReady;
 	}
 	else
 	{

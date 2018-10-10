@@ -240,12 +240,10 @@ void ARightHandMotionController::GrabActor()
 			}
 			else if (NearestMesh->ActorHasTag("PotionBag"))
 			{
-				GLog->Log(FString::Printf(TEXT("콜리전에 들어옴")));
 				APotionBag* PotionBag = Cast<APotionBag>(NearestMesh);
 
 				if (PotionBag)
 				{
-					GLog->Log(FString::Printf(TEXT("가방잇음")));
 					if (PotionBag->Potions.Num()>0)
 					{
 						FActorSpawnParameters SpawnActorOption; //액터를 스폰할때 쓰일 구조체 변수
@@ -273,7 +271,7 @@ void ARightHandMotionController::GrabActor()
 							Potion->Mesh->SetCollisionProfileName(TEXT("OverlapAll"));
 							Potion->SetActorRelativeScale3D(FVector(1.1f, 1.1f, 1.1f));
 							Potion->AttachToComponent(PotionPosition, AttachRules);//스폰한 검을 SwordAttachScene에 붙인다.
-							Potion->TokenCompleteDelegate.BindUObject(this, &ARightHandMotionController::HandNomalState);
+							HandGrabState();
 						}
 						else
 						{
@@ -336,9 +334,32 @@ void ARightHandMotionController::ReleaseActor()
 				APotion* AttachPotion = Cast<APotion>(AttachedActor);
 				if (AttachPotion)
 				{
-					AttachPotion->BagInputFlag = true;
-					AttachPotion->Mesh->SetSimulatePhysics(true);
-					AttachedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);			// 잡은 물체와 뗀다					
+					AActor* NearestMesh = GetActorNearHand();
+
+					if (NearestMesh)
+					{
+						if (NearestMesh->ActorHasTag("PotionBag"))
+						{
+							APotionBag* PotionBag = Cast<APotionBag>(NearestMesh);
+							if (PotionBag)
+							{
+								PotionBag->PotionPush(AttachPotion);
+								HandNomalState();
+							}
+							else
+							{
+								AttachPotion->BagInputFlag = true;
+								AttachPotion->Mesh->SetSimulatePhysics(true);
+								AttachedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);			// 잡은 물체와 뗀다					
+							}
+						}
+					}
+					else
+					{
+						AttachPotion->BagInputFlag = true;
+						AttachPotion->Mesh->SetSimulatePhysics(true);
+						AttachedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);			// 잡은 물체와 뗀다		
+					}					
 				}
 			}
 		}
@@ -365,6 +386,7 @@ AActor * ARightHandMotionController::GetActorNearHand()
 
 	for (AActor* OverlappingActor : OverlappingActors)
 	{
+		//GLog->Log(UKismetSystemLibrary::GetObjectName(OverlappingActor));
 		if (OverlappingActor->ActorHasTag("DisregardForRightHand") || OverlappingActor->ActorHasTag("DisregardForLeftHand"))
 		{
 			continue;

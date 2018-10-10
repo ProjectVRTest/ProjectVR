@@ -36,11 +36,18 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
 		class AMotionControllerCharacter* ShieldOwner;		// 오너
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
-		float ShieldPhysicsVelocityValue;			// 운동값
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ShieldVelocity")
+		FVector ShieldCurrentPosition;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ShieldVelocity")
+		FVector ShieldMoveDelta;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ShieldVelocity")
+		FVector ShieldPreviousPosition;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ShieldVelocity")
+		FVector ShieldMoveVelocity;
 
 	class AMiniBoss* MiniBoss;
 	bool IsActivation;
+	bool IsMiniBossWeaponOverlap;
 
 	// 투명도 변환
 	UFUNCTION()

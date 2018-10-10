@@ -43,13 +43,17 @@ public:
 		ENormalMonsterComboAttackState CurrentComboAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		ENormalMonsterArcherAttackState CurrentArcherAttackState;
-
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimMontage")
+		class UAnimMontage* NMAttackReverseMontage; //단타 공격 회복 애니메이션 몽타주
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UBehaviorTree* SwordBehaviorTree;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-		class UBehaviorTree* ArcherBehaviorTree;
+		class UBehaviorTree* MoveArcherBehaviorTree;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+		class UBehaviorTree* DontMoveArcherBehaviorTree;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 		TArray<class AMyTargetPoint*> PatrolPoints;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")

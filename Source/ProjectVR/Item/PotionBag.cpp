@@ -36,8 +36,7 @@ APotionBag::APotionBag()
 
 	PotionCount = 5; //포션의 갯수를 5개로 정함
 	PotionBagMesh->ComponentTags.Add(TEXT("PotionBagMesh"));
-	Tags.Add(FName("PotionBag"));
-	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName("PotionBag"));	
 }
 
 // Called when the game starts or when spawned
@@ -58,11 +57,6 @@ void APotionBag::BeginPlay()
 		{
 			PotionPush(Potion);
 		}		
-	}
-
-	if (PotionBagCollision)
-	{
-		PotionBagCollision->OnComponentBeginOverlap.AddDynamic(this, &APotionBag::PotionBagOverlap);
 	}
 }
 
@@ -117,26 +111,4 @@ void APotionBag::PotionPush(APotion* PushPotion)
 		}
 	
 	}	
-}
-
-void APotionBag::PotionBagOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
-	FActorSpawnParameters SpawnActorOption;
-	SpawnActorOption.Owner = this;
-	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	if (OtherActor->ActorHasTag(TEXT("Potion")))
-	{
-		APotion* InputPotion = Cast<APotion>(OtherActor);
-
-		if (InputPotion)
-		{
-			if (InputPotion->BagInputFlag)
-			{
-				Potion = GetWorld()->SpawnActor<APotion>(Potion->StaticClass(), SpawnActorOption);
-				PotionPush(Potion);
-				OtherActor->Destroy();
-			}
-		}
-	}
 }
