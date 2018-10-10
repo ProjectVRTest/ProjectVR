@@ -8,6 +8,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Equipment/PlayerSword.h"
 #include "Monster/MiniBoss/MiniBoss.h"
+#include "kismet/GameplayStatics.h"
 
 // Sets default values
 AMiniBossParryingPoint::AMiniBossParryingPoint()
@@ -32,6 +33,12 @@ AMiniBossParryingPoint::AMiniBossParryingPoint()
 	{
 		ParryingPointEffect = PT_ParryingPoint.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingPointExplosionEffect(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/ParryingPointEffect/ParryingPointExplosion.ParryingPointExplosion'"));
+	if (PT_ParryingPointExplosionEffect.Succeeded())
+	{
+		ParryingPointExplosionEffect = PT_ParryingPointExplosionEffect.Object;
+	}	
 
 	ParryingPointEffectComponent->Template = ParryingPointEffect;
 
@@ -76,6 +83,8 @@ void AMiniBossParryingPoint::ParryingPointBeginOverlap(UPrimitiveComponent* Over
 				{
 					IsAttackMiniBossWeapon = true;
 					MiniBoss->ParryingPointCount++;
+					//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingPointExplosionEffect, GetActorLocation());
+					Destroy();
 				}
 			}			
 		}		

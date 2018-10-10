@@ -33,7 +33,7 @@ void UBTTask_MBParryingLoopState::TickTask(UBehaviorTreeComponent & OwnerComp, u
 
 	if (MiniBoss)
 	{
-		if (MiniBoss->ParryingPointCount > 2)
+		if (MiniBoss->ParryingPointMaxCount == MiniBoss->ParryingPointCount)
 		{
 			MiniBoss->ParryingPointCount = 0;
 			MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingSuccess;

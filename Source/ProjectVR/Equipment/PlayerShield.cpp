@@ -56,7 +56,7 @@ APlayerShield::APlayerShield()
 	// 위치, 각도 및 크기 설정
 	ShieldCollision->SetRelativeLocation(FVector(-2.2f, 10.0f, 1.4f));
 	ShieldCollision->SetRelativeRotation(FRotator(0, -20.0f, 0));
-	ShieldCollision->SetRelativeScale3D(FVector(0.75f, 1.5f, 0.24f));
+	ShieldCollision->SetRelativeScale3D(FVector(1.0f, 1.6f, 0.3f));
 	ShieldCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 	ShieldCollision->bHiddenInGame = false;
 

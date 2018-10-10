@@ -31,11 +31,19 @@ ANormalMonster::ANormalMonster()
 
 	if (Normal_Monster_SK_Mesh.Succeeded())
 	{
-		GetMesh()->SetSkeletalMesh(Normal_Monster_SK_Mesh.Object);
+		SwordSKMesh = Normal_Monster_SK_Mesh.Object;
+		//GetMesh()->SetSkeletalMesh(Normal_Monster_SK_Mesh.Object);
 	}
+	
+	//GetMesh()->SetRelativeLocation(FVector(0, 0, -88.0f));
+	//GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
 
-	GetMesh()->SetRelativeLocation(FVector(0, 0, -88.0f));
-	GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>NM_Archer_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Character/SK_NormalMonsterTwo.SK_NormalMonsterTwo'"));
+
+	if (NM_Archer_SK_Mesh.Succeeded())
+	{
+		ArcherSKMesh = NM_Archer_SK_Mesh.Object;
+	}
 
 	CurrentState = ENormalMonsterState::Idle;
 	CurrentAnimState = ENormalMonsterAnimState::Wait;
@@ -139,6 +147,17 @@ void ANormalMonster::BeginPlay()
 
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
+	int RandomMesh = FMath::RandRange(1, 2);
+
+	if (RandomMesh == 1)
+	{
+		GetMesh()->SetSkeletalMesh(ArcherSKMesh);
+	}
+	else
+	{
+		GetMesh()->SetSkeletalMesh(SwordSKMesh);
+	}
+
 	if (AI)
 	{
 		AI->BBComponent->SetValueAsEnum(TEXT("MonsterKind"), (uint8)MonsterKind);
@@ -180,7 +199,7 @@ void ANormalMonster::BeginPlay()
 			}
 		}
 		break;
-	}
+	}	
 	
 }
 
@@ -301,6 +320,12 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 			else
 			{
 				CurrentHP -= Damage;
+
+				if (CurrentHP < 0)
+				{
+					CurrentHP = 0;
+					CurrentState = ENormalMonsterState::Dead;
+				}
 			}			
 		}
 	}

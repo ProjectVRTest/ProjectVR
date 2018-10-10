@@ -76,7 +76,7 @@ AMiniBoss::AMiniBoss()
 	IsAttack = false; //공격할수 있게 해줌
 	StabFlag = false;
 	TwoHandWidthFlag = false;
-	MaxHP = 200.0f;
+	MaxHP = 600.0f;
 	CurrentHP = MaxHP;
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/BackDash/Materials/M_Opacity.M_Opacity'"));
@@ -264,7 +264,7 @@ void AMiniBoss::ParryingPointSet()
 	{
 		ParryingPointValueSet(5); //5개 랜덤하게 스폰
 	}
-	else if (HPPercent > 0 && HPPercent <= 0.3f)
+	else if (HPPercent >= 0 && HPPercent <= 0.3f)
 	{
 		ParryingPointValueSet(7); //7개 랜덤하게 스폰
 	}

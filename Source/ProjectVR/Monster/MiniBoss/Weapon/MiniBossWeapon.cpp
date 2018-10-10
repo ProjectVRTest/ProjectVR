@@ -39,7 +39,7 @@ AMiniBossWeapon::AMiniBossWeapon()
 
 	SwordCollision->SetRelativeLocation(FVector(62.0f, 0, 0));
 	SwordCollision->SetRelativeRotation(FRotator(90.0f, 0, 0));	
-	SwordCollision->SetRelativeScale3D(FVector(1.0f, 1.0f, 2.3f));
+	SwordCollision->SetRelativeScale3D(FVector(1.3f, 1.3f, 2.5f));
 
 	IsWeaponAttack = false;
 	IsParryingAttack = false;
