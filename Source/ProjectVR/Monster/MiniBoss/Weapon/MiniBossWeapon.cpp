@@ -61,7 +61,7 @@ void AMiniBossWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (SwordCollision)
+	if (SwordMesh)
 	{
 		SwordCollision->OnComponentBeginOverlap.AddDynamic(this, &AMiniBossWeapon::WeaponBeginOverlap);
 	}
