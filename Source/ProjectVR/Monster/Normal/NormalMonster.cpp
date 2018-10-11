@@ -32,7 +32,7 @@ ANormalMonster::ANormalMonster()
 	if (Normal_Monster_SK_Mesh.Succeeded())
 	{
 		SwordSKMesh = Normal_Monster_SK_Mesh.Object;
-		//GetMesh()->SetSkeletalMesh(Normal_Monster_SK_Mesh.Object);
+		GetMesh()->SetSkeletalMesh(SwordSKMesh);
 	}
 	
 	//GetMesh()->SetRelativeLocation(FVector(0, 0, -88.0f));
@@ -152,10 +152,6 @@ void ANormalMonster::BeginPlay()
 	if (RandomMesh == 1)
 	{
 		GetMesh()->SetSkeletalMesh(ArcherSKMesh);
-	}
-	else
-	{
-		GetMesh()->SetSkeletalMesh(SwordSKMesh);
 	}
 
 	if (AI)
