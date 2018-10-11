@@ -370,19 +370,11 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 
 	CurrentHP -= Damage;
 	GLog->Log(FString::Printf(TEXT("HPPercent : %f"), CurrentHP / MaxHP));
+
 	if (CurrentHP < 0)
 	{
 		CurrentHP = 0;
 		CurrentState = EMiniBossState::Dead;
-	}
-	
-	if (ParryingFlag)
-	{
-		IsParrying = true;
-	}
-	else
-	{
-		//PlayAnimMontage(ReactionMontage);
 	}
 
 	return Damage;
