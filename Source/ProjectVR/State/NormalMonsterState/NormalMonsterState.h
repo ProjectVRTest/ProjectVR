@@ -21,19 +21,21 @@ enum class ENormalMonsterState : uint8
 	Chase = 2 UMETA(DisplayName = "Chase"),
 	Battle = 3 UMETA(DisplayName = "Battle"),
 	Dead = 4 UMETA(DisplayName = "Dead"),
-	AttackWait = 5 UMETA(DisplayName = "AttackWait")
+	Rotate = 5 UMETA(DisplayName = "Rotate")
 };
 
 UENUM(BlueprintType)
 enum class ENormalMonsterAnimState : uint8
 {
 	Wait =0 UMETA(DisplayName = "Wait"),
-	Walk = 1 UMETA(DisplayName = "Walk"),
-	Run = 2 UMETA(DisplayName = "Run"),
-	RageRun = 3 UMETA(DisplayName = "RageRun"),
-	RageAttack = 4 UMETA(DisplayName = "RageAttack"),
-	AttackReady = 5 UMETA(DisplayName = "AttackReady"),
-	Attack = 6 UMETA(DisplayName = "Attack")
+	AttackWait = 1 UMETA(DisplayName = "AttackWait"), //공격을 받을때까지 대기하는 애니메이션 상태
+	BattleWait = 2 UMETA(DisplayName = "BattleWait"), //전투공격 대기 상태
+	Walk = 3 UMETA(DisplayName = "Walk"),
+	Run = 4 UMETA(DisplayName = "Run"),
+	RageRun = 5 UMETA(DisplayName = "RageRun"),
+	RageAttack = 6 UMETA(DisplayName = "RageAttack"),
+	AttackReady = 7 UMETA(DisplayName = "AttackReady"),
+	Attack = 8 UMETA(DisplayName = "Attack")
 };
 
 UENUM(BlueprintType)
