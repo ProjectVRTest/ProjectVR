@@ -65,7 +65,7 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 					case ENormalMonsterAnimState::Run:
 						break;
 					case ENormalMonsterAnimState::RageRun:
-						if (Distance < 300.0f)
+						if (Distance < 250.0f)
 						{
 							//	GLog->Log(FString::Printf(TEXT("Chase RageRun Distance 500.0f 미만")));
 							NormalMonster->CurrentAnimState = ENormalMonsterAnimState::RageAttack;
@@ -83,7 +83,7 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 								if (!RageAttackFlag)
 								{
 									GLog->Log(FString::Printf(TEXT("TimerStart")));
-									GetWorld()->GetTimerManager().SetTimer(RageAttackTimer, this, &UBTService_NMChaseDistanceCheck::RageAttackTimerCount, 2.0f, false);
+									GetWorld()->GetTimerManager().SetTimer(RageAttackTimer, this, &UBTService_NMChaseDistanceCheck::RageAttackTimerCount, 1.7f, false);
 								}
 							}
 

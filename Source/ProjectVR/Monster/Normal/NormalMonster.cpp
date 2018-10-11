@@ -242,7 +242,7 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 
 		if (AI)
 		{
-			if (CurrentAnimState == ENormalMonsterAnimState::AttackWait)
+			if (CurrentState == ENormalMonsterState::AttackWait)
 			{
 				return;
 			}
@@ -278,52 +278,42 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
-	if (CurrentAnimState == ENormalMonsterAnimState::AttackWait)
+	ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
+
+	if (CurrentState == ENormalMonsterState::AttackWait)
 	{
-		ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
+		Target = DamageCauser;
+		AI->BBComponent->SetValueAsObject("Player", DamageCauser);
 
-		if (AI)
+		float Distance = AI->BBComponent->GetValueAsFloat(TEXT("Distnace"));
+
+		if (Distance <= 400.0f)
 		{
-			if (CurrentAnimState == ENormalMonsterAnimState::AttackWait)
-			{
-				Target = DamageCauser;
-				AI->BBComponent->SetValueAsObject("Player", DamageCauser);
-
-				float Distance = AI->BBComponent->GetValueAsFloat(TEXT("Distnace"));
-
-				if (Distance <= 400.0f)
-				{
-					CurrentState = ENormalMonsterState::Battle;
-				}
-				else
-				{
-					CurrentState = ENormalMonsterState::Chase;
-					switch (MonsterKind)
-					{
-					case ENormalMonsterKind::SwordMan:
-						CurrentAnimState = ENormalMonsterAnimState::Wait;
-						break;
-					case ENormalMonsterKind::MoveArcher:
-						CurrentAnimState = ENormalMonsterAnimState::Walk;
-						break;
-					case ENormalMonsterKind::DontMoveArcher:
-						break;
-					}					
-				}		
-
-				CurrentHP -= Damage;
-			}
-			else
-			{
-				CurrentHP -= Damage;
-
-				if (CurrentHP < 0)
-				{
-					CurrentHP = 0;
-					CurrentState = ENormalMonsterState::Dead;
-				}
-			}			
+			CurrentState = ENormalMonsterState::Battle;
 		}
+		else
+		{
+			CurrentState = ENormalMonsterState::Chase;
+			switch (MonsterKind)
+			{
+			case ENormalMonsterKind::SwordMan:
+				CurrentAnimState = ENormalMonsterAnimState::Wait;
+				break;
+			case ENormalMonsterKind::MoveArcher:
+				CurrentAnimState = ENormalMonsterAnimState::Walk;
+				break;
+			case ENormalMonsterKind::DontMoveArcher:
+				break;
+			}
+		}
+	}
+
+	CurrentHP -= Damage;
+
+	if (CurrentHP < 0)
+	{
+		CurrentHP = 0;
+		CurrentState = ENormalMonsterState::Dead;
 	}
 	return Damage;
 }

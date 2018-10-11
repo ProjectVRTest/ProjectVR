@@ -34,7 +34,7 @@ void UBTTask_NMIdleState::PatrolStart()
 {
 	if (NormalMonster)
 	{		
-		if (NormalMonster->CurrentAnimState == ENormalMonsterAnimState::AttackWait)
+		if (NormalMonster->CurrentState == ENormalMonsterState::AttackWait)
 		{
 			return;
 		}

@@ -11,3 +11,4 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "kismet/KismetMathLibrary.h"
+#include "Monster/Normal/Weapon/Sword/NMWeaponSword.h"
