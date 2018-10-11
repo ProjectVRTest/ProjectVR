@@ -110,6 +110,7 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 				}
 				else // 선속도의 크기가 500초과일 때 데미지 15 (조건4)
 				{
+					GLog->Log(FString::Printf(TEXT("크리 공격")));
 					RumbleRightController(1.0f);
 					Damage = 15.0f;
 				}
