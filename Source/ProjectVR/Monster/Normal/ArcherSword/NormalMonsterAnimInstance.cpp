@@ -2,8 +2,7 @@
 
 #include "NormalMonsterAnimInstance.h"
 #include "NormalMonster.h"
-#include "Monster/Normal/Weapon/Bow/NMWeaponArrow.h"
-#include "Monster/Normal/Weapon/Bow/NMWeaponArrow.h"
+#include "Monster/Normal/ArcherSword/Weapon/Bow/NMWeaponArrow.h"
 
 void UNormalMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {

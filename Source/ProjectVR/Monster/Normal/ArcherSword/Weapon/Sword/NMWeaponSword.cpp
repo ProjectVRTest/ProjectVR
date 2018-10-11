@@ -6,7 +6,7 @@
 #include "Engine/StaticMesh.h"
 #include "Components/CapsuleComponent.h"
 #include "MyCharacter/MotionControllerCharacter.h"
-#include "Monster/Normal/NormalMonster.h"
+#include "Monster/Normal/ArcherSword/NormalMonster.h"
 
 // Sets default values
 ANMWeaponSword::ANMWeaponSword()

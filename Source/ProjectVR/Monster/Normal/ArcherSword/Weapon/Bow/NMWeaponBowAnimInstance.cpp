@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "NMWeaponBowAnimInstance.h"
-#include "Monster/Normal/NormalMonster.h"
-#include "Monster/Normal/Weapon/Bow/NMWeaponBow.h"
+#include "Monster/Normal/ArcherSword/NormalMonster.h"
+#include "Monster/Normal/ArcherSword/Weapon/Bow/NMWeaponBow.h"
 void UNMWeaponBowAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
