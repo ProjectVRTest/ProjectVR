@@ -34,11 +34,11 @@ AMiniBossParryingPoint::AMiniBossParryingPoint()
 		ParryingPointEffect = PT_ParryingPoint.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingPointExplosionEffect(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/ParryingPointEffect/ParryingPointExplosion.ParryingPointExplosion'"));
+	/*static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingPointExplosionEffect(TEXT(""));
 	if (PT_ParryingPointExplosionEffect.Succeeded())
 	{
 		ParryingPointExplosionEffect = PT_ParryingPointExplosionEffect.Object;
-	}	
+	}	*/
 
 	ParryingPointEffectComponent->Template = ParryingPointEffect;
 
