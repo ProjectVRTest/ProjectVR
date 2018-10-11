@@ -219,7 +219,6 @@ void ADog::OnAttackCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor
 				SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 				SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 
-				GetCapsuleComponent()->SetCollisionProfileName("OverlapAll");			// 팔을 물고나서 땅에 충돌하는 것을 방지 -> 목이 늘어나고 위치가 불안정했음
 				AttachActor = RightController;
 				AI->BBComponent->SetValueAsBool("bIsBiting", true);
 			}
