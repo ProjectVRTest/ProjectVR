@@ -4,18 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "DogAIController.generated.h"
+#include "NavigationAIController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTVR_API ADogAIController : public AAIController
+class PROJECTVR_API ANavigationAIController : public AAIController
 {
+
 	GENERATED_BODY()
-	
+
 public:
-	ADogAIController();
+		ANavigationAIController();
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 		class UBehaviorTreeComponent* BTComponent;
