@@ -10,7 +10,8 @@ enum class EDontMoveArcherState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
 	Battle = 1 UMETA(DisplayName = "Battle"),
-	Dead = 2 UMETA(DisplayName = "Dead")
+	Dead = 2 UMETA(DisplayName = "Dead"),
+	AttackReady = 3 UMETA(DisplayName = "AttackReady")
 };
 
 UENUM(BlueprintType)

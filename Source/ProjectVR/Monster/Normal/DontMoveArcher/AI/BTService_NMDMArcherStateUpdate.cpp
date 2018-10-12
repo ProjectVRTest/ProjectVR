@@ -27,10 +27,7 @@ void UBTService_NMDMArcherStateUpdate::TickNode(UBehaviorTreeComponent & OwnerCo
 
 				if (Distance < 2000.0f)
 				{
-					DontMoveArcher->CurrentArcherAttackState = EDontMoveArcherArcherAttackState::ArcherAttackReady;
-					DontMoveArcher->CurrentAttackState = EDontMoveArcherAttackState::BowAttack;
-					DontMoveArcher->CurrentAnimState = EDontMoveArcherAnimState::Attack;
-					DontMoveArcher->CurrentState = EDontMoveArcherState::Battle;
+					DontMoveArcher->CurrentState = EDontMoveArcherState::AttackReady;
 				}
 				else
 				{

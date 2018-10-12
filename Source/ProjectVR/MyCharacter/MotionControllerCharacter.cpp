@@ -281,7 +281,7 @@ void AMotionControllerCharacter::GrabLeftOff()
 
 	GrabState = E_HandState::Open;
 	LeftHand->ReleaseActor();
-	LeftHand->Shield->ConvertOfOpacity(0.5f);
+	LeftHand->Shield->ConvertOfOpacity(0.8f);
 }
 
 void AMotionControllerCharacter::GrabRightOn()
