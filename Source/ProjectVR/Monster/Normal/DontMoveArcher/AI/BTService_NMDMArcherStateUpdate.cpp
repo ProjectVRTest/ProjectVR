@@ -27,10 +27,17 @@ void UBTService_NMDMArcherStateUpdate::TickNode(UBehaviorTreeComponent & OwnerCo
 
 				if (Distance < 2000.0f)
 				{
-					DontMoveArcher->CurrentState = EDontMoveArcherState::AttackReady;
+					if (!DontMoveArcher->AttackEndFlag)
+					{
+						DontMoveArcher->AttackEndFlag = true;
+						DontMoveArcher->CurrentState = EDontMoveArcherState::AttackReady;
+					}					
 				}
 				else
 				{
+					DontMoveArcher->Target = nullptr;
+					DontMoveArcher->TargetCamera = nullptr;
+					DontMoveArcher->AttackEndFlag = false;
 					DontMoveArcher->CurrentArcherAttackState = EDontMoveArcherArcherAttackState::Idle;
 					DontMoveArcher->CurrentAttackState = EDontMoveArcherAttackState::Idle;
 					DontMoveArcher->CurrentAnimState = EDontMoveArcherAnimState::Wait;

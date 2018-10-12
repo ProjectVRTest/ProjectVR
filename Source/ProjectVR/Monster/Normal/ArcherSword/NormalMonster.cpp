@@ -21,6 +21,10 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
 
+#include "MyCharacter/CameraLocation.h"
+#include "MyCharacter/MotionControllerCharacter.h"
+
+
 // Sets default values
 ANormalMonster::ANormalMonster()
 {
@@ -241,23 +245,30 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 			{
 				if (Target == nullptr)
 				{
-					Target = Pawn;
-					AI->BBComponent->SetValueAsObject("Player", Pawn);
+					AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Pawn);
 
-					switch (MonsterKind)
+					if (MyCharacter)
 					{
-					case ENormalMonsterKind::SwordMan:
-						CurrentAnimState = ENormalMonsterAnimState::Wait;
-						CurrentState = ENormalMonsterState::Chase;
-						break;
-					case ENormalMonsterKind::MoveArcher:
-						CurrentAnimState = ENormalMonsterAnimState::Walk;
-						CurrentState = ENormalMonsterState::Chase;
-						break;
-					case ENormalMonsterKind::DontMoveArcher:						
-						CurrentAnimState = ENormalMonsterAnimState::Wait;
-						CurrentState = ENormalMonsterState::Battle;
-						break;
+						Target = Pawn;
+						TargetCamera = MyCharacter->CameraLocation;
+						AI->BBComponent->SetValueAsObject("Player", Pawn);
+						AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
+
+						switch (MonsterKind)
+						{
+						case ENormalMonsterKind::SwordMan:
+							CurrentAnimState = ENormalMonsterAnimState::Wait;
+							CurrentState = ENormalMonsterState::Chase;
+							break;
+						case ENormalMonsterKind::MoveArcher:
+							CurrentAnimState = ENormalMonsterAnimState::Walk;
+							CurrentState = ENormalMonsterState::Chase;
+							break;
+						case ENormalMonsterKind::DontMoveArcher:
+							CurrentAnimState = ENormalMonsterAnimState::Wait;
+							CurrentState = ENormalMonsterState::Battle;
+							break;
+						}
 					}					
 				}
 			}

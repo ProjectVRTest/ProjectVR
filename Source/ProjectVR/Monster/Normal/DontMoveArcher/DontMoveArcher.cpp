@@ -155,6 +155,8 @@ void ADontMoveArcher::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentAnimState", (uint8)CurrentAnimState);
 		AI->BBComponent->SetValueAsEnum("CurrentAttackState", (uint8)CurrentAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentArcherAttackState", (uint8)CurrentArcherAttackState);
+		AI->BBComponent->SetValueAsObject("Player", Target);
+		AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
 	}
 
 	if (Target)

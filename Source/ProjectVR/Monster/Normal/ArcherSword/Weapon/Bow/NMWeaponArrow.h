@@ -20,6 +20,10 @@ public:
 		class UProjectileMovementComponent* Projecttile;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UBoxComponent* ArrowHit;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UParticleSystemComponent* ArrowEffectComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* ArrowEffect;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -70,6 +70,7 @@ public:
 		class ADontMoveArcherBow* Bow;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pitch")
 		float Pitch;
+	bool AttackEndFlag = false;
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	UFUNCTION()

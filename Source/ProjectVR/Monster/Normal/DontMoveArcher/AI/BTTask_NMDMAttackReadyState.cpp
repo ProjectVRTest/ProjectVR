@@ -16,6 +16,7 @@ EBTNodeResult::Type UBTTask_NMDMAttackReadyState::ExecuteTask(UBehaviorTreeCompo
 			DontMoveArcher->CurrentArcherAttackState = EDontMoveArcherArcherAttackState::ArcherAttackReady;
 			DontMoveArcher->CurrentAttackState = EDontMoveArcherAttackState::BowAttack;
 			DontMoveArcher->CurrentAnimState = EDontMoveArcherAnimState::Attack;
+			DontMoveArcher->CurrentState = EDontMoveArcherState::Battle;
 		}
 	}
 

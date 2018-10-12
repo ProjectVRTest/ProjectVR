@@ -60,6 +60,8 @@ public:
 		TArray<class AMyTargetPoint*> PatrolPoints;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class AActor* Target;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+		class ACameraLocation* TargetCamera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
 		class UStaticMeshComponent* QuiverComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")

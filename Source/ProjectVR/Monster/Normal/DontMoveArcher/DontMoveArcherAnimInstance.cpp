@@ -3,6 +3,8 @@
 #include "DontMoveArcherAnimInstance.h"
 #include "DontMoveArcher.h"
 #include "Monster/Normal/ArcherSword/Weapon/Bow/NMWeaponArrow.h"
+#include "Monster/MiniBoss/Weapon/SwordWave/SwordWaveTarget.h"
+#include "MyCharacter/CameraLocation.h"
 
 void UDontMoveArcherAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
@@ -41,5 +43,12 @@ void UDontMoveArcherAnimInstance::AnimNotify_ArrowDestroy(UAnimNotify * Notify)
 
 		DontMoveArcher->DeleteArrowMesh();
 
+		FVector LockonTargetLocation = DontMoveArcher->TargetCamera->GetActorLocation();
+
+		ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
+
+		ANMWeaponArrow* NMArrow = GetWorld()->SpawnActor<ANMWeaponArrow>(NMArrow->StaticClass(), DontMoveArcher->ArrowSpawnLocation->GetComponentLocation(), DontMoveArcher->GetActorRotation(), SpawnActorOption);
+
+		NMArrow->Homing(SwordWaveTarget);
 	}
 }

@@ -14,7 +14,8 @@ class PROJECTVR_API ASwordWaveTarget : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ASwordWaveTarget();
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UBoxComponent* SwordWaveTargetBox;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -17,6 +17,7 @@ EBTNodeResult::Type UBTTask_NMDMArcherSetState::ExecuteTask(UBehaviorTreeCompone
 			DontMoveArcher->CurrentAnimState = SetAnimState;
 			DontMoveArcher->CurrentAttackState = SetAttackState;
 			DontMoveArcher->CurrentArcherAttackState = SetArcherAttackState;
+			DontMoveArcher->AttackEndFlag = false;
 		}
 	}
 
