@@ -36,11 +36,8 @@ void UBTService_NMBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 
 					Distance = AI->BBComponent->GetValueAsFloat(DistanceBlackBoardKey);
 
-					//GLog->Log(FString::Printf(TEXT("NMAttackEndFlag %d"), NormalMonster->NMAttackEndFlag));
 					if (Distance > 400.0f )
 					{
-						NormalMonster->NMAttackEndFlag = false;
-
 						switch (NormalMonster->CurrentAnimState)
 						{
 						case ENormalMonsterAnimState::Walk:

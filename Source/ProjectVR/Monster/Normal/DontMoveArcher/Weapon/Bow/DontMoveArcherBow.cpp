@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "NMWeaponBow.h"
+#include "DontMoveArcherBow.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Animation/AnimBlueprint.h"
 
 // Sets default values
-ANMWeaponBow::ANMWeaponBow()
+ADontMoveArcherBow::ADontMoveArcherBow()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -21,7 +21,7 @@ ANMWeaponBow::ANMWeaponBow()
 		BowMesh->SetSkeletalMesh(SKM_Bow.Object);
 	}
 
-	static ConstructorHelpers::FObjectFinder<UClass>ABP_Bow(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Normal/SwordArcher/Blueprints/Weapon/Bow/ABP_Bow.ABP_Bow_C'"));
+	static ConstructorHelpers::FObjectFinder<UClass>ABP_Bow(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Normal/DontMoveArcher/Blueprints/Weapon/Bow/ABP_DontMoveArcherBow.ABP_DontMoveArcherBow_C'"));
 
 	if (ABP_Bow.Succeeded())
 	{
@@ -36,14 +36,14 @@ ANMWeaponBow::ANMWeaponBow()
 }
 
 // Called when the game starts or when spawned
-void ANMWeaponBow::BeginPlay()
+void ADontMoveArcherBow::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ANMWeaponBow::Tick(float DeltaTime)
+void ADontMoveArcherBow::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

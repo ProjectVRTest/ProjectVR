@@ -42,14 +42,6 @@ void ANormalMonsterAIController::Possess(APawn * InPawn)
 				BTComponent->StartTree(*(NormalMonster->MoveArcherBehaviorTree));
 			}
 			break;
-		case ENormalMonsterKind::DontMoveArcher:
-			if (NormalMonster->DontMoveArcherBehaviorTree)
-			{
-				GLog->Log(FString::Printf(TEXT("DontMoveArcher Start")));
-				BBComponent->InitializeBlackboard(*(NormalMonster->DontMoveArcherBehaviorTree->BlackboardAsset));
-				BTComponent->StartTree(*(NormalMonster->DontMoveArcherBehaviorTree));
-			}
-			break;
 		}
 	
 	}
