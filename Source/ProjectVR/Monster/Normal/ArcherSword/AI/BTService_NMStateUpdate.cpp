@@ -41,8 +41,12 @@ void UBTService_NMStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 			if (Player)
 			{
 				AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
-				Distance = FVector::Distance(NormalMonster->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
-				AI->BBComponent->SetValueAsFloat("Distance", Distance);
+
+				if (MyCharacter)
+				{
+					Distance = FVector::Distance(NormalMonster->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+					AI->BBComponent->SetValueAsFloat("Distance", Distance);
+				}			
 			}
 		}
 	}

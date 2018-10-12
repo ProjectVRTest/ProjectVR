@@ -22,16 +22,6 @@ void UNormalMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 }
 
-void UNormalMonsterAnimInstance::AnimNotify_AttackEnd(UAnimNotify * Notify)
-{
-	ANormalMonster* NormalMonster = Cast<ANormalMonster>(TryGetPawnOwner());
-
-	if (NormalMonster)
-	{
-		NormalMonster->NMAttackEndFlag = true;
-	}
-}
-
 void UNormalMonsterAnimInstance::AnimNotify_ArrowSpawn(UAnimNotify * Notify)
 {
 	ANormalMonster* NormalMonster = Cast<ANormalMonster>(TryGetPawnOwner());

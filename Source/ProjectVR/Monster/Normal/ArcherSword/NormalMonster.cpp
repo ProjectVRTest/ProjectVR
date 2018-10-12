@@ -33,10 +33,9 @@ ANormalMonster::ANormalMonster()
 	{
 		SwordSKMesh = Normal_Monster_SK_Mesh.Object;
 		GetMesh()->SetSkeletalMesh(SwordSKMesh);
-	}
-	
-	//GetMesh()->SetRelativeLocation(FVector(0, 0, -88.0f));
-	//GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
+		GetMesh()->SetRelativeLocation(FVector(0, 0, -88.0f));
+		GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
+	}	
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>NM_Archer_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Character/SK_NormalMonsterTwo.SK_NormalMonsterTwo'"));
 
@@ -76,13 +75,6 @@ ANormalMonster::ANormalMonster()
 	if (NormalMoveArcherMonster_BT.Succeeded())
 	{
 		MoveArcherBehaviorTree = NormalMoveArcherMonster_BT.Object;
-	}
-
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree>NormalDontMoveArcherMonster_BT(TEXT("BehaviorTree'/Game/Blueprints/Monster/Normal/SwordArcher/AI/BT_NormalDontMoveArcherMonster.BT_NormalDontMoveArcherMonster'"));
-
-	if (NormalDontMoveArcherMonster_BT.Succeeded())
-	{
-		DontMoveArcherBehaviorTree = NormalDontMoveArcherMonster_BT.Object;
 	}
 
 	QuiverComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("QuiverComponent"));
@@ -128,8 +120,7 @@ ANormalMonster::ANormalMonster()
 	}
 
 	Target = nullptr;
-	NMAttackEndFlag = false;
-	GetCharacterMovement()->MaxWalkSpeed = 450.0f;
+
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));

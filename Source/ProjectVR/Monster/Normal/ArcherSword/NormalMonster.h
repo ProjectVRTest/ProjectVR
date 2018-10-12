@@ -56,8 +56,6 @@ public:
 		class UBehaviorTree* SwordBehaviorTree;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UBehaviorTree* MoveArcherBehaviorTree;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-		class UBehaviorTree* DontMoveArcherBehaviorTree;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 		TArray<class AMyTargetPoint*> PatrolPoints;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
@@ -81,7 +79,6 @@ public:
 		float MaxHP; //최대 HP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float CurrentHP; //현재 HP
-	bool NMAttackEndFlag;
 
 	UFUNCTION()
 		void SpawnArrowMesh();
