@@ -3,7 +3,7 @@
 #include "NormalMonsterAnimInstance.h"
 #include "NormalMonster.h"
 #include "Monster/Normal/ArcherSword/Weapon/Bow/NMWeaponArrow.h"
-#include "Monster/MiniBoss/Weapon/SwordWave/SwordWaveTarget.h"
+#include "Monster/SwordWaveTarget.h"
 #include "MyCharacter/CameraLocation.h"
 
 void UNormalMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)

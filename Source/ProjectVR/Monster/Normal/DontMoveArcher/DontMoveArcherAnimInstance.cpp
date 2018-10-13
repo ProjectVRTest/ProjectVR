@@ -3,7 +3,7 @@
 #include "DontMoveArcherAnimInstance.h"
 #include "DontMoveArcher.h"
 #include "Monster/Normal/ArcherSword/Weapon/Bow/NMWeaponArrow.h"
-#include "Monster/MiniBoss/Weapon/SwordWave/SwordWaveTarget.h"
+#include "Monster/SwordWaveTarget.h"
 #include "MyCharacter/CameraLocation.h"
 
 void UDontMoveArcherAnimInstance::NativeUpdateAnimation(float DeltaSeconds)

@@ -143,7 +143,7 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 				MiniBoss = Cast<AMiniBoss>(MiniBossWeapon->GetAttachParentActor());
 				if (MiniBoss)  //MiniBoss 형변환에 성공하면
 				{
-					if (IsActivation && ShieldMoveVelocity.Size() > 90.0f && IsMiniBossWeaponOverlap) //그립버튼을 누르고 방패의 선속도가 300이상인지 확인한다.
+					if (IsActivation && IsMiniBossWeaponOverlap&& ShieldMoveVelocity.Size() > 90.0f) //그립버튼을 누르고 방패의 선속도가 300이상인지 확인한다.
 					{
 						RumbleLeftController(5.0f); //패드에 진동을 울려주고
 						MiniBossWeapon->IsParryingAttack = false;

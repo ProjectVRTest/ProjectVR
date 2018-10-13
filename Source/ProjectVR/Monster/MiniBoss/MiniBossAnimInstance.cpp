@@ -17,7 +17,7 @@
 #include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
 #include "Components/StaticMeshComponent.h"
 #include "MyCharacter/CameraLocation.h"
-#include "Weapon/SwordWave/SwordWaveTarget.h"
+#include "Monster/SwordWaveTarget.h"
 
 #define LEFT 1
 #define STRAIGHT 2

@@ -14,7 +14,7 @@
 ANMWeaponArrow::ANMWeaponArrow()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
@@ -53,6 +53,7 @@ ANMWeaponArrow::ANMWeaponArrow()
 	ArrowEffectComponent->Template = ArrowEffect;
 	InitialLifeSpan = 2.5f;
 
+	Tags.Add(FName(TEXT("NMArrow")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
@@ -87,11 +88,9 @@ void ANMWeaponArrow::ArrowBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	else if(OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
 	{
 		GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
-		Destroy();
 	}
 	else if (OtherActor->ActorHasTag(TEXT("Land")))
 	{
-		GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
 		Destroy();
 	}
 }

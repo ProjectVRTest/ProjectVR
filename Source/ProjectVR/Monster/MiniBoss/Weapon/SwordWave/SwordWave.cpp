@@ -72,6 +72,10 @@ ASwordWave::ASwordWave()
 	SwordWaveHit->SetRelativeRotation(FRotator(90.0f, 0, 0));
 	SwordWaveHit->SetRelativeScale3D(FVector(1.6f, 0.5f, 0.1f));
 
+	Tags.Add(FName(TEXT("SwordWave")));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
+
 	InitialLifeSpan = 4.0f; //검기 수명
 }
 
@@ -137,9 +141,7 @@ void ASwordWave::SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		}	
 		else if (OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
 		{
-			GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
 			Projecttile->HomingTargetComponent = nullptr;
-			//Destroy();
 		}
 	}
 }
