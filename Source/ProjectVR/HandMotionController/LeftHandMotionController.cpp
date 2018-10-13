@@ -77,16 +77,20 @@ ALeftHandMotionController::ALeftHandMotionController()
 	PotionBagAttachScene->SetRelativeLocation(FVector(-13.0f, 0, 1.8f)); //위치를 조정한다.
 	PotionBagAttachScene->SetRelativeRotation(FRotator(0, 93.0f, 0));
 
+	//왼팔 부분 비어있는 공간을 채워주기 위한 스테틱 메쉬컴포넌트를 생성해준다.
 	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SphereMesh"));
-	SphereMesh->SetupAttachment(HandMesh);
-	SphereMesh->SetRelativeLocation(FVector(-18.0f, -0.07149f, -0.485587f)); //위치를 조정한다.
-	SphereMesh->SetRelativeScale3D(FVector(0.04f, 0.09f, 0.07f ));
-	SphereMesh->SetCollisionProfileName(TEXT("NoCollision"));
-
+	SphereMesh->SetupAttachment(HandMesh); //손메쉬에 붙이고
+	SphereMesh->SetRelativeLocation(FVector(-18.0f, -0.07149f, -0.485587f)); //위치를 조정하고
+	SphereMesh->SetRelativeScale3D(FVector(0.04f, 0.09f, 0.07f )); //크기도 조정하고
+	SphereMesh->SetCollisionProfileName(TEXT("NoCollision")); //콜리전 반응은 없앤다.
+	
+	//앞에서 생성한 SphereMesh에 메쉬를 넣어주기위해 에디터에서 메쉬를 찾아온다.
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sphere(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/MyCharacter/Hand/Mesh/Sphere.Sphere'"));
 
+	//찾는것에 성공하면
 	if (SM_Sphere.Succeeded())
 	{
+		//넣는다.
 		SphereMesh->SetStaticMesh(SM_Sphere.Object);
 	}
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "State/BossState/BossState.h"
 #include "Boss.generated.h"
 
 UCLASS()
@@ -15,17 +16,27 @@ public:
 	// Sets default values for this character's properties
 	ABoss();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossState CurrentState;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+		class UPawnSensingComponent* PawnSensing;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+		class UBehaviorTree* BehaviorTree;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	
-	
+	UFUNCTION()
+		void OnSeeCharacter(APawn * Pawn);
+
+
+
 };

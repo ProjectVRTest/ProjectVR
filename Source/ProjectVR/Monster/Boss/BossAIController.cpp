@@ -17,5 +17,19 @@ ABossAIController::ABossAIController()
 
 void ABossAIController::Possess(APawn * InPawn)
 {
+	Super::Possess(InPawn);
 
+	ABoss* Boss = Cast<ABoss>(InPawn);
+
+	if (Boss)
+	{
+		if (Boss->BehaviorTree)
+		{
+			if (Boss->BehaviorTree->BlackboardAsset)
+			{
+				BBComponent->InitializeBlackboard(*(Boss->BehaviorTree->BlackboardAsset));
+				BTComponent->StartTree(*(Boss->BehaviorTree));
+			}
+		}
+	}
 }
