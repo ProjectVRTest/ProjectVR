@@ -31,8 +31,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FItemDataTable DataTable;
-	bool BagInputFlag;
-	bool BagInputCompleteFlag;
+	UPROPERTY()
+		bool BagInputFlag;
+	UPROPERTY()
+		bool BagInputCompleteFlag;
 
 	FTokenCompleteSignature TokenCompleteDelegate;
 

@@ -31,7 +31,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -52,7 +52,7 @@ public:
 		class ARightHandMotionController* RightHand;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class USceneComponent* Scene;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere,Category = "StateWidget")
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "StateWidget")
 		class UWidgetComponent* Widget;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class UStereoLayerComponent* Stereo;
@@ -80,7 +80,7 @@ public:
 		bool bAllowBreathe;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float DashPower;
-	
+
 	UPROPERTY()
 		bool InvincibleTimeOn;		// 무적시간인지 아닌지 판별
 
@@ -100,7 +100,7 @@ public:
 		void GrabLeftOff();
 	UFUNCTION()
 		void GrabRightOn();
-	UFUNCTION()	
+	UFUNCTION()
 		void GrabRightOff();
 	UFUNCTION()
 		void MoveForward(float Value);
@@ -110,9 +110,9 @@ public:
 		void RunOn();
 	UFUNCTION()
 		void RunOff();
-		
+
 	UFUNCTION()
-	void DashUpStart();	
+		void DashUpStart();
 	UFUNCTION()
 		void DashDownStart();
 	UFUNCTION()
@@ -126,20 +126,20 @@ public:
 		void GameMenu();
 	UPROPERTY()
 		class AMenu* Menu;
+	UFUNCTION()
+		void AttackPointSet();
 
-	void AttackPointSet();
-		
 	UFUNCTION()
 		void SetAllowBreathe();
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// 데미지 받기
 	UFUNCTION()
 		void DamageTimer();			// 무적시간 On 함수
-	
+
 	UFUNCTION()
 		void OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 데미지를 전달하기위한 함수
 
 	UPROPERTY()
-	TArray<class ADog*> DogArray;
+		TArray<class ADog*> DogArray;
 };

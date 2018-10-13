@@ -93,17 +93,18 @@ AMiniBoss::AMiniBoss()
 
 	AIControllerClass = AMiniBossAIController::StaticClass();
 	
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageStartEffect(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/BackDash/StartEffect.StartEffect'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageStartEffect(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_StartEffect.PS_StartEffect'"));
 	if (PT_AfterImageStartEffect.Succeeded())
 	{
 		AfterImageStartEffect = PT_AfterImageStartEffect.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageEndEffect(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/BackDash/EndEffect.EndEffect'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageEndEffect(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_EndEffect.PS_EndEffect'"));
 	if (PT_AfterImageEndEffect.Succeeded())
 	{
 		AfterImageEndEffect = PT_AfterImageEndEffect.Object;
 	}
+
 	SwordWaveCount = 1;
 	ParryingPointMaxCount = 0;
 	ParryingPointCount = 0;

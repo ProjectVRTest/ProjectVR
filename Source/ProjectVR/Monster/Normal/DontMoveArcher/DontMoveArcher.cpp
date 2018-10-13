@@ -46,8 +46,8 @@ ADontMoveArcher::ADontMoveArcher()
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
 	PawnSensing->bSeePawns = true;
-	PawnSensing->SetPeripheralVisionAngle(30.0f);
-	PawnSensing->SightRadius = 3000.0f;
+	PawnSensing->SetPeripheralVisionAngle(40.0f);
+	PawnSensing->SightRadius = 4000.0f;
 	PawnSensing->SensingInterval = 0.1f;
 
 	QuiverComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("QuiverComponent"));
@@ -163,8 +163,7 @@ void ADontMoveArcher::Tick(float DeltaTime)
 	{
 		FRotator LookAt = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation());
 
-		Pitch = LookAt.Pitch;
-		GLog->Log(FString::Printf(TEXT("Pitch : %f"), Pitch));
+		Pitch = LookAt.Pitch;		
 	}
 }
 

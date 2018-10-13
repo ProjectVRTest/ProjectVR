@@ -59,18 +59,24 @@ ARightHandMotionController::ARightHandMotionController()
 
 	HandMesh->SetRelativeRotation(FRotator(-90.0f, 0, 90.0f)); //넣어준 스켈레탈 메쉬가 정면을 보도록 Roll방향으로 90도 돌린다.
 	HandMesh->bGenerateOverlapEvents = true; //오버랩 이벤트가 발생할 수 있도록 켜준다.
-	HandMesh->SetCollisionProfileName(FName("OverlapAll")); //콜리전 프리셋을 OverlapOnlyPawn으로 바꿔서 Pawn은 오버랩되고 나머지는 블록되게 바꿔준다. 
+	HandMesh->SetCollisionProfileName(FName("NoCollision")); //콜리전 프리셋을 OverlapOnlyPawn으로 바꿔서 Pawn은 오버랩되고 나머지는 블록되게 바꿔준다. 
 
 
 															//손주위에 있는 물체들을 감지하기 위한 스피어 콜리전컴포넌트를 생성해서 GrabShpere에 넣는다.
 	GrabSphere = CreateDefaultSubobject<USphereComponent>(TEXT("GrabComponent"));
 	//생성한 스피어 콜리전 컴포넌트를 HandMesh에 붙인다.
 	GrabSphere->SetupAttachment(HandMesh);
-
 	//생성한 스피어 콜리전의 위치값을 조정한다.
 	GrabSphere->SetRelativeLocation(FVector(14.0f, 0, 0));
 	//생성한 스피어 콜리전의 크기값을 조정한다.
 	GrabSphere->SetSphereRadius(10.0f);
+
+	OverlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("OverlapSphere"));
+	OverlapSphere->SetupAttachment(HandMesh);
+	OverlapSphere->SetCollisionProfileName("OverlapAll");
+	OverlapSphere->SetRelativeLocation(FVector(9.0f, 3.4f, -1.6f));
+	OverlapSphere->SetSphereRadius(7.0f);
+	OverlapSphere->bHiddenInGame = false;
 
 	interaction = CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("Interaction"));
 	interaction->SetupAttachment(GrabSphere);
@@ -161,9 +167,9 @@ void ARightHandMotionController::BeginPlay()
 	Sword->AttachToComponent(SwordAttachScene, AttachRules);//스폰한 검을 SwordAttachScene에 붙인다.
 
 															//손에 다른 액터가 부딪히면 호출할 함수(OnHandBeginOverlap)를 바인딩한다.
-	HandMesh->OnComponentBeginOverlap.AddDynamic(this, &ARightHandMotionController::OnHandBeginOverlap);
+	OverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &ARightHandMotionController::OnHandBeginOverlap);
 	//손에 다른 액터가 부딪히고 벗어날때 호출할 함수(OnHandEndOverlap)를 바인딩한다.
-	HandMesh->OnComponentEndOverlap.AddDynamic(this, &ARightHandMotionController::OnHandEndOverlap);
+	OverlapSphere->OnComponentEndOverlap.AddDynamic(this, &ARightHandMotionController::OnHandEndOverlap);
 
 	if (HandMesh)
 	{
@@ -349,6 +355,7 @@ void ARightHandMotionController::ReleaseActor()
 							else
 							{
 								AttachPotion->BagInputFlag = true;
+								AttachPotion->Mesh->SetCollisionProfileName("NoCollision");
 								AttachPotion->Mesh->SetSimulatePhysics(true);
 								AttachedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);			// 잡은 물체와 뗀다					
 							}

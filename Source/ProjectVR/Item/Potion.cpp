@@ -84,6 +84,7 @@ void APotion::OnPotionBeginOverlap(UPrimitiveComponent * OverlappedComponent, AA
 
 			if (OtherComp->ComponentHasTag("Head"))
 			{
+				GLog->Log(FString::Printf(TEXT("asd")));
 				Destroy(this);
 				TokenCompleteDelegate.ExecuteIfBound();
 			}

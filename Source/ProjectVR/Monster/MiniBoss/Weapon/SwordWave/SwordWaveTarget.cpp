@@ -18,8 +18,8 @@ ASwordWaveTarget::ASwordWaveTarget()
 	SwordWaveTargetBox->bHiddenInGame = false;
 
 	Tags.Add(FName(TEXT("SwordWaveTarget")));
-	Tags.Add(FName(TEXT("DisregardForLeftHand")));
-	Tags.Add(FName(TEXT("DisregardForRightHand")));
+	SwordWaveTargetBox->ComponentTags.Add(TEXT("DisregardForLeftHand"));
+	SwordWaveTargetBox->ComponentTags.Add(TEXT("DisregardForRightHand"));	
 }
 
 // Called when the game starts or when spawned

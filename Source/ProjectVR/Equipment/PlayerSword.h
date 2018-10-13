@@ -38,8 +38,6 @@ public:
 
 	// 칼의 운동 값
 	FVector SwordCurrentPosistion, SwordMoveDelta, SwordPreviousPosistion, SwordMoveVelocity;
-
-	bool IsActivation;
 	
 	// 공격
 	UFUNCTION()

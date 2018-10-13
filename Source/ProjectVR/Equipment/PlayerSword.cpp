@@ -42,7 +42,7 @@ APlayerSword::APlayerSword()
 	SwordCollision->SetRelativeRotation(FRotator(0.0f,0.0f,90.0f));
 	SwordCollision->SetRelativeScale3D(FVector(0.75f, 0.75f, 1.6f));
 
-	IsActivation = false;
+	//IsActivation = false;
 
 	Timer = 0.0f;		// 타이머 초기화
 
@@ -99,7 +99,7 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 	{
 		if (Timer >= 0.5f)			// 타이머가 0.5 이상의 수를 가지고 있을 때 실행 (조건1)
 		{
-			if (IsActivation && SwordMoveVelocity.Size() >= 1500) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
+			if (SwordMoveVelocity.Size() >= 1500) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
 			{
 				Timer = 0.0f;		// 공격 판정이 일어났을 때 타이머 0으로
 				
@@ -131,15 +131,6 @@ void APlayerSword::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭�
 	if (SwordMesh)
 	{
 		SwordMesh->SetScalarParameterValueOnMaterials(FName(TEXT("SwordOpacity")), opacity);
-	}
-
-	if (IsActivation)
-	{
-		IsActivation = false;
-	}
-	else
-	{
-		IsActivation = true;
 	}
 }
 

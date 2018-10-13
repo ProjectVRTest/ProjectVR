@@ -35,6 +35,8 @@ public:
 	//손 주위에 있는 물체를 감지할 콜리전
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USphereComponent* GrabSphere;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class USphereComponent* OverlapSphere;
 
 	//손의 상호작용 영역을 표현해줄 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

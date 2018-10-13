@@ -20,7 +20,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -56,7 +56,7 @@ public:
 		class AActor* Target;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 		class ACameraLocation* TargetCamera;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimMontage")
 		class UAnimMontage* AttackReverseMontage; //단타 공격 회복 애니메이션 몽타주
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
@@ -76,12 +76,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* AfterImageStartEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
-		class UParticleSystem* AfterImageEndEffect;	
+		class UParticleSystem* AfterImageEndEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class AMiniBossWeapon* Sword;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class USceneComponent* SwordWaveSpawn;
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category = "SwordWave")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SwordWave")
 		int SwordWaveCount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
 		int ParryingPointMaxCount; //HP에 따라서 확정된 패링카운트 갯수
@@ -91,13 +91,18 @@ public:
 		float Yaw; //캐릭터가 좌우로 움직일때 판단해줄 값
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Rotate")
 		float RotateYaw;
-	bool WalkStopFlag; 
-	bool IsAttack; //공격중인지 아닌지 판단
-	bool AttackCompleteFlag; //공격이 완료 됏는지 판단
-	bool StabFlag; //찌르기 애니메이션의 재생을 판단해줄 변수로 true이면 찌르기 노콤보 애니메이션이 재생되고, false이면 찌르기 콤보 애니메이션이 재생된다.
+	UPROPERTY()
+		bool WalkStopFlag;
+	UPROPERTY()
+		bool IsAttack; //공격중인지 아닌지 판단
+	UPROPERTY()
+		bool AttackCompleteFlag; //공격이 완료 됏는지 판단
+	UPROPERTY()
+		bool StabFlag; //찌르기 애니메이션의 재생을 판단해줄 변수로 true이면 찌르기 노콤보 애니메이션이 재생되고, false이면 찌르기 콤보 애니메이션이 재생된다.
 	bool TwoHandWidthFlag; //가로베기 애니메이션의 재생을 판단해줄 변수로 true이면 가로베기 노콤보 애니메이션이 재생되고, false이면 가로베기 콤보 애니메이션이 재생된다.
 
-	TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열
+	UPROPERTY()
+		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열
 
 	UFUNCTION()
 		void ParryingPointInit(); //패링포인트 배열에 패링포인트소켓이름을 저장해주는 함수

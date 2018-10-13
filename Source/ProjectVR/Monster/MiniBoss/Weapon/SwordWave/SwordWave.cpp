@@ -68,9 +68,9 @@ ASwordWave::ASwordWave()
 
 	SwordWaveHit = CreateDefaultSubobject<UBoxComponent>(TEXT("SwordWaveHit"));
 	SwordWaveHit->SetupAttachment(Mesh);
-	SwordWaveHit->SetRelativeLocation(FVector(0, 0, -44.0f));
+	SwordWaveHit->SetRelativeLocation(FVector(0, 0, -42.0f));
 	SwordWaveHit->SetRelativeRotation(FRotator(90.0f, 0, 0));
-	SwordWaveHit->SetRelativeScale3D(FVector(1.6f, 0.2f, 0.05f));
+	SwordWaveHit->SetRelativeScale3D(FVector(1.6f, 0.5f, 0.1f));
 
 	InitialLifeSpan = 4.0f; //검기 수명
 }
@@ -134,7 +134,13 @@ void ASwordWave::SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),SwordWaveExplosion, OtherActor->GetActorLocation());
 			Destroy();
-		}		
+		}	
+		else if (OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
+		{
+			GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
+			Projecttile->HomingTargetComponent = nullptr;
+			//Destroy();
+		}
 	}
 }
 

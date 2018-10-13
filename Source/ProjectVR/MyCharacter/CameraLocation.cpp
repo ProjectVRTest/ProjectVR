@@ -13,7 +13,7 @@ ACameraLocation::ACameraLocation()
 	SetRootComponent(Sphere);
 	Sphere->SetCollisionProfileName("OverlapAll");	
 
-	Tags.Add(FName(TEXT("CameraLocation")));
+	Tags.Add(FName(TEXT("CameraLocation")));	
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }

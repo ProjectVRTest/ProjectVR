@@ -402,18 +402,20 @@ void AMotionControllerCharacter::GameMenu()
 
 void AMotionControllerCharacter::AttackPointSet()
 {
-	AMyTargetPoint* AttackPoint;
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.Owner = this;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
 	FAttachmentTransformRules AttachRules(EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false);
 	FVector CalculatePoint;
 	FVector InitPoint = Camera->GetComponentLocation();
 	FVector Point;
 
 	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X + 200.0f;
+	CalculatePoint.X = InitPoint.X + 250.0f;
 	Point = CalculatePoint;
-	Point.Z = Point.Z - 248.0f;
 
-	AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation());
+	AMyTargetPoint* AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation(), SpawnActorOption);
 
 	if (AttackPoint)
 	{
