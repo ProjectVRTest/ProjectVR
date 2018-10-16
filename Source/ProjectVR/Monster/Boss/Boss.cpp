@@ -8,6 +8,10 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Animation/AnimBlueprint.h"
+#include "Weapon/BossWeapon.h"
+#include "MyCharacter/MotionControllerCharacter.h"
+#include "MyCharacter/CameraLocation.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ABoss::ABoss()
@@ -28,6 +32,7 @@ ABoss::ABoss()
 	GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
 
 	CurrentState = EBossState::Idle;
+	CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
@@ -36,6 +41,7 @@ ABoss::ABoss()
 	PawnSensing->SightRadius = 2000.0f;
 	PawnSensing->SensingInterval = 0.01f;
 
+	
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree>Boss_BT(TEXT("BehaviorTree'/Game/Blueprints/Monster/Boss/AI/BT_Boss.BT_Boss'"));
 
 	if (Boss_BT.Succeeded())
@@ -55,6 +61,25 @@ ABoss::ABoss()
 			GetMesh()->SetAnimInstanceClass(BossAnimBlueprint);
 		}
 	}
+
+	SwordWaveSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("SwordWaveSpawn"));
+	SwordWaveSpawn->SetupAttachment(GetRootComponent());
+	SwordWaveSpawn->SetRelativeLocation(FVector(150.0f,0, 0));
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/BackDash/Materials/M_Opacity.M_Opacity'"));
+	if (M_Opacity.Succeeded())
+	{
+		OpacityMaterials = M_Opacity.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/Textures/M_Boss.M_Boss'"));
+	if (M_DefaultMaterials.Succeeded())
+	{
+		DefaultMaterials = M_DefaultMaterials.Object;
+	}
+
+	Target = nullptr;
+	TargetCamera = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -62,6 +87,19 @@ void ABoss::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.Owner = this;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+	Sickle = GetWorld()->SpawnActor<ABossWeapon>(Sickle->StaticClass(), SpawnActorOption);
+
+	if (Sickle)
+	{
+		Sickle->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("BossWeaponSocket")));
+	}
+
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &ABoss::OnSeeCharacter);
@@ -78,6 +116,8 @@ void ABoss::Tick(float DeltaTime)
 	if (AI)
 	{
 		AI->BBComponent->SetValueAsEnum("CurrentState", (uint8)CurrentState);
+		AI->BBComponent->SetValueAsEnum("CurrentBlinkAttackState", (uint8)CurrentBlinkAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentBattleState", (uint8)CurrentBattleState);
 	}
 }
 
@@ -96,7 +136,19 @@ void ABoss::OnSeeCharacter(APawn * Pawn)
 
 		if (AI)
 		{
+			if (!Target)
+			{
+				AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Pawn);
 
+				if (MyCharacter)
+				{
+					Target = MyCharacter;
+					TargetCamera = MyCharacter->CameraLocation;
+					AI->BBComponent->SetValueAsObject("Player", Pawn);
+					AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
+					CurrentState = EBossState::Battle;
+				}
+			}
 		}
 	}
 }

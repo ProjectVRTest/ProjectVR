@@ -4,7 +4,12 @@
 #include "Components/BoxComponent.h"
 #include "MiniBoss/Weapon/SwordWave/SwordWave.h"
 #include "Normal/ArcherSword/Weapon/Bow/NMWeaponArrow.h"
+#include "Monster/Boss/AI/AddAttack/BossAddAttackBall.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "MyCharacter/MotionControllerCharacter.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
+#include "MyCharacter/CameraLocation.h"
 
 // Sets default values
 ASwordWaveTarget::ASwordWaveTarget()
@@ -65,6 +70,17 @@ void ASwordWaveTarget::SwordWaveTargetOverlap(UPrimitiveComponent* OverlappedCom
 			if (NMArrow)
 			{
 				NMArrow->Projecttile->HomingTargetComponent = nullptr;
+			}
+		}
+		else if (OtherActor->ActorHasTag("AttackBall"))
+		{
+			ABossAddAttackBall* AttackBall = Cast<ABossAddAttackBall>(OtherActor);
+
+			if (AttackBall)
+			{
+				AMotionControllerCharacter* MyCharacter= Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+				
+				AttackBall->Homing(MyCharacter->CameraLocation);
 			}
 		}
 	}

@@ -14,7 +14,7 @@
 AMiniBossWeapon::AMiniBossWeapon()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	SwordMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwordMesh"));
 	SetRootComponent(SwordMesh);
@@ -40,6 +40,7 @@ AMiniBossWeapon::AMiniBossWeapon()
 	SwordCollision->SetRelativeLocation(FVector(62.0f, 0, 0));
 	SwordCollision->SetRelativeRotation(FRotator(90.0f, 0, 0));	
 	SwordCollision->SetRelativeScale3D(FVector(1.3f, 1.3f, 2.5f));
+	SwordCollision->bHiddenInGame = false;
 
 	IsWeaponAttack = false;
 	IsParryingAttack = false;
@@ -50,7 +51,7 @@ AMiniBossWeapon::AMiniBossWeapon()
 		DefaultMaterials = M_DefaultMaterials.Object;
 	}
 
-	SwordCollision->bHiddenInGame = false;
+	
 	Tags.Add(FName(TEXT("MiniBossWeapon")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -61,7 +62,7 @@ void AMiniBossWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (SwordMesh)
+	if (SwordCollision)
 	{
 		SwordCollision->OnComponentBeginOverlap.AddDynamic(this, &AMiniBossWeapon::WeaponBeginOverlap);
 	}

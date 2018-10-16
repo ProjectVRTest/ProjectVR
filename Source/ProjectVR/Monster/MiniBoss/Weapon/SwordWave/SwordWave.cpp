@@ -83,7 +83,11 @@ ASwordWave::ASwordWave()
 void ASwordWave::BeginPlay()
 {
 	Super::BeginPlay();
-	SwordWaveHit->OnComponentBeginOverlap.AddDynamic(this, &ASwordWave::SwordWaveBeginOverlap);
+
+	if (SwordWaveHit)
+	{
+		SwordWaveHit->OnComponentBeginOverlap.AddDynamic(this, &ASwordWave::SwordWaveBeginOverlap);
+	}	
 }
 
 // Called every frame
