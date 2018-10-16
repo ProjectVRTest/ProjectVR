@@ -8,7 +8,7 @@ ANavigationPoint::ANavigationPoint()
 	Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
 	Collision->SetupAttachment(RootComponent);
 
-	Collision->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	Collision->SetRelativeScale3D(FVector(2.0f, 2.0f, 2.0f));
 	Collision->bGenerateOverlapEvents = true;
 	Collision->SetCollisionProfileName("OverlapAll");
 
