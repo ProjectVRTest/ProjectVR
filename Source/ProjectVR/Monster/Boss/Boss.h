@@ -18,11 +18,28 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossState CurrentState;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossBlinkAttackState CurrentBlinkAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossBattleState CurrentBattleState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UBehaviorTree* BehaviorTree;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+		class ABossWeapon* Sickle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+		class AActor* Target;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+		class ACameraLocation* TargetCamera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+		class USceneComponent* SwordWaveSpawn;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+		class USceneComponent* WaveSpawn;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
+		class UMaterialInterface* OpacityMaterials;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
+		class UMaterialInterface* DefaultMaterials;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

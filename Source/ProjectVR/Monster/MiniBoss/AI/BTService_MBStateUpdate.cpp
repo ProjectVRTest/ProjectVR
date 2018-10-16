@@ -2,8 +2,8 @@
 
 #include "BTService_MBStateUpdate.h"
 #include "Headers/MiniBossAIHeader.h"
-
 #include "MyCharacter/CameraLocation.h"
+
 void UBTService_MBStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);

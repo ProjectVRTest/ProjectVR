@@ -15,8 +15,15 @@ class PROJECTVR_API UBossAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossState CurrentState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossBlinkAttackState CurrentBlinkAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossBattleState CurrentBattleState;
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		void AnimNotify_LongDistanceAttackBallSpawn(UAnimNotify* Notify);
 };
