@@ -39,6 +39,7 @@
 
 #include "MyCharacter/Widget/Menu.h"									// 메뉴의 활성화 / 비활성화
 #include "Components/WidgetInteractionComponent.h"			// 위젯과의 상호작용
+#include "TimerManager.h"			// 스테미너 자동 회복
 
 #include "CameraLocation.h"
 
@@ -98,6 +99,13 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	MaxStamina = 100.0f;
 	CurrentStamina = MaxStamina;
 
+	// 테스트 / 나중에 수정할 것
+	AttackPoint = 5.0f;
+	DefencePoint = 10.0f;
+	DashPoint = 30.0f;
+	RecoveryPoint = 1.0f;
+	bIsUseStamina = false;
+
 	InvincibleTimeOn = false;
 	CurrentState = EPlayerState::Idle;
 	bAllowBreathe = true;
@@ -155,6 +163,8 @@ void AMotionControllerCharacter::BeginPlay()
 		CameraLocation->AttachToComponent(Camera, AttachRules);
 	}
 	AttackPointSet();
+
+	GetWorld()->GetTimerManager().SetTimer(AutoTimerHandle, this, &AMotionControllerCharacter::AutoStamina, 0.05f, false);		// 자동으로 스테미너 채우기
 }
 
 // Called every frame
@@ -338,38 +348,54 @@ void AMotionControllerCharacter::RunOff()
 
 void AMotionControllerCharacter::DashUpStart()
 {
-	FVector DashVector = FVector::ZeroVector;
-	GetCharacterMovement()->GroundFriction = 0;
-	DashVector = Camera->GetForwardVector()*3000.0f;
-	DashVector.Z = 0;
-	LaunchCharacter(DashVector, false, false);
+	if (CurrentStamina > DashPoint)
+	{
+		UseStamina(DashPoint);
+		FVector DashVector = FVector::ZeroVector;
+		GetCharacterMovement()->GroundFriction = 0;
+		DashVector = Camera->GetForwardVector()*3000.0f;
+		DashVector.Z = 0;
+		LaunchCharacter(DashVector, false, false);
+	}
 }
 
 void AMotionControllerCharacter::DashDownStart()
 {
-	FVector DashVector = FVector::ZeroVector;
-	GetCharacterMovement()->GroundFriction = 0;
-	DashVector = Camera->GetForwardVector()*3000.0f*-1.0f;
-	DashVector.Z = 0;
-	LaunchCharacter(DashVector, false, false);
+	if (CurrentStamina > DashPoint)
+	{
+		UseStamina(DashPoint);
+		FVector DashVector = FVector::ZeroVector;
+		GetCharacterMovement()->GroundFriction = 0;
+		DashVector = Camera->GetForwardVector()*3000.0f*-1.0f;
+		DashVector.Z = 0;
+		LaunchCharacter(DashVector, false, false);
+	}
 }
 
 void AMotionControllerCharacter::DashLeftStart()
 {
-	FVector DashVector = FVector::ZeroVector;
-	GetCharacterMovement()->GroundFriction = 0;
-	DashVector = Camera->GetRightVector()*3000.0f*-1.0f;
-	DashVector.Z = 0;
-	LaunchCharacter(DashVector, false, false);
+	if (CurrentStamina > DashPoint)
+	{
+		UseStamina(DashPoint);
+		FVector DashVector = FVector::ZeroVector;
+		GetCharacterMovement()->GroundFriction = 0;
+		DashVector = Camera->GetRightVector()*3000.0f*-1.0f;
+		DashVector.Z = 0;
+		LaunchCharacter(DashVector, false, false);
+	}
 }
 
 void AMotionControllerCharacter::DashRightStart()
 {
-	FVector DashVector = FVector::ZeroVector;
-	GetCharacterMovement()->GroundFriction = 0;
-	DashVector = Camera->GetRightVector()*3000.0f;
-	DashVector.Z = 0;
-	LaunchCharacter(DashVector, false, false);
+	if (CurrentStamina > DashPoint)
+	{
+		UseStamina(DashPoint);
+		FVector DashVector = FVector::ZeroVector;
+		GetCharacterMovement()->GroundFriction = 0;
+		DashVector = Camera->GetRightVector()*3000.0f;
+		DashVector.Z = 0;
+		LaunchCharacter(DashVector, false, false);
+	}
 }
 
 void AMotionControllerCharacter::DashEnd()
@@ -501,5 +527,30 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 								//{
 								//	HandWidget->GainHP(30);		// 회복
 								//}
+	}
+}
+
+void AMotionControllerCharacter::UseStamina(float _stamina)
+{
+	CurrentStamina -= _stamina;
+	bIsUseStamina = true;
+
+	GetWorld()->GetTimerManager().ClearTimer(AutoTimerHandle);			// 스테미너 사용 동작은 잠시 스테미너 회복을 멈춤
+	GetWorld()->GetTimerManager().SetTimer(AutoTimerHandle, this, &AMotionControllerCharacter::AutoStamina, 3.0f, false);		// 그리고 바로 3초후 예약(스테미너 자동 회복
+}
+
+void AMotionControllerCharacter::AutoStamina()
+{
+	UE_LOG(LogTemp, Log, TEXT("SSipMinPyeReal"));
+	if (CurrentStamina < MaxStamina)			// 스테미너가 Full인 상태가 아닐 때만 실행
+	{
+		CurrentStamina += RecoveryPoint;			// 수치만큼 스테미너 증가
+		UE_LOG(LogTemp, Log, TEXT("SSipMinPyeReal2"));
+		if (CurrentStamina > MaxStamina)
+		{
+			// 다 차게 되면 스테미너를 Full과 맞춰줌
+			CurrentStamina = MaxStamina;
+		}
+		GetWorld()->GetTimerManager().SetTimer(AutoTimerHandle, this, &AMotionControllerCharacter::AutoStamina, 0.01f, false);			// 계속 스테미너 증가
 	}
 }

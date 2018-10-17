@@ -145,13 +145,18 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 				{
 					if (IsActivation && IsMiniBossWeaponOverlap&& ShieldMoveVelocity.Size() > 90.0f) //그립버튼을 누르고 방패의 선속도가 300이상인지 확인한다.
 					{
-						RumbleLeftController(5.0f); //패드에 진동을 울려주고
-						MiniBossWeapon->IsParryingAttack = false;
-						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, MiniBoss->GetActorLocation());
-						GLog->Log(FString::Printf(TEXT("방패 패링")));
-						MiniBoss->ParryingPointSet();//패링 포인트를 스폰(HP에 따라)						
-						MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingStart;		 
-						MiniBoss->CurrentAttackState = EMiniBossAttackState::ParryingState;
+						// 최소 스테미너이상 있을 때 방패로 막기 가능 
+						if (ShieldOwner->CurrentStamina > ShieldOwner->DefencePoint)
+						{
+							ShieldOwner->UseStamina(ShieldOwner->DefencePoint);		// 스테미너 감소 및 대기시간 후 스테미너 회복시작
+							RumbleLeftController(5.0f); //패드에 진동을 울려주고
+							MiniBossWeapon->IsParryingAttack = false;
+							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, MiniBoss->GetActorLocation());
+							GLog->Log(FString::Printf(TEXT("방패 패링")));
+							MiniBoss->ParryingPointSet();//패링 포인트를 스폰(HP에 따라)						
+							MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingStart;
+							MiniBoss->CurrentAttackState = EMiniBossAttackState::ParryingState;
+						}
 					}
 				}
 			}

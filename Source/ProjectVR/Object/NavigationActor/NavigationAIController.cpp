@@ -7,8 +7,8 @@
 
 ANavigationAIController::ANavigationAIController()
 {
-	BTComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("DogBehaviorTree"));
-	BBComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("DogBlackboard"));
+	BTComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTree"));
+	BBComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("Blackboard"));
 }
 
 void ANavigationAIController::Possess(APawn * InPawn)

@@ -10,10 +10,12 @@
 #include "Engine/World.h"
 #include "Engine/StaticMesh.h"
 
+#include"Components/BoxComponent.h"
+
 // Sets default values
 ALever::ALever()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// 모양 생성
@@ -25,8 +27,6 @@ ALever::ALever()
 
 	Lever = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Lever"));
 	Lever->SetupAttachment(LeverScene);
-
-	/////////////////////////////////////////////////////////////////////////////////////
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>PotionShape(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (PotionShape.Succeeded())		// 검 메쉬를 찾았을 경우 실행
@@ -46,7 +46,7 @@ ALever::ALever()
 	Lever->SetRelativeScale3D(FVector(1.0, 1.0, 1.6));
 	Lever->SetRelativeLocation(FVector(0.0, 0.0, 82.0));
 	Lever->SetCollisionProfileName("OverlapAll");
-	
+
 	Tags.Add(FName("Door"));
 }
 
@@ -69,36 +69,25 @@ void ALever::Tick(float DeltaTime)
 
 	if (TouchActor)
 	{
-		if (TouchActor->ActorHasTag("RightHand"))
+		ARightHandMotionController* RightHand = Cast<ARightHandMotionController>(TouchActor);
+		if (RightHand)
 		{
-			AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-			if (Character)
+			if (RightHand->bisRightGrab)		// 참이면 상호작용 실행
 			{
-				ARightHandMotionController* RightHand = Cast<ARightHandMotionController>(TouchActor);
-				if (RightHand)
-				{
-					if (RightHand->bisRightGrab)		// 참이면 상호작용 실행
-					{
-						FVector Cal = UKismetMathLibrary::InverseTransformLocation
-						(GetActorTransform(), RightHand->GetActorLocation());
-						Cal = Cal - LeverScene->GetComponentLocation();
-						float Degree = UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(Cal.X, Cal.Z));
-						LeverScene->SetRelativeRotation(FRotator(Degree, 0.0f, 0.0f));
+				FVector Cal = UKismetMathLibrary::InverseTransformLocation
+				(GetActorTransform(), RightHand->GetActorLocation());// -LeverScene->GetComponentLocation();
 
+				float degree = UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(-Cal.X, Cal.Z));
 
-						UE_LOG(LogTemp, Log, TEXT("%f / %f / %f //// %f / %f / %f"), RightHand->GetActorLocation().X, RightHand->GetActorLocation().Y, RightHand->GetActorLocation().Z, Cal.X, Cal.Y, Cal.Z);
-					}
-				}
+				LeverScene->SetRelativeRotation(FRotator(degree, 0.0f, 0.0f));
 			}
 		}
 	}
+
 }
 
 void ALever::OnLeverOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	// 오른손과 상호작용
-	TouchActor = OtherActor;
-
 	if (OtherActor->ActorHasTag("RightHand"))
 	{
 		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -107,25 +96,13 @@ void ALever::OnLeverOverlap(UPrimitiveComponent * OverlappedComp, AActor * Other
 			ARightHandMotionController* RightHand = Cast<ARightHandMotionController>(OtherActor);
 
 			if (RightHand)
-			{
-				if (RightHand->bisRightGrab)
-				{
-					TouchActor = Character->RightHand;
-				}
-			}
+				TouchActor = Character->RightHand;
 		}
 	}
 }
 
 void ALever::OnLeverEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	//// 오른손과 상호작용
-	//if (OtherActor->ActorHasTag("RightHand"))
-	//{
-	//	TouchActor = nullptr;
-	//	if (Interactor)
-	//		Interactor = nullptr;
-	//	UE_LOG(LogTemp, Log, TEXT("interactor with righthand out"));
-	//}
+	
 }
 

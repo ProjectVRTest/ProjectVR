@@ -28,7 +28,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect")
 		class UParticleSystemComponent* Navigate;
-
+	class UParticleSystemComponent* LastNavigate;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect")
 		class UParticleSystem* StartNavigate;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect")
@@ -38,7 +38,7 @@ public:
 		class UBehaviorTree* BehaviorTree;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-	class ANavigationAIController* AI;
+		class ANavigationAIController* AI;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect")
 		TArray<class ANavigationPoint*> Tagets;
