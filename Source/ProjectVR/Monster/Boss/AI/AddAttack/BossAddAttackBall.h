@@ -23,13 +23,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+		class UStaticMeshComponent* Mesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 		class USphereComponent* Sphere;
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 		class UProjectileMovementComponent* Projecttile;
-	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
-		class UStaticMeshComponent* Mesh;
+	
 	UFUNCTION()
 		void Homing(class AActor* Target);
 	UFUNCTION()
 		void AttackBallBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
 };

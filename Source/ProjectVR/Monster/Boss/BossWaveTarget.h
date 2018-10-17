@@ -4,23 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SwordWaveTarget.generated.h"
+#include "BossWaveTarget.generated.h"
 
 UCLASS()
-class PROJECTVR_API ASwordWaveTarget : public AActor
+class PROJECTVR_API ABossWaveTarget : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ASwordWaveTarget();
+	ABossWaveTarget();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UBoxComponent* SwordWaveTargetBox;
+		class UBoxComponent* BossWaveTargetBox;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override;	
 };

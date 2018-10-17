@@ -19,9 +19,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossState CurrentState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossBattleState CurrentBattleState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossBlinkAttackState CurrentBlinkAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EBossBattleState CurrentBattleState;
+		EBossLongAttackState CurrentLongAttackState;
+
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
@@ -39,7 +43,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
 		class UMaterialInterface* OpacityMaterials;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
-		class UMaterialInterface* DefaultMaterials;
+		class UMaterialInterface* DefaultBodyMaterials;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
+		class UMaterialInterface* DefaultClothMaterials;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AttackBallCrashLocation")
+		class USceneComponent* LeftCrashLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AttackBallCrashLocation")
+		class USceneComponent* RightCrashLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "OrbCreateLocation")
+		class USceneComponent* OrbCreateLocation;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -52,8 +64,5 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION()
-		void OnSeeCharacter(APawn * Pawn);
-
-
-
+		void OnSeeCharacter(APawn * Pawn);	
 };

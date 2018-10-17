@@ -22,7 +22,5 @@ public:
 	ABossAIController();
 	UFUNCTION()
 		virtual void Possess(APawn* InPawn) override;
-	
-	
-	
+
 };

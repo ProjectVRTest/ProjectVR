@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Boss.h"
 #include "BossAIController.h"
@@ -12,6 +12,8 @@
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "MyCharacter/CameraLocation.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
+#include "Monster/Boss/AI/AddAttack/BossAddAttackBall.h"
 
 // Sets default values
 ABoss::ABoss()
@@ -28,11 +30,15 @@ ABoss::ABoss()
 		GetMesh()->SetSkeletalMesh(Boss_SK_Mesh.Object);
 	}
 
+	GetCapsuleComponent()->bHiddenInGame = false;
+
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -88.0f));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
 
 	CurrentState = EBossState::Idle;
+	CurrentBattleState = EBossBattleState::Idle;
 	CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
+	CurrentLongAttackState = EBossLongAttackState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
@@ -72,14 +78,36 @@ ABoss::ABoss()
 		OpacityMaterials = M_Opacity.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/Textures/M_Boss.M_Boss'"));
-	if (M_DefaultMaterials.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultBodyMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/Textures/M_Boss.M_Boss'"));
+	if (M_DefaultBodyMaterials.Succeeded())
 	{
-		DefaultMaterials = M_DefaultMaterials.Object;
+		DefaultBodyMaterials = M_DefaultBodyMaterials.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultClothMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/Textures/M_BossCloth.M_BossCloth'"));
+	if (M_DefaultClothMaterials.Succeeded())
+	{
+		DefaultClothMaterials = M_DefaultClothMaterials.Object;
+	}
+
+	LeftCrashLocation = CreateDefaultSubobject<USceneComponent>(TEXT("LeftCrashLocation"));
+	LeftCrashLocation->SetupAttachment(GetRootComponent());
+	LeftCrashLocation->SetRelativeLocation(FVector(400.0f, -250.0f, 0));
+
+	RightCrashLocation = CreateDefaultSubobject<USceneComponent>(TEXT("RightCrashLocation"));
+	RightCrashLocation->SetupAttachment(GetRootComponent());
+	RightCrashLocation->SetRelativeLocation(FVector(400.0f, 250.0f, 0));
+
+	OrbCreateLocation = CreateDefaultSubobject<USceneComponent>(TEXT("OrbCreateLocation"));
+	OrbCreateLocation->SetupAttachment(GetRootComponent());
+	OrbCreateLocation->SetRelativeLocation(FVector(92.0f, -6.0f, 40.0f));
 
 	Target = nullptr;
 	TargetCamera = nullptr;
+
+	Tags.Add(TEXT("Monster"));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
@@ -118,6 +146,7 @@ void ABoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentState", (uint8)CurrentState);
 		AI->BBComponent->SetValueAsEnum("CurrentBlinkAttackState", (uint8)CurrentBlinkAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentBattleState", (uint8)CurrentBattleState);
+		AI->BBComponent->SetValueAsEnum("CurrentLongAttackState", (uint8)CurrentLongAttackState);
 	}
 }
 
@@ -146,10 +175,11 @@ void ABoss::OnSeeCharacter(APawn * Pawn)
 					TargetCamera = MyCharacter->CameraLocation;
 					AI->BBComponent->SetValueAsObject("Player", Pawn);
 					AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
+					CurrentBlinkAttackState = EBossBlinkAttackState::AddAttackStart;
+					CurrentBattleState = EBossBattleState::AddAttack;
 					CurrentState = EBossState::Battle;
 				}
 			}
 		}
 	}
 }
-

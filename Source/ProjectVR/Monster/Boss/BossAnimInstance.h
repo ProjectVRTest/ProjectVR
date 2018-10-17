@@ -18,12 +18,18 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossState CurrentState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossBattleState CurrentBattleState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossBlinkAttackState CurrentBlinkAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EBossBattleState CurrentBattleState;
+		EBossLongAttackState CurrentLongAttackState;
+
+
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UFUNCTION(BlueprintCallable, Category = "AI")
 		void AnimNotify_LongDistanceAttackBallSpawn(UAnimNotify* Notify);
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		void AnimNotify_OrbCreate(UAnimNotify* Notify);
 };

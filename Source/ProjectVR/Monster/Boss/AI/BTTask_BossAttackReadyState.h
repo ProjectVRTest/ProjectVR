@@ -4,16 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "BTTask_BossVisibleState.generated.h"
+#include "BTTask_BossAttackReadyState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTVR_API UBTTask_BossVisibleState : public UBTTask_BlackboardBase
+class PROJECTVR_API UBTTask_BossAttackReadyState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
-public:
-	class ABoss* Boss;
+private:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
 };

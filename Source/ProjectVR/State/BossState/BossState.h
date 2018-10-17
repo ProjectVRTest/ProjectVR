@@ -18,14 +18,27 @@ UENUM(BlueprintType)
 enum class EBossBattleState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
-	AddAttack = 1 UMETA(DisplayName = "AddAttack")
+	AttackReady = 1 UMETA(DisplayName = "AttackReady"),
+	AddAttack = 2 UMETA(DisplayName = "AddAttack"),
+	CloseAttack = 3 UMETA(DisplayName = "CloseAttack"),
+	LongAttack = 4 UMETA(DisplayName = "LongAttack")	
 };
 
 UENUM(BlueprintType)
 enum class EBossBlinkAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
-	InVisible = 1 UMETA(DisplayName = "InVisible"), //투명화 
-	Visible = 2 UMETA(DisplayName = "Visible"), // 플레이어 앞에 나타나면서 불투명화
-	BlinkAttack = 3 UMETA(DisplayName = "BlinkAttack")
+	AddAttackStart = 1 UMETA(DisplayName ="AddAttackStart"),
+	InVisible = 2 UMETA(DisplayName = "InVisible"), //투명화 
+	Visible = 3 UMETA(DisplayName = "Visible"), // 플레이어 앞에 나타나면서 불투명화
+	BlinkAttack = 4 UMETA(DisplayName = "BlinkAttack")
+};
+
+UENUM(BlueprintType)
+enum class EBossLongAttackState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	LongAttackReady = 1 UMETA(DisplayName= "LongAttackReady"),
+	DefaultLongAttack = 2 UMETA(DisplayName = "DefaultLongAttack"),
+	OrbCreate = 3 UMETA(DisplayName = "OrbCreate")
 };

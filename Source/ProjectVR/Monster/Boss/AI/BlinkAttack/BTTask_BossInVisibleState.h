@@ -14,5 +14,14 @@ class PROJECTVR_API UBTTask_BossInVisibleState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 public:
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;	
+	FTimerHandle InVisibleTimer;
+	class ABossAIController* AI;
+	class ABoss* Boss;
+	bool ExitFlag;
+	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+
+	UFUNCTION()
+		void InVisible();
 };

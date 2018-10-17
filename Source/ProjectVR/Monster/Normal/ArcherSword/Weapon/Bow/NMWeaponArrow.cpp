@@ -88,6 +88,7 @@ void ANMWeaponArrow::ArrowBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	else if(OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
 	{
 		GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
+		Projecttile->HomingTargetComponent = nullptr;
 	}
 	else if (OtherActor->ActorHasTag(TEXT("Land")))
 	{
