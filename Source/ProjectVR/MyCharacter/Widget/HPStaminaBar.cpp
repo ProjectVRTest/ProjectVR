@@ -81,12 +81,14 @@ void AHPStaminaBar::BeginPlay()
 	OwnerCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (OwnerCharacter)
 	{
-		CurrentHP = OwnerCharacter->CurrentHp / OwnerCharacter->MaxHp;
-		MaxHP = CurrentHP;
+		MaxHP = OwnerCharacter->MaxHp;
+		CurrentHP = OwnerCharacter->CurrentHp / MaxHP;
 		VirtualHP = CurrentHP;
 
-		CurrentStamina = OwnerCharacter->CurrentStamina / OwnerCharacter->MaxStamina;
-		MaxStamina = CurrentStamina;
+		MaxStamina = OwnerCharacter->MaxStamina;
+		CurrentStamina = OwnerCharacter->CurrentStamina / MaxStamina;
+		VirtualStamina = CurrentStamina;
+		UE_LOG(LogTemp, Log, TEXT("%f / %f / %f"), CurrentStamina, MaxStamina, VirtualStamina);
 	}
 }
 
@@ -95,9 +97,17 @@ void AHPStaminaBar::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (OwnerCharacter)
+	{
+		VirtualHP = OwnerCharacter->CurrentHp / MaxHP;
+
+		VirtualStamina = OwnerCharacter->CurrentStamina / MaxStamina;
+	}
+
 	if (CurrentHP != VirtualHP)
 	{
-		ChangOfHP = DeltaTime * 0.5f;
+		ChangOfHP = DeltaTime * 0.5f;		// 변화량
+		// 데미지 받음
 		if (CurrentHP > VirtualHP)
 		{
 			CurrentHP -= ChangOfHP;
@@ -105,7 +115,8 @@ void AHPStaminaBar::Tick(float DeltaTime)
 			if (CurrentHP < VirtualHP)					// 현재HP와 가상HP를 맞추기
 				CurrentHP = VirtualHP;
 		}
-		else
+		// HP 회복
+		else		
 		{
 			CurrentHP += ChangOfHP;
 			HPScene->SetRelativeScale3D(FVector(CurrentHP, 1.0f, 1.0f));
@@ -114,7 +125,28 @@ void AHPStaminaBar::Tick(float DeltaTime)
 		}
 	}
 	
+	if (CurrentStamina != VirtualStamina)
+	{
+		//UE_LOG(LogTemp, Log, TEXT("%f / %f"), CurrentStamina, VirtualStamina);
+		ChangOfStamina = DeltaTime * 0.5f;		// 변화량
 
+		// 데미지 받음
+		if (CurrentStamina > VirtualStamina)
+		{
+			CurrentStamina -= ChangOfStamina;
+			SteminaScene->SetRelativeScale3D(FVector(CurrentStamina, 1.0f, 1.0f));
+			if (CurrentStamina < VirtualStamina)					// 현재HP와 가상HP를 맞추기
+				CurrentStamina = VirtualStamina;
+		}
+		// HP 회복
+		else
+		{
+			CurrentStamina += ChangOfStamina;
+			SteminaScene->SetRelativeScale3D(FVector(CurrentStamina, 1.0f, 1.0f));
+			if (CurrentStamina > VirtualStamina)					// 현재HP와 가상HP를 맞추기
+				CurrentStamina = VirtualStamina;
+		}
+	}
 }
 
 void AHPStaminaBar::GetDamage(float damage)
@@ -132,6 +164,7 @@ void AHPStaminaBar::RecoveryHP(float recoveryHP)
 
 void AHPStaminaBar::UseStamina(float _useValue)
 {
+	VirtualStamina -= _useValue / 100;
 }
 
 void AHPStaminaBar::RecoveryStamina(float _useValue)

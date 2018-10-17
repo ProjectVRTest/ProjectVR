@@ -70,16 +70,41 @@ public:
 		float MaxHp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HP")
 		float CurrentHp;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		float MaxStamina;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		float CurrentStamina;
 	UPROPERTY()
 		float RunningTime;
 	UPROPERTY()
 		bool bAllowBreathe;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float DashPower;
+
+
+
+
+
+	// 스테미너 관련
+		float CurrentStamina;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
+		float MaxStamina;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
+		float AttackPoint;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
+		float DefencePoint;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
+		float DashPoint;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
+		float RecoveryPoint;
+
+	bool bIsUseStamina;
+
+	FTimerHandle AutoTimerHandle;			// 타이머핸들
+	UFUNCTION()
+		void UseStamina(float _stamina);
+	UFUNCTION()
+		void AutoStamina();			// 자동으로 스테미너 채워주는 함수
+
+
+
+
 
 	UPROPERTY()
 		bool InvincibleTimeOn;		// 무적시간인지 아닌지 판별
@@ -135,6 +160,7 @@ public:
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// 데미지 받기
 	UFUNCTION()
 		void DamageTimer();			// 무적시간 On 함수
+
 
 	UFUNCTION()
 		void OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,

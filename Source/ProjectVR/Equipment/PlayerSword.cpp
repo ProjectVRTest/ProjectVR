@@ -18,7 +18,7 @@
 // Sets default values
 APlayerSword::APlayerSword()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	/* 스태틱 매쉬 컴포넌트 생성 */
@@ -31,15 +31,15 @@ APlayerSword::APlayerSword()
 	{
 		SwordMesh->SetStaticMesh(SM_Sword.Object);			// 스태틱 메쉬에 검 모양 설정
 	}
-	
+
 	/* 콜리전 컴포넌트 생성 */
-	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));			
+	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
 	SwordCollision->SetupAttachment(SwordMesh);		// 콜리전을 검 메쉬에 붙임
 	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 
 	// 콜리전 위치 및 방향, 크기 설정
 	SwordCollision->SetRelativeLocation(FVector(0.0f, 90.0f, 0.0f));
-	SwordCollision->SetRelativeRotation(FRotator(0.0f,0.0f,90.0f));
+	SwordCollision->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
 	SwordCollision->SetRelativeScale3D(FVector(0.75f, 0.75f, 1.6f));
 
 	//IsActivation = false;
@@ -56,7 +56,7 @@ APlayerSword::APlayerSword()
 void APlayerSword::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// 오너 설정
 	SwordOwner = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
@@ -73,7 +73,7 @@ void APlayerSword::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	Timer += DeltaTime;		// 타이머
-	
+
 	// 매 틱마다 캐릭터의 운동값을 뺌
 	if (SwordOwner)
 	{
@@ -81,7 +81,7 @@ void APlayerSword::Tick(float DeltaTime)
 		SwordMoveDelta = SwordCurrentPosistion - SwordPreviousPosistion;
 		SwordMoveVelocity = SwordMoveDelta / DeltaTime;
 		SwordPreviousPosistion = SwordCurrentPosistion;
-	}	
+	}
 }
 
 void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
@@ -101,29 +101,34 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 		{
 			if (SwordMoveVelocity.Size() >= 1500) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
 			{
-				Timer = 0.0f;		// 공격 판정이 일어났을 때 타이머 0으로
-				
-				if (SwordMoveVelocity.Size() <= 1500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
-				{					
-					RumbleRightController(0.5f);
-					Damage = 10.0f;
-				}
-				else // 선속도의 크기가 500초과일 때 데미지 15 (조건4)
+				// 최소 스테미너이상 있을 때 공격 가능 
+				if (SwordOwner->CurrentStamina >= SwordOwner->AttackPoint)
 				{
-					GLog->Log(FString::Printf(TEXT("크리 공격")));
-					RumbleRightController(1.0f);
-					Damage = 15.0f;
+					SwordOwner->UseStamina(SwordOwner->AttackPoint);			// 스테미너 감소 및 대기시간 후 스테미너 회복시작
+					Timer = 0.0f;		// 공격 판정이 일어났을 때 타이머 0으로
+
+					if (SwordMoveVelocity.Size() <= 1500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
+					{
+						RumbleRightController(0.5f);
+						Damage = 10.0f;
+					}
+					else // 선속도의 크기가 500초과일 때 데미지 15 (조건4)
+					{
+						GLog->Log(FString::Printf(TEXT("크리 공격")));
+						RumbleRightController(1.0f);
+						Damage = 15.0f;
+					}
+					//AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(GetOwner());
+					//ULeftHandWidget* MyStateUI = Cast<ULeftHandWidget>(MyCharacter->LeftHand->Shield->CharacterStateWidget);
+					// 이하 캐릭터 스테미너 감소
+					// 이하 UI스테미너 감소
+
+					UGameplayStatics::ApplyDamage(OtherActor, Damage, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
+					// (오버랩발생된 액터, 데미지, 데미지를가한 주체, 실제 데미지를 가한주체, 데미지종류클래스)
 				}
-				//AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(GetOwner());
-				//ULeftHandWidget* MyStateUI = Cast<ULeftHandWidget>(MyCharacter->LeftHand->Shield->CharacterStateWidget);
-				// 이하 캐릭터 스테미너 감소
-				// 이하 UI스테미너 감소
- 				 
-				UGameplayStatics::ApplyDamage(OtherActor, Damage, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
-				// (오버랩발생된 액터, 데미지, 데미지를가한 주체, 실제 데미지를 가한주체, 데미지종류클래스)
 			}
 		}
-	}	
+	}
 }
 
 void APlayerSword::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭터에서 호출)
