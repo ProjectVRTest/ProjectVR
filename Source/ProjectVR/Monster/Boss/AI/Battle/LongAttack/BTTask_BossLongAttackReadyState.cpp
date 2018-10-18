@@ -11,9 +11,18 @@ EBTNodeResult::Type UBTTask_BossLongAttackReadyState::ExecuteTask(UBehaviorTreeC
 	{
 		ABoss* Boss = Cast<ABoss>(AI->GetPawn());
 
+		int RandValue;
+
 		if (Boss)
 		{
-			int RandValue = FMath::RandRange(1, 10);
+			if (Boss->OrbMaxCount < 1)
+			{
+				RandValue = 5;
+			}
+			else if(Boss->OrbMaxCount >=1)
+			{
+				RandValue = FMath::RandRange(1, 10);
+			}			
 
 			if (RandValue > 4)
 			{

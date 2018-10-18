@@ -14,6 +14,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "Monster/Boss/AI/AddAttack/BossAddAttackBall.h"
+#include "Particles/ParticleSystem.h"
 
 // Sets default values
 ABoss::ABoss()
@@ -102,8 +103,16 @@ ABoss::ABoss()
 	OrbCreateLocation->SetupAttachment(GetRootComponent());
 	OrbCreateLocation->SetRelativeLocation(FVector(92.0f, -6.0f, 40.0f));
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BlinkSmoke(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PT_BossBlinkSmoke.PT_BossBlinkSmoke'"));
+	if (PT_BlinkSmoke.Succeeded())
+	{
+		BlinkSmoke = PT_BlinkSmoke.Object;
+	}
+
 	Target = nullptr;
 	TargetCamera = nullptr;
+
+	OrbMaxCount = 3;
 
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));

@@ -19,7 +19,7 @@ ABossWaveTarget::ABossWaveTarget()
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 
-	InitialLifeSpan = 4.0f;
+	InitialLifeSpan = 3.0f;
 }
 
 // Called when the game starts or when spawned

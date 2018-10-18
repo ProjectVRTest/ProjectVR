@@ -5,7 +5,6 @@
 #include "Engine/StaticMesh.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "UObject/ConstructorHelpers.h"
-#include "MyCharacter/CameraLocation.h"
 #include "Components/BoxComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Particles/ParticleSystem.h"
@@ -74,18 +73,12 @@ void ANMWeaponArrow::Tick(float DeltaTime)
 }
 void ANMWeaponArrow::ArrowBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag(TEXT("CameraLocation")))
+	if (OtherComp->ComponentHasTag(TEXT("CameraLocation")))
 	{
-		ACameraLocation* CameraLocation = Cast<ACameraLocation>(OtherActor);
-
-		GLog->Log(FString::Printf(TEXT("카메라 때림")));
-		if (CameraLocation)
-		{
-			//캐릭터에 데미지 전달
-			Destroy();
-		}
+		Destroy();
 	}
-	else if(OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
+	
+	if(OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
 	{
 		GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
 		Projecttile->HomingTargetComponent = nullptr;

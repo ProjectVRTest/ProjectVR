@@ -27,7 +27,7 @@ ASwordWaveTarget::ASwordWaveTarget()
 	SwordWaveTargetBox->ComponentTags.Add(TEXT("DisregardForLeftHand"));
 	SwordWaveTargetBox->ComponentTags.Add(TEXT("DisregardForRightHand"));
 
-	InitialLifeSpan = 4.0f;
+	InitialLifeSpan = 3.0f;
 }
 
 // Called when the game starts or when spawned

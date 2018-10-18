@@ -52,6 +52,12 @@ public:
 		class USceneComponent* RightCrashLocation;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "OrbCreateLocation")
 		class USceneComponent* OrbCreateLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* BlinkSmoke;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		int OrbMaxCount;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -14,6 +14,5 @@ class PROJECTVR_API UBTTask_BossLongAttackReadyState : public UBTTask_Blackboard
 {
 	GENERATED_BODY()
 private:
-	int a;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);	
 };

@@ -68,6 +68,11 @@ void UBossAnimInstance::AnimNotify_OrbCreate(UAnimNotify * Notify)
 		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		ABossOrb* Orb = GetWorld()->SpawnActor<ABossOrb>(Orb->StaticClass(), Boss->OrbCreateLocation->GetComponentLocation(), Boss->GetActorRotation(), SpawnActorOption);
+
+		if (Orb)
+		{
+			Boss->OrbMaxCount--;
+		}
 	}	
 }
 

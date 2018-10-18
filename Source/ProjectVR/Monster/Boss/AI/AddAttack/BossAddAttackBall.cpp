@@ -77,15 +77,12 @@ void ABossAddAttackBall::Homing(AActor * Target)
 
 void ABossAddAttackBall::AttackBallBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag(TEXT("CameraLocation")))
+	if (OtherComp->ComponentHasTag(TEXT("CameraLocation")))
 	{
-		ACameraLocation* CameraLocation = Cast<ACameraLocation>(OtherActor);
-		if (CameraLocation)
-		{
-			Destroy();
-		}
+		Destroy();
 	}
-	else if (OtherActor->ActorHasTag(TEXT("BossWaveTarget")))
+
+	if (OtherActor->ActorHasTag(TEXT("BossWaveTarget")))
 	{
 		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 		

@@ -24,17 +24,16 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
-		class USphereComponent* Sphere;
-	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 		class UProjectileMovementComponent* Projecttile;
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+		class USphereComponent* Sphere;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystemComponent* OrbWaveParticleComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* OrbWaveParticle;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
-		bool OrbWaveFlag;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* OrbWaveExplosion;
+	
 	UFUNCTION()
 		void Homing(class AActor* Target);
 

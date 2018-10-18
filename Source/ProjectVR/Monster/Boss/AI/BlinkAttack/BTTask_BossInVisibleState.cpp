@@ -25,7 +25,7 @@ EBTNodeResult::Type UBTTask_BossInVisibleState::ExecuteTask(UBehaviorTreeCompone
 		if (Boss)
 		{
 			AMotionControllerCharacter* MyCharacer = Cast<AMotionControllerCharacter>(Boss->Target);
-
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Boss->BlinkSmoke, Boss->GetActorLocation());			
 			Boss->GetMesh()->SetMaterial(0, Boss->OpacityMaterials);
 			Boss->GetMesh()->SetMaterial(1, Boss->OpacityMaterials);
 			Boss->GetMesh()->SetCollisionProfileName("NoCollision");

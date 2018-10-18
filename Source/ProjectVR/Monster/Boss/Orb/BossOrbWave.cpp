@@ -9,6 +9,7 @@
 #include "MyCharacter/CameraLocation.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Particles/ParticleSystem.h"
+#include "kismet/GameplayStatics.h"
 
 // Sets default values
 ABossOrbWave::ABossOrbWave()
@@ -18,7 +19,6 @@ ABossOrbWave::ABossOrbWave()
 	OrbWaveParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SwordWaveTailComponent"));
 	SetRootComponent(OrbWaveParticleComponent);
 	OrbWaveParticleComponent->SetRelativeScale3D(FVector(0.8f, 0.8f, 0.8f));
-	OrbWaveParticleComponent->SetupAttachment(GetRootComponent());
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(GetRootComponent());
@@ -32,11 +32,16 @@ ABossOrbWave::ABossOrbWave()
 	Projecttile->MaxSpeed = 3000.0f;
 	Projecttile->ProjectileGravityScale = 0;
 	
-
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_OrbWave(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_GPP_Magicball.PS_GPP_Magicball'"));
 	if (PT_OrbWave.Succeeded())
 	{
 		OrbWaveParticle = PT_OrbWave.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_OrbWaveExplosion(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_GPP_Magicball_Explosion.PS_GPP_Magicball_Explosion'"));
+	if (PT_OrbWaveExplosion.Succeeded())
+	{
+		OrbWaveExplosion = PT_OrbWaveExplosion.Object;
 	}
 
 	OrbWaveParticleComponent->Template = OrbWaveParticle;
@@ -46,7 +51,6 @@ ABossOrbWave::ABossOrbWave()
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 
 	InitialLifeSpan = 5.0f;
-	OrbWaveFlag = true;
 }
 
 // Called when the game starts or when spawned
@@ -65,6 +69,7 @@ void ABossOrbWave::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
 }
 
 void ABossOrbWave::Homing(AActor * Target)
@@ -79,20 +84,15 @@ void ABossOrbWave::Homing(AActor * Target)
 
 void ABossOrbWave::BossOrbWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OrbWaveFlag)
+	if (OtherComp->ComponentHasTag(TEXT("CameraLocation")))
 	{
-		if (OtherActor->ActorHasTag(TEXT("CameraLocation")))
-		{
-			ACameraLocation* CameraLocation = Cast<ACameraLocation>(OtherActor);
-			if (CameraLocation)
-			{
-				Destroy();
-			}
-		}
-		else if (OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
-		{
-			OrbWaveFlag = false;
-			Projecttile->HomingTargetComponent = nullptr;
-		}
-	}	
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherComp->GetOwner()->GetActorLocation());
+		Destroy();
+	}
+
+	if (OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
+	{
+		Sphere->SetCollisionProfileName("NoCollision");
+		Projecttile->HomingTargetComponent = nullptr;
+	}
 }

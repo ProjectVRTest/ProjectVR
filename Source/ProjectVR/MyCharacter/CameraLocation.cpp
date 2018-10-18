@@ -11,11 +11,12 @@ ACameraLocation::ACameraLocation()
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	SetRootComponent(Sphere);
-	Sphere->SetCollisionProfileName("OverlapAll");	
+	Sphere->SetCollisionProfileName("OverlapAll");		
+	Sphere->bHiddenInGame = false;
 
-	Tags.Add(FName(TEXT("CameraLocation")));	
-	Tags.Add(FName(TEXT("DisregardForLeftHand")));
-	Tags.Add(FName(TEXT("DisregardForRightHand")));
+	Sphere->ComponentTags.Add(FName(TEXT("CameraLocation")));
+	Sphere->ComponentTags.Add(FName(TEXT("DisregardForLeftHand")));
+	Sphere->ComponentTags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
