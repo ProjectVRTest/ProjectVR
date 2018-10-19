@@ -135,19 +135,27 @@ void ASwordWave::Homing(AActor* Target)
 
 void ASwordWave::SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor)
+	if (OtherComp->ComponentHasTag(TEXT("CameraLocation")))
 	{
-		ACameraLocation* CameraLocation = Cast<ACameraLocation>(OtherActor);
+		ACameraLocation* CameraLocation = Cast<ACameraLocation>(OtherComp->GetOwner());
+
 		if (CameraLocation)
 		{
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),SwordWaveExplosion, OtherActor->GetActorLocation());
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SwordWaveExplosion, OtherComp->GetComponentLocation());
+			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 10.0f, nullptr, this, nullptr);
 			Destroy();
-		}	
-		else if (OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
-		{
-			Projecttile->HomingTargetComponent = nullptr;
 		}
 	}
+
+	if (OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
+	{
+		GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
+		Projecttile->bIsHomingProjectile = false;
+	}
+	else if (OtherActor->ActorHasTag(TEXT("Land")))
+	{
+		Destroy();
+	}	
 }
 
 void ASwordWave::SwordWaveRotatorModify(FRotator NewRotator)

@@ -8,6 +8,9 @@
 #include "Components/BoxComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Particles/ParticleSystem.h"
+#include "MyCharacter/CameraLocation.h"
+#include "MyCharacter/MotionControllerCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ANMWeaponArrow::ANMWeaponArrow()
@@ -49,6 +52,12 @@ ANMWeaponArrow::ANMWeaponArrow()
 		ArrowEffect = PT_ArrowEffect.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ArrowExplosionEffect(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_GPP_SpiritSkull_Explosion.PS_GPP_SpiritSkull_Explosion'"));
+	if (PT_ArrowExplosionEffect.Succeeded())
+	{
+		ArrowExplosionEffect = PT_ArrowExplosionEffect.Object;
+	}
+
 	ArrowEffectComponent->Template = ArrowEffect;
 	InitialLifeSpan = 2.5f;
 
@@ -75,13 +84,20 @@ void ANMWeaponArrow::ArrowBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherComp->ComponentHasTag(TEXT("CameraLocation")))
 	{
+		ACameraLocation* CameraLocation = Cast<ACameraLocation>(OtherComp->GetOwner());
+
+		if (CameraLocation)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowExplosionEffect, OtherComp->GetComponentLocation());
+			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 5.0f, nullptr, this, nullptr);
+		}	
 		Destroy();
 	}
 	
 	if(OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
 	{
 		GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
-		Projecttile->HomingTargetComponent = nullptr;
+		Projecttile->bIsHomingProjectile = false;
 	}
 	else if (OtherActor->ActorHasTag(TEXT("Land")))
 	{

@@ -92,8 +92,7 @@ void AMiniBossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponen
 
 				if (MiniBoss)
 				{
-					// (오버랩발생된 액터, 데미지, 데미지를가한 주체, 실제 데미지를 가한주체, 데미지종류클래스)
-					//UGameplayStatics::ApplyDamage(OtherActor, 10.0f, nullptr, MiniBoss, nullptr);
+					UGameplayStatics::ApplyDamage(OtherActor, 10.0f, nullptr, this, nullptr);
 				}				
 			}
 			GLog->Log(FString::Printf(TEXT("캐릭터 때림")));

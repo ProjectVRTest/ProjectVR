@@ -28,6 +28,12 @@ ABossOrb::ABossOrb()
 		OrbParticle = PT_Orb.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_OrbExplosion(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_GPP_MagicDark_Explosion.PS_GPP_MagicDark_Explosion'"));
+	if (PT_OrbExplosion.Succeeded())
+	{
+		OrbExplosion = PT_OrbExplosion.Object;
+	}
+
 	OrbParticleComponent->Template = OrbParticle;
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
@@ -36,6 +42,7 @@ ABossOrb::ABossOrb()
 	OrbWaveSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("OrbWaveSpawn"));
 	OrbWaveSpawn->SetupAttachment(GetRootComponent());
 	OrbWaveSpawn->SetRelativeLocation(FVector(30.0f, 0, 0));
+	OrbWaveMaxCount = 5;
 }
 
 // Called when the game starts or when spawned
@@ -54,25 +61,42 @@ void ABossOrb::Tick(float DeltaTime)
 
 void ABossOrb::FireWave()
 {
-	FActorSpawnParameters SpawnActorOption;
-	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	ABossOrbWave* OrbWave = GetWorld()->SpawnActor<ABossOrbWave>(OrbWave->StaticClass(), OrbWaveSpawn->GetComponentLocation(), GetActorRotation(), SpawnActorOption);
-
-	if (OrbWave)
+	if (OrbWaveMaxCount > 0)
 	{
-		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		FActorSpawnParameters SpawnActorOption;
+		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		if (MyCharacter)
+		ABossOrbWave* OrbWave = GetWorld()->SpawnActor<ABossOrbWave>(OrbWave->StaticClass(), OrbWaveSpawn->GetComponentLocation(), GetActorRotation(), SpawnActorOption);
+		
+		OrbWaveMaxCount--;
+
+		if (OrbWave)
 		{
-			FVector LockonTargetLocation = MyCharacter->CameraLocation->GetActorLocation();
+			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
-			ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
-
-			if (SwordWaveTarget)
+			if (MyCharacter)
 			{
-				OrbWave->Homing(SwordWaveTarget);
+				FVector LockonTargetLocation = MyCharacter->CameraLocation->GetActorLocation();
+
+				ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
+
+				if (SwordWaveTarget)
+				{
+					OrbWave->Homing(SwordWaveTarget);
+				}
 			}
 		}
-	}	
+	}
+
+	if (OrbWaveMaxCount <= 0)
+	{
+		OrbWaveMaxCount = 0;
+		GetWorld()->GetTimerManager().SetTimer(OrbExplosionTimer, this, &ABossOrb::OrbExplosionStart,1.0f,false);
+	}
+}
+
+void ABossOrb::OrbExplosionStart()
+{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbExplosion, GetActorLocation());
+	Destroy();
 }

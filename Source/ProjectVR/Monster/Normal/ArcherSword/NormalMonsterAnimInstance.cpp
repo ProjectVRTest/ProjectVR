@@ -48,9 +48,15 @@ void UNormalMonsterAnimInstance::AnimNotify_ArrowDestroy(UAnimNotify * Notify)
 		FVector LockonTargetLocation = NormalMonster->TargetCamera->GetActorLocation();
 
 		ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
+		
+		if (SwordWaveTarget)
+		{
+			ANMWeaponArrow* NMArrow = GetWorld()->SpawnActor<ANMWeaponArrow>(NMArrow->StaticClass(), NormalMonster->ArrowSpawnLocation->GetComponentLocation(), NormalMonster->GetActorRotation(), SpawnActorOption);
 
-		ANMWeaponArrow* NMArrow = GetWorld()->SpawnActor<ANMWeaponArrow>(NMArrow->StaticClass(),NormalMonster->ArrowSpawnLocation->GetComponentLocation(),NormalMonster->GetActorRotation(), SpawnActorOption);
-
-		NMArrow->Homing(SwordWaveTarget);
+			if (NMArrow)
+			{
+				NMArrow->Homing(SwordWaveTarget);
+			}
+		}		
 	}
 }

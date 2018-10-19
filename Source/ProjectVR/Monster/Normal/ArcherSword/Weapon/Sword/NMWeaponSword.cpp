@@ -7,6 +7,8 @@
 #include "Components/CapsuleComponent.h" //캡슐 콜리전 헤더
 #include "MyCharacter/MotionControllerCharacter.h" //플레이어 헤더
 #include "Monster/Normal/ArcherSword/NormalMonster.h" //일반몬스터 헤더
+#include "Kismet/GameplayStatics.h"
+#include "MyCharacter/CameraLocation.h"
 
 // Sets default values
 ANMWeaponSword::ANMWeaponSword()
@@ -70,23 +72,14 @@ void ANMWeaponSword::SwordBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if (IsWeaponAttack) //공격이 가능한 상태이고
 	{
-		if (OtherActor->ActorHasTag(TEXT("Character")))//부딪힌 상대방의 태그가 Character이면
+		if (OtherComp->ComponentHasTag(TEXT("CameraLocation")))//부딪힌 상대방의 태그가 Character이면
 		{
-			IsWeaponAttack = false; //한번만 공격할 수 있게 false로 해주고
+			ACameraLocation* CameraLocation = Cast<ACameraLocation>(OtherComp->GetOwner());
 
-			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(OtherActor); //부딪힌 액터를 MyCharacer로 형변환해주고
-
-			if (MyCharacter) //MyCharacter이 형변환에 성공하면
+			if (CameraLocation)
 			{
-				ANormalMonster* NormalMonster = Cast<ANormalMonster>(GetAttachParentActor()); //일반몬스터검의 부모 액터인 일반몬스터를 가져온다.
-
-				if (NormalMonster)
-				{
-					// (오버랩발생된 액터, 데미지, 데미지를가한 주체, 실제 데미지를 가한주체, 데미지종류클래스)
-					//UGameplayStatics::ApplyDamage(OtherActor, 10.0f, nullptr, MiniBoss, nullptr);
-				}
+				UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 5.0f, nullptr, this, nullptr);
 			}
-			GLog->Log(FString::Printf(TEXT("캐릭터 때림")));
 		}
 	}
 }

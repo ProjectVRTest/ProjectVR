@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BossOrbWave.h"
 #include "Components/StaticMeshComponent.h"
@@ -86,13 +86,23 @@ void ABossOrbWave::BossOrbWaveBeginOverlap(UPrimitiveComponent* OverlappedCompon
 {
 	if (OtherComp->ComponentHasTag(TEXT("CameraLocation")))
 	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherComp->GetOwner()->GetActorLocation());
-		Destroy();
+		ACameraLocation* CameraLocation = Cast<ACameraLocation>(OtherComp->GetOwner());
+
+		if (CameraLocation)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherComp->GetComponentLocation());
+			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 5.0f, nullptr, this, nullptr);
+			Destroy();
+		}
 	}
 
 	if (OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
 	{
-		Sphere->SetCollisionProfileName("NoCollision");
-		Projecttile->HomingTargetComponent = nullptr;
+		GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
+		Projecttile->bIsHomingProjectile = false;
+	}
+	else if (OtherActor->ActorHasTag(TEXT("Land")))
+	{
+		Destroy();
 	}
 }

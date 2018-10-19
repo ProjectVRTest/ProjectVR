@@ -54,7 +54,13 @@ void UBossAnimInstance::AnimNotify_LongDistanceAttackBallSpawn(UAnimNotify * Not
 
 		AddAttackBall = GetWorld()->SpawnActor<ABossAddAttackBall>(AddAttackBall->StaticClass(), Boss->SwordWaveSpawn->GetComponentLocation(), Boss->GetActorRotation(), SpawnActorOption);
 
-		AddAttackBall->Homing(BossWaveTarget);
+		if (AddAttackBall)
+		{
+			if (BossWaveTarget)
+			{
+				AddAttackBall->Homing(BossWaveTarget);
+			}			
+		}		
 	}
 }
 

@@ -11,7 +11,7 @@ EBTNodeResult::Type UBTTask_BossLongAttackReadyState::ExecuteTask(UBehaviorTreeC
 	{
 		ABoss* Boss = Cast<ABoss>(AI->GetPawn());
 
-		int RandValue;
+		int RandValue=0;
 
 		if (Boss)
 		{

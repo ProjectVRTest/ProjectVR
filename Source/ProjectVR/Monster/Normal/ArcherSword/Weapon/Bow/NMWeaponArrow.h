@@ -24,6 +24,8 @@ public:
 		class UParticleSystemComponent* ArrowEffectComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* ArrowEffect;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* ArrowExplosionEffect;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

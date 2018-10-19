@@ -24,7 +24,7 @@ ABoss::ABoss()
 
 	AIControllerClass = ABossAIController::StaticClass();
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Boss_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/test_mesh.test_mesh'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Boss_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/SK_Boss.SK_Boss'"));
 
 	if (Boss_SK_Mesh.Succeeded())
 	{
@@ -149,6 +149,8 @@ void ABoss::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	ABossAIController* AI = Cast<ABossAIController>(GetController());
+
+	//GLog->Log(FString::Printf(TEXT("%d"), OrbMaxCount));
 
 	if (AI)
 	{
