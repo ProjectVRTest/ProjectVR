@@ -28,7 +28,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UStaticMeshComponent* Mesh;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* PotionUseEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FItemDataTable DataTable;
 	UPROPERTY()

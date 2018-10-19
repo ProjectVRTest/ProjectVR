@@ -2,6 +2,7 @@
 
 #include "CameraLocation.h"
 #include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ACameraLocation::ACameraLocation()
@@ -14,9 +15,18 @@ ACameraLocation::ACameraLocation()
 	Sphere->SetCollisionProfileName("OverlapAll");		
 	Sphere->bHiddenInGame = false;
 
+	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+	Capsule->SetupAttachment(Sphere);
+	Capsule->SetRelativeScale3D(FVector(1.5f, 1.5f, 2.0f));
+	Capsule->SetCollisionProfileName("OverlapAll");
+	Capsule->bHiddenInGame = true;
+
 	Sphere->ComponentTags.Add(FName(TEXT("CameraLocation")));
 	Sphere->ComponentTags.Add(FName(TEXT("DisregardForLeftHand")));
 	Sphere->ComponentTags.Add(FName(TEXT("DisregardForRightHand")));
+
+	Capsule->ComponentTags.Add(FName(TEXT("DisregardForLeftHand")));
+	Capsule->ComponentTags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned

@@ -7,7 +7,7 @@
 #include "Item/Table/ItemDataSingleton.h"
 #include "Engine/StreamableManager.h"
 #include "Engine/StaticMesh.h"
-
+#include "Particles/ParticleSystem.h"
 #include "kismet/GameplayStatics.h"
 #include "MyCharacter/MotionControllerPC.h"
 #include "HandMotionController/LeftHandMotionController.h"
@@ -31,6 +31,13 @@ APotion::APotion()
 	BagInputFlag = false;
 	BagInputCompleteFlag = false;
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_PotionUseEffect(TEXT("ParticleSystem'/Game/Assets/Effect/Life/PS_GPP_CannonPurple_Explosion.PS_GPP_CannonPurple_Explosion'"));
+
+	if (PT_PotionUseEffect.Succeeded())
+	{
+		PotionUseEffect = PT_PotionUseEffect.Object;
+	}
+	
 	//Mesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));		// 크기 설정		-> 테스트용 포션메쉬 나오면 테스트해서 재수정
 	Mesh->SetCollisionProfileName(TEXT("NoCollision"));	
 	Tags.Add(FName(TEXT("Potion")));		// 생성한 포션을 'Potion'란 이름으로 태그를 줌
@@ -84,7 +91,11 @@ void APotion::OnPotionBeginOverlap(UPrimitiveComponent * OverlappedComponent, AA
 
 			if (OtherComp->ComponentHasTag("Head"))
 			{
-				GLog->Log(FString::Printf(TEXT("asd")));
+				if (PotionUseEffect)
+				{
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PotionUseEffect, GetActorLocation());
+				}				
+				MyCharacter->CurrentHp += 30.0f;
 				Destroy(this);
 				TokenCompleteDelegate.ExecuteIfBound();
 			}

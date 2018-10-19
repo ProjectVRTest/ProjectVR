@@ -58,7 +58,8 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	SpringArm->bInheritYaw = true;
 	SpringArm->bInheritRoll = false;
 	SpringArm->TargetArmLength = 1.0f;
-
+		
+	GetCapsuleComponent()->bHiddenInGame = false;
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);	
 

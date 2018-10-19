@@ -24,7 +24,6 @@
 #include "MyCharacter/CameraLocation.h"
 #include "MyCharacter/MotionControllerCharacter.h"
 
-
 // Sets default values
 ANormalMonster::ANormalMonster()
 {
