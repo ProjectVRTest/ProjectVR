@@ -60,6 +60,8 @@ public:
 		class UBoxComponent* HeadBox;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class ACameraLocation* CameraLocation;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+		class UPawnNoiseEmitterComponent* NoiseEmitter;
 
 	FTimerHandle DamageTimerHandle;
 	FTimerHandle HitBloodyTimerHandle;
@@ -165,6 +167,9 @@ public:
 	UFUNCTION()
 		void OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 데미지를 전달하기위한 함수
+
+	UFUNCTION()
+		void MakeNoiseEmitter(); //소리를 캐릭터 주위에 발생시켜주는 함수
 
 	UPROPERTY()
 		TArray<class ADog*> DogArray;

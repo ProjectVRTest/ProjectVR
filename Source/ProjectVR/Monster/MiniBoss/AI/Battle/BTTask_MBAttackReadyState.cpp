@@ -21,7 +21,7 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 
 			if (Distance < 300.0f)
 			{
-				int RandomPattern = FMath::RandRange(1, 11);
+				int RandomPattern = FMath::RandRange(8, 11);
 
 				if (RandomPattern > 0 && RandomPattern <8)
 				{

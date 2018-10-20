@@ -85,7 +85,7 @@ AMiniBoss::AMiniBoss()
 		OpacityMaterials = M_Opacity.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Materials/M_MiniBoss.M_MiniBoss'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultMaterials(TEXT("MaterialInstanceConstant'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Materials/M_MiniBossInVisible.M_MiniBossInVisible'"));
 	if (M_DefaultMaterials.Succeeded())
 	{
 		DefaultMaterials = M_DefaultMaterials.Object;
@@ -105,6 +105,13 @@ AMiniBoss::AMiniBoss()
 		AfterImageEndEffect = PT_AfterImageEndEffect.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_InVisibleStartEffect(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PT_MiniBoss_InVisibleStart.PT_MiniBoss_InVisibleStart'"));
+	if (PT_InVisibleStartEffect.Succeeded())
+	{
+		InVisibleStartEffect = PT_InVisibleStartEffect.Object;
+	}
+
+	
 	SwordWaveCount = 1;
 	ParryingPointMaxCount = 0;
 	ParryingPointCount = 0;

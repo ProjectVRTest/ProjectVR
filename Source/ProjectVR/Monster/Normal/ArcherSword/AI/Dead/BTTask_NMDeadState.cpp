@@ -2,13 +2,13 @@
 
 #include "BTTask_NMDeadState.h"
 #include "Headers/NormalMonsterAIHeader.h"
-
 #include "Components/SkeletalMeshComponent.h"
 
 void UBTTask_NMDeadState::InitializeFromAsset(UBehaviorTree & Asset)
 {
 	Super::InitializeFromAsset(Asset);
-
+	
+	bNotifyTick = true;
 	DeathMaterialsValue = 0;
 }
 
@@ -20,14 +20,12 @@ EBTNodeResult::Type UBTTask_NMDeadState::ExecuteTask(UBehaviorTreeComponent & Ow
 
 	if (AI)
 	{
-		ANormalMonster*	NormalMonster = Cast<ANormalMonster>(AI->GetPawn());
-
+		NormalMonster = Cast<ANormalMonster>(AI->GetPawn());
+			
 		if (NormalMonster)
-		{
-			DeathMaterialsValue += 0.01;
-
-			NormalMonster->GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Amount"), DeathMaterialsValue);
+		{			
 			GetWorld()->GetTimerManager().SetTimer(DestroyTimer, this, &UBTTask_NMDeadState::Destroy, 3.0f, false);
+			GetWorld()->GetTimerManager().SetTimer(DestroyRenderTimer, this, &UBTTask_NMDeadState::DestroyRender, 0.02f,true);
 		}
 	}
 
@@ -39,5 +37,14 @@ void UBTTask_NMDeadState::Destroy()
 	if (AI)
 	{
 		AI->GetPawn()->Destroy();
+	}
+}
+
+void UBTTask_NMDeadState::DestroyRender()
+{
+	if (NormalMonster)
+	{
+		DeathMaterialsValue += 0.01;
+		NormalMonster->GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Amount"), DeathMaterialsValue);
 	}
 }

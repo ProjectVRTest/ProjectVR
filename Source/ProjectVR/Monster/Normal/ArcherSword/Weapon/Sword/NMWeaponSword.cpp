@@ -14,7 +14,7 @@
 ANMWeaponSword::ANMWeaponSword()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false; //틱 반응 없으므로 false로 해준다.
+	PrimaryActorTick.bCanEverTick = true; 
 
 	SwordMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwordMesh")); //스테틱 메쉬 컴포넌트를 생성해주고
 	SetRootComponent(SwordMesh); //루트 컴포넌트로 정한다.
@@ -66,6 +66,17 @@ void ANMWeaponSword::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	ANormalMonster* NormalMonster = Cast<ANormalMonster>(GetAttachParentActor());
+
+	if (NormalMonster)
+	{
+		if (NormalMonster->CurrentState == ENormalMonsterState::Dead)
+		{
+			SwordMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			SwordMesh->SetSimulatePhysics(true);
+			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);			
+		}
+	}
 }
 
 void ANMWeaponSword::SwordBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

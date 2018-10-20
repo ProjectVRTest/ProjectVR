@@ -3,6 +3,7 @@
 #include "BTTask_MBAttackEndState.h"
 #include "Headers/MiniBossAIHeader.h"
 #include "MyCharacter/CameraLocation.h"
+#include "Components/SkeletalMeshComponent.h"
 
 EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
@@ -10,8 +11,7 @@ EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent
 
 	if (AI)
 	{
-		AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
-
+		AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());	
 		AI->BBComponent->SetValueAsFloat(TEXT("AttackAnimationWaitTime"), 0);
 		AI->BBComponent->SetValueAsFloat(TEXT("ReverseWaitTime"), 0);
 		float Distance = AI->BBComponent->GetValueAsFloat("Distance");

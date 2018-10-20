@@ -44,8 +44,6 @@ public:
 		class USkeletalMesh* SwordSKMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BodyMesh")
 		class USkeletalMesh* ArcherSKMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-		class UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
 		class UStaticMeshComponent* QuiverComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
@@ -70,9 +68,9 @@ public:
 		class ADontMoveArcherBow* Bow;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pitch")
 		float Pitch;
-	bool AttackEndFlag = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool AttackEndFlag = false;
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-	UFUNCTION()
-	void OnSeeCharacter(APawn * Pawn);
+
 };

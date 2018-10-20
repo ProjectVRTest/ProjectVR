@@ -23,12 +23,15 @@
 
 #include "MyCharacter/CameraLocation.h"
 #include "MyCharacter/MotionControllerCharacter.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ANormalMonster::ANormalMonster()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);	
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Normal_Monster_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Character/SK_NormalMonster.SK_NormalMonster'"));
 
@@ -60,7 +63,9 @@ ANormalMonster::ANormalMonster()
 	}
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
-	PawnSensing->bHearNoises = false;
+	PawnSensing->HearingThreshold = 1200.0f;
+	PawnSensing->LOSHearingThreshold = 1400.0f;
+	PawnSensing->bHearNoises = true;
 	PawnSensing->bSeePawns = true;
 	PawnSensing->SetPeripheralVisionAngle(30.0f);
 	PawnSensing->SightRadius = 3000.0f;
@@ -104,7 +109,7 @@ ANormalMonster::ANormalMonster()
 	ArrowSpawnLocation->SetupAttachment(GetRootComponent());
 	ArrowSpawnLocation->SetRelativeLocation(FVector(90.0f, 8.0f, 50.0f));
 	ArrowSpawnLocation->SetRelativeScale3D(FVector(-8.0f,90.0f,134.0f));
-	MaxHP = 100;
+	MaxHP = 20.0f;
 	CurrentHP = MaxHP;
 
 	AIControllerClass = ANormalMonsterAIController::StaticClass();
@@ -156,6 +161,7 @@ void ANormalMonster::BeginPlay()
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &ANormalMonster::OnSeeCharacter);
+		PawnSensing->OnHearNoise.AddDynamic(this, &ANormalMonster::OnHearNoise);
 	}
 
 	switch (MonsterKind)
@@ -273,6 +279,40 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 			}
 		}
 	}
+}
+
+void ANormalMonster::OnHearNoise(APawn* Pawn, const FVector& Location, float Volume)
+{
+	GLog->Log(FString::Printf(TEXT("%f"), Volume));
+	if (!Target)
+	{
+		if (Pawn->ActorHasTag(TEXT("Character")))
+		{
+			AMotionControllerCharacter* Mycharacter = Cast<AMotionControllerCharacter>(Pawn);
+
+			if (Mycharacter)
+			{
+				Target = Mycharacter;
+				if (Mycharacter->CameraLocation)
+				{
+					TargetCamera = Mycharacter->CameraLocation;
+					ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
+					if (AI)
+					{
+						AI->BBComponent->SetValueAsObject("Player", Pawn);
+						AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
+
+						FRotator LookRotator = FRotationMatrix::MakeFromX(Pawn->GetActorLocation() - GetActorLocation()).Rotator();
+						SetActorRotation(LookRotator);
+
+						CurrentAnimState = ENormalMonsterAnimState::Walk;
+						CurrentState = ENormalMonsterState::Chase;
+
+					}
+				}
+			}
+		}
+	}	
 }
 
 float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)

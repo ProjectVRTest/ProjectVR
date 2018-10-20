@@ -14,6 +14,7 @@
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "MyCharacter/CameraLocation.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ADontMoveArcher::ADontMoveArcher()
@@ -42,13 +43,6 @@ ADontMoveArcher::ADontMoveArcher()
 	{
 		ArcherSKMesh = NM_SK_DontMoveArcher.Object;
 	}
-
-	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
-	PawnSensing->bHearNoises = false;
-	PawnSensing->bSeePawns = true;
-	PawnSensing->SetPeripheralVisionAngle(40.0f);
-	PawnSensing->SightRadius = 4000.0f;
-	PawnSensing->SensingInterval = 0.1f;
 
 	QuiverComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("QuiverComponent"));
 	QuiverComponent->SetupAttachment(GetMesh(), TEXT("QuiverSocket"));
@@ -127,11 +121,6 @@ void ADontMoveArcher::BeginPlay()
 		GetMesh()->SetSkeletalMesh(ArcherSKMesh);
 	}
 
-	if (PawnSensing)
-	{
-		PawnSensing->OnSeePawn.AddDynamic(this, &ADontMoveArcher::OnSeeCharacter);
-	}
-
 	if (Bow)
 	{
 		Bow->AttachToComponent(GetMesh(), AttachRules, TEXT("BowSocket"));
@@ -139,7 +128,7 @@ void ADontMoveArcher::BeginPlay()
 		{
 			QuiverComponent->SetStaticMesh(QuiverMesh);
 		}
-	}
+	}	
 }
 
 // Called every frame
@@ -148,6 +137,22 @@ void ADontMoveArcher::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	ADontMoveArcherAIController* AI = Cast<ADontMoveArcherAIController>(GetController());
+	
+	if (!Target)
+	{
+		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+		if (MyCharacter)
+		{
+			Target = MyCharacter;
+			if (MyCharacter->CameraLocation)
+			{
+				TargetCamera = MyCharacter->CameraLocation;
+				AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
+				AI->BBComponent->SetValueAsObject("Player", MyCharacter);
+			}
+		}
+	}
 
 	if (AI)
 	{
@@ -155,8 +160,7 @@ void ADontMoveArcher::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentAnimState", (uint8)CurrentAnimState);
 		AI->BBComponent->SetValueAsEnum("CurrentAttackState", (uint8)CurrentAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentArcherAttackState", (uint8)CurrentArcherAttackState);
-		AI->BBComponent->SetValueAsObject("Player", Target);
-		AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
+		
 	}
 
 	if (Target)
@@ -165,6 +169,7 @@ void ADontMoveArcher::Tick(float DeltaTime)
 
 		Pitch = LookAt.Pitch;		
 	}
+
 }
 
 // Called to bind functionality to input
@@ -188,29 +193,3 @@ float ADontMoveArcher::TakeDamage(float Damage, FDamageEvent const & DamageEvent
 {
 	return Damage;
 }
-
-void ADontMoveArcher::OnSeeCharacter(APawn * Pawn)
-{
-	if (Pawn->ActorHasTag("Character"))
-	{
-		ADontMoveArcherAIController* AI = Cast<ADontMoveArcherAIController>(GetController());
-
-		if (AI)
-		{
-			if (Target == nullptr)
-			{
-				AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Pawn);
-
-				if (MyCharacter)
-				{
-					TargetCamera = MyCharacter->CameraLocation;
-					AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
-				}
-				
-				Target = Pawn;
-				AI->BBComponent->SetValueAsObject("Player", Pawn);		
-			}
-		}
-	}
-}
-

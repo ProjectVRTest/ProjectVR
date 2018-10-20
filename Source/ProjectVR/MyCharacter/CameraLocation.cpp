@@ -18,8 +18,11 @@ ACameraLocation::ACameraLocation()
 	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 	Capsule->SetupAttachment(Sphere);
 	Capsule->SetRelativeScale3D(FVector(1.5f, 1.5f, 2.0f));
-	Capsule->SetCollisionProfileName("OverlapAll");
-	Capsule->bHiddenInGame = true;
+	Capsule->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	Capsule->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel3);
+	Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
+	Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Overlap);
+	Capsule->bHiddenInGame = false;
 
 	Sphere->ComponentTags.Add(FName(TEXT("CameraLocation")));
 	Sphere->ComponentTags.Add(FName(TEXT("DisregardForLeftHand")));

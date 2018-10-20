@@ -77,6 +77,8 @@ public:
 		class UParticleSystem* AfterImageStartEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* AfterImageEndEffect;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* InVisibleStartEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class AMiniBossWeapon* Sword;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")

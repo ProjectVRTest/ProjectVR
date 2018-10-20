@@ -88,6 +88,8 @@ public:
 		void DeleteArrowMesh();
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn);
+	UFUNCTION()
+		void OnHearNoise(APawn * Pawn, const FVector & Location, float Volume);
 
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;

@@ -12,3 +12,4 @@
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "kismet/KismetMathLibrary.h"
 #include "Monster/Normal/ArcherSword/Weapon/Sword/NMWeaponSword.h"
+#include "Camera/CameraComponent.h"

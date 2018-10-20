@@ -2,7 +2,7 @@
 
 #include "BTService_NMDMArcherStateUpdate.h"
 #include "Headers/DontMoveArcherAIHeader.h"
-#include "Camera/CameraComponent.h"
+#include "MyCharacter/CameraLocation.h"
 
 void UBTService_NMDMArcherStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
@@ -22,10 +22,10 @@ void UBTService_NMDMArcherStateUpdate::TickNode(UBehaviorTreeComponent & OwnerCo
 
 			if (MyCharacter)
 			{
-				Distance = FVector::Distance(DontMoveArcher->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+				Distance = FVector::Distance(DontMoveArcher->GetActorLocation(), MyCharacter->CameraLocation->GetActorLocation());
 				AI->BBComponent->SetValueAsFloat("Distance", Distance);
 
-				if (Distance < 2000.0f)
+				if (Distance < 3500.0f)
 				{
 					if (!DontMoveArcher->AttackEndFlag)
 					{
@@ -35,8 +35,6 @@ void UBTService_NMDMArcherStateUpdate::TickNode(UBehaviorTreeComponent & OwnerCo
 				}
 				else
 				{
-					DontMoveArcher->Target = nullptr;
-					DontMoveArcher->TargetCamera = nullptr;
 					DontMoveArcher->AttackEndFlag = false;
 					DontMoveArcher->CurrentArcherAttackState = EDontMoveArcherArcherAttackState::Idle;
 					DontMoveArcher->CurrentAttackState = EDontMoveArcherAttackState::Idle;

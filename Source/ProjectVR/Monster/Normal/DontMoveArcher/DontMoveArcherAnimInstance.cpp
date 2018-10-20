@@ -47,8 +47,17 @@ void UDontMoveArcherAnimInstance::AnimNotify_ArrowDestroy(UAnimNotify * Notify)
 
 		ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
 
-		ANMWeaponArrow* NMArrow = GetWorld()->SpawnActor<ANMWeaponArrow>(NMArrow->StaticClass(), DontMoveArcher->ArrowSpawnLocation->GetComponentLocation(), DontMoveArcher->GetActorRotation(), SpawnActorOption);
+		if (SwordWaveTarget)
+		{
+			ANMWeaponArrow* NMArrow = GetWorld()->SpawnActor<ANMWeaponArrow>(NMArrow->StaticClass(), DontMoveArcher->ArrowSpawnLocation->GetComponentLocation(), DontMoveArcher->GetActorRotation(), SpawnActorOption);
 
-		NMArrow->Homing(SwordWaveTarget);
+			if (NMArrow)
+			{
+				NMArrow->Homing(SwordWaveTarget);
+			}
+		}
+		
+
+		
 	}
 }

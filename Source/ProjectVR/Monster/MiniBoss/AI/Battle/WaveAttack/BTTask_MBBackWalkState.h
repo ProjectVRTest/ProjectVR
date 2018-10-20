@@ -7,32 +7,24 @@
 #include "BTTask_MBBackWalkState.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PROJECTVR_API UBTTask_MBBackWalkState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AfterImageOption")
-		float RenderTime;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AfterImageOption")
-		float TotalTime;
+	FTimerHandle ToForceStateTimer;
+	FTimerHandle InVisibleTimer;
 	class AMiniBossAIController* AI;
 	class AMiniBoss* MiniBoss;
-	FTimerHandle AfterImageStartTimer;
-	FTimerHandle AfterImageEndTimer;
-	bool IsAfterEffectOn;
-	int CurrentEffectNumber;
-	int MaxEffectNumber;
-	float SumDelta;
-	float Distance;
-	class UParticleSystemComponent* AfterImageEnd;
-
+	float InVisibleValue;
+	bool ExitFlag;
 	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
-	void AfterImageOn();
-	void AfterImageOff();
-
+	UFUNCTION()
+		void ToForceState();
+	UFUNCTION()
+		void InVisible();
 };

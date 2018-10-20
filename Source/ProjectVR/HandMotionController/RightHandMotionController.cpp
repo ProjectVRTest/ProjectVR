@@ -418,10 +418,7 @@ AActor * ARightHandMotionController::GetActorNearHand()
 				break;
 			}
 		}
-
 	}
-
-
 	return NearestOverlappingActor;
 }
 

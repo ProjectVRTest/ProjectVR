@@ -14,52 +14,25 @@ void UBTTask_MBBackWalkState::InitializeFromAsset(UBehaviorTree & Asset)
 	Super::InitializeFromAsset(Asset);
 
 	bNotifyTick = true;
-	IsAfterEffectOn = false;	
-	MaxEffectNumber = 10;	
+	
+	InVisibleValue = 0;
 }
 
 EBTNodeResult::Type UBTTask_MBBackWalkState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
-{
+{	
 	AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
-
-	SumDelta = 0;
-	CurrentEffectNumber = 0;
+	ExitFlag = false;
 	if (AI)
 	{
 		MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
 
 		if (MiniBoss)
 		{
-			if (!IsAfterEffectOn)
-			{
-				IsAfterEffectOn = true;
-				MiniBoss->GetMesh()->SetMaterial(0, MiniBoss->OpacityMaterials);
-				MiniBoss->Sword->SwordMesh->SetMaterial(0, MiniBoss->OpacityMaterials);
-
-				UParticleSystemComponent* AfterImageStart = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MiniBoss->AfterImageStartEffect, MiniBoss->GetActorLocation());
-
-				FParticleSysParam SysParam;
-				SysParam.Actor = MiniBoss;
-				SysParam.ParamType = EParticleSysParamType::PSPT_Actor;
-				SysParam.Name = FName(TEXT("VertSurfaceActor"));
-				SysParam.Scalar = 0;
-				SysParam.Scalar_Low = 0;
-				SysParam.Vector = FVector::ZeroVector;
-				SysParam.Vector_Low = FVector::ZeroVector;
-
-				AfterImageStart->InstanceParameters.Add(SysParam);
-
-				GetWorld()->GetTimerManager().SetTimer(AfterImageStartTimer, this, &UBTTask_MBBackWalkState::AfterImageOn, RenderTime, true);
-
-				AfterImageEnd = UGameplayStatics::SpawnEmitterAttached(MiniBoss->AfterImageEndEffect, MiniBoss->GetCapsuleComponent(), NAME_None);	
-
-				SysParam.Name = FName(TEXT("VertSurfaceActor2"));
-
-				AfterImageEnd->InstanceParameters.Add(SysParam);
-				GetWorld()->GetTimerManager().SetTimer(AfterImageEndTimer, this, &UBTTask_MBBackWalkState::AfterImageOff, TotalTime, false);
-			}
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MiniBoss->InVisibleStartEffect, MiniBoss->GetActorLocation());
+			GetWorld()->GetTimerManager().SetTimer(ToForceStateTimer, this, &UBTTask_MBBackWalkState::ToForceState, 0.8f, false);
+			GetWorld()->GetTimerManager().SetTimer(InVisibleTimer, this, &UBTTask_MBBackWalkState::InVisible, 0.02f, true);
 		}
-	}
+	}	
 	return EBTNodeResult::InProgress;
 }
 
@@ -67,64 +40,36 @@ void UBTTask_MBBackWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
-	if (AI)
+	if (ExitFlag)
 	{
-		Distance = AI->BBComponent->GetValueAsFloat("Distance");
-	}
-
-	SumDelta += DeltaSeconds;
-	if (MiniBoss)
-	{
-		int RandomLeftRightForce = FMath::RandRange(-1, 1);
-		MiniBoss->GetCharacterMovement()->AddImpulse((MiniBoss->GetActorForwardVector()*-500.0f)+MiniBoss->GetActorUpVector()*2.2f+(MiniBoss->GetActorRightVector()*500.0f*RandomLeftRightForce), true);
-		if (SumDelta > 1.3f)
-		{
-			MiniBoss->IsAttack = false; //다시 공격할 수 있게 해줌
-			AfterImageOff();
-			GetWorld()->GetTimerManager().ClearTimer(AfterImageStartTimer);
-			GetWorld()->GetTimerManager().ClearTimer(AfterImageEndTimer);
-			MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::SwordWaveStart;
-			
-			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);			
-		}		
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }
 
-void UBTTask_MBBackWalkState::AfterImageOn()
+void UBTTask_MBBackWalkState::ToForceState()
 {
 	if (MiniBoss)
 	{
-		if (CurrentEffectNumber == MaxEffectNumber || !IsAfterEffectOn)
+		MiniBoss->CurrentWaveAttackState = EMiniBossWaveAttackState::WavebackWalkForce;
+		ExitFlag = true;
+	}
+}
+
+void UBTTask_MBBackWalkState::InVisible()
+{
+	if (MiniBoss)
+	{
+		if (InVisibleValue > 1.0f)
 		{
-			GetWorld()->GetTimerManager().ClearTimer(AfterImageStartTimer);
+			InVisibleValue = 0;
+			GetWorld()->GetTimerManager().ClearTimer(InVisibleTimer);
+			GetWorld()->GetTimerManager().ClearTimer(ToForceStateTimer);			
+			MiniBoss->GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Amount"), InVisibleValue);
 		}
 		else
 		{
-			UParticleSystemComponent* AfterImageStart=UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MiniBoss->AfterImageStartEffect, MiniBoss->GetActorLocation());
-
-			FParticleSysParam SysParam;
-			SysParam.Actor = MiniBoss;
-			SysParam.ParamType = EParticleSysParamType::PSPT_Actor;
-			SysParam.Name = FName(TEXT("VertSurfaceActor"));
-			SysParam.Scalar = 0;
-			SysParam.Scalar_Low = 0;
-			SysParam.Vector = FVector::ZeroVector;
-			SysParam.Vector_Low = FVector::ZeroVector;
-
-			AfterImageStart->InstanceParameters.Add(SysParam);
-
-			CurrentEffectNumber++;
-		}
-	}
-}
-
-void UBTTask_MBBackWalkState::AfterImageOff()
-{
-	if (MiniBoss)
-	{
-		MiniBoss->GetMesh()->SetMaterial(0, MiniBoss->DefaultMaterials);
-		MiniBoss->Sword->SwordMesh->SetMaterial(0, MiniBoss->Sword->DefaultMaterials);
-		IsAfterEffectOn = false;
-		AfterImageEnd->Deactivate();
+			InVisibleValue += 0.01;
+			MiniBoss->GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Amount"), InVisibleValue);
+		}		
 	}
 }

@@ -42,6 +42,7 @@
 #include "TimerManager.h"			// 스테미너 자동 회복
 
 #include "CameraLocation.h"
+#include "Components/PawnNoiseEmitterComponent.h"
 
 // Sets default values
 AMotionControllerCharacter::AMotionControllerCharacter()
@@ -60,6 +61,9 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	SpringArm->TargetArmLength = 1.0f;
 		
 	GetCapsuleComponent()->bHiddenInGame = false;
+	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Overlap);
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);	
 
@@ -91,6 +95,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	HeadBox->ComponentTags.Add(FName("Head"));
 
 	CameraLocation = nullptr;
+	NoiseEmitter = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("NoiseEmitter"));
 
 	GetCharacterMovement()->MaxWalkSpeed = 280.0f;
 
@@ -173,9 +178,12 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	//UE_LOG(LogTemp, Log, TEXT("%f"), UKismetMathLibrary::Atan2(Cal.Z, Cal.X));
+	
+	if (GetVelocity().Size() > 100.0f)
+	{
+		MakeNoiseEmitter();
+	}
 
-	//GLog->Log(FString::Printf(TEXT("Camera X : %0.1f Y : %0.1f Z : %0.1f"), Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, Camera->GetComponentLocation().Z));
-//	GLog->Log(FString::Printf(TEXT("CameraLocation X : %0.1f Y : %0.1f Z : %0.1f"),CameraLocation->GetActorLocation().X, CameraLocation->GetActorLocation().Y, CameraLocation->GetActorLocation().Z));
 	if (CurrentHp > 100.0f)
 	{
 		CurrentHp = 100.0f;
@@ -520,6 +528,12 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 								//	HandWidget->GainHP(30);		// 회복
 								//}
 	}
+}
+
+void AMotionControllerCharacter::MakeNoiseEmitter()
+{
+	NoiseEmitter->MakeNoise(this, 1.0f, GetActorLocation());
+	NoiseEmitter->NoiseLifetime = 0.2f;
 }
 
 void AMotionControllerCharacter::UseStamina(float _stamina)

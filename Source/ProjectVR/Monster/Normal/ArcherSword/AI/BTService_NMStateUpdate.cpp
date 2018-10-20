@@ -4,7 +4,7 @@
 #include "Headers/NormalMonsterAIHeader.h"
 
 #include "MyCharacter/MotionControllerCharacter.h"
-#include "Camera/CameraComponent.h"
+#include "MyCharacter/CameraLocation.h"
 
 void UBTService_NMStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
@@ -44,7 +44,7 @@ void UBTService_NMStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 
 				if (MyCharacter)
 				{
-					Distance = FVector::Distance(NormalMonster->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
+					Distance = FVector::Distance(NormalMonster->GetActorLocation(), MyCharacter->CameraLocation->GetActorLocation());
 					AI->BBComponent->SetValueAsFloat("Distance", Distance);
 				}			
 			}

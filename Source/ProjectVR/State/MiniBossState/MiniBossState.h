@@ -82,8 +82,9 @@ enum class EMiniBossWaveAttackState : uint8
 	TwoHandWidthReady = 1 UMETA(DisplayName = "TwoHandWidthReady"),
 	TwoHandWidthStart = 2 UMETA(DisplayName = "TwoHandWidthStart"),
 	WavebackWalk = 3 UMETA(DisplayName = "WavebackWalk"),
-	SwordWaveReady = 4 UMETA(DisplayName = "SwordWaveReady"),
-	SwordWaveStart = 5 UMETA(DisplayName = "SwordWaveStart")
+	WavebackWalkForce = 4 UMETA(DiplayName = "WavebackWalkForce"),
+	SwordWaveReady = 5 UMETA(DisplayName = "SwordWaveReady"),
+	SwordWaveStart = 6 UMETA(DisplayName = "SwordWaveStart")
 };
 
 UENUM(BlueprintType)
