@@ -13,7 +13,6 @@ EBTNodeResult::Type UBTTask_MBParryingStartState::ExecuteTask(UBehaviorTreeCompo
 
 		if (MiniBoss)
 		{
-			GLog->Log(FString::Printf(TEXT("패링 시작 진입")));
 			MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingLoop;
 		}
 	}

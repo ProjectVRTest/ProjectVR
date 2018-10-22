@@ -8,13 +8,14 @@ void UBTTask_NMDeadState::InitializeFromAsset(UBehaviorTree & Asset)
 {
 	Super::InitializeFromAsset(Asset);
 	
-	bNotifyTick = true;
-	DeathMaterialsValue = 0;
+	bNotifyTick = true;	
 }
 
 EBTNodeResult::Type UBTTask_NMDeadState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
+
+	DeathMaterialsValue = 0;
 
 	AI = Cast<ANormalMonsterAIController>(OwnerComp.GetAIOwner());
 
@@ -23,8 +24,7 @@ EBTNodeResult::Type UBTTask_NMDeadState::ExecuteTask(UBehaviorTreeComponent & Ow
 		NormalMonster = Cast<ANormalMonster>(AI->GetPawn());
 			
 		if (NormalMonster)
-		{			
-			GetWorld()->GetTimerManager().SetTimer(DestroyTimer, this, &UBTTask_NMDeadState::Destroy, 3.0f, false);
+		{						
 			GetWorld()->GetTimerManager().SetTimer(DestroyRenderTimer, this, &UBTTask_NMDeadState::DestroyRender, 0.02f,true);
 		}
 	}
@@ -36,6 +36,7 @@ void UBTTask_NMDeadState::Destroy()
 {
 	if (AI)
 	{
+		GetWorld()->GetTimerManager().ClearTimer(DestroyTimer);
 		AI->GetPawn()->Destroy();
 	}
 }
@@ -46,5 +47,11 @@ void UBTTask_NMDeadState::DestroyRender()
 	{
 		DeathMaterialsValue += 0.01;
 		NormalMonster->GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Amount"), DeathMaterialsValue);
+
+		if (DeathMaterialsValue >= 1.0f)
+		{
+			GetWorld()->GetTimerManager().SetTimer(DestroyTimer, this, &UBTTask_NMDeadState::Destroy, 0.1f, false);			
+			GetWorld()->GetTimerManager().ClearTimer(DestroyRenderTimer);
+		}
 	}
 }

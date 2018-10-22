@@ -17,6 +17,7 @@ EBTNodeResult::Type UBTTask_BossSetState::ExecuteTask(UBehaviorTreeComponent & O
 			Boss->CurrentBlinkAttackState = SetBlinkAttackState;
 			Boss->CurrentBattleState = SetBattleState;
 			Boss->CurrentLongAttackState = SetLongAttackState;
+			Boss->CurrentCloseAttackState = SetCloseAttackState;
 		}
 	}
 	return EBTNodeResult::Succeeded;

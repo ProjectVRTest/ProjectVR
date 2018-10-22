@@ -42,3 +42,23 @@ enum class EBossLongAttackState : uint8
 	DefaultLongAttack = 2 UMETA(DisplayName = "DefaultLongAttack"),
 	OrbCreate = 3 UMETA(DisplayName = "OrbCreate")
 };
+
+UENUM(BlueprintType)
+enum class EBossCloseAttackState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	CloseAttackReady = 1 UMETA(DisplayName = "CloseAttackReady"),
+	RightUpLeftDownAttack = 2 UMETA(DisplayName = "RightUpLeftDownAttack"),
+	ComboAttack = 3 UMETA(DisplayName = "ComboAttack"),
+	UpDownAttack = 4 UMETA(DisplayName = "UpDownAttack")
+};
+
+UENUM(BlueprintType)
+enum class EBossParryingState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	ParryingStart = 1 UMETA(DisplayName = "ParryingStart"),
+	ParryingLoop = 2 UMETA(DisplayName = "ParryingLoop"),
+	ParryingSuccess = 3 UMETA(DisplayName = "ParryingSuccess"),
+	CounterAttack = 4 UMETA(DisplayName = "CounterAttack")
+};

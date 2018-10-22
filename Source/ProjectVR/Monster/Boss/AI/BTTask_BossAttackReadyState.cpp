@@ -22,7 +22,8 @@ EBTNodeResult::Type UBTTask_BossAttackReadyState::ExecuteTask(UBehaviorTreeCompo
 			}
 			else
 			{
-
+				Boss->CurrentCloseAttackState = EBossCloseAttackState::CloseAttackReady;
+				Boss->CurrentBattleState = EBossBattleState::CloseAttack;
 			}
 		}
 	}

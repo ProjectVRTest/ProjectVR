@@ -31,8 +31,11 @@ ALeftHandMotionController::ALeftHandMotionController()
 	SetRootComponent(MotionController);
 	//MotionController->SetupAttachment(RootComponent); //생성해준 MotionController를 RootComponent에 붙인다.
 
+	
 	HandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HandMesh")); //스켈레탈메쉬 컴포넌트를 생성해서 HandMesh에 넣는다.
 	HandMesh->SetupAttachment(MotionController); //생성해준 HandMesh를 MotionController에 붙인다.
+	HandMesh->SetRelativeLocation(FVector(-15.0f, 0, 7.1f));
+	HandMesh->SetRelativeRotation(FRotator(-50.0f, 0, 90.0f));
 
 												 //스켈레탈메쉬 컴포넌트에 스켈레탈을 넣어주기 위해 에디터 상에 있는 스켈레탈메쉬를 가져와서 SK_LeftHand에 넣어준다.
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>SK_LeftHand(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/MyCharacter/Hand/Mesh/MannequinHand_Right.MannequinHand_Right'"));
@@ -40,8 +43,6 @@ ALeftHandMotionController::ALeftHandMotionController()
 	{
 		HandMesh->SetSkeletalMesh(SK_LeftHand.Object); //스켈레탈메쉬컴포넌트의 스켈레탈메쉬에 앞에서 가져온 스켈레탈메쉬를 넣어준다.
 	}
-
-	HandMesh->SetRelativeRotation(FRotator(0, 0, 90.0f)); //스켈레탈 메쉬가 정면을 바라보게 각도를 변경한다.
 
 	GrabSphere = CreateDefaultSubobject<USphereComponent>(TEXT("GrabComponent")); //손주위에 있는 액터들을 판별하기 위한 콜리전을 스피어콜리전으로 생성해서 GrabShere에 넣는다.
 	GrabSphere->SetupAttachment(HandMesh); //생성한 스피어콜리전을 HandMesh에 붙인다.
@@ -66,7 +67,6 @@ ALeftHandMotionController::ALeftHandMotionController()
 
 	ShieldAttachScene = CreateDefaultSubobject<USceneComponent>(TEXT("ShieldAttachScene")); //방패를 붙일 씬컴포넌트를 생성해서 ShieldAttachScene에 넣는다.
 	ShieldAttachScene->SetupAttachment(HandMesh);//생성한 씬컴포넌트를 HandMesh에 붙인다.
-
 	//ShieldAttachScene->SetRelativeLocation(FVector(-18.0f, -31.0f, 8.0f)); //위치를 조정한다.
 	//ShieldAttachScene->SetRelativeRotation(FRotator(13.0f, 129.0f, -90.0f)); //방패 씬컴포넌트의 각도와
 
@@ -146,7 +146,10 @@ void ALeftHandMotionController::BeginPlay()
 	////방패를 쉴드 씬 컴포넌트에 스폰시킨다.
 	Shield = GetWorld()->SpawnActor<APlayerShield>(Shield->StaticClass(), ShieldAttachScene->GetComponentLocation(), ShieldAttachScene->GetComponentRotation(), SpawnActorOption);
 	////방패를 AttachRules를 토대로 쉴드 씬 컴포넌트에 붙인다.
-	Shield->AttachToComponent(ShieldAttachScene, AttachRules);
+	if (Shield)
+	{
+		Shield->AttachToComponent(HandMesh, AttachRules,TEXT("CharacterShieldSocket"));
+	}	
 
 	PotionBag = GetWorld()->SpawnActor<APotionBag>(PotionBag->StaticClass(), PotionBagAttachScene->GetComponentLocation(), PotionBagAttachScene->GetComponentRotation(), SpawnActorOption);
 	PotionBag->AttachToComponent(PotionBagAttachScene, AttachRules);

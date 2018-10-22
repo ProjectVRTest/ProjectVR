@@ -30,6 +30,9 @@ ACameraLocation::ACameraLocation()
 
 	Capsule->ComponentTags.Add(FName(TEXT("DisregardForLeftHand")));
 	Capsule->ComponentTags.Add(FName(TEXT("DisregardForRightHand")));
+
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned

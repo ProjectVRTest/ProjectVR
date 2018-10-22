@@ -57,7 +57,8 @@ ARightHandMotionController::ARightHandMotionController()
 		HandMesh->SetSkeletalMesh(SK_RightHand.Object);
 	}
 
-	HandMesh->SetRelativeRotation(FRotator(-90.0f, 0, 90.0f)); //넣어준 스켈레탈 메쉬가 정면을 보도록 Roll방향으로 90도 돌린다.
+	HandMesh->SetRelativeLocation(FVector(-15.0f, 1.9f, 9.9f));
+	HandMesh->SetRelativeRotation(FRotator(-45.0f, 0, 90.0f)); //넣어준 스켈레탈 메쉬가 정면을 보도록 Roll방향으로 90도 돌린다.
 	HandMesh->bGenerateOverlapEvents = true; //오버랩 이벤트가 발생할 수 있도록 켜준다.
 	HandMesh->SetCollisionProfileName(FName("NoCollision")); //콜리전 프리셋을 OverlapOnlyPawn으로 바꿔서 Pawn은 오버랩되고 나머지는 블록되게 바꿔준다. 
 
@@ -128,7 +129,7 @@ ARightHandMotionController::ARightHandMotionController()
 												//붙일 검의 방향을 조절해주기위해
 
 
-	SwordAttachScene->SetRelativeRotation(FRotator(0, 60.993034f, -175.082443f)); //롤 방향으로 180도 돌리고
+	SwordAttachScene->SetRelativeRotation(FRotator(0, 60.0f, -175.082443f)); //롤 방향으로 180도 돌리고
 	SwordAttachScene->SetRelativeLocation(FVector(3.238229f, 5.621831f, -3.814407f)); //x축으로 10만큼 이동시킨다.
 
 	interaction->InteractionDistance = 100.0f;
@@ -164,7 +165,12 @@ void ARightHandMotionController::BeginPlay()
 
 	//현재 월드에 검을 스폰시킨다.
 	Sword = GetWorld()->SpawnActor<APlayerSword>(Sword->StaticClass(), SwordAttachScene->GetComponentLocation(), SwordAttachScene->GetComponentRotation(), SpawnActorOption);
-	Sword->AttachToComponent(SwordAttachScene, AttachRules);//스폰한 검을 SwordAttachScene에 붙인다.
+	
+	if (Sword)
+	{
+		Sword->AttachToComponent(HandMesh, AttachRules, TEXT("CharacterSwordSocket"));
+	}
+	//Sword->AttachToComponent(SwordAttachScene, AttachRules);//스폰한 검을 SwordAttachScene에 붙인다.
 
 															//손에 다른 액터가 부딪히면 호출할 함수(OnHandBeginOverlap)를 바인딩한다.
 	OverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &ARightHandMotionController::OnHandBeginOverlap);

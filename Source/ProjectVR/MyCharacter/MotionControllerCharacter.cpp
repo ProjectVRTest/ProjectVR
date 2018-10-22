@@ -290,7 +290,7 @@ void AMotionControllerCharacter::GrabLeftOn()
 
 	// 처음에 그랩상태를 State::Grab으로 세팅해야함, GrabActor()함수에서 반환값 bool로 변환해야함 -> 아직 확실하지 않으므로 장비로 테스트
 	// if(잡힌게 없으면) 
-	LeftHand->Shield->ConvertOfOpacity(1);
+	LeftHand->Shield->ConvertOfOpacity(0.14f);
 }
 
 void AMotionControllerCharacter::GrabLeftOff()

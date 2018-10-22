@@ -22,6 +22,8 @@ ABoss::ABoss()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+
 	AIControllerClass = ABossAIController::StaticClass();
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Boss_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/SK_Boss.SK_Boss'"));
@@ -40,6 +42,7 @@ ABoss::ABoss()
 	CurrentBattleState = EBossBattleState::Idle;
 	CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
 	CurrentLongAttackState = EBossLongAttackState::Idle;
+	CurrentCloseAttackState = EBossCloseAttackState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
@@ -158,6 +161,7 @@ void ABoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentBlinkAttackState", (uint8)CurrentBlinkAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentBattleState", (uint8)CurrentBattleState);
 		AI->BBComponent->SetValueAsEnum("CurrentLongAttackState", (uint8)CurrentLongAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentCloseAttackState", (uint8)CurrentCloseAttackState);
 	}
 }
 
