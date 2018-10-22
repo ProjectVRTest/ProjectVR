@@ -15,6 +15,6 @@
 #include "Camera/CameraComponent.h"
 #include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
 
-#define RightUpLeftDownAttack 1
-#define StabAttacked 2
-#define TwoHandWidthAttack 3
+#define RightUpLeftDownAttackState 1
+#define StabAttackedState 2
+#define TwoHandWidthAttackState 3

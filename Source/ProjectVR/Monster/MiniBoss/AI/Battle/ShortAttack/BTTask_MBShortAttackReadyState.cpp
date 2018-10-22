@@ -21,19 +21,19 @@ EBTNodeResult::Type UBTTask_MBShortAttackReadyState::ExecuteTask(UBehaviorTreeCo
 
 			switch (RandomAttackValue)
 			{
-			case RightUpLeftDownAttack:
+			case RightUpLeftDownAttackState:
 				WaitTime = 0.8f;
 				MiniBoss->StabFlag = false; //우상단 좌하단 베기가 나왓으므로 찌르기 연계가 가능하니까 콤보 애니메이션이 나오게 설정
 				MiniBoss->TwoHandWidthFlag = true;
 				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::RightUpLeftDownReady;
 				break;
-			case StabAttacked:
+			case StabAttackedState:
 				WaitTime = 0.5f;
 				MiniBoss->StabFlag = true; //콤보 애니메이션이 안나오게 설정
 				MiniBoss->TwoHandWidthFlag = true;
 				MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::StabReady;
 				break;
-			case TwoHandWidthAttack:
+			case TwoHandWidthAttackState:
 				WaitTime = 1.5f;
 				MiniBoss->StabFlag = false; //우상단 좌하단 베기가 나왓으므로 찌르기 연계가 가능하니까 콤보 애니메이션이 나오게 설정
 				MiniBoss->TwoHandWidthFlag = false;
