@@ -83,13 +83,13 @@ ABoss::ABoss()
 		OpacityMaterials = M_Opacity.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultBodyMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/Textures/M_Boss.M_Boss'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultBodyMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Boss/Materials/M_Boss.M_Boss'"));
 	if (M_DefaultBodyMaterials.Succeeded())
 	{
 		DefaultBodyMaterials = M_DefaultBodyMaterials.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultClothMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/Textures/M_BossCloth.M_BossCloth'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultClothMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Boss/Materials/M_BossCloth.M_BossCloth'"));
 	if (M_DefaultClothMaterials.Succeeded())
 	{
 		DefaultClothMaterials = M_DefaultClothMaterials.Object;
