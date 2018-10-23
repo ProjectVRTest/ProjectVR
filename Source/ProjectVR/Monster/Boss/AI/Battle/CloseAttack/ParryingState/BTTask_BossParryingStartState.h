@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "BTTask_MBParryingStartState.generated.h"
+#include "BTTask_BossParryingStartState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTVR_API UBTTask_MBParryingStartState : public UBTTask_BlackboardBase
+class PROJECTVR_API UBTTask_BossParryingStartState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 public:

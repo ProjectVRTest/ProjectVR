@@ -174,6 +174,21 @@ void ABoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void ABoss::ParryingPointInit()
+{
+
+}
+
+void ABoss::ParryingPointSet()
+{
+
+}
+
+void ABoss::ParryingPointValueSet(int ParryingCount)
+{
+
+}
+
 void ABoss::OnSeeCharacter(APawn * Pawn)
 {
 	if (Pawn->ActorHasTag("Character"))

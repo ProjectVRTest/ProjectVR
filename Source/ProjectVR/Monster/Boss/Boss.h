@@ -60,6 +60,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		int OrbMaxCount;
 
+	UPROPERTY()
+		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열	
 
 protected:
 	// Called when the game starts or when spawned
@@ -72,6 +74,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION()
+		void ParryingPointInit(); //패링포인트 배열에 패링포인트소켓이름을 저장해주는 함수
+	UFUNCTION()
+		void ParryingPointSet(); //패링포인트를 중간보스의 HP상태에 따라 스폰해주는 함수
+	UFUNCTION()
+		void ParryingPointValueSet(int ParryingCount); //HP가 50%이하인경우 지정한 패링포인트 수만큼 랜덤하게 스폰해주는 함수
 	UFUNCTION()
 		void OnSeeCharacter(APawn * Pawn);	
 };
