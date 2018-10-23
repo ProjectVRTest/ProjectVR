@@ -26,6 +26,8 @@ public:
 		EBossLongAttackState CurrentLongAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossCloseAttackState CurrentCloseAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossParryingState CurrentParryingState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;

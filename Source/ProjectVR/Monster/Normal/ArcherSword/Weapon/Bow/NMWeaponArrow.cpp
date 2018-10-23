@@ -71,7 +71,10 @@ void ANMWeaponArrow::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	ArrowHit->OnComponentBeginOverlap.AddDynamic(this, &ANMWeaponArrow::ArrowBeginOverlap);
+	if (ArrowHit)
+	{
+		ArrowHit->OnComponentBeginOverlap.AddDynamic(this, &ANMWeaponArrow::ArrowBeginOverlap);
+	}	
 }
 
 // Called every frame
@@ -90,8 +93,8 @@ void ANMWeaponArrow::ArrowBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowExplosionEffect, OtherComp->GetComponentLocation());
 			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 5.0f, nullptr, this, nullptr);
-		}	
-		Destroy();
+			Destroy();
+		}			
 	}
 	
 	if(OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))

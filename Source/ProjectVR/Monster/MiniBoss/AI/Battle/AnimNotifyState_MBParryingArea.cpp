@@ -17,11 +17,6 @@ void UAnimNotifyState_MBParryingArea::NotifyBegin(USkeletalMeshComponent * MeshC
 	}
 }
 
-void UAnimNotifyState_MBParryingArea::NotifyTick(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float FrameDeltaTime)
-{
-	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
-}
-
 void UAnimNotifyState_MBParryingArea::NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation)
 {
 	Super::NotifyEnd(MeshComp, Animation);

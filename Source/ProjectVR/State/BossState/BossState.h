@@ -21,7 +21,8 @@ enum class EBossBattleState : uint8
 	AttackReady = 1 UMETA(DisplayName = "AttackReady"),
 	AddAttack = 2 UMETA(DisplayName = "AddAttack"),
 	CloseAttack = 3 UMETA(DisplayName = "CloseAttack"),
-	LongAttack = 4 UMETA(DisplayName = "LongAttack")	
+	LongAttack = 4 UMETA(DisplayName = "LongAttack"),
+	BattleWalk = 5 UMETA(DisplayName = "BattleWalk") // 전투 주시 상태
 };
 
 UENUM(BlueprintType)
@@ -50,7 +51,8 @@ enum class EBossCloseAttackState : uint8
 	CloseAttackReady = 1 UMETA(DisplayName = "CloseAttackReady"),
 	RightUpLeftDownAttack = 2 UMETA(DisplayName = "RightUpLeftDownAttack"),
 	ComboAttack = 3 UMETA(DisplayName = "ComboAttack"),
-	UpDownAttack = 4 UMETA(DisplayName = "UpDownAttack")
+	UpDownAttack = 4 UMETA(DisplayName = "UpDownAttack"),
+	ParryingState = 5 UMETA(DisplayName = "ParryingState")
 };
 
 UENUM(BlueprintType)
