@@ -133,21 +133,15 @@ public:
 		void MoveForward(float Value);
 	UFUNCTION()
 		void MoveRight(float Value);
+	
 	UFUNCTION()
 		void RunOn();
 	UFUNCTION()
 		void RunOff();
-
 	UFUNCTION()
-		void DashUpStart();
+		void DashOn();
 	UFUNCTION()
-		void DashDownStart();
-	UFUNCTION()
-		void DashLeftStart();
-	UFUNCTION()
-		void DashRightStart();
-	UFUNCTION()
-		void DashEnd();
+		void DashOff();
 
 	UFUNCTION()
 		void GameMenu();
