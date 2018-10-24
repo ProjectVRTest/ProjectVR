@@ -43,7 +43,7 @@ public:
 		ENormalMonsterComboAttackState CurrentComboAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		ENormalMonsterArcherAttackState CurrentArcherAttackState;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BodyMesh")
 		class USkeletalMesh* ArcherSKMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BodyMesh")

@@ -54,6 +54,9 @@ ANormalMonster::ANormalMonster()
 	CurrentAnimState = ENormalMonsterAnimState::Wait;
 	CurrentIdleState = ENormalMonsterIdleState::Wait;
 	CurrentAttackState = ENormalMonsterAttackState::Idle;
+	CurrentStabAttackState = ENormalMonsterStabAttackState::Idle;
+	CurrentComboAttackState = ENormalMonsterComboAttackState::Idle;
+	CurrentArcherAttackState = ENormalMonsterArcherAttackState::idle;
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>NMAttackReverse_Montage(TEXT("AnimMontage'/Game/Blueprints/Monster/Normal/SwordArcher/Animation/NM_Attack_Reverse.NM_Attack_Reverse'"));
 
@@ -184,17 +187,6 @@ void ANormalMonster::BeginPlay()
 			}
 		}		
 		break;
-	case ENormalMonsterKind::DontMoveArcher:
-		Bow = GetWorld()->SpawnActor<ANMWeaponBow>(Bow->StaticClass(), SpawnActorOption);
-		if (Bow)
-		{
-			Bow->AttachToComponent(GetMesh(), AttachRules, TEXT("BowSocket"));
-			if (QuiverMesh)
-			{
-				QuiverComponent->SetStaticMesh(QuiverMesh);
-			}
-		}
-		break;
 	}	
 	
 }
@@ -269,10 +261,6 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 							CurrentAnimState = ENormalMonsterAnimState::Walk;
 							CurrentState = ENormalMonsterState::Chase;
 							break;
-						case ENormalMonsterKind::DontMoveArcher:
-							CurrentAnimState = ENormalMonsterAnimState::Wait;
-							CurrentState = ENormalMonsterState::Battle;
-							break;
 						}
 					}					
 				}
@@ -283,7 +271,6 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 
 void ANormalMonster::OnHearNoise(APawn* Pawn, const FVector& Location, float Volume)
 {
-	GLog->Log(FString::Printf(TEXT("%f"), Volume));
 	if (!Target)
 	{
 		if (Pawn->ActorHasTag(TEXT("Character")))
@@ -342,8 +329,6 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 				break;
 			case ENormalMonsterKind::MoveArcher:
 				CurrentAnimState = ENormalMonsterAnimState::Walk;
-				break;
-			case ENormalMonsterKind::DontMoveArcher:
 				break;
 			}
 		}

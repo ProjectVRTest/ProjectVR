@@ -109,13 +109,13 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 
 					if (SwordMoveVelocity.Size() <= 1500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
 					{
-						RumbleRightController(0.5f);
+						RumbleRightController(0.25f);
 						Damage = 10.0f;
 					}
 					else // 선속도의 크기가 500초과일 때 데미지 15 (조건4)
 					{
 						GLog->Log(FString::Printf(TEXT("크리 공격")));
-						RumbleRightController(1.0f);
+						RumbleRightController(0.5f);
 						Damage = 15.0f;
 					}
 					//AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(GetOwner());
