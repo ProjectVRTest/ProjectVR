@@ -41,7 +41,7 @@ AMiniBossWeapon::AMiniBossWeapon()
 	SwordCollision->SetRelativeRotation(FRotator(90.0f, 0, 0));	
 	SwordCollision->SetRelativeScale3D(FVector(1.3f, 1.3f, 2.5f));
 	SwordCollision->bHiddenInGame = false;
-
+	SwordCollision->ComponentTags.Add(FName(TEXT("MiniBossWeaponCollision")));
 	IsWeaponAttack = false;
 	IsParryingAttack = false;
 
@@ -50,9 +50,7 @@ AMiniBossWeapon::AMiniBossWeapon()
 	{
 		DefaultMaterials = M_DefaultMaterials.Object;
 	}
-
 	
-	Tags.Add(FName(TEXT("MiniBossWeapon")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 }
@@ -80,11 +78,11 @@ void AMiniBossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponen
 {
 	if (IsWeaponAttack)
 	{
-		if (OtherActor->ActorHasTag(TEXT("Character")))
+		if (OtherComp->ComponentHasTag(TEXT("CameraLocation")))
 		{
 			IsWeaponAttack = false;
 			
-			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(OtherActor);
+			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(OtherComp->GetOwner()->GetAttachParentActor());
 
 			if (MyCharacter)
 			{

@@ -9,6 +9,7 @@
 #include "Equipment/PlayerSword.h"
 #include "Monster/MiniBoss/MiniBoss.h"
 #include "kismet/GameplayStatics.h"
+#include "Engine/World.h"
 
 // Sets default values
 AMiniBossParryingPoint::AMiniBossParryingPoint()
@@ -34,11 +35,11 @@ AMiniBossParryingPoint::AMiniBossParryingPoint()
 		ParryingPointEffect = PT_ParryingPoint.Object;
 	}
 
-	/*static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingPointExplosionEffect(TEXT(""));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingPointExplosionEffect(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PT_ParryingPointExplosion.PT_ParryingPointExplosion'"));
 	if (PT_ParryingPointExplosionEffect.Succeeded())
 	{
 		ParryingPointExplosionEffect = PT_ParryingPointExplosionEffect.Object;
-	}	*/
+	}
 
 	ParryingPointEffectComponent->Template = ParryingPointEffect;
 
@@ -69,6 +70,31 @@ void AMiniBossParryingPoint::Tick(float DeltaTime)
 
 void AMiniBossParryingPoint::ParryingPointBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+	if (OtherComp->ComponentHasTag(TEXT("PlayerSwordCollision")))
+	{
+		APlayerSword* PlayerSword = Cast<APlayerSword>(OtherComp->GetOwner());
+
+		if (PlayerSword)
+		{
+			AMiniBoss* MiniBoss = Cast<AMiniBoss>(GetAttachParentActor());
+
+			if (MiniBoss)
+			{
+				if (PlayerSword->SwordMoveVelocity.Size() >= 1500)
+				{
+					if (MiniBoss && !IsAttackMiniBossWeapon)
+					{
+						IsAttackMiniBossWeapon = true;
+						MiniBoss->ParryingPointCount++;
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingPointExplosionEffect, OtherComp->GetComponentLocation());
+						Destroy();
+					}
+				}
+			}
+		}
+
+		
+	}
 	if (OtherActor->ActorHasTag(TEXT("PlayerSword"))) //부딪힌 액터가 중간보스 무기인지 확인한다.
 	{
 		APlayerSword* PlayerSword = Cast<APlayerSword>(OtherActor);
@@ -83,7 +109,7 @@ void AMiniBossParryingPoint::ParryingPointBeginOverlap(UPrimitiveComponent* Over
 				{
 					IsAttackMiniBossWeapon = true;
 					MiniBoss->ParryingPointCount++;
-					//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingPointExplosionEffect, GetActorLocation());
+					//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingPointExplosionEffect, Sphere->GetComponentLocation());
 					Destroy();
 				}
 			}			

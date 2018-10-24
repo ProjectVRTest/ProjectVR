@@ -45,6 +45,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ShieldVelocity")
 		FVector ShieldMoveVelocity;
 
+	FTimerHandle GlobalTimeTimer;
 	class AMiniBoss* MiniBoss;
 	bool IsActivation;
 	bool IsMiniBossWeaponOverlap;
@@ -61,5 +62,8 @@ public:
 
 	UFUNCTION()
 		void RumbleLeftController(float Intensity);
+
+	UFUNCTION()
+		void GlobalTimeInit();
 
 };

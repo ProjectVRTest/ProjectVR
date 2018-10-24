@@ -41,13 +41,12 @@ APlayerSword::APlayerSword()
 	SwordCollision->SetRelativeLocation(FVector(0.0f, 90.0f, 0.0f));
 	SwordCollision->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
 	SwordCollision->SetRelativeScale3D(FVector(0.75f, 0.75f, 1.6f));
-
+	SwordCollision->ComponentTags.Add(FName(TEXT("PlayerSwordCollision")));
 	//IsActivation = false;
 
 	Timer = 0.0f;		// 타이머 초기화
 
 	// 태그
-	Tags.Add(FName(TEXT("PlayerSword")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
@@ -114,7 +113,6 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 					}
 					else // 선속도의 크기가 500초과일 때 데미지 15 (조건4)
 					{
-						GLog->Log(FString::Printf(TEXT("크리 공격")));
 						RumbleRightController(0.5f);
 						Damage = 15.0f;
 					}

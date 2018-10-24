@@ -19,6 +19,7 @@
 #include "HandMotionController/LeftHandMotionController.h"
 #include "MyCharacter/MotionControllerCharacter.h"	// Setting Owner
 #include "MyCharacter/Widget/HPStaminaBar.h"			// Character State Bar
+#include "TimerManager.h"
 
 // Sets default values
 APlayerShield::APlayerShield()
@@ -43,7 +44,7 @@ APlayerShield::APlayerShield()
 	StateBarScene = CreateDefaultSubobject<USceneComponent>(TEXT("StateScene"));
 	StateBarScene->SetupAttachment(ShieldMesh);
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingEffect(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/StarterContent/Particles/P_Explosion.P_Explosion'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingEffect(TEXT("ParticleSystem'/Game/Assets/Effect/HitFeedback/BT_ShieldParrying.BT_ShieldParrying'"));
 	if (PT_ParryingEffect.Succeeded())
 	{
 		ParryingEffect = PT_ParryingEffect.Object;
@@ -130,29 +131,33 @@ void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭
 
 void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag(TEXT("MiniBossWeapon"))) //부딪힌 액터가 중간보스 무기인지 확인한다.
+	if (OtherComp->ComponentHasTag(TEXT("MiniBossWeaponCollision")))
 	{
+		GLog->Log(FString::Printf(TEXT("중간보스 검 겹힘")));
 		IsMiniBossWeaponOverlap = true;
-		AMiniBossWeapon* MiniBossWeapon = Cast<AMiniBossWeapon>(OtherActor); //확인되면 중간보스 무기로 변환해서 저장한다.
+		AMiniBossWeapon* MiniBossWeapon = Cast<AMiniBossWeapon>(OtherComp->GetOwner()); //확인되면 중간보스 무기로 변환해서 저장한다.
 
 		if (MiniBossWeapon) //변환이 성공하면
-		{			
+		{
 			if (MiniBossWeapon->IsParryingAttack) //무기가 패링 가능한 상태인지 확인한다.
 			{
 				//패링가능한 상태라면 MiniBoss를 가지고 와서 저장하고
 				MiniBoss = Cast<AMiniBoss>(MiniBossWeapon->GetAttachParentActor());
+
 				if (MiniBoss)  //MiniBoss 형변환에 성공하면
 				{
-					if (IsActivation && IsMiniBossWeaponOverlap&& ShieldMoveVelocity.Size() > 90.0f) //그립버튼을 누르고 방패의 선속도가 300이상인지 확인한다.
+					if (IsActivation && IsMiniBossWeaponOverlap&& ShieldMoveVelocity.Size() > 90.0f) //그립버튼을 누르고 방패의 선속도가 90이상인지 확인한다.
 					{
 						// 최소 스테미너이상 있을 때 방패로 막기 가능 
 						if (ShieldOwner->CurrentStamina > ShieldOwner->DefencePoint)
 						{
+							UGameplayStatics::SetGlobalTimeDilation(GetWorld(),0.5f);
+							GetWorld()->GetTimerManager().SetTimer(GlobalTimeTimer, this, &APlayerShield::GlobalTimeInit, 0.5f, false);
+							//GetWorld()->GetTimerManager().SetTimer(RageAttackTimer, this, &UBTService_NMChaseDistanceCheck::RageAttackTimerCount, 1.7f, false);
 							ShieldOwner->UseStamina(ShieldOwner->DefencePoint);		// 스테미너 감소 및 대기시간 후 스테미너 회복시작
 							RumbleLeftController(5.0f); //패드에 진동을 울려주고
 							MiniBossWeapon->IsParryingAttack = false;
-							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, MiniBoss->GetActorLocation());
-							GLog->Log(FString::Printf(TEXT("방패 패링")));
+							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, OtherComp->GetComponentLocation());
 							MiniBoss->ParryingPointSet();//패링 포인트를 스폰(HP에 따라)						
 							MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingStart;
 							MiniBoss->CurrentAttackState = EMiniBossAttackState::ParryingState;
@@ -166,10 +171,10 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 
 void APlayerShield::OnShieldOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->ActorHasTag(TEXT("MiniBossWeapon")))
+	if (OtherComp->ComponentHasTag(TEXT("MiniBossWeaponCollision")))
 	{
 		IsMiniBossWeaponOverlap = false;
-	}	
+	}
 }
 
 void APlayerShield::RumbleLeftController(float Intensity)
@@ -185,4 +190,10 @@ void APlayerShield::RumbleLeftController(float Intensity)
 			PC->RumbleHandController(LeftHand->Hand,Intensity);
 		}		
 	}
+}
+
+void APlayerShield::GlobalTimeInit()
+{
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
+	GLog->Log(FString::Printf(TEXT("타이머 도는중")));
 }

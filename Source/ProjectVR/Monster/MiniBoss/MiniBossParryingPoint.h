@@ -21,8 +21,8 @@ public:
 		class USphereComponent* Sphere;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* ParryingPointEffect;
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
-		class UParticleSystem* ParryingPointExplosionEffect;*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* ParryingPointExplosionEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystemComponent* ParryingPointEffectComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")

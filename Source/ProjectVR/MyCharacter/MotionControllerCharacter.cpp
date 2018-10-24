@@ -133,7 +133,7 @@ void AMotionControllerCharacter::BeginPlay()
 
 	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
 	{
-		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Eye);
+		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
 	}
 
 	FActorSpawnParameters SpawnActorOption;

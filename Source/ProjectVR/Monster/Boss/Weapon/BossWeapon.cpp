@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BossWeapon.h"
 #include "Components/StaticMeshComponent.h"
@@ -7,6 +7,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Monster/Boss/Boss.h"
+#include "kismet/GameplayStatics.h"
 
 // Sets default values
 ABossWeapon::ABossWeapon()
@@ -31,13 +32,12 @@ ABossWeapon::ABossWeapon()
 	SwordCollision->SetRelativeLocation(FVector(31.0f, 0, 187.0f));
 	SwordCollision->SetRelativeRotation(FRotator(77.0f, 0, 0));
 	SwordCollision->SetRelativeScale3D(FVector(0.44f, 0.54f, 1.42f));
-
+	SwordCollision->ComponentTags.Add(FName(TEXT("BossWeaponCollision")));
 	SwordCollision->bHiddenInGame = false;
 
 	IsWeaponAttack = false;
 	IsParryingAttack = false;
 
-	Tags.Add(FName(TEXT("BossWeapon")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 }
@@ -64,11 +64,11 @@ void ABossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 {
 	if (IsWeaponAttack)
 	{
-		if (OtherActor->ActorHasTag(TEXT("Character")))
+		if (OtherComp->ComponentHasTag(TEXT("CameraLocation")))
 		{
 			IsWeaponAttack = false;
 
-			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(OtherActor);
+			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(OtherComp->GetOwner()->GetAttachParentActor());
 
 			if (MyCharacter)
 			{
@@ -76,9 +76,10 @@ void ABossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 
 				if (Boss)
 				{
-
+					UGameplayStatics::ApplyDamage(MyCharacter, 10.0f, nullptr, nullptr, nullptr);
 				}
-			}
+			}			
+			GLog->Log(FString::Printf(TEXT("캐릭터 때림")));
 		}
 	}
 }
