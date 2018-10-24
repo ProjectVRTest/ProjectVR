@@ -177,8 +177,6 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//UE_LOG(LogTemp, Log, TEXT("%f"), UKismetMathLibrary::Atan2(Cal.Z, Cal.X));
-	
 	if (GetVelocity().Size() > 100.0f)
 	{
 		MakeNoiseEmitter();
@@ -250,24 +248,14 @@ void AMotionControllerCharacter::SetupPlayerInputComponent(UInputComponent* Play
 	PlayerInputComponent->BindAction(TEXT("GrabRight"), IE_Pressed, this, &AMotionControllerCharacter::GrabRightOn);
 	PlayerInputComponent->BindAction(TEXT("GrabRight"), IE_Released, this, &AMotionControllerCharacter::GrabRightOff);
 
-	PlayerInputComponent->BindAction(TEXT("Run"), IE_Pressed, this, &AMotionControllerCharacter::RunOn);
-	PlayerInputComponent->BindAction(TEXT("Run"), IE_Released, this, &AMotionControllerCharacter::RunOff);
+	PlayerInputComponent->BindAction(TEXT("Dash"), IE_Pressed, this, &AMotionControllerCharacter::DashOn);
+	PlayerInputComponent->BindAction(TEXT("Dash"), IE_Released, this, &AMotionControllerCharacter::DashOff);
 
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AMotionControllerCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AMotionControllerCharacter::MoveRight);
 
-	PlayerInputComponent->BindAction(TEXT("DashUp"), IE_Pressed, this, &AMotionControllerCharacter::DashUpStart);
-	PlayerInputComponent->BindAction(TEXT("DashUp"), IE_Released, this, &AMotionControllerCharacter::DashEnd);
-
-	PlayerInputComponent->BindAction(TEXT("DashDown"), IE_Pressed, this, &AMotionControllerCharacter::DashDownStart);
-	PlayerInputComponent->BindAction(TEXT("DashDown"), IE_Released, this, &AMotionControllerCharacter::DashEnd);
-
-	PlayerInputComponent->BindAction(TEXT("DashLeft"), IE_Pressed, this, &AMotionControllerCharacter::DashLeftStart);
-	PlayerInputComponent->BindAction(TEXT("DashLeft"), IE_Released, this, &AMotionControllerCharacter::DashEnd);
-
-	PlayerInputComponent->BindAction(TEXT("DashRight"), IE_Pressed, this, &AMotionControllerCharacter::DashRightStart);
-	PlayerInputComponent->BindAction(TEXT("DashRight"), IE_Released, this, &AMotionControllerCharacter::DashEnd);
-
+	PlayerInputComponent->BindAction(TEXT("Run"), IE_Pressed, this, &AMotionControllerCharacter::RunOn);
+	PlayerInputComponent->BindAction(TEXT("Run"), IE_Released, this, &AMotionControllerCharacter::RunOff);
 	//  Test
 	PlayerInputComponent->BindAction(TEXT("Menu"), IE_Released, this, &AMotionControllerCharacter::GameMenu);
 }
@@ -324,90 +312,67 @@ void AMotionControllerCharacter::GrabRightOff()
 	RightHand->Sword->ConvertOfOpacity(0.5f);
 }
 
+// 플레이어의 상태에 따라 걷기 / 달리기 
 void AMotionControllerCharacter::MoveForward(float Value)
 {
 	if (Value != 0)
 	{
-		CurrentState = EPlayerState::Walk;
+		if(CurrentState == EPlayerState::Run)
+			GetCharacterMovement()->MaxWalkSpeed = 675.0f;
+		else
+		{
+			CurrentState = EPlayerState::Walk;
+			GetCharacterMovement()->MaxWalkSpeed = 450.0f;
+		}
 		AddMovementInput(Camera->GetForwardVector(), Value);
 	}
 }
 
+// 플레이어의 상태에 따라 걷기 / 달리기 
 void AMotionControllerCharacter::MoveRight(float Value)
 {
 	if (Value != 0)
 	{
-		CurrentState = EPlayerState::Walk;
+		if (CurrentState == EPlayerState::Run)
+			GetCharacterMovement()->MaxWalkSpeed = 675.0f;
+		else
+		{
+			CurrentState = EPlayerState::Walk;
+			GetCharacterMovement()->MaxWalkSpeed = 450.0f;
+		}
 		AddMovementInput(Camera->GetRightVector(), Value);
 	}
 }
 
+// 트랙패드를 누르면  Run상태
 void AMotionControllerCharacter::RunOn()
 {
 	CurrentState = EPlayerState::Run;
-	GetCharacterMovement()->MaxWalkSpeed = 675.0f;
 }
 
+// 트랙패드를 누르면 Run해제
 void AMotionControllerCharacter::RunOff()
 {
-	CurrentState = EPlayerState::Run;
-	GetCharacterMovement()->MaxWalkSpeed = 450.0f;
+	CurrentState = EPlayerState::Idle;
 }
 
-void AMotionControllerCharacter::DashUpStart()
+void AMotionControllerCharacter::DashOn()
 {
 	if (CurrentStamina > DashPoint)
 	{
+		UE_LOG(LogTemp, Log, TEXT("D1"));
 		UseStamina(DashPoint);
 		FVector DashVector = FVector::ZeroVector;
 		GetCharacterMovement()->GroundFriction = 0;
-		DashVector = Camera->GetForwardVector()*3000.0f;
+		DashVector = GetVelocity().GetSafeNormal()*3000.0f;//Camera->GetForwardVector()*3000.0f;
 		DashVector.Z = 0;
 		LaunchCharacter(DashVector, false, false);
 	}
 }
 
-void AMotionControllerCharacter::DashDownStart()
+void AMotionControllerCharacter::DashOff()
 {
-	if (CurrentStamina > DashPoint)
-	{
-		UseStamina(DashPoint);
-		FVector DashVector = FVector::ZeroVector;
-		GetCharacterMovement()->GroundFriction = 0;
-		DashVector = Camera->GetForwardVector()*3000.0f*-1.0f;
-		DashVector.Z = 0;
-		LaunchCharacter(DashVector, false, false);
-	}
-}
-
-void AMotionControllerCharacter::DashLeftStart()
-{
-	if (CurrentStamina > DashPoint)
-	{
-		UseStamina(DashPoint);
-		FVector DashVector = FVector::ZeroVector;
-		GetCharacterMovement()->GroundFriction = 0;
-		DashVector = Camera->GetRightVector()*3000.0f*-1.0f;
-		DashVector.Z = 0;
-		LaunchCharacter(DashVector, false, false);
-	}
-}
-
-void AMotionControllerCharacter::DashRightStart()
-{
-	if (CurrentStamina > DashPoint)
-	{
-		UseStamina(DashPoint);
-		FVector DashVector = FVector::ZeroVector;
-		GetCharacterMovement()->GroundFriction = 0;
-		DashVector = Camera->GetRightVector()*3000.0f;
-		DashVector.Z = 0;
-		LaunchCharacter(DashVector, false, false);
-	}
-}
-
-void AMotionControllerCharacter::DashEnd()
-{
+	UE_LOG(LogTemp, Log, TEXT("D2"));
 	GetCharacterMovement()->GroundFriction = 8.0f;
 }
 
@@ -547,11 +512,10 @@ void AMotionControllerCharacter::UseStamina(float _stamina)
 
 void AMotionControllerCharacter::AutoStamina()
 {
-	UE_LOG(LogTemp, Log, TEXT("SSipMinPyeReal"));
 	if (CurrentStamina < MaxStamina)			// 스테미너가 Full인 상태가 아닐 때만 실행
 	{
 		CurrentStamina += RecoveryPoint;			// 수치만큼 스테미너 증가
-		UE_LOG(LogTemp, Log, TEXT("SSipMinPyeReal2"));
+		
 		if (CurrentStamina > MaxStamina)
 		{
 			// 다 차게 되면 스테미너를 Full과 맞춰줌
