@@ -15,14 +15,16 @@ class PROJECTVR_API UNormalMonsterAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		ENormalMonsterState CurrentState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		ENormalMonsterAnimState CurrentAnimState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IdleState")
 		ENormalMonsterIdleState CurrentIdleState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		ENormalMonsterAttackState CurrentAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		ENormalMonsterKind MonsterKind;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		ENormalMonsterStabAttackState CurrentStabAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")

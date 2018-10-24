@@ -9,8 +9,7 @@ UENUM(BlueprintType)
 enum class ENormalMonsterKind : uint8
 {
 	SwordMan = 0 UMETA(DisplayName = "SwordMan"),
-	MoveArcher = 1 UMETA(DisplayName = "MoveArcher"),
-	DontMoveArcher = 2 UMETA(DisplayName = "DontMoveArcher")
+	MoveArcher = 1 UMETA(DisplayName = "MoveArcher")
 };
 
 UENUM(BlueprintType)
