@@ -78,16 +78,16 @@ AMiniBoss::AMiniBoss()
 	IsAttack = false; //공격할수 있게 해줌
 	StabFlag = false;
 	TwoHandWidthFlag = false;
-	MaxHP = 600.0f;
+	MaxHP = 10.0f;
 	CurrentHP = MaxHP;
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/BackDash/Materials/M_Opacity.M_Opacity'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/M_MonsterOpacity.M_MonsterOpacity'"));
 	if (M_Opacity.Succeeded())
 	{
 		OpacityMaterials = M_Opacity.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultMaterials(TEXT("MaterialInstanceConstant'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Materials/M_MiniBossInVisible.M_MiniBossInVisible'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultMaterials(TEXT("MaterialInstanceConstant'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Materials/M_MB_Inst.M_MB_Inst'"));
 	if (M_DefaultMaterials.Succeeded())
 	{
 		DefaultMaterials = M_DefaultMaterials.Object;

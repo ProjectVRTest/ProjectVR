@@ -20,7 +20,7 @@ ABossWeapon::ABossWeapon()
 	SwordMesh->SetCollisionProfileName(TEXT("OverlapAll"));
 	SwordMesh->ComponentTags.Add(FName(TEXT("BossWeapon")));
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Boss_Sword(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/Boss/Weapon/SM_BossWeapon.SM_BossWeapon'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Boss_Sword(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/Boss/Weapon/Mesh/SM_BossWeapon.SM_BossWeapon'"));
 
 	if (SM_Boss_Sword.Succeeded())
 	{

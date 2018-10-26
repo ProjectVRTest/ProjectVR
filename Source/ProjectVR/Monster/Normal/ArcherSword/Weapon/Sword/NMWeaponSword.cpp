@@ -21,7 +21,7 @@ ANMWeaponSword::ANMWeaponSword()
 	SwordMesh->SetCollisionProfileName("NoCollision"); //콜리전반응을 제거한다.
 
 	//에디터로부터 일반몬스터 검 메쉬를 찾고
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Sword/SM_NormalMonsterSword.SM_NormalMonsterSword'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Sword/Mesh/SM_NormalMonsterSword.SM_NormalMonsterSword'"));
 
 	//찾는것에 성공하면
 	if (SM_Sword.Succeeded())

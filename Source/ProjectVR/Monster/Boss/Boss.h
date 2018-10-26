@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -61,7 +61,7 @@ public:
 		int OrbMaxCount;
 
 	UPROPERTY()
-		TArray<FName>ParryingPoints; //ÆĞ¸µÆ÷ÀÎÆ® ¼ÒÄÏÀÌ¸§À» ÀúÀåÇØµÑ ¹è¿­	
+		TArray<FName>ParryingPoints; //íŒ¨ë§í¬ì¸íŠ¸ ì†Œì¼“ì´ë¦„ì„ ì €ì¥í•´ë‘˜ ë°°ì—´	
 
 protected:
 	// Called when the game starts or when spawned
@@ -75,11 +75,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION()
-		void ParryingPointInit(); //ÆĞ¸µÆ÷ÀÎÆ® ¹è¿­¿¡ ÆĞ¸µÆ÷ÀÎÆ®¼ÒÄÏÀÌ¸§À» ÀúÀåÇØÁÖ´Â ÇÔ¼ö
+		void ParryingPointInit(); //íŒ¨ë§í¬ì¸íŠ¸ ë°°ì—´ì— íŒ¨ë§í¬ì¸íŠ¸ì†Œì¼“ì´ë¦„ì„ ì €ì¥í•´ì£¼ëŠ” í•¨ìˆ˜
 	UFUNCTION()
-		void ParryingPointSet(); //ÆĞ¸µÆ÷ÀÎÆ®¸¦ Áß°£º¸½ºÀÇ HP»óÅÂ¿¡ µû¶ó ½ºÆùÇØÁÖ´Â ÇÔ¼ö
+		void ParryingPointSet(); //íŒ¨ë§í¬ì¸íŠ¸ë¥¼ ì¤‘ê°„ë³´ìŠ¤ì˜ HPìƒíƒœì— ë”°ë¼ ìŠ¤í°í•´ì£¼ëŠ” í•¨ìˆ˜
 	UFUNCTION()
-		void ParryingPointValueSet(int ParryingCount); //HP°¡ 50%ÀÌÇÏÀÎ°æ¿ì ÁöÁ¤ÇÑ ÆĞ¸µÆ÷ÀÎÆ® ¼ö¸¸Å­ ·£´ıÇÏ°Ô ½ºÆùÇØÁÖ´Â ÇÔ¼ö
+		void ParryingPointValueSet(int ParryingCount); //HPê°€ 50%ì´í•˜ì¸ê²½ìš° ì§€ì •í•œ íŒ¨ë§í¬ì¸íŠ¸ ìˆ˜ë§Œí¼ ëœë¤í•˜ê²Œ ìŠ¤í°í•´ì£¼ëŠ” í•¨ìˆ˜
 	UFUNCTION()
 		void OnSeeCharacter(APawn * Pawn);	
 };

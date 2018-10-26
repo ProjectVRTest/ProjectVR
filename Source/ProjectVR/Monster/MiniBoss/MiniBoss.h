@@ -65,7 +65,7 @@ public:
 		bool ParryingFlag; //패링이 가능한 구간에 true로 바뀌고 구간이 끝나면 false로 바뀌는 변수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
 		bool IsParrying; //현재 패링중인지 아닌지
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Stat")
 		float MaxHP; //최대 HP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float CurrentHP; //현재 HP

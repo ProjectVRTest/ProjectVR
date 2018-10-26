@@ -27,10 +27,11 @@ AMiniBossWeapon::AMiniBossWeapon()
 		SwordMesh->SetStaticMesh(SM_Sword.Object);
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface>M_Sword(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Weapon/Materials/M_Weapon.M_Weapon'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>M_Sword(TEXT("MaterialInstanceConstant'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Weapon/Materials/M_MB_Weapon_Inst.M_MB_Weapon_Inst'"));
 
 	if (M_Sword.Succeeded())
 	{
+		DefaultMaterials = M_Sword.Object;
 		SwordMesh->SetMaterial(0,M_Sword.Object);
 	}
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
@@ -44,13 +45,7 @@ AMiniBossWeapon::AMiniBossWeapon()
 	SwordCollision->ComponentTags.Add(FName(TEXT("MiniBossWeaponCollision")));
 	IsWeaponAttack = false;
 	IsParryingAttack = false;
-
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Weapon/Materials/M_Weapon.M_Weapon'"));
-	if (M_DefaultMaterials.Succeeded())
-	{
-		DefaultMaterials = M_DefaultMaterials.Object;
-	}
-	
+		
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 }

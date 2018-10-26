@@ -77,19 +77,19 @@ ABoss::ABoss()
 	SwordWaveSpawn->SetupAttachment(GetRootComponent());
 	SwordWaveSpawn->SetRelativeLocation(FVector(150.0f,0, 0));
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/BackDash/Materials/M_Opacity.M_Opacity'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/M_MonsterOpacity.M_MonsterOpacity'"));
 	if (M_Opacity.Succeeded())
 	{
 		OpacityMaterials = M_Opacity.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultBodyMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Boss/Materials/M_Boss.M_Boss'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultBodyMaterials(TEXT("MaterialInstanceConstant'/Game/Assets/CharacterEquipment/Monster/Boss/Materials/M_Boss_Inst.M_Boss_Inst'"));
 	if (M_DefaultBodyMaterials.Succeeded())
 	{
 		DefaultBodyMaterials = M_DefaultBodyMaterials.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultClothMaterials(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Boss/Materials/M_BossCloth.M_BossCloth'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultClothMaterials(TEXT("MaterialInstanceConstant'/Game/Assets/CharacterEquipment/Monster/Boss/Materials/M_Boss_Cloth_Inst.M_Boss_Cloth_Inst'"));
 	if (M_DefaultClothMaterials.Succeeded())
 	{
 		DefaultClothMaterials = M_DefaultClothMaterials.Object;
