@@ -14,6 +14,9 @@ class PROJECTVR_API UBTService_MBStateUpdate : public UBTService_BlackboardBase
 {
 	GENERATED_BODY()
 public:
-	float Distance;
+	UPROPERTY()
+		FRotator LookAt;
+	UPROPERTY()
+		float Distance;
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;	
 };

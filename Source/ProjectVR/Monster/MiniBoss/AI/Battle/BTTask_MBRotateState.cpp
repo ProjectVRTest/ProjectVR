@@ -28,7 +28,6 @@ EBTNodeResult::Type UBTTask_MBRotateState::ExecuteTask(UBehaviorTreeComponent & 
 				LookAt= UKismetMathLibrary::NormalizedDeltaRotator(MiniBoss->GetActorRotation(), UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), CameraLocation->GetActorLocation()));
 				AI->BBComponent->SetValueAsRotator("LookAtRotator", LookAt);
 				MiniBoss->RotateYaw = LookAt.Yaw*-1.0f;
-				GLog->Log(FString::Printf(TEXT("RotateYaw %f"), MiniBoss->RotateYaw));
 			}
 		}		
 	}

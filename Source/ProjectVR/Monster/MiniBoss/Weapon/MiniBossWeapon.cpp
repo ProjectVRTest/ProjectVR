@@ -65,6 +65,8 @@ void AMiniBossWeapon::BeginPlay()
 void AMiniBossWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);	
+
+	GLog->Log(FString::Printf(TEXT("칼 틱")));
 }
 
 void AMiniBossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

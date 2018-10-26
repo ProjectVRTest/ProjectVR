@@ -21,10 +21,7 @@ EBTNodeResult::Type UBTTask_MBAttackEndState::ExecuteTask(UBehaviorTreeComponent
 			ACameraLocation* CameraLocation = Cast<ACameraLocation>(AI->BBComponent->GetValueAsObject("PlayerCamera"));
 
 			FRotator LookAt = UKismetMathLibrary::NormalizedDeltaRotator(MiniBoss->GetActorRotation(), UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), CameraLocation->GetActorLocation()));
-
-			//float BackAttackYawValue = UKismetMathLibrary::Abs(LookAt.Yaw);
 			
-
 			if (-180.0f < LookAt.Yaw && LookAt.Yaw < -150.0f)
 			{
 				if (Distance < 300.0f)

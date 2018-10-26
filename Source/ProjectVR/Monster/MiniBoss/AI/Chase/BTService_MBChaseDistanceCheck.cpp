@@ -11,31 +11,23 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
 
-	FVector Velocity;
-	FRotator MiniBossRotator;
-
 	if (AI)
 	{
-		FRotator LookAt;
 		Distance = AI->BBComponent->GetValueAsFloat(DistanceBlackBoardKey);
 
 		AActor* Player = Cast<AActor>(AI->BBComponent->GetValueAsObject(TEXT("Player")));
 		AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Player);
 		AMiniBoss* MiniBoss = Cast<AMiniBoss>(AI->GetPawn());
 
-		LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation() , MyCharacter->GetActorLocation());
-
-		if (MiniBoss && Player)
+		if (MiniBoss && MyCharacter)
 		{
-			Velocity = MiniBoss->GetCharacterMovement()->Velocity;
-			MiniBossRotator = MiniBoss->GetActorRotation();
+			FVector Velocity = MiniBoss->GetCharacterMovement()->Velocity;
+			FRotator MiniBossRotator = MiniBoss->GetActorRotation();
 
 			FVector NormalVector = UKismetMathLibrary::Normal(Velocity);
 			FRotator XNormalRotator = UKismetMathLibrary::MakeRotFromX(NormalVector);
 			FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(MiniBossRotator, XNormalRotator);
 			MiniBoss->Yaw = CompleteRotator.Yaw;
-
-			//GLog->Log(FString::Printf(TEXT("Yaw : %0.1f"), MiniBoss->Yaw));
 
 			if (!MiniBoss->CurrentFalling)
 			{
@@ -48,24 +40,19 @@ void UBTService_MBChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 					}
 					else if (Distance <1000.0f && Distance >500.0f)
 					{
-						//GLog->Log(FString::Printf(TEXT("대쉬 애드 범위 진입")));
+						MiniBoss->CurrentAnimState = EMiniBossAnimState::Walk;
 					}
 					else if (Distance < 500.0f && Distance >300.0f)
 					{
-						//MiniBoss->WalkStopFlag = true;
-						AI->BBComponent->SetValueAsInt(TEXT("DashCount"), 0);
 						MiniBoss->CurrentAnimState = EMiniBossAnimState::BattleWalk;						
 					}
 					else if(Distance <300.0f)
 					{
-						//MiniBoss->CurrentShortAttackState = EMiniBossShortAttackState::ShortAttackReady;
 						MiniBoss->CurrentAnimState = EMiniBossAnimState::AttackReady;
 						MiniBoss->CurrentState = EMiniBossState::Battle;
 					}
 					break;
 				case EMiniBossAnimState::JumpAttack:
-					break;
-				case EMiniBossAnimState::DashAttack:
 					break;
 				case EMiniBossAnimState::BattleWalk:
 					if (Distance > 600.0f)

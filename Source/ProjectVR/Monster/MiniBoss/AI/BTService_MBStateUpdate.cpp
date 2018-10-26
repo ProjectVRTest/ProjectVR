@@ -24,6 +24,8 @@ void UBTService_MBStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 			{
 				Distance = FVector::Distance(MiniBoss->GetActorLocation(), MyCharacter->CameraLocation->GetActorLocation());
 				AI->BBComponent->SetValueAsFloat("Distance", Distance);
+				LookAt = UKismetMathLibrary::FindLookAtRotation(MiniBoss->GetActorLocation(), MyCharacter->CameraLocation->GetActorLocation());
+				AI->BBComponent->SetValueAsRotator("LookAtRotator", LookAt);
 			}
 		}
 	}

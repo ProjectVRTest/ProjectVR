@@ -53,15 +53,6 @@ public:
 		void AnimNotify_JumpAttackStart(UAnimNotify* Notify);
 	UFUNCTION(BlueprintCallable, Category = "AI")
 		void AnimNotify_JumpAttackEnd(UAnimNotify* Notify);
-	UFUNCTION(BlueprintCallable, Category = "Attack")
-		void AnimNotify_AttackComplete(UAnimNotify* Notify);
-
-	UFUNCTION(BlueprintCallable, Category = "AI")
-		void AnimNotify_DashStart(UAnimNotify* Notify);
-	UFUNCTION(BlueprintCallable, Category = "AI")
-		void AnimNotify_DashEnd(UAnimNotify* Notify);
-	UFUNCTION(BlueprintCallable, Category = "AI")
-		void AnimNotify_GroundFrictionDefault(UAnimNotify* Notify);
 	UFUNCTION(BlueprintCallable, Category = "AI")
 		void AnimNotify_SwordWaveSpawn(UAnimNotify* Notify);
 };

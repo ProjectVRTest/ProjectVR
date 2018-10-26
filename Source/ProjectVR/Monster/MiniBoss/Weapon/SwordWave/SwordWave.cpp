@@ -21,8 +21,7 @@ ASwordWave::ASwordWave()
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	SetRootComponent(Sphere);
-
-	Sphere->SetCollisionProfileName("OverlapAll");
+	Sphere->SetCollisionProfileName("NoCollision");
 
 	Projecttile = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projecttile"));
 	Projecttile->InitialSpeed = 3000.0f;
@@ -68,6 +67,7 @@ ASwordWave::ASwordWave()
 
 	SwordWaveHit = CreateDefaultSubobject<UBoxComponent>(TEXT("SwordWaveHit"));
 	SwordWaveHit->SetupAttachment(Mesh);
+	SwordWaveHit->SetCollisionProfileName("OverlapAll");
 	SwordWaveHit->SetRelativeLocation(FVector(0, 0, -42.0f));
 	SwordWaveHit->SetRelativeRotation(FRotator(90.0f, 0, 0));
 	SwordWaveHit->SetRelativeScale3D(FVector(1.6f, 0.5f, 0.1f));

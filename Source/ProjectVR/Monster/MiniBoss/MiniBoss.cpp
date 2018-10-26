@@ -11,7 +11,7 @@
 #include "MiniBossAIController.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
-                                                           
+
 #include "Animation/AnimBlueprint.h"
 #include "Weapon/MiniBossWeapon.h"
 #include "Particles/ParticleSystem.h"
@@ -26,7 +26,7 @@
 // Sets default values
 AMiniBoss::AMiniBoss()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
@@ -68,7 +68,7 @@ AMiniBoss::AMiniBoss()
 
 	if (AttackReverse_Montage.Succeeded())
 	{
-		AttackReverseMontage= AttackReverse_Montage.Object;
+		AttackReverseMontage = AttackReverse_Montage.Object;
 	}
 
 	CurrentFalling = false;
@@ -94,7 +94,7 @@ AMiniBoss::AMiniBoss()
 	}
 
 	AIControllerClass = AMiniBossAIController::StaticClass();
-	
+
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_AfterImageStartEffect(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_StartEffect.PS_StartEffect'"));
 	if (PT_AfterImageStartEffect.Succeeded())
 	{
@@ -113,7 +113,7 @@ AMiniBoss::AMiniBoss()
 		InVisibleStartEffect = PT_InVisibleStartEffect.Object;
 	}
 
-	
+
 	SwordWaveCount = 1;
 	ParryingPointMaxCount = 0;
 	ParryingPointCount = 0;
@@ -132,7 +132,7 @@ AMiniBoss::AMiniBoss()
 		{
 			GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 			GetMesh()->SetAnimInstanceClass(MiniBossAnimBlueprint);
-		}		
+		}
 	}
 	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 	GetCharacterMovement()->MaxAcceleration = 2048.0f;
@@ -160,7 +160,7 @@ void AMiniBoss::BeginPlay()
 	{
 		Sword->AttachToComponent(GetMesh(), AttachRules, FName(TEXT("weapon001소켓")));
 	}
-	
+
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &AMiniBoss::OnSeeCharacter);
@@ -173,7 +173,7 @@ void AMiniBoss::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
-		
+
 	if (AI)
 	{
 		AI->BBComponent->SetValueAsEnum("CurrentState", (uint8)CurrentState);
@@ -186,7 +186,7 @@ void AMiniBoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentBackAttackState", (uint8)CurrentBackAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentDashState", (uint8)CurrentDashState);
 		AI->BBComponent->SetValueAsEnum("CurrentParryingState", (uint8)CurrentParryingState);
-		CurrentFalling = GetCharacterMovement()->IsFalling(); 
+		CurrentFalling = GetCharacterMovement()->IsFalling();
 	}
 }
 
@@ -199,7 +199,7 @@ void AMiniBoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 //패링포인트배열에 패링포인트소켓이름을 저장한다.
 void AMiniBoss::ParryingPointInit()
-{	
+{
 	ParryingPoints.Add(TEXT("RightArmsParryingPoint"));
 	ParryingPoints.Add(TEXT("RightUpperArmsParryingPoint"));
 	ParryingPoints.Add(TEXT("LeftArmsParryingPoint"));
@@ -212,7 +212,7 @@ void AMiniBoss::ParryingPointInit()
 void AMiniBoss::ParryingPointSet()
 {
 	float HPPercent = CurrentHP / MaxHP;
-	int PreviousParryingPointName =-1;
+	int PreviousParryingPointName = -1;
 	int RandomParryingPointName;
 
 	AMiniBossParryingPoint * MiniBossParryingPoint;
@@ -220,19 +220,19 @@ void AMiniBoss::ParryingPointSet()
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
-	
+
 	if (HPPercent > 0.5f && HPPercent <= 1.0f) //HP가 50~100% 일때
-	{		
+	{
 		//패링 점을 1~2개 생성하기 위해 1~2만큼 랜덤하게 수를 받는다.
-		int RandomParryingPointSpawn = FMath::RandRange(1, 2); 
-		
+		int RandomParryingPointSpawn = FMath::RandRange(1, 2);
+
 		ParryingPointMaxCount = RandomParryingPointSpawn; //패링 점이 최대 몇개 인지 저장해둔다.
 
 		//위에서 랜덤하게 받은 수만큼 반복하면서
 		for (int i = 0; i < RandomParryingPointSpawn; i++)
 		{
 			//7개의 패링 점중에서 랜덤한곳에 스폰시켜 주기 위해 0~6까지의 랜덤수를 받는다.
-			RandomParryingPointName = FMath::RandRange(0, 6); 
+			RandomParryingPointName = FMath::RandRange(0, 6);
 
 			//이미 스폰한곳은 다시 스폰하지 않기 위해서 그 전랜덤수와 현재 랜덤수를 비교하고
 			if (RandomParryingPointName == PreviousParryingPointName)
@@ -272,20 +272,21 @@ void AMiniBoss::ParryingPointValueSet(int ParryingCount)
 {
 	int RandomParryingPointName;
 	ParryingPointMaxCount = ParryingCount;
-	int* RandomPointNotOverlap = new int[ParryingCount];
+	TArray<int32> RandomPointNotOverlap;
+	//int* RandomPointNotOverlap = new int[ParryingCount];
 	bool RandomFlag;
 
 	for (int k = 0; k < ParryingCount; k++)
 	{
-		RandomPointNotOverlap[k] = -1;
-	}	
+		RandomPointNotOverlap.Add(-1);
+	}
 
 	AMiniBossParryingPoint * MiniBossParryingPoint;
 	FActorSpawnParameters SpawnActorOption;
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
-		
+
 	for (int i = 0; i < ParryingCount; i++)
 	{
 		RandomParryingPointName = FMath::RandRange(0, 6);
@@ -299,7 +300,7 @@ void AMiniBoss::ParryingPointValueSet(int ParryingCount)
 				RandomFlag = false;
 			}
 		}
-		
+
 		if (RandomFlag)
 		{
 			RandomPointNotOverlap[i] = RandomParryingPointName;
@@ -326,37 +327,24 @@ void AMiniBoss::ParryingPointValueSet(int ParryingCount)
 
 void AMiniBoss::OnSeeCharacter(APawn * Pawn)
 {
-	if (Pawn->ActorHasTag("Character"))
+	if (!Target)
 	{
-		AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
-		if (AI)
+		if (Pawn->ActorHasTag("Character"))
 		{
-			switch (CurrentState)
+			AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
+			if (AI)
 			{
-			case EMiniBossState::Idle:			
-				if (!Target)
-				{
-					AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(Pawn);
+				AMotionControllerCharacter * MyCharacter = Cast<AMotionControllerCharacter>(Pawn);
 
-					if (MyCharacter)
-					{
-						TargetCamera = MyCharacter->CameraLocation;
-						AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
-					}
+				if (MyCharacter)
+				{
+					TargetCamera = MyCharacter->CameraLocation;
+					AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
 					AI->BBComponent->SetValueAsObject("Player", Pawn);
 					Target = Pawn;
 					CurrentState = EMiniBossState::Chase;
 					CurrentAnimState = EMiniBossAnimState::Walk;
-				}				
-				break;
-			case EMiniBossState::Chase:
-				break;
-			case EMiniBossState::Battle:
-				break;
-			case EMiniBossState::Patrol:
-				break;
-			case EMiniBossState::Dead:
-				break;
+				}
 			}
 		}
 	}
@@ -367,21 +355,11 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
 	CurrentHP -= Damage;
-	GLog->Log(FString::Printf(TEXT("HPPercent : %f"), CurrentHP / MaxHP));
+
 	if (CurrentHP < 0)
 	{
 		CurrentHP = 0;
 		CurrentState = EMiniBossState::Dead;
 	}
-	
-	if (ParryingFlag)
-	{
-		IsParrying = true;
-	}
-	else
-	{
-		//PlayAnimMontage(ReactionMontage);
-	}
-
 	return Damage;
 }
