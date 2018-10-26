@@ -17,7 +17,8 @@ ABossWeapon::ABossWeapon()
 
 	SwordMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwordMesh"));
 	SetRootComponent(SwordMesh);
-	SwordMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	SwordMesh->SetCollisionProfileName(TEXT("OverlapAll"));
+	SwordMesh->ComponentTags.Add(FName(TEXT("BossWeapon")));
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Boss_Sword(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/Boss/Weapon/SM_BossWeapon.SM_BossWeapon'"));
 
@@ -25,15 +26,6 @@ ABossWeapon::ABossWeapon()
 	{
 		SwordMesh->SetStaticMesh(SM_Boss_Sword.Object);
 	}
-
-	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
-	SwordCollision->SetupAttachment(SwordMesh);
-	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));
-	SwordCollision->SetRelativeLocation(FVector(31.0f, 0, 187.0f));
-	SwordCollision->SetRelativeRotation(FRotator(77.0f, 0, 0));
-	SwordCollision->SetRelativeScale3D(FVector(0.44f, 0.54f, 1.42f));
-	SwordCollision->ComponentTags.Add(FName(TEXT("BossWeaponCollision")));
-	SwordCollision->bHiddenInGame = false;
 
 	IsWeaponAttack = false;
 	IsParryingAttack = false;
@@ -47,9 +39,9 @@ void ABossWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (SwordCollision)
+	if (SwordMesh)
 	{
-		SwordCollision->OnComponentBeginOverlap.AddDynamic(this, &ABossWeapon::WeaponBeginOverlap);
+		SwordMesh->OnComponentBeginOverlap.AddDynamic(this, &ABossWeapon::WeaponBeginOverlap);
 	}
 }
 

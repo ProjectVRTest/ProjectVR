@@ -94,7 +94,7 @@ void ANMWeaponArrow::ArrowBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowExplosionEffect, OtherComp->GetComponentLocation());
 			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 5.0f, nullptr, this, nullptr);
 			Destroy();
-		}			
+		}
 	}
 	
 	if(OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))

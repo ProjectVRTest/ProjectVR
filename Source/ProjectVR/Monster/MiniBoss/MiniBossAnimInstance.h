@@ -46,12 +46,7 @@ public:
 		bool StabFlag;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
 		bool TwoHandWidthFlag;
-	FTimerHandle AnimationChangeTimer;
-	bool IdleAnimationChangeFlag;
-	
 
-	UFUNCTION()
-		virtual void NativeBeginPlay() override;
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 	UFUNCTION(BlueprintCallable, Category = "AI")

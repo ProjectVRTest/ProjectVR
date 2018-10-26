@@ -134,7 +134,7 @@ AMiniBoss::AMiniBoss()
 			GetMesh()->SetAnimInstanceClass(MiniBossAnimBlueprint);
 		}		
 	}
-
+	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 	GetCharacterMovement()->MaxAcceleration = 2048.0f;
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -174,16 +174,6 @@ void AMiniBoss::Tick(float DeltaTime)
 
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
 		
-	//GLog->Log(FString::Printf(TEXT("%d"), AttackCompleteFlag));
-
-	/*GLog->Log(FString::Printf(TEXT("Origin X : %0.1f  Y : %0.1f Z : %0.1f"), Origin.X, Origin.Y, Origin.Z));
-	GLog->Log(FString::Printf(TEXT("Origin %0.1f"), Origin.Size()));*/
-	//GLog->Log(FString::Printf(TEXT("Origin %d : \n BoxExtent : %d \n SphereRadius : %0.1f"),Origin.Size(),BoxExtent.Size(),SphereRadius));
-
-	//GLog->Log(FString::Printf(TEXT("HP : %f"),CurrentHP));
-
-	//GLog->Log(FString::Printf(TEXT("%f"), GetCharacterMovement()->Velocity.Size()));
-	//GLog->Log(FString::Printf(TEXT("ParryingPointCount : %d"), ParryingPointCount));
 	if (AI)
 	{
 		AI->BBComponent->SetValueAsEnum("CurrentState", (uint8)CurrentState);
@@ -196,9 +186,7 @@ void AMiniBoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentBackAttackState", (uint8)CurrentBackAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentDashState", (uint8)CurrentDashState);
 		AI->BBComponent->SetValueAsEnum("CurrentParryingState", (uint8)CurrentParryingState);
-
 		CurrentFalling = GetCharacterMovement()->IsFalling(); 
-		AI->BBComponent->SetValueAsBool("CurrentFalling", CurrentFalling);	
 	}
 }
 

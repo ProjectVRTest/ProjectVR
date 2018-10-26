@@ -20,6 +20,8 @@
 #include "MyCharacter/MotionControllerCharacter.h"	// Setting Owner
 #include "MyCharacter/Widget/HPStaminaBar.h"			// Character State Bar
 #include "TimerManager.h"
+#include "Monster/Boss/Weapon/BossWeapon.h"
+#include "Monster/Boss/Boss.h"
 
 // Sets default values
 APlayerShield::APlayerShield()
@@ -51,7 +53,7 @@ APlayerShield::APlayerShield()
 	}
 
 	StateBar = nullptr;
-	ShieldMesh->SetRelativeScale3D(FVector(-1.0f, 1.0f, 1.0f));
+	ShieldMesh->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 	ShieldMesh->SetCollisionProfileName(TEXT("NoCollision"));	
 
 	// 위치, 각도 및 크기 설정
@@ -59,13 +61,14 @@ APlayerShield::APlayerShield()
 	ShieldCollision->SetRelativeRotation(FRotator(0, -20.0f, 0));
 	ShieldCollision->SetRelativeScale3D(FVector(1.0f, 1.6f, 0.3f));
 	ShieldCollision->SetCollisionProfileName(TEXT("OverlapAll"));
-	ShieldCollision->bHiddenInGame = false;
+	ShieldCollision->bHiddenInGame = true;
 
 	// 스테이트바 씬의 위기값과 회전값 설정
 	StateBarScene->SetRelativeLocation(FVector(-23.0f, -10.0f, 0.0f));
 	StateBarScene->SetRelativeRotation(FRotator(0.0f, -19.0f, -90.0f));
 	IsActivation = false;
 	IsMiniBossWeaponOverlap = false;
+	IsBossWeaponOverlap = false;
 	// 태그
 	Tags.Add(FName(TEXT("PlayerShield")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -142,7 +145,7 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 			if (MiniBossWeapon->IsParryingAttack) //무기가 패링 가능한 상태인지 확인한다.
 			{
 				//패링가능한 상태라면 MiniBoss를 가지고 와서 저장하고
-				MiniBoss = Cast<AMiniBoss>(MiniBossWeapon->GetAttachParentActor());
+				AMiniBoss* MiniBoss = Cast<AMiniBoss>(MiniBossWeapon->GetAttachParentActor());
 
 				if (MiniBoss)  //MiniBoss 형변환에 성공하면
 				{
@@ -153,14 +156,49 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 						{
 							UGameplayStatics::SetGlobalTimeDilation(GetWorld(),0.5f);
 							GetWorld()->GetTimerManager().SetTimer(GlobalTimeTimer, this, &APlayerShield::GlobalTimeInit, 0.5f, false);
-							//GetWorld()->GetTimerManager().SetTimer(RageAttackTimer, this, &UBTService_NMChaseDistanceCheck::RageAttackTimerCount, 1.7f, false);
 							ShieldOwner->UseStamina(ShieldOwner->DefencePoint);		// 스테미너 감소 및 대기시간 후 스테미너 회복시작
-							RumbleLeftController(5.0f); //패드에 진동을 울려주고
+							RumbleLeftController(1.0f); //패드에 진동을 울려주고
 							MiniBossWeapon->IsParryingAttack = false;
 							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, OtherComp->GetComponentLocation());
 							MiniBoss->ParryingPointSet();//패링 포인트를 스폰(HP에 따라)						
 							MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingStart;
 							MiniBoss->CurrentAttackState = EMiniBossAttackState::ParryingState;
+						}
+					}
+				}
+			}
+		}
+	}
+	else if (OtherComp->ComponentHasTag(TEXT("BossWeapon")))
+	{
+		GLog->Log(FString::Printf(TEXT("보스 검 겹힘")));
+
+		IsBossWeaponOverlap = true;
+
+		ABossWeapon* BossWeapon = Cast<ABossWeapon>(OtherComp->GetOwner());
+
+		if (BossWeapon)
+		{
+			if (BossWeapon->IsParryingAttack)
+			{
+				ABoss* Boss = Cast<ABoss>(BossWeapon->GetAttachParentActor());
+
+				if (Boss)
+				{
+					if (IsActivation && IsBossWeaponOverlap && ShieldMoveVelocity.Size() > 90.0f)
+					{
+						if (ShieldOwner->CurrentStamina > ShieldOwner->DefencePoint)
+						{
+							GLog->Log(FString::Printf(TEXT("보스 패링 성공")));
+							UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.5f);
+							GetWorld()->GetTimerManager().SetTimer(GlobalTimeTimer,this, &APlayerShield::GlobalTimeInit, 0.5f, false);
+							ShieldOwner->UseStamina(ShieldOwner->DefencePoint);
+							RumbleLeftController(1.0f);
+							BossWeapon->IsParryingAttack = false;
+							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, OtherComp->GetComponentLocation());
+							//Boss->ParryingPointSet();
+							Boss->CurrentParryingState = EBossParryingState::ParryingStart;
+							Boss->CurrentCloseAttackState = EBossCloseAttackState::ParryingState;
 						}
 					}
 				}
@@ -175,6 +213,11 @@ void APlayerShield::OnShieldOverlapEnd(UPrimitiveComponent* OverlappedComponent,
 	{
 		IsMiniBossWeaponOverlap = false;
 	}
+	else if (OtherComp->ComponentHasTag(TEXT("BossWeaponCollision")))
+	{
+		IsBossWeaponOverlap = false;
+	}
+
 }
 
 void APlayerShield::RumbleLeftController(float Intensity)

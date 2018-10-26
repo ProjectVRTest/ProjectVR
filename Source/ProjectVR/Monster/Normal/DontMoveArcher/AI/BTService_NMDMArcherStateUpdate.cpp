@@ -3,6 +3,7 @@
 #include "BTService_NMDMArcherStateUpdate.h"
 #include "Headers/DontMoveArcherAIHeader.h"
 #include "MyCharacter/CameraLocation.h"
+#include "MyCharacter/CameraLocationCharacter.h"
 
 void UBTService_NMDMArcherStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {

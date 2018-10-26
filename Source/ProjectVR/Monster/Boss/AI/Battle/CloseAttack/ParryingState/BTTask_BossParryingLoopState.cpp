@@ -2,6 +2,7 @@
 
 #include "BTTask_BossParryingLoopState.h"
 
-
-
-
+EBTNodeResult::Type UBTTask_BossParryingLoopState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
+{
+	return EBTNodeResult::Succeeded;
+}
