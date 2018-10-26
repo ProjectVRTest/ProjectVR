@@ -15,7 +15,7 @@ EBTNodeResult::Type UBTTask_BossCloseAttackReadyState::ExecuteTask(UBehaviorTree
 
 		if (Boss)
 		{
-			RandValue = FMath::RandRange(1, 15);
+			RandValue = FMath::RandRange(1, 5);
 
 			//1~5
 			if (RandValue > 0 && RandValue < 6)

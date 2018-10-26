@@ -18,8 +18,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UStaticMeshComponent* SwordMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UCapsuleComponent* SwordCollision;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool IsWeaponAttack;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool IsParryingAttack;

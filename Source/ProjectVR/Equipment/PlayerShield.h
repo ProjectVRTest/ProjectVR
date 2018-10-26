@@ -10,8 +10,8 @@ UCLASS()
 class PROJECTVR_API APlayerShield : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	APlayerShield();
 
@@ -19,7 +19,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -27,7 +27,7 @@ public:
 		class UStaticMeshComponent* ShieldMesh;			// 메쉬에 방패를 붙일 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
 		class UBoxComponent* ShieldCollision;			// 방패 콜리전
-	UPROPERTY(VisibleAnywhere , BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USceneComponent* StateBarScene;		// 캐릭터 상태 바
 	UPROPERTY(VisibleAnywhere, Category = "StateBar")
 		class AHPStaminaBar* StateBar;		// 캐릭터 상태 바
@@ -44,26 +44,23 @@ public:
 		FVector ShieldPreviousPosition;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ShieldVelocity")
 		FVector ShieldMoveVelocity;
-
-	FTimerHandle GlobalTimeTimer;
-	class AMiniBoss* MiniBoss;
-	bool IsActivation;
-	bool IsMiniBossWeaponOverlap;
-
-	// 투명도 변환
-	UFUNCTION()
-		void ConvertOfOpacity(float opacity);
-
-	UFUNCTION()
-	void OnShieldOverlapStart(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	UPROPERTY()
+		FTimerHandle GlobalTimeTimer; //패링성공시 글로벌 타임을 조절할때 필요한 타이머 변수
+	UPROPERTY()
+		bool IsActivation; //방패가 활성화 중인지 아닌지 확인해줄 변수
+	UPROPERTY()
+		bool IsMiniBossWeaponOverlap; //중간보스 무기가 현재 방패와 겹쳐진 상태인지 확인해줄 변수
+	UPROPERTY()
+		bool IsBossWeaponOverlap; //보스 무기가 현재 방패와 겹쳐진 상태인지 확인해줄 변수
 
 	UFUNCTION()
-	void OnShieldOverlapEnd(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex);
-
+		void ConvertOfOpacity(float opacity); //방패를 활성,비활성 시킬때 투명도를 정해줄 함수
+	UFUNCTION()
+		void OnShieldOverlapStart(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	UFUNCTION()
+		void OnShieldOverlapEnd(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex);
 	UFUNCTION()
 		void RumbleLeftController(float Intensity);
-
 	UFUNCTION()
 		void GlobalTimeInit();
-
 };

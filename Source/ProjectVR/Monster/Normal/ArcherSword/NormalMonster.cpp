@@ -31,8 +31,7 @@ ANormalMonster::ANormalMonster()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);	
-
+	/*GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);	*/
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Normal_Monster_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Character/SK_NormalMonster.SK_NormalMonster'"));
 
 	if (Normal_Monster_SK_Mesh.Succeeded())
@@ -90,7 +89,8 @@ ANormalMonster::ANormalMonster()
 
 	QuiverComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("QuiverComponent"));
 	QuiverComponent->SetupAttachment(GetMesh(),TEXT("QuiverSocket"));
-	
+	QuiverComponent->SetCollisionProfileName(TEXT("OverlapAll"));
+
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Quiver(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Bow/Arrow/Mesh/SM_Quiver.SM_Quiver'"));
 
 	if (SM_Quiver.Succeeded())
@@ -100,6 +100,7 @@ ANormalMonster::ANormalMonster()
 
 	NMArrowComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("NMArrowComponent"));
 	NMArrowComponent->SetupAttachment(GetMesh(), TEXT("ArrowSocket"));
+	NMArrowComponent->SetCollisionProfileName(TEXT("OverlapAll"));
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Arrow(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Bow/Arrow/Mesh/SM_Arrow.SM_Arrow'"));
 

@@ -42,6 +42,7 @@
 #include "TimerManager.h"			// 스테미너 자동 회복
 
 #include "CameraLocation.h"
+#include "CameraLocationCharacter.h"
 #include "Components/PawnNoiseEmitterComponent.h"
 
 // Sets default values
@@ -59,13 +60,15 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	SpringArm->bInheritYaw = true;
 	SpringArm->bInheritRoll = false;
 	SpringArm->TargetArmLength = 1.0f;
-		
+	
+	//GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
+	//GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
+	//GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Overlap);
+
 	GetCapsuleComponent()->bHiddenInGame = false;
-	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Overlap);
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);	
+	
 
 	Stereo = CreateDefaultSubobject<UStereoLayerComponent>(TEXT("StereoB"));
 	Stereo->SetupAttachment(Camera);
@@ -133,7 +136,7 @@ void AMotionControllerCharacter::BeginPlay()
 
 	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
 	{
-		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
+		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Eye);
 	}
 
 	FActorSpawnParameters SpawnActorOption;
@@ -161,6 +164,12 @@ void AMotionControllerCharacter::BeginPlay()
 		HeadBox->OnComponentBeginOverlap.AddDynamic(this, &AMotionControllerCharacter::OnHeadOverlap);		// 오버랩 이벤트를 발생시킬 수 있도록 설정
 	}
 
+	/*CameraLocationChracter = GetWorld()->SpawnActor<ACameraLocationCharacter>(CameraLocationChracter->StaticClass());
+
+	if (CameraLocationChracter)
+	{
+		CameraLocationChracter->AttachToComponent(Camera, AttachRules);
+	}*/
 	CameraLocation = GetWorld()->SpawnActor<ACameraLocation>(CameraLocation->StaticClass());
 
 	if (CameraLocation)
@@ -177,6 +186,7 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
 	if (GetVelocity().Size() > 100.0f)
 	{
 		MakeNoiseEmitter();
@@ -414,12 +424,12 @@ void AMotionControllerCharacter::AttackPointSet()
 	CalculatePoint.X = InitPoint.X + 250.0f;
 	Point = CalculatePoint;
 
-	AMyTargetPoint* AttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(AttackPoint->StaticClass(), Point, this->GetActorRotation(), SpawnActorOption);
+	AMyTargetPoint* TargetAttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(TargetAttackPoint->StaticClass(), Point, this->GetActorRotation(), SpawnActorOption);
 
-	if (AttackPoint)
+	if (TargetAttackPoint)
 	{
-		AttackPoints.Add(AttackPoint);
-		AttackPoint->AttachToComponent(Camera, AttachRules);
+		AttackPoints.Add(TargetAttackPoint);
+		TargetAttackPoint->AttachToComponent(Camera, AttachRules);
 	}
 }
 

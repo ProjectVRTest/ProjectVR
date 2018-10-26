@@ -61,6 +61,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class ACameraLocation* CameraLocation;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+		class ACameraLocationCharacter* CameraLocationChracter;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class UPawnNoiseEmitterComponent* NoiseEmitter;
 
 	FTimerHandle DamageTimerHandle;

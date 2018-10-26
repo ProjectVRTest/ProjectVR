@@ -23,18 +23,12 @@
 #define STRAIGHT 2
 #define RIGHT 3
 
-void UMiniBossAnimInstance::NativeBeginPlay()
-{
-	Super::NativeBeginPlay();
-}
-
 void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
 	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
-	FVector Velocity;
-	FRotator TestRotator;
+
 	if (MiniBoss && MiniBoss->IsValidLowLevelFast())
 	{
 		CurrentState = MiniBoss->CurrentState;
