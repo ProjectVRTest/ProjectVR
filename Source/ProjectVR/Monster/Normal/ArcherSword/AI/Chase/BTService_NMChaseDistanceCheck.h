@@ -14,14 +14,18 @@ class PROJECTVR_API UBTService_NMChaseDistanceCheck : public UBTService_Blackboa
 {
 	GENERATED_BODY()
 private:
-	float Distance;
-	float ChaseWalkTimeCount;
-	float ChaseRunTimerCount;
+	UPROPERTY()
+		float Distance;
+	UPROPERTY()
+		float ChaseWalkTimeCount;
+	UPROPERTY()
+		float ChaseRunTimerCount;
+	UPROPERTY()
+		bool RageAttackFlag;
 
-	bool RageAttackFlag;
-
+	class ANormalMonster* NormalMonster;
 	FTimerHandle RageAttackTimer;
-
+	
 	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 	void RageAttackTimerCount();

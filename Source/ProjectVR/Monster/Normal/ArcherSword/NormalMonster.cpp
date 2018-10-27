@@ -113,7 +113,7 @@ ANormalMonster::ANormalMonster()
 	ArrowSpawnLocation->SetupAttachment(GetRootComponent());
 	ArrowSpawnLocation->SetRelativeLocation(FVector(90.0f, 8.0f, 50.0f));
 	ArrowSpawnLocation->SetRelativeScale3D(FVector(-8.0f,90.0f,134.0f));
-	MaxHP = 20.0f;
+	MaxHP = 5.0f;
 	CurrentHP = MaxHP;
 
 	AIControllerClass = ANormalMonsterAIController::StaticClass();
@@ -307,38 +307,45 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
-	ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
+	CurrentHP -= Damage;
 
-	if (CurrentState == ENormalMonsterState::AttackWait)
+	if (CurrentHP > 0)
 	{
-		Target = DamageCauser;
-		AI->BBComponent->SetValueAsObject("Player", DamageCauser);
+		GLog->Log(FString::Printf(TEXT("캐릭터로부터 데미지 받음")));
+		
 
-		float Distance = AI->BBComponent->GetValueAsFloat(TEXT("Distnace"));
+		ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
 
-		if (Distance <= 400.0f)
+		if (CurrentState == ENormalMonsterState::AttackWait)
 		{
-			CurrentState = ENormalMonsterState::Battle;
-		}
-		else
-		{
-			CurrentState = ENormalMonsterState::Chase;
-			switch (MonsterKind)
+			Target = DamageCauser;
+			AI->BBComponent->SetValueAsObject("Player", DamageCauser);
+
+			float Distance = AI->BBComponent->GetValueAsFloat(TEXT("Distnace"));
+
+			if (Distance <= 400.0f)
 			{
-			case ENormalMonsterKind::SwordMan:
-				CurrentAnimState = ENormalMonsterAnimState::Wait;
-				break;
-			case ENormalMonsterKind::MoveArcher:
-				CurrentAnimState = ENormalMonsterAnimState::Walk;
-				break;
+				CurrentState = ENormalMonsterState::Battle;
+			}
+			else
+			{
+				CurrentState = ENormalMonsterState::Chase;
+				switch (MonsterKind)
+				{
+				case ENormalMonsterKind::SwordMan:
+					CurrentAnimState = ENormalMonsterAnimState::Wait;
+					break;
+				case ENormalMonsterKind::MoveArcher:
+					CurrentAnimState = ENormalMonsterAnimState::Walk;
+					break;
+				}
 			}
 		}
 	}
-
-	CurrentHP -= Damage;
-
-	if (CurrentHP < 0)
+	else if (CurrentHP < 0)
 	{
+		GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
+		GLog->Log(FString::Printf(TEXT("HP가 0보다 작은데 공격 받음")));		
 		CurrentHP = 0;
 		CurrentState = ENormalMonsterState::Dead;
 	}

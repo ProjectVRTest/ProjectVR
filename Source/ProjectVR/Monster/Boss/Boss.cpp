@@ -15,6 +15,7 @@
 #include "Components/SphereComponent.h"
 #include "Monster/Boss/AI/AddAttack/BossAddAttackBall.h"
 #include "Particles/ParticleSystem.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ABoss::ABoss()
@@ -44,6 +45,7 @@ ABoss::ABoss()
 	CurrentLongAttackState = EBossLongAttackState::Idle;
 	CurrentCloseAttackState = EBossCloseAttackState::Idle;
 	CurrentParryingState = EBossParryingState::Idle;
+	CurrentBattleWatchState = EBossBattleWatchState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
@@ -117,6 +119,7 @@ ABoss::ABoss()
 	TargetCamera = nullptr;
 
 	OrbMaxCount = 3;
+	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -164,6 +167,7 @@ void ABoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentLongAttackState", (uint8)CurrentLongAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentCloseAttackState", (uint8)CurrentCloseAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentParryingState", (uint8)CurrentParryingState);
+		AI->BBComponent->SetValueAsEnum("CurrentBattleWatchState", (uint8)CurrentBattleWatchState);
 	}
 }
 

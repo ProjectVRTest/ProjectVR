@@ -42,7 +42,6 @@ void UBTTask_NMIdleState::PatrolStart()
 		{
 			NormalMonster->CurrentState = ENormalMonsterState::Patrol;
 			NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Walk;
-			GetWorld()->GetTimerManager().ClearTimer(PatrolOnTimer);
 		}		
 	}
 }

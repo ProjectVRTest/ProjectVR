@@ -28,6 +28,8 @@ public:
 		EBossCloseAttackState CurrentCloseAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossParryingState CurrentParryingState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossBattleWatchState CurrentBattleWatchState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;
@@ -62,6 +64,8 @@ public:
 
 	UPROPERTY()
 		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열	
+	UPROPERTY()
+		TArray<class AMyTargetPoint*> TeleportPoints; //순간이동 지점을 저장해둘 배열
 
 protected:
 	// Called when the game starts or when spawned

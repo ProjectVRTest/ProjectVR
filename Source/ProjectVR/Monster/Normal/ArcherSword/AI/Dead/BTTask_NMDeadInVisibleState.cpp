@@ -30,12 +30,15 @@ void UBTTask_NMDeadInVisibleState::TickTask(UBehaviorTreeComponent & OwnerComp, 
 	{
 		if (NormalMonster)
 		{
-			DeadInVisibleValue += 0.01;
-			NormalMonster->GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Amount"), DeadInVisibleValue);
-
-			if (DeadInVisibleValue >= 1.0f)
+			if (DeadInVisibleValue > 1.0f)
+			{			
+				NormalMonster->Destroy();				
+				FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+			}
+			else
 			{
-				AI->GetPawn()->Destroy();
+				DeadInVisibleValue += 0.01;
+				NormalMonster->GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Amount"), DeadInVisibleValue);
 			}
 		}
 	}

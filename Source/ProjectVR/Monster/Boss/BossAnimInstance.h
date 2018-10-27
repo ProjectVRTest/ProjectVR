@@ -27,6 +27,8 @@ public:
 		EBossCloseAttackState CurrentCloseAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossParryingState CurrentParryingState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossBattleWatchState CurrentBattleWatchState;
 
 
 	UFUNCTION(BlueprintCallable)

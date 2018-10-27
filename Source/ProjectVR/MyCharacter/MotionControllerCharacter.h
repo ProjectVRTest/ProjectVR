@@ -148,9 +148,6 @@ public:
 	UPROPERTY()
 		class AMenu* Menu;
 	UFUNCTION()
-		void AttackPointSet();
-
-	UFUNCTION()
 		void SetAllowBreathe();
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// 데미지 받기

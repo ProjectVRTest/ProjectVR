@@ -14,11 +14,21 @@ EBTNodeResult::Type UBTTask_BossVisibleState::ExecuteTask(UBehaviorTreeComponent
 
 		if (Boss)
 		{
-			Boss->SetActorLocation(AI->BBComponent->GetValueAsVector("TelepoteLocation"));
+			Boss->SetActorLocation(AI->BBComponent->GetValueAsVector("TeleportLocation"));
 			Boss->GetMesh()->SetMaterial(0, Boss->DefaultBodyMaterials);
 			Boss->GetMesh()->SetMaterial(1, Boss->DefaultClothMaterials);
 			Boss->GetMesh()->SetCollisionProfileName("CharacterMesh");
-			Boss->CurrentBlinkAttackState = EBossBlinkAttackState::BlinkAttack;
+
+			switch (Boss->CurrentBattleState)
+			{
+			case EBossBattleState::AddAttack:
+				Boss->CurrentBlinkAttackState = EBossBlinkAttackState::BlinkAttack;
+				break;
+			case EBossBattleState::BattleWatch:
+				Boss->CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
+				Boss->CurrentBattleState = EBossBattleState::AttackReady;
+				break;
+			}
 		}		
 	}
 	return EBTNodeResult::Succeeded;

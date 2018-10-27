@@ -32,6 +32,7 @@ ANMWeaponSword::ANMWeaponSword()
 
 	//공격이 가능한 상태인지 알려주는 변수로 처음에는 꺼둔다.
 	IsWeaponAttack = false;
+	IsPlayerEquipment = false; 
 
 	//오버랩반응을 구현하기 위해서 캡슐콜리전컴포넌트를 생성해주고
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
@@ -45,7 +46,7 @@ ANMWeaponSword::ANMWeaponSword()
 	Tags.Add(FName(TEXT("NormalMonsterSword")));
 	//왼손과 오른손에 반응이 없게 태그를 달아준다.
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
-	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));	
 }
 
 // Called when the game starts or when spawned

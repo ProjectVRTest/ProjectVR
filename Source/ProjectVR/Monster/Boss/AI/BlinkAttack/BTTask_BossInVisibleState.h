@@ -24,4 +24,6 @@ public:
 
 	UFUNCTION()
 		void InVisible();
+	UFUNCTION()
+		void SetTeleportLocation(FVector &Location);
 };

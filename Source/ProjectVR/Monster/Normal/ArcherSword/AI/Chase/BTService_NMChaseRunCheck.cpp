@@ -21,7 +21,6 @@ void UBTService_NMChaseRunCheck::TickNode(UBehaviorTreeComponent & OwnerComp, ui
 	if (AI)
 	{
 		Distance = AI->BBComponent->GetValueAsFloat(DistanceBlackBoardKey);
-		GLog->Log(FString::Printf(TEXT("%0.1f"), ChaseRunTimeCount));
 		ANormalMonster* NormalMonster = Cast<ANormalMonster>(AI->GetPawn());
 
 		if (NormalMonster)

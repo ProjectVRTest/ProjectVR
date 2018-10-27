@@ -20,6 +20,8 @@ public:
 		class UCapsuleComponent* SwordCollision;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool IsWeaponAttack;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool IsPlayerEquipment;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

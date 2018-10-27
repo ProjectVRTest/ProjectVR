@@ -4,7 +4,7 @@
 #include "Headers/BossAIHeader.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "MyCharacter/MotionControllerCharacter.h"
-#include "MyTargetPoint.h"
+#include "MyCharacter/CameraLocation.h"
 
 void UBTTask_BossInVisibleState::InitializeFromAsset(UBehaviorTree & Asset)
 {
@@ -54,10 +54,23 @@ void UBTTask_BossInVisibleState::InVisible()
 
 		if (MyCharacer)
 		{
-			FVector TelpoLocation = MyCharacer->AttackPoints[0]->GetActorLocation();
-			AI->BBComponent->SetValueAsVector("TelepoteLocation", TelpoLocation);
-			Boss->CurrentBlinkAttackState = EBossBlinkAttackState::Visible;
-			ExitFlag = true;
+			FVector TeleportLocation;
+			switch (Boss->CurrentBattleState)
+			{
+			case EBossBattleState::AddAttack:
+				TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(200.0f, 0, 0);
+				SetTeleportLocation(TeleportLocation);
+				break;			
+			case EBossBattleState::BattleWatch:
+				break;
+			}			
 		}
 	}
+}
+
+void UBTTask_BossInVisibleState::SetTeleportLocation(FVector & Location)
+{
+	AI->BBComponent->SetValueAsVector("TeleportLocation", Location);
+	Boss->CurrentBlinkAttackState = EBossBlinkAttackState::Visible;
+	ExitFlag = true;
 }

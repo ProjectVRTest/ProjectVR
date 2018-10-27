@@ -29,8 +29,6 @@
 
 #include "Equipment/PlayerSword.h"
 
-#include "MyTargetPoint.h"
-
 #include "Monster/Dog/Dog.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
@@ -175,7 +173,6 @@ void AMotionControllerCharacter::BeginPlay()
 	{
 		CameraLocation->AttachToComponent(Camera, AttachRules);
 	}
-	AttackPointSet();
 
 	GetWorld()->GetTimerManager().SetTimer(AutoTimerHandle, this, &AMotionControllerCharacter::AutoStamina, 0.05f, false);		// 자동으로 스테미너 채우기
 }
@@ -408,30 +405,6 @@ void AMotionControllerCharacter::GameMenu()
 	}
 }
 
-void AMotionControllerCharacter::AttackPointSet()
-{
-	FActorSpawnParameters SpawnActorOption;
-	SpawnActorOption.Owner = this;
-	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	FAttachmentTransformRules AttachRules(EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false);
-	FVector CalculatePoint;
-	FVector InitPoint = Camera->GetComponentLocation();
-	FVector Point;
-
-	CalculatePoint = InitPoint;
-	CalculatePoint.X = InitPoint.X + 250.0f;
-	Point = CalculatePoint;
-
-	AMyTargetPoint* TargetAttackPoint = GetWorld()->SpawnActor<AMyTargetPoint>(TargetAttackPoint->StaticClass(), Point, this->GetActorRotation(), SpawnActorOption);
-
-	if (TargetAttackPoint)
-	{
-		AttackPoints.Add(TargetAttackPoint);
-		TargetAttackPoint->AttachToComponent(Camera, AttachRules);
-	}
-}
-
 void AMotionControllerCharacter::SetAllowBreathe()
 {
 	bAllowBreathe = true;			// 타이머로 움직인후 몇 초 후에 다시 숨쉴수 있게 함
@@ -506,7 +479,7 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 
 void AMotionControllerCharacter::MakeNoiseEmitter()
 {
-	NoiseEmitter->MakeNoise(this, 1.0f, GetActorLocation());
+	NoiseEmitter->MakeNoise(this, 0.8f, GetActorLocation());
 	NoiseEmitter->NoiseLifetime = 0.2f;
 }
 

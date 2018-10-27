@@ -25,6 +25,8 @@ public:
 		EBossLongAttackState SetLongAttackState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EBossCloseAttackState SetCloseAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		EBossBattleWatchState SetBattleWatchState;
 private:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
 

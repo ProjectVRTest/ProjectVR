@@ -24,7 +24,7 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 	{
 		Distance = AI->BBComponent->GetValueAsFloat(DistanceBlackBoardKey);
 
-		ANormalMonster* NormalMonster = Cast<ANormalMonster>(AI->GetPawn());
+		NormalMonster = Cast<ANormalMonster>(AI->GetPawn());
 
 		if (NormalMonster)
 		{
@@ -46,11 +46,6 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 						NormalMonster->CurrentState = ENormalMonsterState::Battle;
 						NormalMonster->CurrentAnimState = ENormalMonsterAnimState::AttackReady;
 					}
-					/*else
-					{
-					NormalMonster->CurrentState = ENormalMonsterState::Battle;
-					NormalMonster->CurrentAnimState = ENormalMonsterAnimState::AttackReady;
-					}*/
 				}
 				else
 				{
@@ -60,14 +55,13 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 						NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Walk;
 						break;
 					case ENormalMonsterAnimState::Walk: //걷기 상태라면
-						RageAttackFlag = false;  //분노 공격 상태가 되면 초기값으로 돌려준다.
+						RageAttackFlag = false; 
 						break;
 					case ENormalMonsterAnimState::Run:
 						break;
 					case ENormalMonsterAnimState::RageRun:
 						if (Distance < 250.0f)
 						{
-							//	GLog->Log(FString::Printf(TEXT("Chase RageRun Distance 500.0f 미만")));
 							NormalMonster->CurrentAnimState = ENormalMonsterAnimState::RageAttack;
 						}
 						break;
@@ -77,12 +71,10 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 							//GLog->Log(FString::Printf(TEXT("RageAttack Walk")));						
 							if (!GetWorld()->GetTimerManager().TimerExists(RageAttackTimer)) //타이머가 현재 활성화 되어 있는지 확인해준다.
 							{
-								//활성화 되어 있지 않다면							
-								//분노 추적 공격 타이머를 생성해준다.
-								GLog->Log(FString::Printf(TEXT("NoExists")));
+								GLog->Log(FString::Printf(TEXT("분노공격 타이머 비활성화")));
 								if (!RageAttackFlag)
 								{
-									GLog->Log(FString::Printf(TEXT("TimerStart")));
+									GLog->Log(FString::Printf(TEXT("분노공격 타이머 시작")));
 									GetWorld()->GetTimerManager().SetTimer(RageAttackTimer, this, &UBTService_NMChaseDistanceCheck::RageAttackTimerCount, 1.7f, false);
 								}
 							}
@@ -92,7 +84,7 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 								NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Walk;
 							}
 						}
-						else //거리가 만약에 4M보다 작다면
+						else //거리가 만약에 2M보다 작다면
 						{
 							//공격 상태로 바꿔준다.
 							NormalMonster->CurrentAnimState = ENormalMonsterAnimState::AttackReady;
@@ -117,6 +109,6 @@ void UBTService_NMChaseDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCom
 
 void UBTService_NMChaseDistanceCheck::RageAttackTimerCount()
 {
-	GLog->Log(FString::Printf(TEXT("RageAttackTimer Call")));
+	GLog->Log(FString::Printf(TEXT("분노 공격 타이머 콜")));
 	RageAttackFlag = true;
 }
