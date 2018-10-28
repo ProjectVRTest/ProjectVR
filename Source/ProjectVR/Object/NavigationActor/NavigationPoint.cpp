@@ -8,7 +8,7 @@ ANavigationPoint::ANavigationPoint()
 	Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
 	Collision->SetupAttachment(RootComponent);
 
-	Collision->SetRelativeScale3D(FVector(2.0f, 2.0f, 2.0f));
+	Collision->SetRelativeScale3D(FVector(5.0f, 5.0f, 5.0f));
 	Collision->bGenerateOverlapEvents = true;
 	Collision->SetCollisionProfileName("OverlapAll");
 
@@ -26,8 +26,7 @@ void ANavigationPoint::OnOverlap(UPrimitiveComponent * OverlappedComp, AActor * 
 {
 	if (OtherActor->ActorHasTag("Character"))
 	{
-		Collision->bGenerateOverlapEvents = false;
-		UE_LOG(LogTemp, Log, TEXT("$$$$$$$$$$$$$$ %s"), *GetName());
+		UE_LOG(LogTemp, Log, TEXT("%s  Close@@@@  %s"),*GetName(), *OtherActor->GetName());
 		NaviEvent.ExecuteIfBound();
 	}
 }

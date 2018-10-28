@@ -68,10 +68,10 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	
 
 	Stereo = CreateDefaultSubobject<UStereoLayerComponent>(TEXT("StereoB"));
-	Stereo->SetupAttachment(Camera);
+	//Stereo->SetupAttachment(Camera);
 
 	Widget = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetB"));
-	Widget->SetupAttachment(Camera);
+	//Widget->SetupAttachment(Camera);
 
 	Stereo->SetRelativeLocation(FVector(100.0f, 0.0f, 0.0f));
 	Stereo->bLiveTexture = true;

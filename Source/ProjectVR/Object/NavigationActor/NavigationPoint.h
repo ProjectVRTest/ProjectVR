@@ -22,7 +22,7 @@ public:
 
 	virtual void BeginPlay() override;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 		class UBoxComponent* Collision;
 	
 	UFUNCTION()

@@ -41,9 +41,9 @@ public:
 		class ANavigationAIController* AI;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect")
-		TArray<class ANavigationPoint*> Tagets;
+		TArray<class ANavigationPoint*> Targets;
 
-	class ANavigationPoint* Taget;
+	class ANavigationPoint* Target;
 
 	UFUNCTION()
 		void NavigationEvent();

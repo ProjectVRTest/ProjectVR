@@ -6,6 +6,7 @@
 #include "Object/NavigationActor/NavigationAIController.h"
 #include "Particles/ParticleSystemComponent.h"			// 파티클 시스템
 #include "Particles/ParticleSystem.h"			// 파티클 시스템
+#include "Kismet/GameplayStatics.h"
 
 EBTNodeResult::Type UBTTask_NextTarget::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
@@ -19,20 +20,16 @@ EBTNodeResult::Type UBTTask_NextTarget::ExecuteTask(UBehaviorTreeComponent & Own
 
 		if (Navi)
 		{
-			Navi->CurrentPoint++;
-			
-			if (Navi->CurrentPoint  == Navi->Tagets.Num()-1)
+			if (Navi->CurrentPoint == Navi->Targets.Num() - 1)
 			{
-				
-				//Navi->Navigate->SetTemplate(Navi->EndNavigate);
-				//Navi->Navigate->SetTemplate(Navi->EndNavigate);
-				if (Navi->EndNavigate)
-				{
-					
-					//Navi->Navigate->SetTemplate(Navi->EndNavigate);
-					UE_LOG(LogTemp, Log, TEXT("%s"), *Navi->EndNavigate->GetName());
-				}
+				Navi->Navigate->DeactivateSystem();
+
+				if(Navi->EndNavigate)
+				Navi->Navigate = UGameplayStatics::SpawnEmitterAttached(Navi->EndNavigate, Navi->Scene,
+					NAME_None, Navi->GetActorLocation(), Navi->GetActorRotation(), EAttachLocation::KeepWorldPosition, false);
+				UE_LOG(LogTemp, Log, TEXT("Complete"));
 			}
+			
 			return EBTNodeResult::Succeeded;
 		}
 	}

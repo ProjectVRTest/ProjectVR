@@ -11,6 +11,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 ANavigationActor::ANavigationActor()
@@ -29,7 +30,7 @@ ANavigationActor::ANavigationActor()
 	{
 		StartNavigate = P_Navigate.Object;
 	}
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> P_EndNavigate(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_GPP_SpiritPurple.PS_GPP_SpiritPurple'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> P_EndNavigate(TEXT("ParticleSystem'/Game/Assets/Effect/Navigation/PS_GPP_Butterfly.PS_GPP_Butterfly'"));
 	if (P_EndNavigate.Succeeded())
 	{
 		EndNavigate= P_EndNavigate.Object;
@@ -52,10 +53,10 @@ ANavigationActor::ANavigationActor()
 
 	// ÇöÀç Å¸°Ù°ú ¸ñÇ¥ Å¸°Ù
 	CurrentPoint = -1;
-	TargetPoint = 0;
+	TargetPoint = -1;
 
 	// Å¸°Ù
-	Taget = NULL;
+	Target = NULL;
 
 	// ÅÂ±×
 	Tags.Add(FName("Navigation"));
@@ -70,10 +71,11 @@ void ANavigationActor::BeginPlay()
 	Navigate = UGameplayStatics::SpawnEmitterAttached(StartNavigate, RootComponent, NAME_None, GetActorLocation(), GetActorRotation(),
 		EAttachLocation::KeepWorldPosition, false);
 
-	if (Tagets.Num() >= TargetPoint + 1)
+	if (Targets.Num() -1>= TargetPoint)
 	{
-		Taget = Tagets[TargetPoint];
-		Register = Cast<ANavigationPoint>(Tagets[TargetPoint]);
+		TargetPoint++;
+		Target = Targets[TargetPoint];
+		Register = Cast<ANavigationPoint>(Targets[TargetPoint]);
 		Register->NaviEvent.BindUObject(this, &ANavigationActor::NavigationEvent);
 	}
 }
@@ -89,9 +91,9 @@ void ANavigationActor::Tick(float DeltaTime)
 	{
 		AI->BBComponent->SetValueAsInt("CurrentPoint", CurrentPoint);
 		AI->BBComponent->SetValueAsInt("TargetPoint", TargetPoint);
-		AI->BBComponent->SetValueAsObject("Target", Taget);
+		AI->BBComponent->SetValueAsObject("Target", Target);
 		AI->BBComponent->SetValueAsBool("bIsSame", CurrentPoint==TargetPoint);
-		AI->BBComponent->SetValueAsBool("bIsMax", TargetPoint ==Tagets.Num());
+		AI->BBComponent->SetValueAsBool("bIsMax", TargetPoint ==Targets.Num());
 	}
 }
 
@@ -99,26 +101,31 @@ void ANavigationActor::NavigationEvent()
 {
 	UE_LOG(LogTemp, Log, TEXT("Pizza"));
 
-	
+	CurrentPoint++;
 	TargetPoint++;
-	if (Tagets.Num() > TargetPoint)
+
+	if (Targets.Num() > TargetPoint)
 	{
-		if (Tagets[TargetPoint])
+		if (Targets[TargetPoint])
 		{
-			Taget = Tagets[TargetPoint];
-			UE_LOG(LogTemp, Log, TEXT("Next Target %s"), *Taget->GetName());
-			Register = Cast<ANavigationPoint>(Tagets[TargetPoint]);
+			Target = Targets[TargetPoint];
+			UE_LOG(LogTemp, Log, TEXT("Next Target %s"), *Target->GetName());
+			if (Register)
+				Register->Collision->bGenerateOverlapEvents = false;
+			Register = Cast<ANavigationPoint>(Targets[TargetPoint]);
 			Register->NaviEvent.BindUObject(this, &ANavigationActor::NavigationEvent);
 		}
 	}
 
-	if (CurrentPoint == Tagets.Num() - 1)
+	if (CurrentPoint == Targets.Num() - 1)
 	{
 		Navigate->DeactivateSystem();
-		Navigate = UGameplayStatics::SpawnEmitterAttached(EndNavigate, RootComponent, NAME_None, GetActorLocation(), GetActorRotation(), EAttachLocation::KeepWorldPosition, false);
-		UE_LOG(LogTemp, Log, TEXT("%s"), *EndNavigate->GetName());
-	}
 
+		if (EndNavigate)
+			Navigate = UGameplayStatics::SpawnEmitterAttached(EndNavigate, RootComponent,
+				NAME_None, GetActorLocation(), GetActorRotation(), EAttachLocation::KeepWorldPosition, false);
+		UE_LOG(LogTemp, Log, TEXT("Complete"));
+	}
 }
 
 
