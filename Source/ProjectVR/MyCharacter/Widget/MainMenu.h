@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Menu.generated.h"
+#include "MainMenu.generated.h"
 
 UCLASS()
-class PROJECTVR_API AMenu : public AActor
+class PROJECTVR_API AMainMenu : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AMenu();
+	AMainMenu();
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,6 +23,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USceneComponent* Scene;
 

@@ -24,22 +24,24 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class USceneComponent* LeverScene;
+		class USceneComponent* Scene;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UStaticMeshComponent* Lever;
+		class UStaticMeshComponent* LeverScene;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UStaticMeshComponent* LeverObject;
+		class UBoxComponent* Lever;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UBoxComponent* Collision;
 
 	UPROPERTY()
-		class AActor* Interactor;
+		FRotator AutoRot;
 
+	UPROPERTY()
+		float DefaultYaw;
 	UPROPERTY()
 		class AActor* TouchActor;
-
-	FVector Pre;
-	FVector Cur;
 
 	UFUNCTION()
 		void OnLeverOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
@@ -48,5 +50,4 @@ public:
 	UFUNCTION()
 		void OnLeverEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor
 			, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);		// 만약 오른손이 레버를 빠져나간다면 Interactor를 null로 만들어줘야하기 때문
-
 };

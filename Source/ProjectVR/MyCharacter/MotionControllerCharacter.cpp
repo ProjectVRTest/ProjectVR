@@ -181,7 +181,7 @@ void AMotionControllerCharacter::BeginPlay()
 void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	UE_LOG(LogTemp, Log, TEXT("%f"), GetVelocity().Size());
 	
 	if (GetVelocity().Size() > 100.0f)
 	{
@@ -366,19 +366,20 @@ void AMotionControllerCharacter::DashOn()
 {
 	if (CurrentStamina > DashPoint)
 	{
-		UE_LOG(LogTemp, Log, TEXT("D1"));
-		UseStamina(DashPoint);
-		FVector DashVector = FVector::ZeroVector;
-		GetCharacterMovement()->GroundFriction = 0;
-		DashVector = GetVelocity().GetSafeNormal()*3000.0f;//Camera->GetForwardVector()*3000.0f;
-		DashVector.Z = 0;
-		LaunchCharacter(DashVector, false, false);
+		if (GetVelocity().Size() >= 20.0f)
+		{
+			UseStamina(DashPoint);
+			FVector DashVector = FVector::ZeroVector;
+			GetCharacterMovement()->GroundFriction = 0;
+			DashVector = GetVelocity().GetSafeNormal()*3000.0f;
+			DashVector.Z = 0;
+			LaunchCharacter(DashVector, false, false);
+		}
 	}
 }
 
 void AMotionControllerCharacter::DashOff()
 {
-	UE_LOG(LogTemp, Log, TEXT("D2"));
 	GetCharacterMovement()->GroundFriction = 8.0f;
 }
 

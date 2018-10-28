@@ -11,41 +11,48 @@
 #include "Engine/StaticMesh.h"
 
 #include"Components/BoxComponent.h"
-
+#include"Components/StaticMeshComponent.h"
 // Sets default values
 ALever::ALever()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// 모양 생성
-	LeverObject = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeverObj"));
-	LeverObject->SetupAttachment(RootComponent);
+	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
+	Scene->SetupAttachment(RootComponent);
 
-	LeverScene = CreateDefaultSubobject<USceneComponent>(TEXT("LeverScene"));
-	LeverScene->SetupAttachment(LeverObject);
+	LeverScene = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeverScene"));
+	LeverScene->SetupAttachment(Scene);
 
-	Lever = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Lever"));
+	Lever = CreateDefaultSubobject<UBoxComponent>(TEXT("Lever"));
 	Lever->SetupAttachment(LeverScene);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>PotionShape(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
+	Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
+	Collision->SetupAttachment(Lever);
+
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>PotionShape(TEXT("StaticMesh'/Game/Assets/MapBuild/RoughMap/Bridge/mesh/bridge_door_bridge_door_01.bridge_door_bridge_door_01'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (PotionShape.Succeeded())		// 검 메쉬를 찾았을 경우 실행
 	{
-		Lever->SetStaticMesh(PotionShape.Object);			// 스태틱 메쉬에 검 모양 설정
-		LeverObject->SetStaticMesh(PotionShape.Object);			// 스태틱 메쉬에 검 모양 설정
+		LeverScene->SetStaticMesh(PotionShape.Object);			// 스태틱 메쉬에 검 모양 설정
 	}
 
-	LeverObject->SetRelativeScale3D(FVector(0.4, 0.2, 0.4));
-	LeverObject->SetRelativeLocation(FVector(0.0, 0.0, 0.0));
-	//LeverObject->SetSimulatePhysics(true);
-	LeverObject->SetCollisionProfileName("OverlapAll");
+	LeverScene->SetRelativeScale3D(FVector(4.0f, 4.0f, 4.0f));
 
-	LeverScene->SetRelativeLocation(FVector(0.0, 0.0, 4.0));
-	LeverScene->SetRelativeScale3D(FVector(0.37, 0.38, 2.3));
+	Lever->SetRelativeLocation(FVector(-62.0f, 0.0f, 40.0f));
+	Lever->SetRelativeScale3D(FVector(0.09f, 0.09f, 1.0f));
 
-	Lever->SetRelativeScale3D(FVector(1.0, 1.0, 1.6));
-	Lever->SetRelativeLocation(FVector(0.0, 0.0, 82.0));
+	Collision->SetRelativeLocation(FVector(360.0f, 0.0f, -40.0f));
+	Collision->SetRelativeScale3D(FVector(10.0f, 0.7f, 2.6f));
+
+	AutoRot = FRotator(LeverScene->RelativeRotation.Pitch, LeverScene->RelativeRotation.Yaw+60.0f, LeverScene->RelativeRotation.Roll);
+	DefaultYaw = LeverScene->GetComponentRotation().Yaw;
+
+	Collision->bGenerateOverlapEvents = false;
+
+	LeverScene->SetCollisionProfileName("NoCollision");
 	Lever->SetCollisionProfileName("OverlapAll");
+	Collision->SetCollisionProfileName("BlockAll");
 
 	Tags.Add(FName("Door"));
 }
@@ -54,9 +61,6 @@ ALever::ALever()
 void ALever::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Cur = FVector::ZeroVector;
-	Pre = FVector::ZeroVector;
 
 	Lever->OnComponentBeginOverlap.AddDynamic(this, &ALever::OnLeverOverlap);		// 오버랩 이벤트를 발생시킬 수 있도록 설정
 	Lever->OnComponentEndOverlap.AddDynamic(this, &ALever::OnLeverEndOverlap);		// 오버랩 이벤트를 발생시킬 수 있도록 설정
@@ -75,13 +79,18 @@ void ALever::Tick(float DeltaTime)
 			if (RightHand->bisRightGrab)		// 참이면 상호작용 실행
 			{
 				FVector Cal = UKismetMathLibrary::InverseTransformLocation
-				(GetActorTransform(), RightHand->GetActorLocation());// -LeverScene->GetComponentLocation();
+				(GetActorTransform(), RightHand->GetActorLocation());
 
-				float degree = UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(-Cal.X, Cal.Z));
+				float degree = UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(-Cal.Y, -Cal.X));
 
-				LeverScene->SetRelativeRotation(FRotator(degree, 0.0f, 0.0f));
+				LeverScene->SetRelativeRotation(FRotator(0.0f, degree, 0.0f));
 			}
 		}
+	}
+	
+	if (LeverScene->RelativeRotation.Yaw > 10.0f)
+	{
+		LeverScene->SetRelativeRotation(FMath::Lerp(LeverScene->RelativeRotation, AutoRot, 0.05f));
 	}
 
 }

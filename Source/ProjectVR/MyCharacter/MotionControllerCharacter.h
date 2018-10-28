@@ -78,11 +78,7 @@ public:
 		bool bAllowBreathe;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float DashPower;
-
-
-
-
-
+	
 	// 스테미너 관련
 		float CurrentStamina;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
