@@ -135,6 +135,12 @@ ARightHandMotionController::ARightHandMotionController()
 	interaction->InteractionDistance = 100.0f;
 	interaction->bShowDebug = true;
 
+	// 개한테 물렸을 때, 한 방향으로 지속되는 시간
+	DefaultTime = 0.2f;
+	SwayTime = DefaultTime;
+	SwayCount = 0;
+	TolerateCount = 0;
+
 	VisibleSwordFlag = true; //초기에는 검을 보여준다.		///////////////////////////////////////////////////////////////////////////////////
 	HandTouchActorFlag = true; //처음에는 오른손에 검이 붙여있으므로 true로 해준다
 	bisRightGrab = false;
@@ -217,18 +223,25 @@ void ARightHandMotionController::Tick(float DeltaTime)
 		}
 	}
 
+
 	if (AttachDog)
 	{
-		// 포인트 식으로 일정 횟수 누적되면 개가 떨어짐 8이 적당함 - 각도만 틀면 떨어지는것 방지
-		if (HandMesh->GetPhysicsLinearVelocity().Size() >= 300.0f && HandMesh->GetPhysicsAngularVelocity().Size() >= 400.0f)
-			stack++;
-		else
-			// 전 속도의 최소한계 - GetPhysicsVelocity는 역으로 이동하면 값이 작아짐 -> 전과 비교를해서 낙차가 작으면 포인트 감소
-			if (stack > 0 && prelinear < 300 && preangular < 400)
-				stack--;
+		Prelinear = Currentlinear;
 
-		prelinear = HandMesh->GetPhysicsLinearVelocity().Size() - HandOwner->GetVelocity().Size();
-		preangular = HandMesh->GetPhysicsAngularVelocity().Size();
+		HandCurrentPosistion = GrabSphere->GetComponentLocation() - GetActorLocation();
+		HandMoveDelta = HandCurrentPosistion - HandPreviousPosistion;
+		HandMoveVelocity = HandMoveDelta / DeltaTime;
+		HandPreviousPosistion = HandCurrentPosistion;
+		
+		Currentlinear = HandMoveVelocity.Size();
+
+		UE_LOG(LogTemp, Log, TEXT("%f     /    %f     /     %f      /     %d"), HandMoveVelocity.Size(), Currentlinear, Prelinear,stack);
+
+		if (Currentlinear > 45.0f) stack++;
+		else
+		{
+			if (stack > 0) stack = 0;
+		}
 	}
 }
 
@@ -514,36 +527,7 @@ void ARightHandMotionController::OnHandEndOverlap(UPrimitiveComponent * Overlapp
 	return;
 }
 
-void ARightHandMotionController::OnDogBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
-	//if (OtherActor->ActorHasTag("Monster") && !AttachDog)
-	//{
-	//	ADog* Dog = Cast<ADog>(OtherActor);
 
-	//	if (Dog)
-	//	{
-	//		//AttachDog = Dog;
-
-	//		//FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
-
-	//		//Dog->AttachToComponent(DogAttachRange, AttachRules);
-	//		//Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine", true, true);
-	//		//Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", false, true);
-	//		//Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-R-Thigh", true, true);
-	//		//Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-L-Thigh", true, true);
-	//		//Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Tail", true, true);
-
-	//		//Dog->GetCharacterMovement()->DisableMovement();
-
-	//		//FVector AttachDogLocation = DogAttachRange->GetComponentLocation();
-	//		//Dog->SetActorLocation(AttachDogLocation);
-	//		////Dog->GetCapsuleComponent()->AddRelativeLocation(FVector(-440.0f, 0.0f, -300.0f));
-	//		//Dog->SetActorRotation(DogAttachRange->GetComponentRotation());
-
-	//		Dog->AttachActor = this;
-	//	}
-	//}
-}
 
 FString ARightHandMotionController::GetEnumToString(EControllerHand Value)
 {

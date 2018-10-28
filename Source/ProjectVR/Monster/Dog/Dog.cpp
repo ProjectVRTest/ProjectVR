@@ -197,6 +197,8 @@ void ADog::OnAttackCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor
 {
 	if (OtherComp->ComponentHasTag("Head"))
 	{
+		UGameplayStatics::ApplyDamage(OtherActor, 20, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
+
 		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
 		if (Character)
@@ -214,7 +216,7 @@ void ADog::OnAttackCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor
 
 				AttachToComponent(RightController->AttachDogPosition, AttachRules);
 
-				GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);			// Neck이하는 모조리 피직스 부여
+				GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine2", true, true);			// Neck이하는 모조리 피직스 부여
 
 				SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 				SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));

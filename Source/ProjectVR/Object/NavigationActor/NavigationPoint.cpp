@@ -26,7 +26,6 @@ void ANavigationPoint::OnOverlap(UPrimitiveComponent * OverlappedComp, AActor * 
 {
 	if (OtherActor->ActorHasTag("Character"))
 	{
-		UE_LOG(LogTemp, Log, TEXT("%s  Close@@@@  %s"),*GetName(), *OtherActor->GetName());
 		NaviEvent.ExecuteIfBound();
 	}
 }

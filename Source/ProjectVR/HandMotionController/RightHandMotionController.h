@@ -85,11 +85,17 @@ public:
 		class APlayerSword* Sword;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
+		float SwayTime;
+		float DefaultTime;
+
+		int SwayCount;
+		int TolerateCount;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
 		int stack;				// 개를 떨어뜨리기위한 스택
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
-		float prelinear;				// 개를 떨어뜨리기위한 스택
+		float Prelinear;				// 개를 떨어뜨리기위한 스택
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
-		float preangular;				// 개를 떨어뜨리기위한 스택
+		float Currentlinear;				// 개를 떨어뜨리기위한 스택
 
 	//오른손에 붙인 검이 보이는지 안보이는지 판단해줄 변수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sword")
@@ -137,10 +143,6 @@ public:
 	UFUNCTION()
 		void OnHandEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	//손이 다른 액터에 오버랩 될때 호출 되는 함수
-	UFUNCTION()
-		void OnDogBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-
 	//열거형을 스트링으로 변환해주는 함수
 	UFUNCTION()
 		FString GetEnumToString(EControllerHand Value);
@@ -148,6 +150,7 @@ public:
 	UPROPERTY()
 		class ADog* AttachDog;
 
-	
+	// 손의 운동 값
+	FVector HandCurrentPosistion, HandMoveDelta, HandPreviousPosistion, HandMoveVelocity;
 
 };

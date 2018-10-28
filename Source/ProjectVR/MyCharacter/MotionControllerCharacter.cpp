@@ -428,8 +428,12 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 			}
 		}
 
-		CurrentHp -= Damage;			// 현재 체력감소
-
+		if (CurrentHp > 0.0f)
+		{
+			CurrentHp -= Damage;			// 현재 체력감소
+			if (CurrentHp < 0.0f)
+				CurrentHp = 0.0f;
+		}
 		LeftHand->Shield->StateBar->GetDamage(Damage);
 		GLog->Log(FString::Printf(TEXT("데미지 받음")));
 		InvincibleTimeOn = true;		// 피격되면 즉시 무적시간 활성화

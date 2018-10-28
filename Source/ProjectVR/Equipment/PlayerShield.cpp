@@ -64,7 +64,7 @@ APlayerShield::APlayerShield()
 	ShieldCollision->bHiddenInGame = true;
 
 	// 스테이트바 씬의 위기값과 회전값 설정
-	StateBarScene->SetRelativeLocation(FVector(-23.0f, -10.0f, 0.0f));
+	StateBarScene->SetRelativeLocation(FVector(-4.5f, -16.0f, 0.0f));
 	StateBarScene->SetRelativeRotation(FRotator(0.0f, -19.0f, -90.0f));
 	IsActivation = false;
 	IsMiniBossWeaponOverlap = false;

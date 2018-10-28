@@ -99,8 +99,6 @@ void ANavigationActor::Tick(float DeltaTime)
 
 void ANavigationActor::NavigationEvent()
 {
-	UE_LOG(LogTemp, Log, TEXT("Pizza"));
-
 	CurrentPoint++;
 	TargetPoint++;
 
@@ -109,7 +107,6 @@ void ANavigationActor::NavigationEvent()
 		if (Targets[TargetPoint])
 		{
 			Target = Targets[TargetPoint];
-			UE_LOG(LogTemp, Log, TEXT("Next Target %s"), *Target->GetName());
 			if (Register)
 				Register->Collision->bGenerateOverlapEvents = false;
 			Register = Cast<ANavigationPoint>(Targets[TargetPoint]);

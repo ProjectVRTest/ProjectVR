@@ -40,7 +40,17 @@ AHPStaminaBar::AHPStaminaBar()
 		StaminaBar->SetStaticMesh(StaminaBar_SM.Object);
 	}
 
-	// 체력 바 및 스테미너 바 텍스처 예정
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>HP_Material(TEXT("Material'/Game/Blueprints/UI/HPTestMaterial.HPTestMaterial'"));
+	if (HP_Material.Succeeded())
+	{
+		HPBar->SetMaterial(0, HP_Material.Object);
+	}
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>Stamina_Material(TEXT("Material'/Game/Blueprints/UI/StaminaTestMaterial.StaminaTestMaterial'"));
+	if (Stamina_Material.Succeeded())
+	{
+		StaminaBar->SetMaterial(0, Stamina_Material.Object);
+	}
 
 	// 바 사이즈 설정
 	HPBarXSize = 0.3f;
