@@ -26,21 +26,13 @@ void UBTService_NMBattleDistanceCheck::TickNode(UBehaviorTreeComponent & OwnerCo
 
 				if (NormalMonster)
 				{
-					Velocity = NormalMonster->GetCharacterMovement()->Velocity;
-					NMRotator = NormalMonster->GetActorRotation();
-
-					FVector NormalVector = UKismetMathLibrary::Normal(Velocity);
-					FRotator XNormalRotator = UKismetMathLibrary::MakeRotFromX(NormalVector);
-					FRotator CompleteRotator = UKismetMathLibrary::NormalizedDeltaRotator(NMRotator, XNormalRotator);
-					NormalMonster->Yaw = CompleteRotator.Yaw;
-
 					Distance = AI->BBComponent->GetValueAsFloat(DistanceBlackBoardKey);
 
 					if (Distance > 400.0f )
 					{
 						switch (NormalMonster->CurrentAnimState)
 						{
-						case ENormalMonsterAnimState::Walk:
+						case ENormalMonsterAnimState::Walk: //공격이 끝난후에 Walk로 가니까 이때에만
 							NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Walk;
 							NormalMonster->CurrentState = ENormalMonsterState::Chase;
 							break;
