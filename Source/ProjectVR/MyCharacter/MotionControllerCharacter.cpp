@@ -181,6 +181,7 @@ void AMotionControllerCharacter::BeginPlay()
 void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	//UE_LOG(LogTemp, Log, TEXT("%f"), GetVelocity().Size());
 	
 	if (GetVelocity().Size() > 100.0f)
 	{
@@ -323,11 +324,11 @@ void AMotionControllerCharacter::MoveForward(float Value)
 	if (Value != 0)
 	{
 		if(CurrentState == EPlayerState::Run)
-			GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+			GetCharacterMovement()->MaxWalkSpeed = 675.0f;
 		else
 		{
 			CurrentState = EPlayerState::Walk;
-			GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+			GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 		}
 		AddMovementInput(Camera->GetForwardVector(), Value);
 	}
@@ -339,11 +340,11 @@ void AMotionControllerCharacter::MoveRight(float Value)
 	if (Value != 0)
 	{
 		if (CurrentState == EPlayerState::Run)
-			GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+			GetCharacterMovement()->MaxWalkSpeed = 675.0f;
 		else
 		{
 			CurrentState = EPlayerState::Walk;
-			GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+			GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 		}
 		AddMovementInput(Camera->GetRightVector(), Value);
 	}
