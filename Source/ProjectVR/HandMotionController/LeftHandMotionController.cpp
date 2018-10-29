@@ -276,14 +276,13 @@ AActor * ALeftHandMotionController::GetActorNearHand()
 
 void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("Dog"))
+	if (OtherComp->ComponentHasTag("DogAttackCollision"))
 	{
-		
 		ADog* RagdollDog = Cast<ADog>(OtherActor);
 
 		if (HandOwner->RightHand->AttachDog == RagdollDog)	// 개가 물고 있지 않으면 왼손과 어떤 상호작용을 해도 무시할 수 있어야 함
 		{
-			if (HandMoveVelocity.Size() >= 250.0f)
+			if (HandMoveVelocity.Size() >= 100.0f)
 			{
 				AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 

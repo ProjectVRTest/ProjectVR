@@ -30,6 +30,7 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 
 		float Distance = FVector::Distance(RagdollDog->GetActorLocation(), MyCharacter->Camera->GetComponentLocation());
 
+		// 개와의 거리가 멀어질 때
 		if (Distance > 400.0f)
 		{
 			RagdollDog->CurrentDogState = EDogState::Chase;
@@ -41,6 +42,17 @@ void UBTService_CheckCanAttack::TickNode(UBehaviorTreeComponent & OwnerComp, uin
 			return;
 		}
 
+		// 개가 죽었을 때
+		if (RagdollDog->CurrentHP <= 0.0f)
+		{
+			RagdollDog->CurrentDogState = EDogState::Death;
+			RagdollDog->CurrentDogAnimState = EDogAnimState::Nothing;
+			RagdollDog->CurrentDogBattleState = EDogBattleState::Nothing;
+			RagdollDog->CurrentDogJumpState = EDogJumpState::Nothing;
+			RagdollDog->CurrentDogCircleState = EDogCircleState::Nothing;
+			UnAttackableRange(MyCharacter, RagdollDog);
+			return;
+		}
 
 		if (RagdollDog && MyCharacter)
 		{
@@ -324,10 +336,7 @@ void UBTService_CheckCanAttack::AttackableRange(AMotionControllerCharacter* MyCh
 		return;
 	}
 	else
-	{
 		RagdollDog->bAttack = true;
-		UE_LOG(LogTemp, Log, TEXT("%s &&&&&&&&&&&&&&&&&&&&&&&&&&"), *RagdollDog->GetName());
-	}
 
 	if (RagdollDog->bAttack)
 	{
