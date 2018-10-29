@@ -181,7 +181,7 @@ void AMotionControllerCharacter::BeginPlay()
 void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UE_LOG(LogTemp, Log, TEXT("%f"), GetVelocity().Size());
+	//UE_LOG(LogTemp, Log, TEXT("%f"), GetVelocity().Size());
 	
 	if (GetVelocity().Size() > 100.0f)
 	{

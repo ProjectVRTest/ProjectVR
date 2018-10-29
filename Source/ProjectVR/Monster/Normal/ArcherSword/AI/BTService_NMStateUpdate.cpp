@@ -46,6 +46,26 @@ void UBTService_NMStateUpdate::TickNode(UBehaviorTreeComponent & OwnerComp, uint
 				{
 					Distance = FVector::Distance(NormalMonster->GetActorLocation(), MyCharacter->CameraLocation->GetActorLocation());
 					AI->BBComponent->SetValueAsFloat("Distance", Distance);
+
+					switch (NormalMonster->CurrentState)
+					{
+					case ENormalMonsterState::Chase:
+						break;
+					case ENormalMonsterState::Battle:
+						if (NormalMonster->CurrentAnimState == ENormalMonsterAnimState::Walk)
+						{
+							if (Distance > 400.0f)
+							{
+								NormalMonster->CurrentAnimState = ENormalMonsterAnimState::Walk;
+								NormalMonster->CurrentState = ENormalMonsterState::Chase;
+							}
+							else
+							{
+								NormalMonster->CurrentAnimState = ENormalMonsterAnimState::AttackReady;
+							}
+						}					
+						break;
+					}
 				}			
 			}
 		}
