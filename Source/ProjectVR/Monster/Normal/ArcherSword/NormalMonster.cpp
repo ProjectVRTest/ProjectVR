@@ -130,7 +130,7 @@ ANormalMonster::ANormalMonster()
 			GetMesh()->SetAnimInstanceClass(NormalMonsterAnimBlueprint);
 		}		
 	}
-
+	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 	Target = nullptr;
 
 	Tags.Add(TEXT("Monster"));
