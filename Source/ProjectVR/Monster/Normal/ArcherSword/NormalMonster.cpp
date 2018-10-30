@@ -24,6 +24,7 @@
 #include "MyCharacter/CameraLocation.h"
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "TimerManager.h"
 
 // Sets default values
 ANormalMonster::ANormalMonster()
@@ -39,7 +40,7 @@ ANormalMonster::ANormalMonster()
 		SwordSKMesh = Normal_Monster_SK_Mesh.Object;
 		GetMesh()->SetSkeletalMesh(SwordSKMesh);
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -88.0f));
-		GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
+		GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));		
 	}	
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>NM_Archer_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Character/SK_NormalMonsterTwo.SK_NormalMonsterTwo'"));
@@ -113,7 +114,7 @@ ANormalMonster::ANormalMonster()
 	ArrowSpawnLocation->SetupAttachment(GetRootComponent());
 	ArrowSpawnLocation->SetRelativeLocation(FVector(90.0f, 8.0f, 50.0f));
 	ArrowSpawnLocation->SetRelativeScale3D(FVector(-8.0f,90.0f,134.0f));
-	MaxHP = 5.0f;
+	MaxHP = 10.0f;
 	CurrentHP = MaxHP;
 
 	AIControllerClass = ANormalMonsterAIController::StaticClass();
@@ -132,6 +133,7 @@ ANormalMonster::ANormalMonster()
 	}
 	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 	Target = nullptr;
+	FresnelValue = 1.0f;
 
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -303,17 +305,35 @@ void ANormalMonster::OnHearNoise(APawn* Pawn, const FVector& Location, float Vol
 	}	
 }
 
+void ANormalMonster::Fresnel()
+{	
+	GetMesh()->SetVectorParameterValueOnMaterials(TEXT("Fresnel_color_3"), FVector(1.0f, 0.2f, 0));
+	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Fresnel_exp_3"), FresnelValue);
+	FresnelValue += 1.6f;
+
+	if (FresnelValue > 6.0f)
+	{
+		FresnelValue = 1.0f;
+		GetWorld()->GetTimerManager().ClearTimer(FresnelTimer);
+		GetMesh()->SetVectorParameterValueOnMaterials(TEXT("Fresnel_color_3"), FVector(0, 0, 0));
+		GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Fresnel_exp_3"), FresnelValue);
+	}
+	
+}
+
 float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-
+		
 	CurrentHP -= Damage;
+
+	GetWorld()->GetTimerManager().SetTimer(FresnelTimer, this, &ANormalMonster::Fresnel, 0.1f, true, 0.1f);
 
 	if (CurrentHP > 0)
 	{
-		GLog->Log(FString::Printf(TEXT("캐릭터로부터 데미지 받음")));
-		
+		GLog->Log(FString::Printf(TEXT("캐릭터로부터 데미지 받음")));		
 
+		//GetWorld()->GetTimerManager().SetTimer(RageAttackTimer, this, &UBTService_NMStateUpdate::RageAttackTimerCount, 1.7f, false);
 		ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
 
 		if (CurrentState == ENormalMonsterState::AttackWait)
@@ -321,7 +341,7 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 			Target = DamageCauser;
 			AI->BBComponent->SetValueAsObject("Player", DamageCauser);
 
-			float Distance = AI->BBComponent->GetValueAsFloat(TEXT("Distnace"));
+			float Distance = AI->BBComponent->GetValueAsFloat(TEXT("Distance"));
 
 			if (Distance <= 400.0f)
 			{
@@ -347,6 +367,10 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 		GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 		GLog->Log(FString::Printf(TEXT("HP가 0보다 작은데 공격 받음")));		
 		CurrentHP = 0;
+		if (Bow)
+		{
+			Bow->NMBowDestory();
+		}
 		CurrentState = ENormalMonsterState::Dead;
 	}
 	return Damage;

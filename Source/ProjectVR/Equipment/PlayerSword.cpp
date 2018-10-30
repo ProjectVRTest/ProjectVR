@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"			// 스태틱메쉬 컴포넌트
 #include "UObject/ConstructorHelpers.h"					// ConstructorHelpers 사용
 #include "Components/CapsuleComponent.h"				// 캡슐컴포넌트
+#include "Particles/ParticleSystem.h" //파티클 이펙트에 사용할 헤더
 #include "Kismet/GameplayStatics.h"							// 데미지전달시 사용 / 오너 설정
 
 #include "MyCharacter/MotionControllerCharacter.h"
@@ -14,6 +15,7 @@
 #include "MyCharacter/MotionControllerPC.h"
 #include "HandMotionController/RightHandMotionController.h"
 #include "Monster/Dog/Dog.h"
+
 
 // Sets default values
 APlayerSword::APlayerSword()
@@ -35,14 +37,19 @@ APlayerSword::APlayerSword()
 	/* 콜리전 컴포넌트 생성 */
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
 	SwordCollision->SetupAttachment(SwordMesh);		// 콜리전을 검 메쉬에 붙임
-	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));
+	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));	
 
 	// 콜리전 위치 및 방향, 크기 설정
 	SwordCollision->SetRelativeLocation(FVector(0.0f, 90.0f, 0.0f));
 	SwordCollision->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
 	SwordCollision->SetRelativeScale3D(FVector(0.75f, 0.75f, 1.6f));
 	SwordCollision->ComponentTags.Add(FName(TEXT("PlayerSwordCollision")));
-	//IsActivation = false;
+	
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BloodEffect(TEXT("ParticleSystem'/Game/Assets/Effect/HitFeedback/Blood_cloud_large.Blood_cloud_large'"));
+	if (PT_BloodEffect.Succeeded())
+	{
+		BloodEffect = PT_BloodEffect.Object;
+	}
 
 	Timer = 0.0f;		// 타이머 초기화
 
@@ -96,7 +103,7 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 
 	if (OtherActor->ActorHasTag("Monster"))		// 오버랩된 액터가 'Monster'라는 태그를 가지고 있으면 실행
 	{		
-		//GLog->Log(FString::Printf(TEXT(""), SweepResult.))
+		//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BloodEffect, );
 		if (Timer >= 0.5f)			// 타이머가 0.5 이상의 수를 가지고 있을 때 실행 (조건1)
 		{
 			if (SwordMoveVelocity.Size() >= 1500) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
@@ -121,7 +128,7 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 					//ULeftHandWidget* MyStateUI = Cast<ULeftHandWidget>(MyCharacter->LeftHand->Shield->CharacterStateWidget);
 					// 이하 캐릭터 스테미너 감소
 					// 이하 UI스테미너 감소
-
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BloodEffect, OtherActor->GetActorLocation());
 					UGameplayStatics::ApplyDamage(OtherActor, Damage, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
 					// (오버랩발생된 액터, 데미지, 데미지를가한 주체, 실제 데미지를 가한주체, 데미지종류클래스)
 				}

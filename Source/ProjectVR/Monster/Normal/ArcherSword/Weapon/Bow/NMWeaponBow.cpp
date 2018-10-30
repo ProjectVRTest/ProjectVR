@@ -4,6 +4,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Animation/AnimBlueprint.h"
+#include "Monster/Normal/ArcherSword/NormalMonster.h"
 
 // Sets default values
 ANMWeaponBow::ANMWeaponBow()
@@ -46,6 +47,10 @@ void ANMWeaponBow::BeginPlay()
 void ANMWeaponBow::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
 
+void ANMWeaponBow::NMBowDestory()
+{
+	Destroy();
 }
 

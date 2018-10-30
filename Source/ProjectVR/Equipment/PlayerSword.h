@@ -32,9 +32,10 @@ public:
 		float Timer;			// 지속적인 공격을 막기위한 타이머
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float Damage;		// 데미지
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
 		class AMotionControllerCharacter* SwordOwner;			// 오너 설정
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect")
+		class UParticleSystem* BloodEffect;
 
 	// 칼의 운동 값
 	FVector SwordCurrentPosistion, SwordMoveDelta, SwordPreviousPosistion, SwordMoveVelocity;

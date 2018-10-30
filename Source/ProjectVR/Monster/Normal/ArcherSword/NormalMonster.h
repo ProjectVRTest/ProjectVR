@@ -76,11 +76,16 @@ public:
 		class ANMWeaponSword* Sword;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class ANMWeaponBow* Bow;
-	float Yaw; //캐릭터 회전에 쓰일 Yaw값
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float MaxHP; //최대 HP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float CurrentHP; //현재 HP
+	UPROPERTY()
+		FTimerHandle FresnelTimer;
+	UPROPERTY()
+		float FresnelValue;
+
 
 	UFUNCTION()
 		void SpawnArrowMesh();
@@ -90,7 +95,8 @@ public:
 		void OnSeeCharacter(APawn *Pawn);
 	UFUNCTION()
 		void OnHearNoise(APawn * Pawn, const FVector & Location, float Volume);
-
+	UFUNCTION()
+		void Fresnel();
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };
