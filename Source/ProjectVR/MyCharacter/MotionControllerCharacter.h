@@ -79,6 +79,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float DashPower;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
+		float WalkSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
+		float RunSpeed;
+
 	// 스테미너 관련
 		float CurrentStamina;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")

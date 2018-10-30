@@ -75,7 +75,8 @@ void ANMWeaponSword::Tick(float DeltaTime)
 		{
 			SwordMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			SwordMesh->SetSimulatePhysics(true);
-			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);			
+			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+			InitialLifeSpan = 4.0f;
 		}
 	}
 }

@@ -7,15 +7,25 @@
 #include "BTService_NMStateUpdate.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PROJECTVR_API UBTService_NMStateUpdate : public UBTService_BlackboardBase
 {
 	GENERATED_BODY()
 public:
-	float Distance;
+	UPROPERTY()
+		float Distance;
+	UPROPERTY()
+		bool RageAttackFlag;
+	UPROPERTY()
+		FTimerHandle RageAttackTimer;
+
+	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
-	
-	
+
+	UFUNCTION()
+		void RageAttackTimerCount();
+
+
 };
