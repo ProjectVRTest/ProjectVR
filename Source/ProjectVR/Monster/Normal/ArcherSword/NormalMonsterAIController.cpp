@@ -43,6 +43,7 @@ void ANormalMonsterAIController::Possess(APawn * InPawn)
 			}
 			break;
 		}
-	
+		
+		NormalMonster->SetEquipment();
 	}
 }

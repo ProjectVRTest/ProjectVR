@@ -161,12 +161,6 @@ void AMotionControllerCharacter::BeginPlay()
 		HeadBox->OnComponentBeginOverlap.AddDynamic(this, &AMotionControllerCharacter::OnHeadOverlap);		// 오버랩 이벤트를 발생시킬 수 있도록 설정
 	}
 
-	/*CameraLocationChracter = GetWorld()->SpawnActor<ACameraLocationCharacter>(CameraLocationChracter->StaticClass());
-
-	if (CameraLocationChracter)
-	{
-		CameraLocationChracter->AttachToComponent(Camera, AttachRules);
-	}*/
 	CameraLocation = GetWorld()->SpawnActor<ACameraLocation>(CameraLocation->StaticClass());
 
 	if (CameraLocation)

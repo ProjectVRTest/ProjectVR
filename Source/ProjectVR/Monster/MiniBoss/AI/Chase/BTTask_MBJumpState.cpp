@@ -31,8 +31,8 @@ void UBTTask_MBJumpState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * N
 	if (MiniBoss)
 	{
 		FFindFloorResult FloorDistance;
-		CurrentFalling = MiniBoss->CurrentFalling;
-
+		CurrentFalling = MiniBoss->CurrentFalling; 
+		
 		if (CurrentFalling && PreviousFalling)
 		{
 			MiniBoss->CurrentJumpState = EMiniBossJumpState::JumpLoop;

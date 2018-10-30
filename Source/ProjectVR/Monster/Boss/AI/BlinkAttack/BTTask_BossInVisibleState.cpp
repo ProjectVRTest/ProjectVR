@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTTask_BossInVisibleState.h"
 #include "Headers/BossAIHeader.h"
@@ -54,21 +54,35 @@ void UBTTask_BossInVisibleState::InVisible()
 
 		if (MyCharacer)
 		{
+			int RandomValue;
 			FVector TeleportLocation;
 			switch (Boss->CurrentBattleState)
 			{
 			case EBossBattleState::AddAttack:
 				TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(200.0f, 0, 0);
-				SetTeleportLocation(TeleportLocation);
 				break;			
 			case EBossBattleState::BattleWatch:
+				TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(200.0f, 0, 0);
+
+				RandomValue = FMath::RandRange(1, 10);
+
+				//캐릭터의 배틀 상태에 따라서 계산해주는 텔포 위치가 달라지는 것을 구현해야함
+				if (RandomValue > 6) //정해진 포인트로 이동
+				{
+
+				}
+				else // 캐릭터 앞으로 이동 
+				{
+					
+				}
 				break;
 			}			
+			SetTeleportLocation(Boss->CurrentBattleState,TeleportLocation);
 		}
 	}
 }
 
-void UBTTask_BossInVisibleState::SetTeleportLocation(FVector & Location)
+void UBTTask_BossInVisibleState::SetTeleportLocation(EBossBattleState & BattleState,FVector & Location)
 {
 	AI->BBComponent->SetValueAsVector("TeleportLocation", Location);
 	Boss->CurrentBlinkAttackState = EBossBlinkAttackState::Visible;

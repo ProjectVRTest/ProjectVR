@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
+#include "State/BossState/BossState.h"
 #include "BTTask_BossInVisibleState.generated.h"
 
 /**
@@ -25,5 +26,5 @@ public:
 	UFUNCTION()
 		void InVisible();
 	UFUNCTION()
-		void SetTeleportLocation(FVector &Location);
+		void SetTeleportLocation(EBossBattleState &BattleState,FVector &Location);
 };

@@ -146,12 +146,6 @@ void ANormalMonster::BeginPlay()
 	Super::BeginPlay();
 	ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
 
-	FActorSpawnParameters SpawnActorOption;
-	SpawnActorOption.Owner = this;
-	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
-
 	int RandomMesh = FMath::RandRange(1, 2);
 
 	if (RandomMesh == 1)
@@ -168,30 +162,7 @@ void ANormalMonster::BeginPlay()
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &ANormalMonster::OnSeeCharacter);
 		PawnSensing->OnHearNoise.AddDynamic(this, &ANormalMonster::OnHearNoise);
-	}
-
-	switch (MonsterKind)
-	{
-	case ENormalMonsterKind::SwordMan:
-		Sword = GetWorld()->SpawnActor<ANMWeaponSword>(Sword->StaticClass(), SpawnActorOption);
-		if (Sword)
-		{
-			Sword->AttachToComponent(GetMesh(), AttachRules, TEXT("SwordSocket"));
-		}
-		break;
-	case ENormalMonsterKind::MoveArcher:
-		Bow = GetWorld()->SpawnActor<ANMWeaponBow>(Bow->StaticClass(), SpawnActorOption);
-		if (Bow)
-		{
-			Bow->AttachToComponent(GetMesh(), AttachRules, TEXT("BowSocket"));
-			if (QuiverMesh)
-			{
-				QuiverComponent->SetStaticMesh(QuiverMesh);
-			}
-		}		
-		break;
 	}	
-	
 }
 
 // Called every frame
@@ -374,5 +345,72 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 		CurrentState = ENormalMonsterState::Dead;
 	}
 	return Damage;
+}
+
+void ANormalMonster::SetNormalMonsterKind(ENormalMonsterKind & NewMonsterKind)
+{
+	MonsterKind = NewMonsterKind;
+}
+
+void ANormalMonster::SetEquipment()
+{
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.Owner = this;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+	switch (MonsterKind)
+	{
+	case ENormalMonsterKind::SwordMan:
+		Sword = GetWorld()->SpawnActor<ANMWeaponSword>(Sword->StaticClass(), SpawnActorOption);
+		if (Sword)
+		{
+			Sword->AttachToComponent(GetMesh(), AttachRules, TEXT("SwordSocket"));
+		}
+		break;
+	case ENormalMonsterKind::MoveArcher:
+		Bow = GetWorld()->SpawnActor<ANMWeaponBow>(Bow->StaticClass(), SpawnActorOption);
+		if (Bow)
+		{
+			Bow->AttachToComponent(GetMesh(), AttachRules, TEXT("BowSocket"));
+			if (QuiverMesh)
+			{
+				QuiverComponent->SetStaticMesh(QuiverMesh);
+			}
+		}
+		break;
+	}
+}
+
+void ANormalMonster::SetTarget()
+{	
+	AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
+
+	if (MyCharacter)
+	{
+		ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
+
+		if (AI)
+		{
+			Target = MyCharacter;
+			TargetCamera = MyCharacter->CameraLocation;
+
+			if (TargetCamera)
+			{
+				GLog->Log(FString::Printf(TEXT("카메라 없음")));
+			}
+			else
+			{
+				GLog->Log(FString::Printf(TEXT("카메라 있음")));
+			}
+			AI->BBComponent->SetValueAsObject("Player", Target);
+			AI->BBComponent->SetValueAsObject("PlayerCamera", MyCharacter->CameraLocation);
+
+			CurrentAnimState = ENormalMonsterAnimState::Walk;
+			CurrentState = ENormalMonsterState::Chase;			
+		}
+		
+	}
 }
 

@@ -99,4 +99,10 @@ public:
 		void Fresnel();
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	UFUNCTION()
+		void SetNormalMonsterKind(ENormalMonsterKind &NewMonsterKind);
+	UFUNCTION()
+		void SetEquipment();
+	UFUNCTION()
+		void SetTarget();
 };
