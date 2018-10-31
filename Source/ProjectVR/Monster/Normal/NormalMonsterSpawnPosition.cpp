@@ -25,39 +25,49 @@ void ANormalMonsterSpawnPosition::BeginPlay()
 
 	NormalMonsterAI = GetWorld()->SpawnActor<ANormalMonsterAIController>(NormalMonsterAI->StaticClass(), GetActorLocation(), GetActorRotation());
 
-	switch (NormalMonsterkind)
+	if (NormalMonsterAI)
 	{
-	case ENormalMonsterKind::SwordMan:
-		NormalMonster = GetWorld()->SpawnActor<ANormalMonster>(NormalMonster->StaticClass(), GetActorLocation(), GetActorRotation());
-		
-		if (NormalMonster)
-		{
-			MonsterKind = ENormalMonsterKind::SwordMan;
-			NormalMonster->SetNormalMonsterKind(MonsterKind);
-			if (NormalMonsterAI)
-			{
-				NormalMonsterAI->Possess(NormalMonster);
-				NormalMonster->SetCurrentHP(5.0f);
-			}
-		}		
-		break;
-	case ENormalMonsterKind::MoveArcher:
-		NormalMonster = GetWorld()->SpawnActor<ANormalMonster>(NormalMonster->StaticClass(), GetActorLocation(), GetActorRotation());
-		
-		if (NormalMonster)
-		{
-			MonsterKind = ENormalMonsterKind::MoveArcher;
-			NormalMonster->SetNormalMonsterKind(MonsterKind);
-			if (NormalMonsterAI)
-			{
-				NormalMonsterAI->Possess(NormalMonster);	
-				NormalMonster->SetCurrentHP(5.0f);
-			}
-		}
-		break;
-	}	
+		FActorSpawnParameters SpawnActorOption;
+		SpawnActorOption.Owner = this;
+		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	GetWorld()->GetTimerManager().SetTimer(FindTimer, this, &ANormalMonsterSpawnPosition::FindTarget, 1.0f, false);
+		switch (NormalMonsterkind)
+		{
+		case ENormalMonsterKind::SwordMan:
+			NormalMonster = GetWorld()->SpawnActor<ANormalMonster>(NormalMonster->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+
+			if (NormalMonster)
+			{
+				MonsterKind = ENormalMonsterKind::SwordMan;
+				NormalMonster->SetNormalMonsterKind(MonsterKind);
+				if (NormalMonsterAI)
+				{
+					NormalMonsterAI->Possess(NormalMonster);
+					NormalMonster->SetCurrentHP(5.0f);
+				}
+			}
+			break;
+		case ENormalMonsterKind::MoveArcher:
+			NormalMonster = GetWorld()->SpawnActor<ANormalMonster>(NormalMonster->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+
+			if (NormalMonster)
+			{
+				MonsterKind = ENormalMonsterKind::MoveArcher;
+				NormalMonster->SetNormalMonsterKind(MonsterKind);
+				if (NormalMonsterAI)
+				{
+					NormalMonsterAI->Possess(NormalMonster);
+					NormalMonster->SetCurrentHP(5.0f);
+				}
+			}
+			break;
+		}
+
+		GetWorld()->GetTimerManager().SetTimer(FindTimer, this, &ANormalMonsterSpawnPosition::FindTarget, 1.0f, false);
+	}
+
+
+
 }
 
 
