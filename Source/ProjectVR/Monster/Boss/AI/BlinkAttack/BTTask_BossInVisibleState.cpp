@@ -5,6 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "MyCharacter/CameraLocation.h"
+#include "MyTargetPoint.h"
 
 void UBTTask_BossInVisibleState::InitializeFromAsset(UBehaviorTree & Asset)
 {
@@ -62,18 +63,18 @@ void UBTTask_BossInVisibleState::InVisible()
 				TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(200.0f, 0, 0);
 				break;			
 			case EBossBattleState::BattleWatch:
-				TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(200.0f, 0, 0);
-
 				RandomValue = FMath::RandRange(1, 10);
 
 				//캐릭터의 배틀 상태에 따라서 계산해주는 텔포 위치가 달라지는 것을 구현해야함
 				if (RandomValue > 6) //정해진 포인트로 이동
 				{
-
+					GLog->Log(FString::Printf(TEXT("정해진 포인트로 이동")));
+					TeleportLocation = Boss->TeleportPoints[0]->GetActorLocation();
 				}
 				else // 캐릭터 앞으로 이동 
 				{
-					
+					GLog->Log(FString::Printf(TEXT("캐릭터 앞으로 이동")));
+					TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(200.0f, 0, 0);
 				}
 				break;
 			}			
@@ -85,6 +86,15 @@ void UBTTask_BossInVisibleState::InVisible()
 void UBTTask_BossInVisibleState::SetTeleportLocation(EBossBattleState & BattleState,FVector & Location)
 {
 	AI->BBComponent->SetValueAsVector("TeleportLocation", Location);
-	Boss->CurrentBlinkAttackState = EBossBlinkAttackState::Visible;
+
+	switch (BattleState)
+	{
+	case EBossBattleState::AddAttack:
+		Boss->CurrentBlinkAttackState = EBossBlinkAttackState::Visible;
+		break;
+	case EBossBattleState::BattleWatch:
+		Boss->CurrentBattleWatchState = EBossBattleWatchState::Visible;
+		break;
+	}	
 	ExitFlag = true;
 }
