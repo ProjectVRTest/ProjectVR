@@ -16,54 +16,62 @@
 // Sets default values
 ALockedDoor::ALockedDoor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	Scene->SetupAttachment(RootComponent);
 
-	DoorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DoorMesh"));
-	DoorMesh->SetupAttachment(Scene);
+	DoorScene1 = CreateDefaultSubobject<USceneComponent>(TEXT("DoorScene1"));
+	DoorScene1->SetupAttachment(Scene);
 
-	//Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
-	//Collision->SetupAttachment(DoorMesh);
+	DoorScene2 = CreateDefaultSubobject<USceneComponent>(TEXT("DoorScene2"));
+	DoorScene2->SetupAttachment(Scene);
+
+	Door1 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door1"));
+	Door1->SetupAttachment(DoorScene1);
+
+	Door2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door2"));
+	Door2->SetupAttachment(DoorScene2);
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Door(TEXT("StaticMesh'/Game/Assets/MapBuild/RoughMap/Bridge/mesh/bridge_door_bridge_door_01.bridge_door_bridge_door_01'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (SM_Door.Succeeded())		// 검 메쉬를 찾았을 경우 실행
 	{
-		DoorMesh->SetStaticMesh(SM_Door.Object);			// 스태틱 메쉬에 검 모양 설정
+		Door1->SetStaticMesh(SM_Door.Object);			// 스태틱 메쉬에 검 모양 설정
+		Door2->SetStaticMesh(SM_Door.Object);			// 스태틱 메쉬에 검 모양 설정
 	}
 
-	DoorMesh->SetRelativeScale3D(FVector(4.0f, 4.0f, 4.0f));
+	DoorScene1->SetRelativeLocation(FVector(252.5, 0.0f, 0.0f));
+	DoorScene2->SetRelativeLocation(FVector(-252.5, 0.0f, 0.0f));
+	DoorScene2->SetRelativeScale3D(FVector(-1.0f, 1.0f, 1.0f));
 
-	//Collision->SetRelativeLocation(FVector(360.0f, 0.0f, -40.0f));
-	//Collision->SetRelativeScale3D(FVector(10.0f, 0.7f, 2.6f));
+	Door1->SetRelativeScale3D(FVector(4.0f, 4.0f, 4.0f));
+	Door2->SetRelativeScale3D(FVector(4.0f, 4.0f, 4.0f));
 
-	AutoRot = FRotator(DoorMesh->RelativeRotation.Pitch, DoorMesh->RelativeRotation.Yaw + 60.0f, DoorMesh->RelativeRotation.Roll);
-	DefaultYaw = DoorMesh->GetComponentRotation().Yaw;
+
+	AutoRot = FRotator(Door1->RelativeRotation.Pitch, Door1->RelativeRotation.Yaw + 60.0f, Door1->RelativeRotation.Roll);
+	DefaultYaw = Door1->GetComponentRotation().Yaw;
 
 	//Collision->bGenerateOverlapEvents = false;
 
-	DoorMesh->SetCollisionProfileName("BlockAll");
-	//Collision->SetCollisionProfileName("BlockAll");
+	Door1->SetCollisionProfileName("BlockAll");
+	Door2->SetCollisionProfileName("BlockAll");
 
 	Tags.Add(FName("LockedDoor"));
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
 void ALockedDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
+	// 이벤트 등록
 	for (TActorIterator<ADoorLock> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
 		ActorItr->OpenEvent.BindUObject(this, &ALockedDoor::OpenDoor);
-		UE_LOG(LogTemp, Log, TEXT("%s @@@@"), *ActorItr->GetName());
-		/*if (ActorItr->GetName() == "MyActor1")
-		{
-		}*/
 	}
-	
+
 }
 
 // Called every frame
@@ -73,9 +81,11 @@ void ALockedDoor::Tick(float DeltaTime)
 
 	if (bGetKey)
 	{
-		if (DoorMesh->RelativeRotation.Yaw < 60.0f)
+
+		if (Door1->RelativeRotation.Yaw < 60.0f)
 		{
-			DoorMesh->SetRelativeRotation(FMath::Lerp(DoorMesh->RelativeRotation, AutoRot, 0.05f));
+			Door1->SetRelativeRotation(FMath::Lerp(Door1->RelativeRotation, AutoRot, 0.05f));
+			Door2->SetRelativeRotation(FMath::Lerp(Door2->RelativeRotation, AutoRot, 0.05f));
 		}
 	}
 }
@@ -83,6 +93,7 @@ void ALockedDoor::Tick(float DeltaTime)
 void ALockedDoor::OpenDoor()
 {
 	bGetKey = true;
-	DoorMesh->SetCollisionProfileName("NoCollision");
+	Door1->SetCollisionProfileName("NoCollision");
+	Door2->SetCollisionProfileName("NoCollision");
 }
 

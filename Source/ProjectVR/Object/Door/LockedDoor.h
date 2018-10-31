@@ -10,8 +10,8 @@ UCLASS()
 class PROJECTVR_API ALockedDoor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ALockedDoor();
 
@@ -19,7 +19,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -27,10 +27,14 @@ public:
 		class USceneComponent* Scene;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UStaticMeshComponent* DoorMesh;
+		class USceneComponent* DoorScene1;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class USceneComponent* DoorScene2;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UStaticMeshComponent* Door1;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UStaticMeshComponent* Door2;
 
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//	class UBoxComponent* Collision;
 
 	UPROPERTY()
 		FRotator AutoRot;
@@ -40,7 +44,7 @@ public:
 	UPROPERTY()
 		class AActor* TouchActor;
 
-	bool bGetKey;
+	bool bGetKey;		// true¸é ¿­¸²
 
 	UFUNCTION()
 		void OpenDoor();

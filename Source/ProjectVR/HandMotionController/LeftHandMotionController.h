@@ -102,4 +102,23 @@ public:
 	//열거형을 String으로 형변환해주는 함수
 	UFUNCTION()
 		FString GetEnumToString(EControllerHand Value);
+
+	// 키
+	UPROPERTY(EditAnywhere)
+		class ALockKey* Key;
+	bool bOverlapLock;
+	UPROPERTY()
+		bool bisLeftGrab;
+
+	// 평시 상태 조건으로 
+	UFUNCTION()
+		void HandNomalState();
+
+	// 오픈 상태 조건으로
+	UFUNCTION()
+		void HandOpenState();
+
+	// 그랩 상태 조건으로
+	UFUNCTION()
+		void HandGrabState();
 };
