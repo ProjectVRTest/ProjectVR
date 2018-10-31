@@ -414,3 +414,8 @@ void ANormalMonster::SetTarget()
 	}
 }
 
+void ANormalMonster::SetCurrentHP(float HP)
+{
+	CurrentHP = HP;
+}
+

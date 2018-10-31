@@ -64,7 +64,7 @@ public:
 
 	UPROPERTY()
 		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열	
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeleportPoint")
 		TArray<class AMyTargetPoint*> TeleportPoints; //순간이동 지점을 저장해둘 배열
 
 protected:
@@ -85,5 +85,5 @@ public:
 	UFUNCTION()
 		void ParryingPointValueSet(int ParryingCount); //HP가 50%이하인경우 지정한 패링포인트 수만큼 랜덤하게 스폰해주는 함수
 	UFUNCTION()
-		void OnSeeCharacter(APawn * Pawn);	
+		void OnSeeCharacter(APawn * Pawn);
 };
