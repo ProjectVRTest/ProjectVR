@@ -57,21 +57,21 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	SpringArm->bInheritYaw = true;
 	SpringArm->bInheritRoll = false;
 	SpringArm->TargetArmLength = 1.0f;
-	
+
 	//GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
 	//GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
 	//GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Overlap);
 
 	GetCapsuleComponent()->bHiddenInGame = false;
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(SpringArm);	
-	
+	Camera->SetupAttachment(SpringArm);
+
 
 	Stereo = CreateDefaultSubobject<UStereoLayerComponent>(TEXT("StereoB"));
-	//Stereo->SetupAttachment(Camera);
+	Stereo->SetupAttachment(Camera);
 
 	Widget = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetB"));
-	//Widget->SetupAttachment(Camera);
+	Widget->SetupAttachment(Camera);
 
 	Stereo->SetRelativeLocation(FVector(100.0f, 0.0f, 0.0f));
 	Stereo->bLiveTexture = true;
@@ -88,7 +88,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	Widget->bVisible = true;
 
 	HeadBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HeadBox"));
-	HeadBox->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	HeadBox->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
 	HeadBox->SetupAttachment(Camera);
 	HeadBox->SetCollisionProfileName(TEXT("OverlapAll"));
 	HeadBox->bGenerateOverlapEvents = true;
@@ -161,6 +161,12 @@ void AMotionControllerCharacter::BeginPlay()
 		HeadBox->OnComponentBeginOverlap.AddDynamic(this, &AMotionControllerCharacter::OnHeadOverlap);		// 오버랩 이벤트를 발생시킬 수 있도록 설정
 	}
 
+	/*CameraLocationChracter = GetWorld()->SpawnActor<ACameraLocationCharacter>(CameraLocationChracter->StaticClass());
+
+	if (CameraLocationChracter)
+	{
+	CameraLocationChracter->AttachToComponent(Camera, AttachRules);
+	}*/
 	CameraLocation = GetWorld()->SpawnActor<ACameraLocation>(CameraLocation->StaticClass());
 
 	if (CameraLocation)
@@ -175,8 +181,7 @@ void AMotionControllerCharacter::BeginPlay()
 void AMotionControllerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//UE_LOG(LogTemp, Log, TEXT("%f"), GetVelocity().Size());
-	
+
 	if (GetVelocity().Size() > 100.0f)
 	{
 		MakeNoiseEmitter();
@@ -317,12 +322,12 @@ void AMotionControllerCharacter::MoveForward(float Value)
 {
 	if (Value != 0)
 	{
-		if(CurrentState == EPlayerState::Run)
-			GetCharacterMovement()->MaxWalkSpeed = 675.0f;
+		if (CurrentState == EPlayerState::Run)
+			GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 		else
 		{
 			CurrentState = EPlayerState::Walk;
-			GetCharacterMovement()->MaxWalkSpeed = 450.0f;
+			GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 		}
 		AddMovementInput(Camera->GetForwardVector(), Value);
 	}
@@ -334,11 +339,11 @@ void AMotionControllerCharacter::MoveRight(float Value)
 	if (Value != 0)
 	{
 		if (CurrentState == EPlayerState::Run)
-			GetCharacterMovement()->MaxWalkSpeed = 675.0f;
+			GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 		else
 		{
 			CurrentState = EPlayerState::Walk;
-			GetCharacterMovement()->MaxWalkSpeed = 450.0f;
+			GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 		}
 		AddMovementInput(Camera->GetRightVector(), Value);
 	}
@@ -389,7 +394,7 @@ void AMotionControllerCharacter::GameMenu()
 		FVector location = FVector(Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, GetActorLocation().Z);
 		FRotator rotator = FRotator(Camera->GetComponentRotation().Pitch + 20.0f, Camera->GetComponentRotation().Yaw + 180.0f, 0.0f);
 		FVector CameraForwardVectorzeroHeight = FVector(Camera->GetForwardVector().X, Camera->GetForwardVector().Y, 0.0f);
-		
+
 		Menu = GetWorld()->SpawnActor<AMenu>(Menu->StaticClass(), location + CameraForwardVectorzeroHeight.GetSafeNormal() * 70.0f,
 			rotator, SpawnActorOption);
 	}
@@ -498,7 +503,7 @@ void AMotionControllerCharacter::AutoStamina()
 	if (CurrentStamina < MaxStamina)			// 스테미너가 Full인 상태가 아닐 때만 실행
 	{
 		CurrentStamina += RecoveryPoint;			// 수치만큼 스테미너 증가
-		
+
 		if (CurrentStamina > MaxStamina)
 		{
 			// 다 차게 되면 스테미너를 Full과 맞춰줌

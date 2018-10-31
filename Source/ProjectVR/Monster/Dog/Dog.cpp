@@ -217,8 +217,6 @@ void ADog::OnAttackCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor
 				AttachToComponent(RightController->AttachDogPosition, AttachRules);
 
 				GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine1", true, true);			// Neck이하는 모조리 피직스 부여
-				GetCapsuleComponent()->SetCapsuleRadius(10.0f);
-				GetCapsuleComponent()->SetCapsuleHalfHeight(10.0f);
 
 				SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 				SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));

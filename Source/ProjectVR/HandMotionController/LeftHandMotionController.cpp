@@ -290,8 +290,10 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 				{
 					if (Character->RightHand)
 					{
-						if(Character->RightHand->AttachDog)
+						if (Character->RightHand->AttachDog)
+						{
 							UGameplayStatics::ApplyDamage(OtherActor, 10.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
+						}
 					}
 				}
 			}

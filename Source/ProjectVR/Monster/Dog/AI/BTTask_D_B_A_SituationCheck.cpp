@@ -62,21 +62,17 @@ void UBTTask_D_B_A_SituationCheck::TickTask(UBehaviorTreeComponent & OwnerComp, 
 			if (bIsDeath)
 			{
 				Dog->GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, LookAt.Yaw, 0.0f));
-				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Neck", true, true);		// 동작가능하게 함
+				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine1", true, true);		// 동작가능하게 함
 				Dog->GetMesh()->SetSimulatePhysics(true);
 				Dog->GetCapsuleComponent()->SetSimulatePhysics(false);				// 동작 가능하게 함
-				Dog->GetCapsuleComponent()->SetCapsuleRadius(30.0f);
-				Dog->GetCapsuleComponent()->SetCapsuleHalfHeight(55.0f);
 				AI->BBComponent->SetValueAsFloat("CustomWaitTime", 2.5f);		// 커스텀 대기시간(죽음)
 				FinishLatentTask(OwnerComp, EBTNodeResult::Failed);				// 틱 종료
 			}
 			else
 			{
 				Dog->GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, LookAt.Yaw, 0.0f));
-				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Spine1", false, true);		// 동작가능하게 함
+				Dog->GetMesh()->SetAllBodiesBelowSimulatePhysics("Bip002-Head", false, true);		// 동작가능하게 함
 				Dog->GetCapsuleComponent()->SetSimulatePhysics(false);				// 동작 가능하게 함
-				Dog->GetCapsuleComponent()->SetCapsuleRadius(30.0f);
-				Dog->GetCapsuleComponent()->SetCapsuleHalfHeight( 55.0f);
 				AI->BBComponent->SetValueAsFloat("CustomWaitTime", 0.3f);		// 커스텀 대기시간(일어나는시간)
 				Dog->CurrentDogAirState = EDogAirState::GetUp;
 				FinishLatentTask(OwnerComp, EBTNodeResult::Failed);				// 틱 종료

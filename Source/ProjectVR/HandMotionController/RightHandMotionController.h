@@ -108,8 +108,10 @@ public:
 	UPROPERTY()
 		bool bisRightGrab;
 
+
 	UPROPERTY()
 		class APotion* Potion;
+	bool bGrabPotion;
 
 	//그립 버튼을 누를때 호출되는 함수
 	UFUNCTION()

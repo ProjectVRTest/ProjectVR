@@ -135,6 +135,8 @@ ARightHandMotionController::ARightHandMotionController()
 	interaction->InteractionDistance = 100.0f;
 	interaction->bShowDebug = true;
 
+	bGrabPotion = false;		// 포션 없음
+
 	// 개한테 물렸을 때, 한 방향으로 지속되는 시간
 	DefaultTime = 0.2f;
 	SwayTime = DefaultTime;
@@ -235,7 +237,6 @@ void ARightHandMotionController::Tick(float DeltaTime)
 		
 		Currentlinear = HandMoveVelocity.Size();
 
-		UE_LOG(LogTemp, Log, TEXT("%f     /    %f     /     %f      /     %d"), HandMoveVelocity.Size(), Currentlinear, Prelinear,stack);
 
 		if (Currentlinear > 45.0f) stack++;
 		else
@@ -297,6 +298,7 @@ void ARightHandMotionController::GrabActor()
 							Potion->SetActorRelativeScale3D(FVector(1.1f, 1.1f, 1.1f));
 							Potion->AttachToComponent(PotionPosition, AttachRules);//스폰한 검을 SwordAttachScene에 붙인다.
 							HandGrabState();
+							bGrabPotion = true;
 						}
 						else
 						{
@@ -373,6 +375,7 @@ void ARightHandMotionController::ReleaseActor()
 							}
 							else
 							{
+								bGrabPotion = false;
 								AttachPotion->BagInputFlag = true;
 								AttachPotion->Mesh->SetCollisionProfileName("NoCollision");
 								AttachPotion->Mesh->SetSimulatePhysics(true);
@@ -468,15 +471,21 @@ void ARightHandMotionController::HandGrabState()
 
 void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+	
+	// 종류 : 포션박스, 머리, 문, 기타액터
+	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
+	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
+	{
+		if (OtherComp->ComponentHasTag("Head"))
+		{
+			HandNomalState();
+		}
+		return;
+	}
 	if (AttachedActor)
 	{
 		return;
 	}
-	// 종류 : 포션박스, 머리, 문, 기타액터
-	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
-	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
-		return;
-
 	// 메뉴의 공간 범위안에 들어가면 검을 지우는 오픈상태로 되게 함
 	if (OtherComp->ComponentHasTag("GrabRange"))
 	{
@@ -507,6 +516,8 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 
 void ARightHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
+	
+
 	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
 	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
 		return;
