@@ -26,6 +26,8 @@ ADoorLock::ADoorLock()
 	Lock->bGenerateOverlapEvents = true;
 	Lock->SetCollisionProfileName("OverlapAll");
 	Tags.Add("Lock");
+	//Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	//Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
@@ -46,6 +48,7 @@ void ADoorLock::OnOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherAc
 {
 	if (OtherActor->ActorHasTag("Key"))
 	{
+		UE_LOG(LogTemp, Log, TEXT("Lopetegi"));
 		OpenEvent.ExecuteIfBound();
 	}
 }

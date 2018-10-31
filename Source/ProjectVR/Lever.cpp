@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"							// 캐릭터 찾기
 #include "HandMotionController/RightHandMotionController.h"
+#include "HandMotionController/LeftHandMotionController.h"
 #include "Engine/World.h"
 #include "Engine/StaticMesh.h"
 
@@ -74,12 +75,25 @@ void ALever::Tick(float DeltaTime)
 	if (TouchActor)
 	{
 		ARightHandMotionController* RightHand = Cast<ARightHandMotionController>(TouchActor);
+		ALeftHandMotionController* LeftHand = Cast<ALeftHandMotionController>(TouchActor);
 		if (RightHand)
 		{
 			if (RightHand->bisRightGrab)		// 참이면 상호작용 실행
 			{
 				FVector Cal = UKismetMathLibrary::InverseTransformLocation
 				(GetActorTransform(), RightHand->GetActorLocation());
+
+				float degree = UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(-Cal.Y, -Cal.X));
+
+				LeverScene->SetRelativeRotation(FRotator(0.0f, degree, 0.0f));
+			}
+		}
+		else if(LeftHand)
+		{
+			if (LeftHand->bisLeftGrab)		// 참이면 상호작용 실행
+			{
+				FVector Cal = UKismetMathLibrary::InverseTransformLocation
+				(GetActorTransform(), LeftHand->GetActorLocation());
 
 				float degree = UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(-Cal.Y, -Cal.X));
 
@@ -103,6 +117,18 @@ void ALever::OnLeverOverlap(UPrimitiveComponent * OverlappedComp, AActor * Other
 		if (Character)
 		{
 			ARightHandMotionController* RightHand = Cast<ARightHandMotionController>(OtherActor);
+
+			if (RightHand)
+				TouchActor = Character->RightHand;
+		}
+	}
+	
+	if (OtherActor->ActorHasTag("LeftHand"))
+	{
+		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		if (Character)
+		{
+			ALeftHandMotionController* RightHand = Cast<ALeftHandMotionController>(OtherActor);
 
 			if (RightHand)
 				TouchActor = Character->RightHand;

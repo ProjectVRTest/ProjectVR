@@ -19,7 +19,8 @@
 #include "Engine/StaticMesh.h"
 #include "Haptics/HapticFeedbackEffect_Base.h"
 #include "Components/WidgetInteractionComponent.h"			// 상호작용
-
+#include "Object/Door/LockKey.h"		// 문열 때 키 생성
+#include "Object/Door/DoorLock.h"		// 이벤트
 
 // Sets default values
 ALeftHandMotionController::ALeftHandMotionController()
@@ -207,123 +208,233 @@ void ALeftHandMotionController::Tick(float DeltaTime)
 	}
 }
 
-//그립버튼을 누를때 호출되는 함수
+//그립버튼을 눌럿을시 호출되는 함수
 void ALeftHandMotionController::GrabActor()
 {
 	AActor* NearestMesh; //근처에 있는 액터를 저장해둘 변수
 	WantToGrip = true; //쥔상태로 바꾼다.
-
+	bisLeftGrab = true;
 	if (HandTouchActorFlag)//손에 액터가 부딪힌 상태이면
 	{
 		NearestMesh = GetActorNearHand(); //근처에 있는 액터가 뭔지 판별한다.
 		if (NearestMesh) //근처에 액터가 있으면
 		{
-			// 왼손은 어떤 것도 집을 수 없다.
-			// 문을 여는 것이라면 붙일 수는 있겠지만, 손을 따라다니지는 않는다.
-		}
-	}
-}
-
-//그립버튼을 뗄때 호출되는 함수
-void ALeftHandMotionController::ReleaseActor()
-{
-	if (AttachedActor)
-	{
-		WantToGrip = false;//쥐지않은 상태로 바꾼다.
-		VisibleShieldFlag = false;			// 단지 그랩을 풀었을 뿐. 오버랩엔드 함수에서 액터로부터 빠져나오면 true로 바꾼다.
-		if (AttachedActor->GetRootComponent()->GetAttachParent() == MotionController)
-		{
-			if (AttachedActor->ActorHasTag("Door"))			// 왼손이 잡을 수 있는것은 문 뿐이다.
+			Shield->SetActorHiddenInGame(true);	// 검을 숨김 -> GrabActor함수로 인해 근처에 액터가 있을 때 검을 보이지 않게 한다.
+			if (NearestMesh->ActorHasTag("Door"))
 			{
-				// 문을 잡았다 놓았을 때
+				AttachedActor = NearestMesh;
+				// 문을 여는 것이라면 붙일 수는 있겠지만, 손을 따라다니지는 않는다.
 			}
-		}
-	}
-}
-
-//손주위에 있는 액터들 중에서 가장 가까이 있는 액터를 구하는 함수
-AActor * ALeftHandMotionController::GetActorNearHand()
-{
-	TArray<AActor*> OverlappingActors;//손주위에 있는 액터들을 담기위해 선언해준 변수
-
-	FVector GrabSphereLocation; //손 콜리전의 위치를 저장해둘 변수
-	FVector OverlappingActorLocation; //콜리전에 부딪힌 액터의 위치를 저장해둘 변수
-	FVector SubActorLocation; //손 콜리전과 콜리전에 부딪힌 액터의 거리값을 저장해둘 변수
-	AActor* NearestOverlappingActor = nullptr; //손에서 가장가까이 있는 액터를 저장해둘 변수 
-	float NearestOverlap = 10000.0f;//가장 가까이 있는 액터를 판별해주기 위해 임의로 지정한 거리값
-
-	GrabSphere->GetOverlappingActors(OverlappingActors, AActor::StaticClass()); //손 콜리전에 부딪힌 모든액터들을 가져와서 앞서 선언해준 배열에 담는다.
-	GrabSphereLocation = GrabSphere->GetComponentLocation(); //손 콜리전의 위치를 저장해둔다.
-
-	for (AActor* OverlappingActor : OverlappingActors) //배열에 담겨있는 액터들을 돌면서
-	{
-		if (OverlappingActor->ActorHasTag("DisregardForRightHand") || OverlappingActor->ActorHasTag("DisregardForLeftHand")) //안에 담겨 있는 액터가 캐릭터, 오른손, 검, 방패이면 
-		{
-			continue; //무시하고 다음번 배열로 속행한다.
-		}
-		else if (OverlappingActor->ActorHasTag("Door"))		// 접한 액터가 'Door'라는 태그를 가지고 있으면 실행.
-		{
-			OverlappingActorLocation = OverlappingActor->GetActorLocation();// 배열에 있는 액터의 거리를 저장한다.
-			SubActorLocation = OverlappingActorLocation - GrabSphereLocation; // 부딪힌 액터와 손콜리전 사이의 위치를 구한다.
-			if (SubActorLocation.Size() < NearestOverlap) //부딪힌 액터와 손콜리전 사이의 거리가 이전 액터의 거리보다 작으면
+			else if (NearestMesh->ActorHasTag("Lock"))
 			{
-				NearestOverlappingActor = OverlappingActor; //부딪힌 액터를 가장가까이 있는 액터로 정한다.
-			}
-		}
-	}
-	return NearestOverlappingActor; //반복문을 돌며 구한 가장가까이 있는 액터를 반환한다.
-}
-
-void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
-	if (OtherComp->ComponentHasTag("DogAttackCollision"))
-	{
-		ADog* RagdollDog = Cast<ADog>(OtherActor);
-
-		if (HandOwner->RightHand->AttachDog == RagdollDog)	// 개가 물고 있지 않으면 왼손과 어떤 상호작용을 해도 무시할 수 있어야 함
-		{
-			if (HandMoveVelocity.Size() >= 100.0f)
-			{
-				AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-				if (Character)
+				if (HandOwner->bHasKey)
 				{
-					if (Character->RightHand)
+					// 자물쇠에 그랩하면 문열리고 나머지 다 사라짐
+					ADoorLock* Lock = Cast<ADoorLock>(NearestMesh);
+					if (Lock)
 					{
-						if (Character->RightHand->AttachDog)
-						{
-							UGameplayStatics::ApplyDamage(OtherActor, 10.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
-						}
+						Lock->OpenEvent.ExecuteIfBound();
+						Lock->Destroy();
+						HandOwner->bHasKey = false;
+						HandNomalState();
 					}
 				}
 			}
 		}
 	}
+}
 
-	if (OtherActor->ActorHasTag("Door"))			// 문에서 오버랩 되면 실행
+void ALeftHandMotionController::ReleaseActor()
+{
+	bisLeftGrab = false;
+	if (AttachedActor)
 	{
-		VisibleShieldFlag = false;					// 방패를 보이게 하지 않는다.
-		Shield->SetActorHiddenInGame(true);			// 방패를 숨긴다.(보이지 않게 한다.)
-		HandTouchActorFlag = true;					// 손에서 물체와 부딪혔다.
+		WantToGrip = false;
+		VisibleShieldFlag = false;			// 단지 그랩을 풀었을 뿐. 오버랩엔드 함수에서 액터로부터 빠져나오면 true로 바꾼다.
+		if (AttachedActor->GetRootComponent()->GetAttachParent() == MotionController)
+		{
+			if (AttachedActor->ActorHasTag("Door"))
+			{
+
+			}
+			else		// 문 이외의 것들
+			{
+				AttachedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);			// 잡은 물체와 뗀다
+			}
+		}
+		AttachedActor = nullptr;			// 현재 잡은 것이 없다.
+	}
+	else			// 메뉴에서 그랩 후 릴리즈하면 아무것도 없는 오픈상태여야하기 때문에 잡힌 것이 없을 때 진행
+	{
+		if (Shield->bHidden)		// 칼이 숨겨져 있을 때(메뉴 범위에 손이 들어가있을 때)
+			HandOpenState();		// 릴리즈 시 오픈상태로 변환
+	}
+}
+
+AActor * ALeftHandMotionController::GetActorNearHand()
+{
+	TArray<AActor*> OverlappingActors;
+
+	FVector GrabSphereLocation;
+	FVector OverlappingActorLocation;
+	FVector SubActorLocation;
+	AActor* NearestOverlappingActor = nullptr;
+	float NearestOverlap = 10000.0f;
+	GrabSphere->GetOverlappingActors(OverlappingActors, AActor::StaticClass());
+	GrabSphereLocation = GrabSphere->GetComponentLocation();
+
+	for (AActor* OverlappingActor : OverlappingActors)
+	{
+		//GLog->Log(UKismetSystemLibrary::GetObjectName(OverlappingActor));
+		if (OverlappingActor->ActorHasTag("DisregardForRightHand") || OverlappingActor->ActorHasTag("DisregardForLeftHand"))
+		{
+			continue;
+		}
+		else if (OverlappingActor->ActorHasTag("PotionBag"))
+		{
+			NearestOverlappingActor = OverlappingActor;
+			break;
+		}
+		else if (OverlappingActor->ActorHasTag("Door"))
+		{
+			NearestOverlappingActor = OverlappingActor;
+			break;
+		}
+		else		// 기타 액터
+		{
+			OverlappingActorLocation = OverlappingActor->GetActorLocation();
+			SubActorLocation = OverlappingActorLocation - GrabSphereLocation;
+			if (SubActorLocation.Size() < NearestOverlap)
+			{
+				NearestOverlappingActor = OverlappingActor;
+				break;
+			}
+		}
+	}
+	return NearestOverlappingActor;
+}
+
+void ALeftHandMotionController::HandNomalState()
+{
+	HandTouchActorFlag = false;
+	WantToGrip = true;
+	VisibleShieldFlag = true;
+	Shield->SetActorHiddenInGame(false); // 검 보이게함
+	AttachedActor = nullptr;		// 포션이 삭제되므로 손에 붙은 액터를 null값으로 바꾼다.
+}
+
+void ALeftHandMotionController::HandOpenState()
+{
+	HandTouchActorFlag = true;
+	WantToGrip = false;
+	VisibleShieldFlag = false;
+	Shield->SetActorHiddenInGame(true); //검을 숨김
+}
+
+void ALeftHandMotionController::HandGrabState()
+{
+	HandTouchActorFlag = false;
+	WantToGrip = true;
+	VisibleShieldFlag = false;
+	Shield->SetActorHiddenInGame(true); //검을 숨김
+}
+
+void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	if (OtherActor->ActorHasTag("Lock"))
+	{
+		bOverlapLock = true;
+		if (HandOwner->bHasKey)
+		{
+			HandGrabState();
+			FActorSpawnParameters SpawnActorOption; //액터를 스폰할때 쓰일 구조체 변수
+			SpawnActorOption.Owner = this; //스폰할 액터의 주인을 현재 클래스로 정한다.
+			SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;//액터를 스폰할때 충돌과 관계없이 스폰시킨다.
+			FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+			Key = GetWorld()->SpawnActor<ALockKey>(Key->StaticClass(), ShieldAttachScene->GetComponentLocation(), ShieldAttachScene->GetComponentRotation(), SpawnActorOption);
+
+			if (Key)
+			{
+				Key->AttachToComponent(HandMesh, AttachRules, TEXT("CharacterSwordSocket"));
+			}
+		}
+		return;
+	}
+	// 종류 : 포션박스, 머리, 문, 기타액터
+	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
+	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
+	{
+		if (OtherComp->ComponentHasTag("Head"))
+		{
+			HandNomalState();
+		}
+		return;
+	}
+	if (AttachedActor)
+	{
+		return;
+	}
+	// 메뉴의 공간 범위안에 들어가면 검을 지우는 오픈상태로 되게 함
+	if (OtherComp->ComponentHasTag("GrabRange"))
+	{
+		HandOpenState();
 		return;
 	}
 
-	if (OtherActor->ActorHasTag("DisregardForLeftHand"))
+	if (OtherActor->ActorHasTag("PotionBag"))		// 'PotionBox'라는 태그를 가진 액터일 때
+	{
+		HandOpenState();
 		return;
+	}
+	else if (OtherActor->ActorHasTag("Door"))		// 'Door'라는 태그를 가진 액터일 때
+	{
+		HandOpenState();
+		return;
+	}
+	else if (OtherActor->ActorHasTag("DisregardForRightHand"))
+	{
+		return;
+	}
+	else 		// 다른 액터일 때
+	{
+		HandOpenState();
+		return;
+	}
 }
 
 void ALeftHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->ActorHasTag("Door"))			// 문에서 오버랩 엔드 되면 실행
+	if (OtherActor->ActorHasTag("Lock"))
 	{
-		VisibleShieldFlag = true;					// 방패를 볼 수 있다.
-		HandTouchActorFlag = false;					// 손에서 물체와 부딪히지 않았다.
-		Shield->SetActorHiddenInGame(false);		// 방패를 숨기지 않는다.(보이게 한다)
+		bOverlapLock = false;
+		if (Key)
+		{
+			Key->Destroy();
+			HandNomalState();
+		}
+	}
+
+	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
+	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
+		return;
+
+	// 메뉴의 공간 범위를 나가게되면 검을 든 보통상태로 있게 함
+	if (OtherComp->ComponentHasTag("GrabRange"))
+	{
+		HandNomalState();
 		return;
 	}
-	if (OtherActor->ActorHasTag("DisregardForLeftHand"))
+
+	if (OtherActor->ActorHasTag("DisregardForRightHand"))
 		return;
+
+	if (HandState != E_HandState::Grab)
+		HandNomalState();
+
+	return;
 }
+
 
 FString ALeftHandMotionController::GetEnumToString(EControllerHand Value)
 {

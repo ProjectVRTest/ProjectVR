@@ -25,6 +25,8 @@ ALockKey::ALockKey()
 	Key->bGenerateOverlapEvents = true;
 	Key->SetCollisionProfileName("OverlapAll");
 	Tags.Add("Key");
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
@@ -51,7 +53,7 @@ void ALockKey::OnOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherAct
 		if (!Character->bHasKey)
 		{
 			Character->bHasKey = true;
-			Destroy(this);
+			Destroy();
 		}
 	}
 }
