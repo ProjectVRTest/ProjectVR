@@ -31,10 +31,10 @@ ALever::ALever()
 	Collision->SetupAttachment(Lever);
 
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>PotionShape(TEXT("StaticMesh'/Game/Assets/MapBuild/RoughMap/Bridge/mesh/bridge_door_bridge_door_01.bridge_door_bridge_door_01'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
-	if (PotionShape.Succeeded())		// 검 메쉬를 찾았을 경우 실행
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Door(TEXT("StaticMesh'/Game/Assets/MapBuild/RoughMap/Bridge/mesh/bridge_door_bridge_door_01.bridge_door_bridge_door_01'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
+	if (SM_Door.Succeeded())		// 검 메쉬를 찾았을 경우 실행
 	{
-		LeverScene->SetStaticMesh(PotionShape.Object);			// 스태틱 메쉬에 검 모양 설정
+		LeverScene->SetStaticMesh(SM_Door.Object);			// 스태틱 메쉬에 검 모양 설정
 	}
 
 	LeverScene->SetRelativeScale3D(FVector(4.0f, 4.0f, 4.0f));

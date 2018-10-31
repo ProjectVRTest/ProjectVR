@@ -78,14 +78,14 @@ public:
 		bool bAllowBreathe;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float DashPower;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
 		float WalkSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
 		float RunSpeed;
 
 	// 스테미너 관련
-		float CurrentStamina;
+	float CurrentStamina;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
 		float MaxStamina;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
@@ -105,7 +105,7 @@ public:
 	UFUNCTION()
 		void AutoStamina();			// 자동으로 스테미너 채워주는 함수
 
-
+	bool bHasKey;		// 키를 가지고 있는지
 
 
 
@@ -134,7 +134,7 @@ public:
 		void MoveForward(float Value);
 	UFUNCTION()
 		void MoveRight(float Value);
-	
+
 	UFUNCTION()
 		void RunOn();
 	UFUNCTION()
