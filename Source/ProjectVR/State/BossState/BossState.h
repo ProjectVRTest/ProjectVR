@@ -73,5 +73,6 @@ enum class EBossBattleWatchState : uint8
 	Walk = 1 UMETA(DisplayName = "Walk"),
 	BattleWatchDistanceCheck = 2 UMETA(DisplayName = "BattleWatchDistanceCheck"),
 	InVisible = 3 UMETA(DisplayName = "InVisible"),
-	Visible = 4 UMETA(DisplayName = "Visible")
+	Visible = 4 UMETA(DisplayName = "Visible"),
+	Confrontation = 5 UMETA(DisplayName = "Confrontation")
 };

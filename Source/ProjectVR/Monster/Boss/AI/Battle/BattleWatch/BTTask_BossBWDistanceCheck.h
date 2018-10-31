@@ -14,6 +14,5 @@ class PROJECTVR_API UBTTask_BossBWDistanceCheck : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 public:
-	int a;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };
