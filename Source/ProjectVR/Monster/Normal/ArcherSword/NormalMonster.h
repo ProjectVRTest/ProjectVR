@@ -105,4 +105,6 @@ public:
 		void SetEquipment();
 	UFUNCTION()
 		void SetTarget();
+	UFUNCTION()
+		void SetCurrentHP(float HP);
 };

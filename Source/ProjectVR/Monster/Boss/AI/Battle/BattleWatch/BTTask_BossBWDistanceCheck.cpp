@@ -14,19 +14,16 @@ EBTNodeResult::Type UBTTask_BossBWDistanceCheck::ExecuteTask(UBehaviorTreeCompon
 		if (Boss)
 		{
 			float Distance = AI->BBComponent->GetValueAsFloat("Distance");
-
-			Boss->CurrentBattleWatchState = EBossBattleWatchState::InVisible;			
-
+			
 			if (Distance >= 600.0f)
 			{
-				//Boss->CurrentBattleWatchState = EBossBattleWatchState::Idle;
-				//Boss->CurrentBlinkAttackState = EBossBlinkAttackState::InVisible;
+				Boss->CurrentBattleWatchState = EBossBattleWatchState::InVisible;
 			}
 			else
 			{
 				int RandomPatternValue = FMath::RandRange(1, 10);
 
-				if (RandomPatternValue > 5)
+				if (RandomPatternValue < 5)
 				{
 
 				}

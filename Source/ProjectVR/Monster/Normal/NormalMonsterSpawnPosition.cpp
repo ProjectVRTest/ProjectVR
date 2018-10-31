@@ -37,7 +37,7 @@ void ANormalMonsterSpawnPosition::BeginPlay()
 			if (NormalMonsterAI)
 			{
 				NormalMonsterAI->Possess(NormalMonster);
-				
+				NormalMonster->SetCurrentHP(5.0f);
 			}
 		}		
 		break;
@@ -50,7 +50,8 @@ void ANormalMonsterSpawnPosition::BeginPlay()
 			NormalMonster->SetNormalMonsterKind(MonsterKind);
 			if (NormalMonsterAI)
 			{
-				NormalMonsterAI->Possess(NormalMonster);				
+				NormalMonsterAI->Possess(NormalMonster);	
+				NormalMonster->SetCurrentHP(5.0f);
 			}
 		}
 		break;
