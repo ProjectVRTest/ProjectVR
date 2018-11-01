@@ -104,7 +104,7 @@ void ALever::Tick(float DeltaTime)
 	
 	if (LeverScene->RelativeRotation.Yaw > 10.0f)
 	{
-		LeverScene->SetRelativeRotation(FMath::Lerp(LeverScene->RelativeRotation, AutoRot, 0.05f));
+		LeverScene->SetRelativeRotation(FMath::Lerp(LeverScene->RelativeRotation, AutoRot, 0.01f));
 	}
 
 }

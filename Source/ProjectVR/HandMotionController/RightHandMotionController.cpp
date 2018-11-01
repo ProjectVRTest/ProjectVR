@@ -133,13 +133,16 @@ ARightHandMotionController::ARightHandMotionController()
 	SwordAttachScene->SetRelativeRotation(FRotator(0, 60.0f, -175.082443f)); //롤 방향으로 180도 돌리고
 	SwordAttachScene->SetRelativeLocation(FVector(3.238229f, 5.621831f, -3.814407f)); //x축으로 10만큼 이동시킨다.
 
+	KeySocket = CreateDefaultSubobject<USceneComponent>(TEXT("KeySocket"));
+	KeySocket->SetupAttachment(HandMesh);
+
+	KeySocket->SetRelativeLocation(FVector(10.0f, 0.0f, 0.5f));
+	KeySocket->SetRelativeRotation(FRotator(88.0f, 180.0f, 180.0f));
+	// 88.0f 
 	interaction->InteractionDistance = 100.0f;
 	interaction->bShowDebug = true;
 
 	bGrabPotion = false;		// 포션 없음
-
-	// 키
-	bOverlapLock = false;
 
 	// 개한테 물렸을 때, 한 방향으로 지속되는 시간
 	DefaultTime = 0.2f;
@@ -268,23 +271,23 @@ void ARightHandMotionController::GrabActor()
 				AttachedActor = NearestMesh;
 				// 문을 여는 것이라면 붙일 수는 있겠지만, 손을 따라다니지는 않는다.
 			}
-			else if (NearestMesh->ActorHasTag("Lock"))
-			{
-				UE_LOG(LogTemp, Log, TEXT("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"));
-				if (HandOwner->bHasKey)
-				{
-					UE_LOG(LogTemp, Log, TEXT("Event@@@@@@@@@@@@@@@@@@@@@@@"));
-					// 자물쇠에 그랩하면 문열리고 나머지 다 사라짐
-					ADoorLock* Lock = Cast<ADoorLock>(NearestMesh);
-					if (Lock)
-					{
-						Lock->OpenEvent.ExecuteIfBound();
-						Lock->Destroy();
-						HandOwner->bHasKey = false;
-						HandNomalState();
-					}
-				}
-			}
+			//else if (NearestMesh->ActorHasTag("Lock"))
+			//{
+			//	UE_LOG(LogTemp, Log, TEXT("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"));
+			//	if (HandOwner->bHasKey)
+			//	{
+			//		UE_LOG(LogTemp, Log, TEXT("Event@@@@@@@@@@@@@@@@@@@@@@@"));
+			//		// 자물쇠에 그랩하면 문열리고 나머지 다 사라짐
+			//		ADoorLock* Lock = Cast<ADoorLock>(NearestMesh);
+			//		if (Lock)
+			//		{
+			//			Lock->OpenEvent.ExecuteIfBound();
+			//			Lock->Destroy();
+			//			HandOwner->bHasKey = false;
+			//			HandNomalState();
+			//		}
+			//	}
+			//}
 			else if (NearestMesh->ActorHasTag("PotionBag"))
 			{
 				APotionBag* PotionBag = Cast<APotionBag>(NearestMesh);
@@ -494,7 +497,24 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 {
 	if (OtherActor->ActorHasTag("Lock"))
 	{
-		bOverlapLock = true;
+		if (HandOwner->bHasKey)
+			Lock = Cast<ADoorLock>(OtherActor);
+	}
+
+	if (OtherComp->ComponentHasTag("BodyLock"))
+	{
+		if (HandOwner->bHasKey)
+		{
+			Lock->GetLockKey();
+			HandNomalState();
+			Key->Destroy();
+			Lock = NULL;
+		}
+		return;
+	}
+
+	if (OtherComp->ComponentHasTag("LockArea"))
+	{
 		if (HandOwner->bHasKey)
 		{
 			HandGrabState();
@@ -503,15 +523,16 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 			SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;//액터를 스폰할때 충돌과 관계없이 스폰시킨다.
 			FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
-			Key = GetWorld()->SpawnActor<ALockKey>(Key->StaticClass(), SwordAttachScene->GetComponentLocation(), SwordAttachScene->GetComponentRotation(), SpawnActorOption);
+			Key = GetWorld()->SpawnActor<ALockKey>(Key->StaticClass(), KeySocket->GetComponentLocation(), KeySocket->GetComponentRotation(), SpawnActorOption);
 
 			if (Key)
 			{
-				Key->AttachToComponent(HandMesh, AttachRules, TEXT("CharacterSwordSocket"));
+				Key->AttachToComponent(KeySocket, AttachRules);
 			}
 		}
 		return;
 	}
+	
 	// 종류 : 포션박스, 머리, 문, 기타액터
 	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
 	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
@@ -557,13 +578,15 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 void ARightHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
 	if (OtherActor->ActorHasTag("Lock"))
+		Lock = NULL;
+
+	if (OtherComp->ComponentHasTag("LockArea"))
 	{
-		bOverlapLock = false;
 		if (Key)
 		{
 			Key->Destroy();
-			HandNomalState();
 		}
+		HandNomalState();
 	}
 
 	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)

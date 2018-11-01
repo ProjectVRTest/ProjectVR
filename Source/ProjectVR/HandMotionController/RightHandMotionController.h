@@ -155,10 +155,11 @@ public:
 	// 손의 운동 값
 	FVector HandCurrentPosistion, HandMoveDelta, HandPreviousPosistion, HandMoveVelocity;
 
-
 	// 키
 	UPROPERTY(EditAnywhere)
 		class ALockKey* Key;
-	bool bOverlapLock;
-
+	UPROPERTY(EditAnywhere)
+		class ADoorLock* Lock;
+	UPROPERTY(EditAnywhere)
+		class USceneComponent* KeySocket;
 };

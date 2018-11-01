@@ -26,21 +26,39 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Scene")
 		class USceneComponent* Scene;
-	UPROPERTY(EditAnywhere)
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Scene")
+		class USceneComponent* LockScene;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Scene")
+		class USceneComponent* CollisionScene;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lock")
 		class UStaticMeshComponent* Body;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lock")
 		class UStaticMeshComponent* Button;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lock")
 		class UStaticMeshComponent* Opener;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lock")
 		class UStaticMeshComponent* Chain;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LockCollision")
+		class UBoxComponent* BoxCollision;
+
+	UPROPERTY()
+		class ALockKey* Key;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Scene")
+		class USceneComponent* KeySocket;
+
+	FTimerHandle OpenHandle;			// 타이머핸들
 
 	FOpenEvent OpenEvent;
 
 	UFUNCTION()
-		void OnOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
-			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 오른손과 상호작용하기 위해서 만듦
-	
+		void OpenDoor();
+
+	UFUNCTION()
+		void GetLockKey();
 };
