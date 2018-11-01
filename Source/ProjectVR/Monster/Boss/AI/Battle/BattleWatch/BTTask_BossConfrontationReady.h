@@ -12,9 +12,7 @@
 UCLASS()
 class PROJECTVR_API UBTTask_BossConfrontationReady : public UBTTask_BlackboardBase
 {
-	GENERATED_BODY()
-	
-	
-	
-	
+	GENERATED_BODY()	
+public:
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;		
 };

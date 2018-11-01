@@ -29,18 +29,8 @@ EBTNodeResult::Type UBTTask_BossBWDistanceCheck::ExecuteTask(UBehaviorTreeCompon
 				}
 				else
 				{
-					int RandomPattern = FMath::RandRange(0, 1);
-
-					//왼쪽 오른쪽을 선택하는 아래의 구문을 BossConfrontationReady로 옮겨야함
-					if (RandomPattern == 0)
-					{
-						Boss->CurrentConfrontationState = EBossConfrontationState::LeftWalk;
-					}
-					else
-					{
-						Boss->CurrentConfrontationState = EBossConfrontationState::RightWalk;
-					}					
-					Boss->CurrentBattleWatchState = EBossBattleWatchState::Confrontation;
+					Boss->CurrentConfrontationState = EBossConfrontationState::ConfrontationReady;
+					Boss->CurrentBattleWatchState = EBossBattleWatchState::Confrontation;						
 				}
 			}
 		}

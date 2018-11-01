@@ -15,20 +15,19 @@ EBTNodeResult::Type UBTTask_BossConfrontationState::ExecuteTask(UBehaviorTreeCom
 		{
 			int RandomPattern = FMath::RandRange(0,1);
 
+			if (RandomPattern == 0)
+			{
+				Boss->CurrentConfrontationState = EBossConfrontationState::Idle;
+				Boss->CurrentBattleWatchState = EBossBattleWatchState::Idle;
+				Boss->CurrentBattleState = EBossBattleState::AttackReady;
+			}
+			else
+			{
+				Boss->CurrentConfrontationState = EBossConfrontationState::Idle;
+				Boss->CurrentBattleWatchState = EBossBattleWatchState::Idle;
 				Boss->CurrentLongAttackState = EBossLongAttackState::WaveAttack;
 				Boss->CurrentBattleState = EBossBattleState::LongAttack;
-
-			//if (RandomPattern == 0)
-			//{
-			//	Boss->CurrentBattleWatchState = EBossBattleWatchState::Idle;
-			//	Boss->CurrentBattleState = EBossBattleState::AttackReady;
-			//}
-			//else
-			//{
-			//	Boss->CurrentLongAttackState = EBossLongAttackState::WaveAttack;
-			//	Boss->CurrentBattleState = EBossBattleState::LongAttack;
-			//	//웨이브4 스킬
-			//}
+			}
 		}
 	}
 	return EBTNodeResult::Succeeded;

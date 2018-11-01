@@ -28,7 +28,11 @@ public:
 		class USphereComponent* Sphere;
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 		class UProjectileMovementComponent* Projecttile;
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystem* AddAttackBallEffect;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+		class UParticleSystemComponent* AddAttackBallEffectComponent;
+
 	UFUNCTION()
 		void Homing(class AActor* Target);
 	UFUNCTION()
