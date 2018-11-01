@@ -6,6 +6,10 @@
 #include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"							// 캐릭터 찾기
 #include "MyCharacter/MotionControllerCharacter.h"
+#include "Components/BoxComponent.h"
+#include "Object/Door/LockKey.h"		// 문열 때 키 생성
+#include "Engine/World.h"
+#include "Public/TimerManager.h" 
 
 // Sets default values
 ADoorLock::ADoorLock()
@@ -16,14 +20,26 @@ ADoorLock::ADoorLock()
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	Scene->SetupAttachment(RootComponent);
 
+	LockScene = CreateDefaultSubobject<USceneComponent>(TEXT("LockScene"));
+	LockScene->SetupAttachment(Scene);
+
+	CollisionScene = CreateDefaultSubobject<USceneComponent>(TEXT("CollisionScene"));
+	CollisionScene->SetupAttachment(Scene);
+
+	KeySocket = CreateDefaultSubobject<USceneComponent>(TEXT("KeySocket"));
+	KeySocket->SetupAttachment(Scene);
+
 	Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body"));
-	Body->SetupAttachment(Scene);
+	Body->SetupAttachment(LockScene);
 	Button = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Button"));
-	Button->SetupAttachment(Scene);
+	Button->SetupAttachment(LockScene);
 	Opener = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Opener"));
-	Opener->SetupAttachment(Scene);
+	Opener->SetupAttachment(LockScene);
 	Chain = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Chain"));
-	Chain->SetupAttachment(Scene);
+	Chain->SetupAttachment(LockScene);
+
+	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+	BoxCollision->SetupAttachment(CollisionScene);
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Body(TEXT("StaticMesh'/Game/Assets/MapBuild/RoughMap/Locks/Lock/lock_low_Object002.lock_low_Object002'"));
 	if (SM_Body.Succeeded())
@@ -46,11 +62,18 @@ ADoorLock::ADoorLock()
 		Chain->SetStaticMesh(SM_Chain.Object);
 	}
 
-	Scene->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
-
-	Chain->SetRelativeScale3D(FVector(7.5f, 7.5f, 7.5f));
 	Chain->SetRelativeLocation(FVector(-2.0f, -218.0f, 127.0f));
 	Chain->SetWorldRotation(FRotator(0.0f, 0.0f, -57.0f));
+	Chain->SetRelativeScale3D(FVector(7.5f, 7.5f, 7.5f));
+
+	LockScene->SetRelativeRotation(FRotator(0.0f, 0.0f, 54.0f));
+	LockScene->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
+
+	CollisionScene->SetRelativeLocation(FVector(0.0f, 90.0f, 22.0f));
+	CollisionScene->SetRelativeScale3D(FVector(7.5f, 4.0f, 3.0f));
+
+	KeySocket->SetRelativeLocation(FVector(0.32f, 22.6f, 14.17f));
+	KeySocket->SetRelativeRotation(FRotator(0.0f, 0.0f, 54.0f));
 
 	Body->SetEnableGravity(false);
 	Body->bGenerateOverlapEvents = true;
@@ -58,14 +81,20 @@ ADoorLock::ADoorLock()
 	Body->SetCollisionProfileName("OverlapAll");
 	Button->SetCollisionProfileName("OverlapAll");
 	Chain->SetCollisionProfileName("OverlapAll");
+
+	BoxCollision->ComponentTags.Add("LockArea");
+	Body->ComponentTags.Add("BodyLock");
+
 	Tags.Add("Lock");
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
 void ADoorLock::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -75,12 +104,32 @@ void ADoorLock::Tick(float DeltaTime)
 
 }
 
-void ADoorLock::OnOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+void ADoorLock::GetLockKey()
 {
-	if (OtherActor->ActorHasTag("Key"))
+	FActorSpawnParameters SpawnActorOption; //액터를 스폰할때 쓰일 구조체 변수
+	SpawnActorOption.Owner = this; //스폰할 액터의 주인을 현재 클래스로 정한다.
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;//액터를 스폰할때 충돌과 관계없이 스폰시킨다.
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+	Key = GetWorld()->SpawnActor<ALockKey>(Key->StaticClass(), KeySocket->GetComponentLocation(), KeySocket->GetComponentRotation(), SpawnActorOption);
+
+	if (Key)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Lopetegi"));
-		OpenEvent.ExecuteIfBound();
+		Key->AttachToComponent(KeySocket, AttachRules);
 	}
+
+	BoxCollision->bGenerateOverlapEvents = false;
+	Body->bGenerateOverlapEvents = false;
+	Button->bGenerateOverlapEvents = false;
+	Chain->bGenerateOverlapEvents = false;
+
+	GetWorld()->GetTimerManager().SetTimer(OpenHandle, this, &ADoorLock::OpenDoor, 2.0f, false);
+}
+
+void ADoorLock::OpenDoor()
+{
+	OpenEvent.ExecuteIfBound();
+	Key->Destroy();
+	Destroy();
 }
 

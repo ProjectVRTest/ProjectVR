@@ -85,15 +85,14 @@ void ALockedDoor::Tick(float DeltaTime)
 
 		if (Door1->RelativeRotation.Yaw < 60.0f)
 		{
-			Door1->SetRelativeRotation(FMath::Lerp(Door1->RelativeRotation, AutoRot, 0.05f));
-			Door2->SetRelativeRotation(FMath::Lerp(Door2->RelativeRotation, AutoRot, 0.05f));
+			Door1->SetRelativeRotation(FMath::Lerp(Door1->RelativeRotation, AutoRot, 0.01f));
+			Door2->SetRelativeRotation(FMath::Lerp(Door2->RelativeRotation, AutoRot, 0.01f));
 		}
 	}
 }
 
 void ALockedDoor::OpenDoor()
 {
-	UE_LOG(LogTemp, Log, TEXT("Open@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	bGetKey = true;
 	Door1->SetCollisionProfileName("NoCollision");
 	Door2->SetCollisionProfileName("NoCollision");

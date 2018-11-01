@@ -154,7 +154,7 @@ void ALeftHandMotionController::BeginPlay()
 	PotionBag->AttachToComponent(PotionBagAttachScene, AttachRules);
 
 	GrabSphere->OnComponentBeginOverlap.AddDynamic(this, &ALeftHandMotionController::OnComponentBeginOverlap);
-
+	GrabSphere->OnComponentEndOverlap.AddDynamic(this, &ALeftHandMotionController::OnHandEndOverlap);
 	//기본 메쉬가 오른쪽으로 돌아가 잇으므로
 	//왼손으로 표현하기 위해 크기와 각도를 조정해준다.
 	if (HandMesh)
@@ -302,8 +302,8 @@ void ALeftHandMotionController::HandNomalState()
 	HandTouchActorFlag = false;
 	WantToGrip = true;
 	VisibleShieldFlag = true;
-	Shield->SetActorHiddenInGame(false); // 검 보이게함
-	AttachedActor = nullptr;		// 포션이 삭제되므로 손에 붙은 액터를 null값으로 바꾼다.
+	Shield->SetActorHiddenInGame(false); // 방패 보이게함
+	AttachedActor = nullptr;	
 }
 
 void ALeftHandMotionController::HandOpenState()
@@ -311,7 +311,7 @@ void ALeftHandMotionController::HandOpenState()
 	HandTouchActorFlag = true;
 	WantToGrip = false;
 	VisibleShieldFlag = false;
-	Shield->SetActorHiddenInGame(true); //검을 숨김
+	Shield->SetActorHiddenInGame(true); //방패 숨김
 }
 
 void ALeftHandMotionController::HandGrabState()
@@ -319,7 +319,7 @@ void ALeftHandMotionController::HandGrabState()
 	HandTouchActorFlag = false;
 	WantToGrip = true;
 	VisibleShieldFlag = false;
-	Shield->SetActorHiddenInGame(true); //검을 숨김
+	Shield->SetActorHiddenInGame(true); //방패 숨김
 }
 
 void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
@@ -368,6 +368,12 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 
 void ALeftHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
+	if (OtherActor->ActorHasTag("Door"))
+	{
+		UE_LOG(LogTemp, Log, TEXT("Door@@@@@"));
+		HandNomalState();
+		return;
+	}
 
 	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
 	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
@@ -383,6 +389,7 @@ void ALeftHandMotionController::OnHandEndOverlap(UPrimitiveComponent * Overlappe
 	if (OtherActor->ActorHasTag("DisregardForRightHand"))
 		return;
 
+	
 	if (HandState != E_HandState::Grab)
 		HandNomalState();
 
