@@ -34,11 +34,11 @@ ALockedDoor::ALockedDoor()
 	Door2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door2"));
 	Door2->SetupAttachment(DoorScene2);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Door(TEXT("StaticMesh'/Game/Assets/MapBuild/RoughMap/Bridge/mesh/bridge_door_bridge_door_01.bridge_door_bridge_door_01'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
-	if (SM_Door.Succeeded())		// 검 메쉬를 찾았을 경우 실행
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Door(TEXT("StaticMesh'/Game/Assets/MapBuild/RoughMap/Bridge/mesh/bridge_door_bridge_door_01.bridge_door_bridge_door_01'"));	
+	if (SM_Door.Succeeded())
 	{
-		Door1->SetStaticMesh(SM_Door.Object);			// 스태틱 메쉬에 검 모양 설정
-		Door2->SetStaticMesh(SM_Door.Object);			// 스태틱 메쉬에 검 모양 설정
+		Door1->SetStaticMesh(SM_Door.Object);
+		Door2->SetStaticMesh(SM_Door.Object);
 	}
 
 	DoorScene1->SetRelativeLocation(FVector(252.5, 0.0f, 0.0f));
@@ -69,6 +69,7 @@ void ALockedDoor::BeginPlay()
 	// 이벤트 등록
 	for (TActorIterator<ADoorLock> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
+
 		ActorItr->OpenEvent.BindUObject(this, &ALockedDoor::OpenDoor);
 	}
 
@@ -92,6 +93,7 @@ void ALockedDoor::Tick(float DeltaTime)
 
 void ALockedDoor::OpenDoor()
 {
+	UE_LOG(LogTemp, Log, TEXT("Open@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	bGetKey = true;
 	Door1->SetCollisionProfileName("NoCollision");
 	Door2->SetCollisionProfileName("NoCollision");

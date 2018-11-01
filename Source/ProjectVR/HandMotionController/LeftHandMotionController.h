@@ -103,10 +103,6 @@ public:
 	UFUNCTION()
 		FString GetEnumToString(EControllerHand Value);
 
-	// 키
-	UPROPERTY(EditAnywhere)
-		class ALockKey* Key;
-	bool bOverlapLock;
 	UPROPERTY()
 		bool bisLeftGrab;
 

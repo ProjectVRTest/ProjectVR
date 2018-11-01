@@ -270,8 +270,10 @@ void ARightHandMotionController::GrabActor()
 			}
 			else if (NearestMesh->ActorHasTag("Lock"))
 			{
+				UE_LOG(LogTemp, Log, TEXT("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"));
 				if (HandOwner->bHasKey)
 				{
+					UE_LOG(LogTemp, Log, TEXT("Event@@@@@@@@@@@@@@@@@@@@@@@"));
 					// 자물쇠에 그랩하면 문열리고 나머지 다 사라짐
 					ADoorLock* Lock = Cast<ADoorLock>(NearestMesh);
 					if (Lock)

@@ -17,9 +17,9 @@ public:
 	ABoss();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EBossState CurrentState;
+		EBossState CurrentState; //보스의 메인 상태 (대기,전투,그로기,죽음)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EBossBattleState CurrentBattleState;
+		EBossBattleState CurrentBattleState; //보스의 전투 상태 (전투준비,애드 공격, 근접 공격, 원거리 공격, 전투 주시)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossBlinkAttackState CurrentBlinkAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
@@ -30,6 +30,8 @@ public:
 		EBossParryingState CurrentParryingState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossBattleWatchState CurrentBattleWatchState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossConfrontationState CurrentConfrontationState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;

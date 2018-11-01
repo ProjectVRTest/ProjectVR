@@ -15,10 +15,10 @@ ALockKey::ALockKey()
 	Key = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Key"));
 	Key->SetupAttachment(RootComponent);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Key(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Item/LockAndKey/Key/Mesh/SM_Key.SM_Key'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
-	if (SM_Key.Succeeded())		// 검 메쉬를 찾았을 경우 실행
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Key(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Item/LockAndKey/Key/Mesh/SM_Key.SM_Key'"));
+	if (SM_Key.Succeeded())
 	{
-		Key->SetStaticMesh(SM_Key.Object);			// 스태틱 메쉬에 검 모양 설정
+		Key->SetStaticMesh(SM_Key.Object);
 	}
 
 	Key->SetEnableGravity(false);

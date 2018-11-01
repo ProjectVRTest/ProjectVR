@@ -19,8 +19,6 @@
 #include "Engine/StaticMesh.h"
 #include "Haptics/HapticFeedbackEffect_Base.h"
 #include "Components/WidgetInteractionComponent.h"			// 상호작용
-#include "Object/Door/LockKey.h"		// 문열 때 키 생성
-#include "Object/Door/DoorLock.h"		// 이벤트
 
 // Sets default values
 ALeftHandMotionController::ALeftHandMotionController()
@@ -225,21 +223,6 @@ void ALeftHandMotionController::GrabActor()
 				AttachedActor = NearestMesh;
 				// 문을 여는 것이라면 붙일 수는 있겠지만, 손을 따라다니지는 않는다.
 			}
-			else if (NearestMesh->ActorHasTag("Lock"))
-			{
-				if (HandOwner->bHasKey)
-				{
-					// 자물쇠에 그랩하면 문열리고 나머지 다 사라짐
-					ADoorLock* Lock = Cast<ADoorLock>(NearestMesh);
-					if (Lock)
-					{
-						Lock->OpenEvent.ExecuteIfBound();
-						Lock->Destroy();
-						HandOwner->bHasKey = false;
-						HandNomalState();
-					}
-				}
-			}
 		}
 	}
 }
@@ -341,26 +324,6 @@ void ALeftHandMotionController::HandGrabState()
 
 void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("Lock"))
-	{
-		bOverlapLock = true;
-		if (HandOwner->bHasKey)
-		{
-			HandGrabState();
-			FActorSpawnParameters SpawnActorOption; //액터를 스폰할때 쓰일 구조체 변수
-			SpawnActorOption.Owner = this; //스폰할 액터의 주인을 현재 클래스로 정한다.
-			SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;//액터를 스폰할때 충돌과 관계없이 스폰시킨다.
-			FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
-
-			Key = GetWorld()->SpawnActor<ALockKey>(Key->StaticClass(), ShieldAttachScene->GetComponentLocation(), ShieldAttachScene->GetComponentRotation(), SpawnActorOption);
-
-			if (Key)
-			{
-				Key->AttachToComponent(HandMesh, AttachRules, TEXT("CharacterSwordSocket"));
-			}
-		}
-		return;
-	}
 	// 종류 : 포션박스, 머리, 문, 기타액터
 	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
 	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
@@ -405,15 +368,6 @@ void ALeftHandMotionController::OnComponentBeginOverlap(UPrimitiveComponent * Ov
 
 void ALeftHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->ActorHasTag("Lock"))
-	{
-		bOverlapLock = false;
-		if (Key)
-		{
-			Key->Destroy();
-			HandNomalState();
-		}
-	}
 
 	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
 	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))

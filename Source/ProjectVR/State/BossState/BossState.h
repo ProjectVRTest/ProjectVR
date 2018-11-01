@@ -22,7 +22,8 @@ enum class EBossBattleState : uint8
 	AddAttack = 2 UMETA(DisplayName = "AddAttack"),
 	CloseAttack = 3 UMETA(DisplayName = "CloseAttack"),
 	LongAttack = 4 UMETA(DisplayName = "LongAttack"),
-	BattleWatch = 5 UMETA(DisplayName = "BattleWatch") // 전투 주시 상태
+	BattleWatch = 5 UMETA(DisplayName = "BattleWatch"), // 전투 주시 상태
+	UltimateAttack = 6 UMETA(DisplayName = "UltimateAttack")
 };
 
 UENUM(BlueprintType)
@@ -32,8 +33,7 @@ enum class EBossBlinkAttackState : uint8
 	AddAttackStart = 1 UMETA(DisplayName ="AddAttackStart"),
 	InVisible = 2 UMETA(DisplayName = "InVisible"), //투명화 
 	Visible = 3 UMETA(DisplayName = "Visible"), // 플레이어 앞에 나타나면서 불투명화
-	BlinkAttack = 4 UMETA(DisplayName = "BlinkAttack"), //전투주시 상태
-	ManyOrbCreate = 5 UMETA(DisplayNAme = "ManyOrbCreate")
+	BlinkAttack = 4 UMETA(DisplayName = "BlinkAttack") //아래로 내려 찍기
 };
 
 UENUM(BlueprintType)
@@ -42,7 +42,8 @@ enum class EBossLongAttackState : uint8
 	Idle = 0 UMETA(DisplayName = "Idle"),
 	LongAttackReady = 1 UMETA(DisplayName= "LongAttackReady"),
 	DefaultLongAttack = 2 UMETA(DisplayName = "DefaultLongAttack"),
-	OrbCreate = 3 UMETA(DisplayName = "OrbCreate")
+	OrbCreate = 3 UMETA(DisplayName = "OrbCreate"),
+	WaveAttack = 4 UMETA(DisplayName = "WaveAttack")
 };
 
 UENUM(BlueprintType)
@@ -75,4 +76,13 @@ enum class EBossBattleWatchState : uint8
 	InVisible = 3 UMETA(DisplayName = "InVisible"),
 	Visible = 4 UMETA(DisplayName = "Visible"),
 	Confrontation = 5 UMETA(DisplayName = "Confrontation")
+};
+
+UENUM(BlueprintType)
+enum class EBossConfrontationState : uint8
+{
+	Idle = 0 UMETA(DisplayName ="Idle"),
+	ConfrontationReady = 1 UMETA(DisplayName = "ConfrontationReady"),
+	LeftWalk = 2 UMETA(DisplayName = "LeftWalk"),
+	RightWalk = 3 UMETA(DisplayNAme = "RightWalk")
 };

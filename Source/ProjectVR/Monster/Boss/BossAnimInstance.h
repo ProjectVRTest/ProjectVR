@@ -29,7 +29,8 @@ public:
 		EBossParryingState CurrentParryingState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossBattleWatchState CurrentBattleWatchState;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossConfrontationState CurrentConfrontationState;
 
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;
