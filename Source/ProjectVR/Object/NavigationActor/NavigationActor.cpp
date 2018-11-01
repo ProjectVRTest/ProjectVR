@@ -117,11 +117,11 @@ void ANavigationActor::NavigationEvent()
 	if (CurrentPoint == Targets.Num() - 1)
 	{
 		Navigate->DeactivateSystem();
-
+		TargetPoint = Targets.Num();
 		if (EndNavigate)
 			Navigate = UGameplayStatics::SpawnEmitterAttached(EndNavigate, RootComponent,
 				NAME_None, GetActorLocation(), GetActorRotation(), EAttachLocation::KeepWorldPosition, false);
-		UE_LOG(LogTemp, Log, TEXT("Complete"));
+		UE_LOG(LogTemp, Log, TEXT("%d  /  %d"), TargetPoint, Targets.Num() );
 	}
 }
 
