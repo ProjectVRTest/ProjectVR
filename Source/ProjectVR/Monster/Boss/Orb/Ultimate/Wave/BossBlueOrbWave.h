@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Monster/Boss/Orb/BossOrbWave.h"
+#include "Monster/Boss/Orb/DefaultOrb/BossOrbWave.h"
 #include "BossBlueOrbWave.generated.h"
 
 /**
@@ -14,7 +14,6 @@ class PROJECTVR_API ABossBlueOrbWave : public ABossOrbWave
 {
 	GENERATED_BODY()
 public:
-	int a;
 	// Sets default values for this actor's properties
 	ABossBlueOrbWave();
 

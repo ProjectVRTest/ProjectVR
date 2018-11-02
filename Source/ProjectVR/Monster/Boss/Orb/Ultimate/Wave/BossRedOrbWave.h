@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Monster/Boss/Orb/BossOrbWave.h"
+#include "Monster/Boss/Orb/DefaultOrb/BossOrbWave.h"
 #include "BossRedOrbWave.generated.h"
 
 /**

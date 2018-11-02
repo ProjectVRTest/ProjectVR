@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Monster/Boss/Orb/BossOrb.h"
+#include "Monster/Boss/Orb/DefaultOrb/BossOrb.h"
 #include "BossYellowOrb.generated.h"
 
 /**

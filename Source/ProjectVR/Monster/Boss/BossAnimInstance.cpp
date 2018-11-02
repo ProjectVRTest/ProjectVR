@@ -8,7 +8,7 @@
 #include "Monster/Boss/AI/AddAttack/BossAddAttackBall.h"
 #include "Components/SphereComponent.h"
 #include "BossWaveTarget.h"
-#include "Orb/BossOrb.h"
+#include "Orb/DefaultOrb/BossOrb.h"
 
 void UBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
