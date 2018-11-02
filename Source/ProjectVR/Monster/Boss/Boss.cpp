@@ -16,6 +16,7 @@
 #include "Monster/Boss/AI/AddAttack/BossAddAttackBall.h"
 #include "Particles/ParticleSystem.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 ABoss::ABoss()
@@ -109,6 +110,13 @@ ABoss::ABoss()
 	OrbCreateLocation->SetupAttachment(GetRootComponent());
 	OrbCreateLocation->SetRelativeLocation(FVector(92.0f, -6.0f, 40.0f));
 
+	ManyOrbBound = CreateDefaultSubobject<UBoxComponent>(TEXT("ManyOrbBound"));
+	ManyOrbBound->SetupAttachment(GetRootComponent());
+	//ManyOrbBound->SetRelativeLocation(FVector());
+
+	MaxHP = 100.0f;
+	CurrentHP = MaxHP;
+
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BlinkSmoke(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PT_BossBlinkSmoke.PT_BossBlinkSmoke'"));
 	if (PT_BlinkSmoke.Succeeded())
 	{
@@ -157,7 +165,7 @@ void ABoss::Tick(float DeltaTime)
 
 	ABossAIController* AI = Cast<ABossAIController>(GetController());
 
-	//GLog->Log(FString::Printf(TEXT("%d"), OrbMaxCount));
+	GLog->Log(FString::Printf(TEXT("%d"), OrbMaxCount));
 
 	if (AI)
 	{
@@ -219,4 +227,54 @@ void ABoss::OnSeeCharacter(APawn * Pawn)
 			}
 		}
 	}
+}
+
+float ABoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	GLog->Log(FString::Printf(TEXT("보스를 때림")));
+
+	CurrentHP -= Damage;
+
+	if (CurrentHP < 0)
+	{
+		CurrentHP = 0;
+		CurrentState = EBossState::Dead;
+	}
+
+	float HPPercent = CurrentHP / MaxHP;
+	
+	if (HPPercent >= 0.65f && HPPercent <=0.71f)
+	{
+		CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
+		CurrentLongAttackState = EBossLongAttackState::Idle;
+		CurrentCloseAttackState = EBossCloseAttackState::Idle;
+		CurrentParryingState = EBossParryingState::Idle;
+		CurrentBattleWatchState = EBossBattleWatchState::Idle;
+		CurrentConfrontationState = EBossConfrontationState::Idle;
+		CurrentBattleState = EBossBattleState::UltimateAttack;		
+	}
+	else if(HPPercent >=0.35f && HPPercent <= 0.41f)
+	{
+		CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
+		CurrentLongAttackState = EBossLongAttackState::Idle;
+		CurrentCloseAttackState = EBossCloseAttackState::Idle;
+		CurrentParryingState = EBossParryingState::Idle;
+		CurrentBattleWatchState = EBossBattleWatchState::Idle;
+		CurrentConfrontationState = EBossConfrontationState::Idle;
+		CurrentBattleState = EBossBattleState::UltimateAttack;
+	}
+	else if (HPPercent >= 0.08f && HPPercent <=0.12f)
+	{
+		CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
+		CurrentLongAttackState = EBossLongAttackState::Idle;
+		CurrentCloseAttackState = EBossCloseAttackState::Idle;
+		CurrentParryingState = EBossParryingState::Idle;
+		CurrentBattleWatchState = EBossBattleWatchState::Idle;
+		CurrentConfrontationState = EBossConfrontationState::Idle;
+		CurrentBattleState = EBossBattleState::UltimateAttack;
+	}
+
+	return Damage;
 }

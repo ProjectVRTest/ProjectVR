@@ -81,6 +81,7 @@ void UBossAnimInstance::AnimNotify_OrbCreate(UAnimNotify * Notify)
 
 		if (Orb)
 		{
+			Orb->OwnerSave(Boss);
 			Boss->OrbMaxCount--;
 		}
 	}	

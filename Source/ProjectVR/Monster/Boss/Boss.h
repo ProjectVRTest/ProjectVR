@@ -59,10 +59,18 @@ public:
 		class USceneComponent* RightCrashLocation;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "OrbCreateLocation")
 		class USceneComponent* OrbCreateLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "OrbCreateLocation")
+		class UBoxComponent* ManyOrbBound;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
+		float MaxHP;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
+		float CurrentHP;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* BlinkSmoke;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		int OrbMaxCount;
+
 
 	UPROPERTY()
 		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열	
@@ -88,4 +96,6 @@ public:
 		void ParryingPointValueSet(int ParryingCount); //HP가 50%이하인경우 지정한 패링포인트 수만큼 랜덤하게 스폰해주는 함수
 	UFUNCTION()
 		void OnSeeCharacter(APawn * Pawn);
+	UFUNCTION()
+		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };
