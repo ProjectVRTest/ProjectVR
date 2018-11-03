@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SwordWaveTarget.h"
 #include "Components/BoxComponent.h"
@@ -23,9 +23,9 @@ ASwordWaveTarget::ASwordWaveTarget()
 	SwordWaveTargetBox->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
 	SwordWaveTargetBox->bHiddenInGame = false;
 
-	Tags.Add(FName(TEXT("SwordWaveTarget")));
-	SwordWaveTargetBox->ComponentTags.Add(TEXT("DisregardForLeftHand"));
-	SwordWaveTargetBox->ComponentTags.Add(TEXT("DisregardForRightHand"));
+	SwordWaveTargetBox->ComponentTags.Add(FName(TEXT("SwordWaveTarget")));
+	SwordWaveTargetBox->ComponentTags.Add(FName(TEXT("DisregardForLeftHand")));
+	SwordWaveTargetBox->ComponentTags.Add(FName(TEXT("DisregardForRightHand")));
 
 	InitialLifeSpan = 3.0f;
 }

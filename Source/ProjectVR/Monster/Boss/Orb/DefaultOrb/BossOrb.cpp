@@ -42,11 +42,12 @@ ABossOrb::ABossOrb()
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(GetRootComponent());
+	Sphere->SetCollisionProfileName("OverlapOnlyPawn");
 
 	OrbWaveSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("OrbWaveSpawn"));
 	OrbWaveSpawn->SetupAttachment(GetRootComponent());
 	OrbWaveSpawn->SetRelativeLocation(FVector(30.0f, 0, 0));
-	OrbWaveMaxCount = 5;
+	OrbWaveMaxCount = 100;
 }
 
 // Called when the game starts or when spawned
@@ -54,7 +55,9 @@ void ABossOrb::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorld()->GetTimerManager().SetTimer(OrbWaveFireTimer, this, &ABossOrb::FireWave, 3.0f, true, 2.0f);
+	float RandomOrbAttackTime = FMath::RandRange(1.0f, 2.5f);
+	
+	GetWorld()->GetTimerManager().SetTimer(OrbWaveFireTimer, this, &ABossOrb::FireWave, RandomOrbAttackTime, true, RandomOrbAttackTime);
 }
 
 // Called every frame
@@ -130,4 +133,21 @@ void ABossOrb::OwnerSave(AActor * _OrbOwner)
 	{
 		OrbOwner = Cast<ABoss>(_OrbOwner);
 	}
+}
+
+void ABossOrb::RandomFireLocation(FVector &Location)
+{
+	float LeftRandLocation = FMath::FRandRange(-5.0f, 5.0f);
+	float RightRandLocation = FMath::FRandRange(5.0f, 10.0f);
+
+	Location.Y = Location.Y - LeftRandLocation * RightRandLocation;
+	Location.X = Location.X - LeftRandLocation * RightRandLocation;
+}
+
+float ABossOrb::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+
+	return Damage;
 }

@@ -19,6 +19,9 @@ ABossBlueOrbWave::ABossBlueOrbWave()
 
 	OrbWaveParticleComponent->Template = OrbWaveParticle;
 
+	Projecttile->InitialSpeed = 2500.0f;
+	Projecttile->MaxSpeed = 2500.0f;
+
 	Tags.Add(FName(TEXT("BossBlueOrbWave")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
@@ -44,14 +47,10 @@ void ABossBlueOrbWave::BossOrbWaveBeginOverlap(UPrimitiveComponent * OverlappedC
 			Destroy();
 		}
 	}
-
-	if (OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
+	else if (OtherComp->ComponentHasTag(TEXT("SwordWaveTarget")))
 	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherActor->GetActorLocation());
 		Projecttile->bIsHomingProjectile = false;
 		OtherActor->Destroy();
-	}
-	else if (OtherActor->ActorHasTag(TEXT("Land")))
-	{
-		Destroy();
 	}
 }

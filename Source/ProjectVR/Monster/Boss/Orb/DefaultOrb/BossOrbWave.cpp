@@ -11,22 +11,22 @@
 #include "Particles/ParticleSystem.h"
 #include "kismet/GameplayStatics.h"
 #include "Monster/Boss/Orb/Ultimate/Wave/BossRedOrbWave.h"
+#include "Monster/SwordWaveTarget.h"
 
 // Sets default values
 ABossOrbWave::ABossOrbWave()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
-	OrbWaveParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SwordWaveTailComponent"));
-	SetRootComponent(OrbWaveParticleComponent);
-	OrbWaveParticleComponent->SetRelativeScale3D(FVector(0.8f, 0.8f, 0.8f));
-
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
-	Sphere->SetupAttachment(GetRootComponent());
+	SetRootComponent(Sphere);
 	Sphere->SetCollisionProfileName("OverlapAll");
 	Sphere->SetSphereRadius(28.0f);
-	Sphere->SetRelativeLocation(FVector(0, 0, 0.35f));
 	Sphere->bHiddenInGame = false;
+
+	PrimaryActorTick.bCanEverTick = false;
+	OrbWaveParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SwordWaveTailComponent"));
+	OrbWaveParticleComponent->SetupAttachment(GetRootComponent());
+	OrbWaveParticleComponent->SetRelativeScale3D(FVector(0.8f, 0.8f, 0.8f));	
 	
 	Projecttile = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projecttile"));	
 	Projecttile->InitialSpeed = 3000.0f;
@@ -48,7 +48,7 @@ ABossOrbWave::ABossOrbWave()
 
 	OrbWaveParticleComponent->Template = OrbWaveParticle;
 
-	Tags.Add(FName(TEXT("BossOrbWave")));
+	Sphere->ComponentTags.Add(FName(TEXT("BossOrbWave")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 
@@ -98,15 +98,15 @@ void ABossOrbWave::BossOrbWaveBeginOverlap(UPrimitiveComponent* OverlappedCompon
 			Destroy();
 		}
 	}
+	else if (OtherComp->ComponentHasTag(TEXT("SwordWaveTarget")))
+	{
+		ASwordWaveTarget* SwordWaveTarget = Cast<ASwordWaveTarget>(OtherComp->GetOwner());
 
-	if (OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
-	{
-		GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
-		Projecttile->bIsHomingProjectile = false;
-		OtherActor->Destroy();
-	}
-	else if (OtherActor->ActorHasTag(TEXT("Land")))
-	{
-		Destroy();
+		if (SwordWaveTarget)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, SwordWaveTarget->GetActorLocation());
+			Projecttile->bIsHomingProjectile = false;			
+			SwordWaveTarget->Destroy();
+		}		
 	}
 }

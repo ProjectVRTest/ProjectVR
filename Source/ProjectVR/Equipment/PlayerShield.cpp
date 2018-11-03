@@ -61,7 +61,8 @@ APlayerShield::APlayerShield()
 	ShieldCollision->SetRelativeRotation(FRotator(0, -20.0f, 0));
 	ShieldCollision->SetRelativeScale3D(FVector(1.0f, 1.6f, 0.3f));
 	ShieldCollision->SetCollisionProfileName(TEXT("OverlapAll"));
-	ShieldCollision->bHiddenInGame = true;
+	ShieldCollision->bHiddenInGame = false;
+	ShieldCollision->ComponentTags.Add(FName(TEXT("PlayerShield")));
 
 	// 스테이트바 씬의 위기값과 회전값 설정
 	StateBarScene->SetRelativeLocation(FVector(-4.5f, -16.0f, 0.0f));
@@ -70,7 +71,7 @@ APlayerShield::APlayerShield()
 	IsMiniBossWeaponOverlap = false;
 	IsBossWeaponOverlap = false;
 	// 태그
-	Tags.Add(FName(TEXT("PlayerShield")));
+	
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
@@ -203,6 +204,18 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 					}
 				}
 			}
+		}
+	}
+	else if (OtherComp->ComponentHasTag(TEXT("BossOrbWave")))
+	{
+		if (IsActivation)
+		{
+			GLog->Log(FString::Printf(TEXT("활성화 방패와 기본 오브 미사일이 부딪힘")));
+			RumbleLeftController(0.5f);
+		}
+		else
+		{
+			GLog->Log(FString::Printf(TEXT("비활성화 방패와 기본 오브 미사일이 부딪힘")));
 		}
 	}
 }

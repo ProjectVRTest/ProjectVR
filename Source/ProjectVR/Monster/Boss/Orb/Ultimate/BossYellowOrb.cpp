@@ -27,6 +27,8 @@ ABossYellowOrb::ABossYellowOrb()
 	{
 		OrbExplosion = PT_YellowOrbExplosion.Object;
 	}
+
+	OrbWaveMaxCount = 100;
 }
 
 void ABossYellowOrb::BeginPlay()
@@ -59,6 +61,8 @@ void ABossYellowOrb::FireWave()
 			if (OrbWave)
 			{
 				FVector LockonTargetLocation = MyCharacter->CameraLocation->GetActorLocation();
+
+				RandomFireLocation(LockonTargetLocation);
 
 				ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
 

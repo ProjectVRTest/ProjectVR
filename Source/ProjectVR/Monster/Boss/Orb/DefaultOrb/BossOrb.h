@@ -30,6 +30,9 @@ public:
 		FTimerHandle OrbExplosionTimer;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class ABoss* OrbOwner;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool CanbeDamaged;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		int OrbWaveMaxCount;	
@@ -47,4 +50,9 @@ public:
 		void ColorOrbExplosionStart();
 	UFUNCTION()
 		void OwnerSave(class AActor* _OrbOwner);
+	UFUNCTION()
+		void RandomFireLocation(FVector &Location);
+
+	UFUNCTION()
+		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };

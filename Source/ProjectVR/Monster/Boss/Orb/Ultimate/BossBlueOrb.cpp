@@ -15,6 +15,7 @@
 
 ABossBlueOrb::ABossBlueOrb()
 {
+	PrimaryActorTick.bCanEverTick = true;
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BlueOrb(TEXT("ParticleSystem'/Game/Assets/Effect/Orb/PS_OrbBlue.PS_OrbBlue'"));
 	if (PT_BlueOrb.Succeeded())
 	{
@@ -27,6 +28,8 @@ ABossBlueOrb::ABossBlueOrb()
 	{
 		OrbExplosion = PT_BlueOrbExplosion.Object;
 	}
+
+	OrbWaveMaxCount = 100;
 }
 
 void ABossBlueOrb::BeginPlay()
@@ -59,7 +62,9 @@ void ABossBlueOrb::FireWave()
 			{
 				FVector LockonTargetLocation = MyCharacter->CameraLocation->GetActorLocation();
 
-				ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
+				RandomFireLocation(LockonTargetLocation);
+							
+				ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator, SpawnActorOption);
 
 				if (SwordWaveTarget)
 				{

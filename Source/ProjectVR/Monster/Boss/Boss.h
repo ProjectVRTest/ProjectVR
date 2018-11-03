@@ -7,6 +7,18 @@
 #include "State/BossState/BossState.h"
 #include "Boss.generated.h"
 
+USTRUCT(BlueprintType)
+struct PROJECTVR_API FUltimateOrbColors
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	int RedOrbColor;
+	int BlueOrbColor;
+	int YellowOrbColor;
+	int NormalMonsterCount;
+	int UltimateOrbMaxCount;
+};
+
 UCLASS()
 class PROJECTVR_API ABoss : public ACharacter
 {
@@ -60,17 +72,18 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "OrbCreateLocation")
 		class USceneComponent* OrbCreateLocation;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "OrbCreateLocation")
-		class UBoxComponent* ManyOrbBound;
+		class UBoxComponent* ManyOrbBound; //궁극기를 쓸때 오브들을 스폰시키는데 필요한 박스
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float MaxHP;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float CurrentHP;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect")
 		class UParticleSystem* BlinkSmoke;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		int OrbMaxCount;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		int32 OrbMaxCount; //기본 원거리 공격시 오브의 최대 갯수
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		FUltimateOrbColors UltimateOrbColor;
 
 	UPROPERTY()
 		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열	

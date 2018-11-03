@@ -17,6 +17,12 @@
 #include "Particles/ParticleSystem.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Orb/DefaultOrb/BossOrb.h"
+#include "Orb/Ultimate/BossRedOrb.h"
+#include "Orb/Ultimate/BossBlueOrb.h"
+#include "Orb/Ultimate/BossYellowOrb.h"
 
 // Sets default values
 ABoss::ABoss()
@@ -25,7 +31,7 @@ ABoss::ABoss()
 	PrimaryActorTick.bCanEverTick = true;
 
 	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
-
+	
 	AIControllerClass = ABossAIController::StaticClass();
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Boss_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/SK_Boss.SK_Boss'"));
@@ -112,8 +118,10 @@ ABoss::ABoss()
 
 	ManyOrbBound = CreateDefaultSubobject<UBoxComponent>(TEXT("ManyOrbBound"));
 	ManyOrbBound->SetupAttachment(GetRootComponent());
-	//ManyOrbBound->SetRelativeLocation(FVector());
-
+	ManyOrbBound->SetCollisionProfileName("NoCollision");
+	ManyOrbBound->SetRelativeLocation(FVector(-142.0f,1.0f,318.0f));
+	ManyOrbBound->SetRelativeScale3D(FVector(1.5f, 16.0f, 12.75f));
+		
 	MaxHP = 100.0f;
 	CurrentHP = MaxHP;
 
@@ -127,6 +135,7 @@ ABoss::ABoss()
 	TargetCamera = nullptr;
 
 	OrbMaxCount = 3;
+	UltimateOrbColor.UltimateOrbMaxCount = 15;
 	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 
 	Tags.Add(TEXT("Monster"));
@@ -155,7 +164,7 @@ void ABoss::BeginPlay()
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &ABoss::OnSeeCharacter);
-	}
+	}	
 }
 
 // Called every frame
@@ -165,7 +174,9 @@ void ABoss::Tick(float DeltaTime)
 
 	ABossAIController* AI = Cast<ABossAIController>(GetController());
 
-	GLog->Log(FString::Printf(TEXT("%d"), OrbMaxCount));
+	//GLog->Log(FString::Printf(TEXT("%d"), OrbMaxCount));
+
+	//GLog->Log(FString::Printf(TEXT("UltimateOrbColor Red : %d Blue : %d Yellow : %d %d"), UltimateOrbColor.RedOrbColor, UltimateOrbColor.BlueOrbColor, UltimateOrbColor.YellowOrbColor, UltimateOrbColor.UltimateOrbMaxCount));
 
 	if (AI)
 	{
@@ -177,6 +188,43 @@ void ABoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentParryingState", (uint8)CurrentParryingState);
 		AI->BBComponent->SetValueAsEnum("CurrentBattleWatchState", (uint8)CurrentBattleWatchState);
 		AI->BBComponent->SetValueAsEnum("CurrentConfrontationState", (uint8)CurrentConfrontationState);
+	} 
+
+	if (ManyOrbBound)
+	{
+		if (UltimateOrbColor.UltimateOrbMaxCount > 0)
+		{
+			FVector Origin;
+			FVector Extent;
+			float BoundRadius;
+			UKismetSystemLibrary::GetComponentBounds(ManyOrbBound, Origin, Extent, BoundRadius);
+
+			FActorSpawnParameters SpawnActorOption;
+			SpawnActorOption.Owner = this;
+			SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+			FVector RandomManyOrbCreatePoint = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
+		
+			int RandomOrbColor = FMath::RandRange(1, 3);
+
+			if (RandomOrbColor == 1)
+			{
+				ABossRedOrb* DefaultOrb = GetWorld()->SpawnActor<ABossRedOrb>(DefaultOrb->StaticClass(), RandomManyOrbCreatePoint, GetActorRotation(), SpawnActorOption);
+				UltimateOrbColor.RedOrbColor++;
+			}
+			else if (RandomOrbColor == 2)
+			{
+				ABossBlueOrb* DefaultOrb = GetWorld()->SpawnActor<ABossBlueOrb>(DefaultOrb->StaticClass(), RandomManyOrbCreatePoint, GetActorRotation(), SpawnActorOption);
+				UltimateOrbColor.BlueOrbColor++;
+			}
+			else
+			{
+				ABossYellowOrb* DefaultOrb = GetWorld()->SpawnActor<ABossYellowOrb>(DefaultOrb->StaticClass(), RandomManyOrbCreatePoint, GetActorRotation(), SpawnActorOption);
+				UltimateOrbColor.YellowOrbColor++;
+			}
+			
+			UltimateOrbColor.UltimateOrbMaxCount--;		
+		}		
 	}
 }
 

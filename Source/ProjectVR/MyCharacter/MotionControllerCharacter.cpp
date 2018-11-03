@@ -175,6 +175,8 @@ void AMotionControllerCharacter::BeginPlay()
 	}
 
 	GetWorld()->GetTimerManager().SetTimer(AutoTimerHandle, this, &AMotionControllerCharacter::AutoStamina, 0.05f, false);		// 자동으로 스테미너 채우기
+	GrabLeftOn();
+	GrabLeftOff();
 }
 
 // Called every frame
