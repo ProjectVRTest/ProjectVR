@@ -40,7 +40,7 @@ ABossOrbWave::ABossOrbWave()
 		OrbWaveParticle = PT_OrbWave.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_OrbWaveExplosion(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_GPP_Magicball_Explosion.PS_GPP_Magicball_Explosion'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_OrbWaveExplosion(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_OrbWaveExplosion.PS_OrbWaveExplosion'"));
 	if (PT_OrbWaveExplosion.Succeeded())
 	{
 		OrbWaveExplosion = PT_OrbWaveExplosion.Object;
@@ -51,6 +51,7 @@ ABossOrbWave::ABossOrbWave()
 	Sphere->ComponentTags.Add(FName(TEXT("BossOrbWave")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
+	Damage = 10.0f;
 
 	InitialLifeSpan = 5.0f;
 }
@@ -93,8 +94,8 @@ void ABossOrbWave::BossOrbWaveBeginOverlap(UPrimitiveComponent* OverlappedCompon
 
 		if (CameraLocation)
 		{
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherComp->GetComponentLocation());
-			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 5.0f, nullptr, this, nullptr);
+			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherComp->GetComponentLocation());
+			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), Damage, nullptr, this, nullptr);
 			Destroy();
 		}
 	}
@@ -104,9 +105,14 @@ void ABossOrbWave::BossOrbWaveBeginOverlap(UPrimitiveComponent* OverlappedCompon
 
 		if (SwordWaveTarget)
 		{
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, SwordWaveTarget->GetActorLocation());
+			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, SwordWaveTarget->GetActorLocation());
 			Projecttile->bIsHomingProjectile = false;			
 			SwordWaveTarget->Destroy();
 		}		
 	}
+}
+
+float ABossOrbWave::GetOrbDamage()
+{
+	return Damage;
 }

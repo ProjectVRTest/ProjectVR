@@ -270,7 +270,6 @@ void AMotionControllerCharacter::SetupPlayerInputComponent(UInputComponent* Play
 // 오파시티값이 있어도 항상 그랩상태로 있는다고 가정할 때
 void AMotionControllerCharacter::GrabLeftOn()
 {
-
 	// 왼손으로 할수 있는것은 아무것도 없으므로 LeftHand->GrabActor();를 빼는거 고려해야함, 그런데 문을 두손으로 연다고하면 조건문 줘서 문이 아닐때는 걸러줘야함
 
 	LeftHand->interaction->PressPointerKey(EKeys::LeftMouseButton);

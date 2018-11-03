@@ -63,4 +63,6 @@ public:
 		void RumbleLeftController(float Intensity);
 	UFUNCTION()
 		void GlobalTimeInit();
+	UFUNCTION()
+		void OrbWaveCrash(class AActor* Orb);
 };

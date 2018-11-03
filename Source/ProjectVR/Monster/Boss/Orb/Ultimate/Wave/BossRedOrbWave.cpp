@@ -18,10 +18,16 @@ ABossRedOrbWave::ABossRedOrbWave()
 		OrbWaveParticle = PT_RedOrbWave.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_RedOrbWaveExplosion(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_RedOrbWaveExplosion.PS_RedOrbWaveExplosion'"));
+	if (PT_RedOrbWaveExplosion.Succeeded())
+	{
+		OrbWaveExplosion = PT_RedOrbWaveExplosion.Object;
+	}
+
 	OrbWaveParticleComponent->Template = OrbWaveParticle;
 
-	Projecttile->InitialSpeed = 2500.0f;
-	Projecttile->MaxSpeed = 2500.0f;
+	Projecttile->InitialSpeed = 2000.0f;
+	Projecttile->MaxSpeed = 2000.0f;
 
 	Tags.Add(FName(TEXT("BossRedOrbWave")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -44,14 +50,14 @@ void ABossRedOrbWave::BossOrbWaveBeginOverlap(UPrimitiveComponent * OverlappedCo
 
 		if (CameraLocation)
 		{
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherComp->GetComponentLocation());
+			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherComp->GetComponentLocation());
 			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 5.0f, nullptr, this, nullptr);
 			Destroy();
 		}
 	}
 	else if (OtherComp->ComponentHasTag(TEXT("SwordWaveTarget")))
 	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherActor->GetActorLocation());
+		//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherActor->GetActorLocation());
 		Projecttile->bIsHomingProjectile = false;
 		OtherActor->Destroy();
 	}

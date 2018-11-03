@@ -22,13 +22,15 @@
 #include "TimerManager.h"
 #include "Monster/Boss/Weapon/BossWeapon.h"
 #include "Monster/Boss/Boss.h"
+#include "Monster/Boss/Orb/DefaultOrb/BossOrbWave.h"
+#include "Monster/Boss/Orb/Ultimate/Wave/BossBlueOrbWave.h"
 
 // Sets default values
 APlayerShield::APlayerShield()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	/* 스태틱 매쉬 컴포넌트 생성 */
 	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));
 	SetRootComponent(ShieldMesh);
@@ -54,7 +56,7 @@ APlayerShield::APlayerShield()
 
 	StateBar = nullptr;
 	ShieldMesh->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
-	ShieldMesh->SetCollisionProfileName(TEXT("NoCollision"));	
+	ShieldMesh->SetCollisionProfileName(TEXT("NoCollision"));
 
 	// 위치, 각도 및 크기 설정
 	ShieldCollision->SetRelativeLocation(FVector(-2.2f, 10.0f, 1.4f));
@@ -71,7 +73,7 @@ APlayerShield::APlayerShield()
 	IsMiniBossWeaponOverlap = false;
 	IsBossWeaponOverlap = false;
 	// 태그
-	
+
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
@@ -82,7 +84,7 @@ void APlayerShield::BeginPlay()
 	Super::BeginPlay();
 
 	FActorSpawnParameters SpawnActorOption;
-	SpawnActorOption.Owner = this; 
+	SpawnActorOption.Owner = this;
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
@@ -120,7 +122,7 @@ void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭
 {
 	if (ShieldMesh)
 	{
-		ShieldMesh->SetScalarParameterValueOnMaterials(FName(TEXT("ShieldOpacity")), opacity);		
+		ShieldMesh->SetScalarParameterValueOnMaterials(FName(TEXT("ShieldOpacity")), opacity);
 	}
 
 	if (IsActivation)
@@ -155,7 +157,7 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 						// 최소 스테미너이상 있을 때 방패로 막기 가능 
 						if (ShieldOwner->CurrentStamina > ShieldOwner->DefencePoint)
 						{
-							UGameplayStatics::SetGlobalTimeDilation(GetWorld(),0.5f);
+							UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.5f);
 							GetWorld()->GetTimerManager().SetTimer(GlobalTimeTimer, this, &APlayerShield::GlobalTimeInit, 0.5f, false);
 							ShieldOwner->UseStamina(ShieldOwner->DefencePoint);		// 스테미너 감소 및 대기시간 후 스테미너 회복시작
 							RumbleLeftController(1.0f); //패드에 진동을 울려주고
@@ -192,7 +194,7 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 						{
 							GLog->Log(FString::Printf(TEXT("보스 패링 성공")));
 							UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.5f);
-							GetWorld()->GetTimerManager().SetTimer(GlobalTimeTimer,this, &APlayerShield::GlobalTimeInit, 0.5f, false);
+							GetWorld()->GetTimerManager().SetTimer(GlobalTimeTimer, this, &APlayerShield::GlobalTimeInit, 0.5f, false);
 							ShieldOwner->UseStamina(ShieldOwner->DefencePoint);
 							RumbleLeftController(1.0f);
 							BossWeapon->IsParryingAttack = false;
@@ -206,16 +208,11 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 			}
 		}
 	}
-	else if (OtherComp->ComponentHasTag(TEXT("BossOrbWave")))
+	else if (OtherComp->ComponentHasTag(TEXT("BossOrbWave")) || OtherComp->ComponentHasTag(TEXT("BossBlueOrbWave")))
 	{
 		if (IsActivation)
 		{
-			GLog->Log(FString::Printf(TEXT("활성화 방패와 기본 오브 미사일이 부딪힘")));
-			RumbleLeftController(0.5f);
-		}
-		else
-		{
-			GLog->Log(FString::Printf(TEXT("비활성화 방패와 기본 오브 미사일이 부딪힘")));
+			OrbWaveCrash(OtherComp->GetOwner());
 		}
 	}
 }
@@ -243,8 +240,8 @@ void APlayerShield::RumbleLeftController(float Intensity)
 
 		if (LeftHand)
 		{
-			PC->RumbleHandController(LeftHand->Hand,Intensity);
-		}		
+			PC->RumbleHandController(LeftHand->Hand, Intensity);
+		}
 	}
 }
 
@@ -252,4 +249,32 @@ void APlayerShield::GlobalTimeInit()
 {
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
 	GLog->Log(FString::Printf(TEXT("타이머 도는중")));
+}
+
+void APlayerShield::OrbWaveCrash(AActor * Orb)
+{
+	AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	if (MyCharacter)
+	{
+		ABossOrbWave* BossOrbWave = Cast<ABossOrbWave>(Orb);
+
+		if (BossOrbWave)
+		{
+			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BossOrbWave->OrbWaveExplosion, BossOrbWave->GetActorLocation());
+			MyCharacter->UseStamina(BossOrbWave->GetOrbDamage()*1.2f);
+			BossOrbWave->Destroy();
+		}
+		else
+		{
+			ABossBlueOrbWave* BossBlueOrbWave = Cast<ABossBlueOrbWave>(Orb);
+
+			if (BossBlueOrbWave)
+			{
+				//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BossBlueOrbWave->OrbWaveExplosion, BossBlueOrbWave->GetActorLocation());
+				MyCharacter->UseStamina(BossOrbWave->GetOrbDamage()*1.2f);
+				BossOrbWave->Destroy();
+			}
+		}
+	}
 }
