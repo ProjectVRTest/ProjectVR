@@ -11,12 +11,28 @@ USTRUCT(BlueprintType)
 struct PROJECTVR_API FUltimateOrbColors
 {
 	GENERATED_USTRUCT_BODY()
+private:
+	int32 UltimateNormalMonsterSpawnMaxCount;
+	int32 UltimateOrbMaxCount;
 public:
-	int RedOrbColor;
-	int BlueOrbColor;
-	int YellowOrbColor;
-	int NormalMonsterCount;
-	int UltimateOrbMaxCount;
+	int32 GetUltimateOrbMaxCount()
+	{
+		return UltimateOrbMaxCount;
+	}
+	int32 GetUltimateNormalMonsterSpawnMaxCount()
+	{
+		return UltimateNormalMonsterSpawnMaxCount;
+	}
+
+	void SetUltimateNormalMonsterSpawnMaxCount(int32 Count)
+	{
+		UltimateNormalMonsterSpawnMaxCount = Count;
+	}
+
+	void SetUltimateOrbMaxCount(int32 Count)
+	{
+		UltimateOrbMaxCount = Count;
+	}
 };
 
 UCLASS()
@@ -44,7 +60,9 @@ public:
 		EBossBattleWatchState CurrentBattleWatchState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossConfrontationState CurrentConfrontationState;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossUltimateAttackState CurrentUltimateAttackState;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class UPawnSensingComponent* PawnSensing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
@@ -73,6 +91,10 @@ public:
 		class USceneComponent* OrbCreateLocation;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "OrbCreateLocation")
 		class UBoxComponent* ManyOrbBound; //궁극기를 쓸때 오브들을 스폰시키는데 필요한 박스
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MonsterSpawnLocation")
+		class UBoxComponent* MonsterSpawnBoound; //궁극기를 쓸때 오브들을 스폰시키는데 필요한 박스
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UParticleSystemComponent* UltimateAuraEffectComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float MaxHP;
@@ -80,15 +102,21 @@ public:
 		float CurrentHP;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect")
 		class UParticleSystem* BlinkSmoke;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect")
+		class UParticleSystem* UltimateAura;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		int32 OrbMaxCount; //기본 원거리 공격시 오브의 최대 갯수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FUltimateOrbColors UltimateOrbColor;
+	UPROPERTY()
+		int32 CurrentNormalMonsterCount;
 
 	UPROPERTY()
 		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeleportPoint")
 		TArray<class AMyTargetPoint*> TeleportPoints; //순간이동 지점을 저장해둘 배열
+	UPROPERTY()
+		TArray<class ABossOrb*> UltimateOrbs;
 
 protected:
 	// Called when the game starts or when spawned

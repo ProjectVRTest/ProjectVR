@@ -28,13 +28,12 @@ ABossRedOrb::ABossRedOrb()
 		OrbExplosion = PT_RedOrbExplosion.Object;
 	}
 
-	OrbWaveMaxCount = 100;
+	OrbWaveMaxCount = 20;
 }
 
 void ABossRedOrb::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void ABossRedOrb::FireWave()

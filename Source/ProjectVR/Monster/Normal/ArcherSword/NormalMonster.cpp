@@ -25,6 +25,7 @@
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "TimerManager.h"
+#include "Monster/Boss/Boss.h"
 
 // Sets default values
 ANormalMonster::ANormalMonster()
@@ -134,6 +135,7 @@ ANormalMonster::ANormalMonster()
 	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 	Target = nullptr;
 	FresnelValue = 1.0f;
+	CanbeDamaged = true;
 
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -296,53 +298,72 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 		
-	CurrentHP -= Damage;
-
-	GetWorld()->GetTimerManager().SetTimer(FresnelTimer, this, &ANormalMonster::Fresnel, 0.1f, true, 0.1f);
-
-	if (CurrentHP > 0)
+	if (CanbeDamaged)
 	{
-		GLog->Log(FString::Printf(TEXT("캐릭터로부터 데미지 받음")));		
+		CurrentHP -= Damage;
 
-		//GetWorld()->GetTimerManager().SetTimer(RageAttackTimer, this, &UBTService_NMStateUpdate::RageAttackTimerCount, 1.7f, false);
-		ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
+		GetWorld()->GetTimerManager().SetTimer(FresnelTimer, this, &ANormalMonster::Fresnel, 0.1f, true, 0.1f);
 
-		if (CurrentState == ENormalMonsterState::AttackWait)
+		if (CurrentHP > 0)
 		{
-			Target = DamageCauser;
-			AI->BBComponent->SetValueAsObject("Player", DamageCauser);
+			GLog->Log(FString::Printf(TEXT("캐릭터로부터 데미지 받음")));
 
-			float Distance = AI->BBComponent->GetValueAsFloat(TEXT("Distance"));
+			//GetWorld()->GetTimerManager().SetTimer(RageAttackTimer, this, &UBTService_NMStateUpdate::RageAttackTimerCount, 1.7f, false);
+			ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
 
-			if (Distance <= 400.0f)
+			if (CurrentState == ENormalMonsterState::AttackWait)
 			{
-				CurrentState = ENormalMonsterState::Battle;
-			}
-			else
-			{
-				CurrentState = ENormalMonsterState::Chase;
-				switch (MonsterKind)
+				Target = DamageCauser;
+				AI->BBComponent->SetValueAsObject("Player", DamageCauser);
+
+				float Distance = AI->BBComponent->GetValueAsFloat(TEXT("Distance"));
+
+				if (Distance <= 400.0f)
 				{
-				case ENormalMonsterKind::SwordMan:
-					CurrentAnimState = ENormalMonsterAnimState::Wait;
-					break;
-				case ENormalMonsterKind::MoveArcher:
-					CurrentAnimState = ENormalMonsterAnimState::Walk;
-					break;
+					CurrentState = ENormalMonsterState::Battle;
+				}
+				else
+				{
+					CurrentState = ENormalMonsterState::Chase;
+					switch (MonsterKind)
+					{
+					case ENormalMonsterKind::SwordMan:
+						CurrentAnimState = ENormalMonsterAnimState::Wait;
+						break;
+					case ENormalMonsterKind::MoveArcher:
+						CurrentAnimState = ENormalMonsterAnimState::Walk;
+						break;
+					}
 				}
 			}
 		}
-	}
-	else if (CurrentHP < 0)
-	{
-		GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
-		GLog->Log(FString::Printf(TEXT("HP가 0보다 작은데 공격 받음")));		
-		CurrentHP = 0;
-		if (Bow)
+		else if (CurrentHP < 0)
 		{
-			Bow->NMBowDestory();
-		}
-		CurrentState = ENormalMonsterState::Dead;
+			CanbeDamaged = false;
+
+			if (GetOwner())
+			{
+				ABoss* Boss = Cast<ABoss>(GetOwner());
+
+				if (Boss)
+				{
+					Boss->CurrentNormalMonsterCount--;
+				}
+			}
+
+			GLog->Log(FString::Printf(TEXT("HP가 0보다 작은데 공격 받음")));
+			CurrentHP = 0;
+			if (Bow)
+			{
+				Bow->Destroy();
+			}
+
+			if (Sword)
+			{
+				Sword->Destroy();
+			}
+			CurrentState = ENormalMonsterState::Dead;
+		}		
 	}
 	return Damage;
 }
@@ -395,15 +416,7 @@ void ANormalMonster::SetTarget()
 		{
 			Target = MyCharacter;
 			TargetCamera = MyCharacter->CameraLocation;
-
-			if (TargetCamera)
-			{
-				GLog->Log(FString::Printf(TEXT("카메라 없음")));
-			}
-			else
-			{
-				GLog->Log(FString::Printf(TEXT("카메라 있음")));
-			}
+					
 			AI->BBComponent->SetValueAsObject("Player", Target);
 			AI->BBComponent->SetValueAsObject("PlayerCamera", MyCharacter->CameraLocation);
 

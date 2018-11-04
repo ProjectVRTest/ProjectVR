@@ -86,3 +86,13 @@ enum class EBossConfrontationState : uint8
 	LeftWalk = 2 UMETA(DisplayName = "LeftWalk"),
 	RightWalk = 3 UMETA(DisplayNAme = "RightWalk")
 };
+
+UENUM(BlueprintType)
+enum class EBossUltimateAttackState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	InVisible = 1 UMETA(DisplayName = "InVisible"),
+	Visible = 2 UMETA(DisplayName = "Visible"),
+	ManyOrbCreateReady = 3 UMETA(DisplayName = "ManyOrbCreateReady"),
+	ManyOrbCreateStart = 4 UMETA(DisplayName = "ManyOrbCreateStart")
+};

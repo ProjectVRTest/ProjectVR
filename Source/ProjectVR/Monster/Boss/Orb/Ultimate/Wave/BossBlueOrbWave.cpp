@@ -26,11 +26,11 @@ ABossBlueOrbWave::ABossBlueOrbWave()
 
 	OrbWaveParticleComponent->Template = OrbWaveParticle;
 
-	Projecttile->InitialSpeed = 2000.0f;
-	Projecttile->MaxSpeed = 2000.0f;
+	Projecttile->InitialSpeed = 800.0f;
+	Projecttile->MaxSpeed = 800.0f;
 
 	Sphere->ComponentTags.Add(FName(TEXT("BossBlueOrbWave")));
-	Tags.Add(FName(TEXT("BossBlueOrbWave")));
+
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }

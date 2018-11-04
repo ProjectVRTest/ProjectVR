@@ -6,21 +6,41 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Particles/ParticleSystem.h"
+#include "Monster/Boss/Boss.h"
 
 ANormalMonsterSpawnPosition::ANormalMonsterSpawnPosition()
 {
+	PrimaryActorTick.bCanEverTick = true;
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_SpawnEffect(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PT_BossBlinkSmoke.PT_BossBlinkSmoke'"));
+	if (PT_SpawnEffect.Succeeded())
+	{
+		SpawnEffect = PT_SpawnEffect.Object;
+	}
+
+	NowSpawn = false;
+}
+
+void ANormalMonsterSpawnPosition::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (NowSpawn)
+	{
+		MonsterSpawn();
+	}
 }
 
 void ANormalMonsterSpawnPosition::FindTarget()
 {
 	NormalMonster->SetTarget();
+	Destroy();
 }
 
-void ANormalMonsterSpawnPosition::BeginPlay()
+void ANormalMonsterSpawnPosition::MonsterSpawn()
 {
-	Super::BeginPlay();
-
 	ENormalMonsterKind MonsterKind;
 
 	NormalMonsterAI = GetWorld()->SpawnActor<ANormalMonsterAIController>(NormalMonsterAI->StaticClass(), GetActorLocation(), GetActorRotation());
@@ -28,14 +48,28 @@ void ANormalMonsterSpawnPosition::BeginPlay()
 	if (NormalMonsterAI)
 	{
 		FActorSpawnParameters SpawnActorOption;
-		SpawnActorOption.Owner = this;
+
+		ABoss* Boss = Cast<ABoss>(GetOwner());
+		
+		if (Boss)
+		{
+			SpawnActorOption.Owner = Boss;
+		}
+		else
+		{
+			SpawnActorOption.Owner = this;
+		}
+		
 		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		NormalMonster = GetWorld()->SpawnActor<ANormalMonster>(NormalMonster->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SpawnEffect, NormalMonster->GetActorLocation());
+
 
 		switch (NormalMonsterkind)
 		{
 		case ENormalMonsterKind::SwordMan:
-			NormalMonster = GetWorld()->SpawnActor<ANormalMonster>(NormalMonster->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
-
 			if (NormalMonster)
 			{
 				MonsterKind = ENormalMonsterKind::SwordMan;
@@ -48,8 +82,6 @@ void ANormalMonsterSpawnPosition::BeginPlay()
 			}
 			break;
 		case ENormalMonsterKind::MoveArcher:
-			NormalMonster = GetWorld()->SpawnActor<ANormalMonster>(NormalMonster->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
-
 			if (NormalMonster)
 			{
 				MonsterKind = ENormalMonsterKind::MoveArcher;
@@ -64,10 +96,6 @@ void ANormalMonsterSpawnPosition::BeginPlay()
 		}
 
 		GetWorld()->GetTimerManager().SetTimer(FindTimer, this, &ANormalMonsterSpawnPosition::FindTarget, 1.0f, false);
+		NowSpawn = false;
 	}
-
-
-
 }
-
-

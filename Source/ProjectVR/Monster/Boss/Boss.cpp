@@ -15,14 +15,12 @@
 #include "Components/SphereComponent.h"
 #include "Monster/Boss/AI/AddAttack/BossAddAttackBall.h"
 #include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Orb/DefaultOrb/BossOrb.h"
-#include "Orb/Ultimate/BossRedOrb.h"
-#include "Orb/Ultimate/BossBlueOrb.h"
-#include "Orb/Ultimate/BossYellowOrb.h"
+#include "Monster/MiniBoss/MiniBossParryingPoint.h"
 
 // Sets default values
 ABoss::ABoss()
@@ -53,6 +51,7 @@ ABoss::ABoss()
 	CurrentCloseAttackState = EBossCloseAttackState::Idle;
 	CurrentParryingState = EBossParryingState::Idle;
 	CurrentBattleWatchState = EBossBattleWatchState::Idle;
+	CurrentUltimateAttackState = EBossUltimateAttackState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
@@ -122,6 +121,16 @@ ABoss::ABoss()
 	ManyOrbBound->SetRelativeLocation(FVector(-142.0f,1.0f,318.0f));
 	ManyOrbBound->SetRelativeScale3D(FVector(1.5f, 16.0f, 12.75f));
 		
+	MonsterSpawnBoound = CreateDefaultSubobject<UBoxComponent>(TEXT("MonsterSpawnBoound"));
+	MonsterSpawnBoound->SetupAttachment(GetRootComponent());
+	MonsterSpawnBoound->SetCollisionProfileName("NoCollision");
+	MonsterSpawnBoound->SetRelativeLocation(FVector(293.0f, 0, 110.0f));
+	MonsterSpawnBoound->SetRelativeScale3D(FVector(5.25f, 10.25f, 6.25f));
+
+	UltimateAuraEffectComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("UltimateAuraEffectComponent"));
+	UltimateAuraEffectComponent->SetupAttachment(GetRootComponent());
+	UltimateAuraEffectComponent->SetRelativeLocation(FVector(0, 0, -200.0f));
+
 	MaxHP = 100.0f;
 	CurrentHP = MaxHP;
 
@@ -131,11 +140,21 @@ ABoss::ABoss()
 		BlinkSmoke = PT_BlinkSmoke.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_UltimateAura(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/Boss_UltimateAura.Boss_UltimateAura'"));
+	if (PT_UltimateAura.Succeeded())
+	{
+		UltimateAura = PT_UltimateAura.Object;
+		UltimateAuraEffectComponent->Template = UltimateAura;
+		UltimateAuraEffectComponent->SetVisibility(false);		
+	}
+
 	Target = nullptr;
 	TargetCamera = nullptr;
 
 	OrbMaxCount = 3;
-	UltimateOrbColor.UltimateOrbMaxCount = 15;
+	UltimateOrbColor.SetUltimateNormalMonsterSpawnMaxCount(3);
+	UltimateOrbColor.SetUltimateOrbMaxCount(15);
+	CurrentNormalMonsterCount = UltimateOrbColor.GetUltimateNormalMonsterSpawnMaxCount();
 	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 
 	Tags.Add(TEXT("Monster"));
@@ -188,44 +207,8 @@ void ABoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentParryingState", (uint8)CurrentParryingState);
 		AI->BBComponent->SetValueAsEnum("CurrentBattleWatchState", (uint8)CurrentBattleWatchState);
 		AI->BBComponent->SetValueAsEnum("CurrentConfrontationState", (uint8)CurrentConfrontationState);
+		AI->BBComponent->SetValueAsEnum("CurrentUltimateAttackState", (uint8)CurrentUltimateAttackState);
 	} 
-
-	if (ManyOrbBound)
-	{
-		if (UltimateOrbColor.UltimateOrbMaxCount > 0)
-		{
-			FVector Origin;
-			FVector Extent;
-			float BoundRadius;
-			UKismetSystemLibrary::GetComponentBounds(ManyOrbBound, Origin, Extent, BoundRadius);
-
-			FActorSpawnParameters SpawnActorOption;
-			SpawnActorOption.Owner = this;
-			SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-			FVector RandomManyOrbCreatePoint = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
-		
-			int RandomOrbColor = FMath::RandRange(1, 3);
-
-			if (RandomOrbColor == 1)
-			{
-				ABossRedOrb* DefaultOrb = GetWorld()->SpawnActor<ABossRedOrb>(DefaultOrb->StaticClass(), RandomManyOrbCreatePoint, GetActorRotation(), SpawnActorOption);
-				UltimateOrbColor.RedOrbColor++;
-			}
-			else if (RandomOrbColor == 2)
-			{
-				ABossBlueOrb* DefaultOrb = GetWorld()->SpawnActor<ABossBlueOrb>(DefaultOrb->StaticClass(), RandomManyOrbCreatePoint, GetActorRotation(), SpawnActorOption);
-				UltimateOrbColor.BlueOrbColor++;
-			}
-			else
-			{
-				ABossYellowOrb* DefaultOrb = GetWorld()->SpawnActor<ABossYellowOrb>(DefaultOrb->StaticClass(), RandomManyOrbCreatePoint, GetActorRotation(), SpawnActorOption);
-				UltimateOrbColor.YellowOrbColor++;
-			}
-			
-			UltimateOrbColor.UltimateOrbMaxCount--;		
-		}		
-	}
 }
 
 // Called to bind functionality to input
@@ -242,6 +225,17 @@ void ABoss::ParryingPointInit()
 
 void ABoss::ParryingPointSet()
 {
+	//float HPPercent = CurrentHP / MaxHP;
+	//int PreviousParryingPointName = -1;
+	//int RandomParryingPointName;
+
+	//AMiniBossParryingPoint * MiniBossParryingPoint;
+
+	//FActorSpawnParameters SpawnActorOption;
+	//SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	//FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
 
 }
 
@@ -292,6 +286,8 @@ float ABoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControl
 	}
 
 	float HPPercent = CurrentHP / MaxHP;
+
+	GLog->Log(FString::Printf(TEXT("HPPercent %f"), HPPercent));
 	
 	if (HPPercent >= 0.65f && HPPercent <=0.71f)
 	{
@@ -300,7 +296,8 @@ float ABoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControl
 		CurrentCloseAttackState = EBossCloseAttackState::Idle;
 		CurrentParryingState = EBossParryingState::Idle;
 		CurrentBattleWatchState = EBossBattleWatchState::Idle;
-		CurrentConfrontationState = EBossConfrontationState::Idle;
+		CurrentConfrontationState = EBossConfrontationState::Idle;	
+		CurrentUltimateAttackState = EBossUltimateAttackState::Idle;
 		CurrentBattleState = EBossBattleState::UltimateAttack;		
 	}
 	else if(HPPercent >=0.35f && HPPercent <= 0.41f)
@@ -311,6 +308,7 @@ float ABoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControl
 		CurrentParryingState = EBossParryingState::Idle;
 		CurrentBattleWatchState = EBossBattleWatchState::Idle;
 		CurrentConfrontationState = EBossConfrontationState::Idle;
+		CurrentUltimateAttackState = EBossUltimateAttackState::Idle;
 		CurrentBattleState = EBossBattleState::UltimateAttack;
 	}
 	else if (HPPercent >= 0.08f && HPPercent <=0.12f)
@@ -321,6 +319,7 @@ float ABoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControl
 		CurrentParryingState = EBossParryingState::Idle;
 		CurrentBattleWatchState = EBossBattleWatchState::Idle;
 		CurrentConfrontationState = EBossConfrontationState::Idle;
+		CurrentUltimateAttackState = EBossUltimateAttackState::Idle;
 		CurrentBattleState = EBossBattleState::UltimateAttack;
 	}
 

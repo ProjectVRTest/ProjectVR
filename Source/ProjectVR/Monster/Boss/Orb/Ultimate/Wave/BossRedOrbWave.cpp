@@ -8,7 +8,7 @@
 #include "kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-
+#include "Components/SphereComponent.h"
 
 ABossRedOrbWave::ABossRedOrbWave()
 {
@@ -26,10 +26,11 @@ ABossRedOrbWave::ABossRedOrbWave()
 
 	OrbWaveParticleComponent->Template = OrbWaveParticle;
 
-	Projecttile->InitialSpeed = 2000.0f;
-	Projecttile->MaxSpeed = 2000.0f;
+	Projecttile->InitialSpeed = 800.0f;
+	Projecttile->MaxSpeed = 800.0f;
 
-	Tags.Add(FName(TEXT("BossRedOrbWave")));
+	Sphere->ComponentTags.Add(FName(TEXT("BossRedOrbWave")));
+
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }

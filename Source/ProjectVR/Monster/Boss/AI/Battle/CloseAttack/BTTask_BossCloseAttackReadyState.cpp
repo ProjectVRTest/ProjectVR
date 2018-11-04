@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTTask_BossCloseAttackReadyState.h"
 #include "Headers/BossAIHeader.h"
@@ -15,16 +15,17 @@ EBTNodeResult::Type UBTTask_BossCloseAttackReadyState::ExecuteTask(UBehaviorTree
 
 		if (Boss)
 		{
-			RandValue = FMath::RandRange(1, 15);
-			//1~5
+			RandValue = FMath::RandRange(1, 5);
+			
+			//1~5 패링이 가능한 공격
 			if (RandValue > 0 && RandValue < 6)
 			{
 				Boss->CurrentCloseAttackState = EBossCloseAttackState::RightUpLeftDownAttack;
-			}// 6~11
+			}// 6~11 콤보 공격
 			else if (RandValue > 5 && RandValue < 12)
 			{
 				Boss->CurrentCloseAttackState = EBossCloseAttackState::ComboAttack;
-			}
+			} //위에서 아래로 찍는 공격
 			else if (RandValue > 11)
 			{
 				Boss->CurrentCloseAttackState = EBossCloseAttackState::UpDownAttack;

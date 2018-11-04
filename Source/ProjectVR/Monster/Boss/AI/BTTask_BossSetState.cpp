@@ -20,6 +20,7 @@ EBTNodeResult::Type UBTTask_BossSetState::ExecuteTask(UBehaviorTreeComponent & O
 			Boss->CurrentCloseAttackState = SetCloseAttackState;
 			Boss->CurrentBattleWatchState = SetBattleWatchState;
 			Boss->CurrentConfrontationState = SetConfrontationState;
+			Boss->CurrentUltimateAttackState = SetUltimateAttackState;
 		}
 	}
 	return EBTNodeResult::Succeeded;

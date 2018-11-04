@@ -41,7 +41,7 @@ void UBTTask_MBBackWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
 	if (ExitFlag)
-	{
+	{		
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }

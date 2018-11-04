@@ -28,7 +28,7 @@ ABossYellowOrb::ABossYellowOrb()
 		OrbExplosion = PT_YellowOrbExplosion.Object;
 	}
 
-	OrbWaveMaxCount = 100;
+	OrbWaveMaxCount = 20;
 }
 
 void ABossYellowOrb::BeginPlay()

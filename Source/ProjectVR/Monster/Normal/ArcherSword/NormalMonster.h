@@ -85,7 +85,8 @@ public:
 		FTimerHandle FresnelTimer;
 	UPROPERTY()
 		float FresnelValue;
-
+	UPROPERTY()
+		bool CanbeDamaged;
 
 	UFUNCTION()
 		void SpawnArrowMesh();

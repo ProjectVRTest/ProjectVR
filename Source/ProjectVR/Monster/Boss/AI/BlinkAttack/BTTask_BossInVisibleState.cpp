@@ -77,6 +77,9 @@ void UBTTask_BossInVisibleState::InVisible()
 					TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(200.0f, 0, 0);
 				}
 				break;
+			case EBossBattleState::UltimateAttack:				
+				TeleportLocation = Boss->TeleportPoints[1]->GetActorLocation();
+				break;
 			}			
 			SetTeleportLocation(Boss->CurrentBattleState,TeleportLocation);
 		}
@@ -93,7 +96,10 @@ void UBTTask_BossInVisibleState::SetTeleportLocation(EBossBattleState & BattleSt
 		Boss->CurrentBlinkAttackState = EBossBlinkAttackState::Visible;
 		break;
 	case EBossBattleState::BattleWatch:
-		Boss->CurrentBattleWatchState = EBossBattleWatchState::Visible;
+		Boss->CurrentBattleWatchState = EBossBattleWatchState::Visible;		
+		break;
+	case EBossBattleState::UltimateAttack:
+		Boss->CurrentUltimateAttackState = EBossUltimateAttackState::Visible;
 		break;
 	}	
 	ExitFlag = true;

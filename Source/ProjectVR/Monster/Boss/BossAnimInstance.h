@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -16,9 +16,9 @@ class PROJECTVR_API UBossAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EBossState CurrentState;
+		EBossState CurrentState; //보스의 메인 상태 (대기,전투,그로기,죽음)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EBossBattleState CurrentBattleState;
+		EBossBattleState CurrentBattleState; //보스의 전투 상태 (전투준비,애드 공격, 근접 공격, 원거리 공격, 전투 주시)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossBlinkAttackState CurrentBlinkAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
@@ -31,6 +31,8 @@ public:
 		EBossBattleWatchState CurrentBattleWatchState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossConfrontationState CurrentConfrontationState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossUltimateAttackState CurrentUltimateAttackState;
 
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;

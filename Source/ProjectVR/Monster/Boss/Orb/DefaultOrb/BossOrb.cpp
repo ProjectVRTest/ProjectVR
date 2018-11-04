@@ -47,7 +47,8 @@ ABossOrb::ABossOrb()
 	OrbWaveSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("OrbWaveSpawn"));
 	OrbWaveSpawn->SetupAttachment(GetRootComponent());
 	OrbWaveSpawn->SetRelativeLocation(FVector(30.0f, 0, 0));
-	OrbWaveMaxCount = 100;
+
+	OrbWaveMaxCount = 5;
 }
 
 // Called when the game starts or when spawned
@@ -55,7 +56,7 @@ void ABossOrb::BeginPlay()
 {
 	Super::BeginPlay();
 
-	float RandomOrbAttackTime = FMath::RandRange(1.0f, 2.5f);
+	float RandomOrbAttackTime = FMath::RandRange(2.0f, 3.0f);
 	
 	GetWorld()->GetTimerManager().SetTimer(OrbWaveFireTimer, this, &ABossOrb::FireWave, RandomOrbAttackTime, true, RandomOrbAttackTime);
 }
@@ -124,6 +125,11 @@ void ABossOrb::DefaultOrbExplosionStart()
 void ABossOrb::ColorOrbExplosionStart()
 {
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbExplosion, GetActorLocation());
+
+	if (GetOwner())
+	{
+		GLog->Log(FString::Printf(TEXT("내주인의 이름은 : %s"), *GetOwner()->GetName()));
+	}
 	Destroy();
 }
 
@@ -137,7 +143,7 @@ void ABossOrb::OwnerSave(AActor * _OrbOwner)
 
 void ABossOrb::RandomFireLocation(FVector &Location)
 {
-	float LeftRandLocation = FMath::FRandRange(-5.0f, 5.0f);
+	float LeftRandLocation = FMath::FRandRange(-30.0f, 30.0f);
 	float RightRandLocation = FMath::FRandRange(5.0f, 10.0f);
 
 	Location.Y = Location.Y - LeftRandLocation * RightRandLocation;

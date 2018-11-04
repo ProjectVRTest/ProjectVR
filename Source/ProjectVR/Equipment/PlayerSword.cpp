@@ -15,6 +15,7 @@
 #include "MyCharacter/MotionControllerPC.h"
 #include "HandMotionController/RightHandMotionController.h"
 #include "Monster/Dog/Dog.h"
+#include "Monster/Boss/Orb/Ultimate/Wave/BossRedOrbWave.h"
 
 
 // Sets default values
@@ -106,7 +107,7 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 		//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BloodEffect, );
 		if (Timer >= 0.5f)			// 타이머가 0.5 이상의 수를 가지고 있을 때 실행 (조건1)
 		{
-			if (SwordMoveVelocity.Size() >= 1500) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
+			if (SwordMoveVelocity.Size() >= 1000) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
 			{
 				// 최소 스테미너이상 있을 때 공격 가능 
 				if (SwordOwner->CurrentStamina >= SwordOwner->AttackPoint)
@@ -114,7 +115,7 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 					SwordOwner->UseStamina(SwordOwner->AttackPoint);			// 스테미너 감소 및 대기시간 후 스테미너 회복시작
 					Timer = 0.0f;		// 공격 판정이 일어났을 때 타이머 0으로
 
-					if (SwordMoveVelocity.Size() <= 1500)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
+					if (SwordMoveVelocity.Size() <= 1000)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
 					{
 						RumbleRightController(0.25f);
 						Damage = 10.0f;
@@ -124,8 +125,6 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 						RumbleRightController(0.5f);
 						Damage = 15.0f;
 					}
-					//AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(GetOwner());
-					//ULeftHandWidget* MyStateUI = Cast<ULeftHandWidget>(MyCharacter->LeftHand->Shield->CharacterStateWidget);
 					// 이하 캐릭터 스테미너 감소
 					// 이하 UI스테미너 감소
 					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BloodEffect, OtherActor->GetActorLocation());
@@ -134,6 +133,20 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 				}
 			}
 		}
+	}
+
+	if (OtherComp->ComponentHasTag(TEXT("BossRedOrbWave")))
+	{
+		if (SwordMoveVelocity.Size() >= 500.0f) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
+		{
+			ABossRedOrbWave* RedOrbWave = Cast<ABossRedOrbWave>(OtherComp->GetOwner());
+
+			if (RedOrbWave)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), RedOrbWave->OrbWaveExplosion, RedOrbWave->GetActorLocation());
+				RedOrbWave->Destroy();
+			}
+		}		
 	}
 }
 

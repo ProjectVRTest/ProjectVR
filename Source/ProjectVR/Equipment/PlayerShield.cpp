@@ -54,6 +54,12 @@ APlayerShield::APlayerShield()
 		ParryingEffect = PT_ParryingEffect.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ShieldBlockEffect(TEXT("ParticleSystem'/Game/Assets/Effect/HitFeedback/PT_ShieldBlock.PT_ShieldBlock'"));
+	if (PT_ShieldBlockEffect.Succeeded())
+	{
+		ShieldBlockEffect = PT_ShieldBlockEffect.Object;
+	}
+
 	StateBar = nullptr;
 	ShieldMesh->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 	ShieldMesh->SetCollisionProfileName(TEXT("NoCollision"));
@@ -208,7 +214,7 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 			}
 		}
 	}
-	else if (OtherComp->ComponentHasTag(TEXT("BossOrbWave")) || OtherComp->ComponentHasTag(TEXT("BossBlueOrbWave")))
+	else if (OtherComp->ComponentHasTag(TEXT("BossBlueOrbWave")))
 	{
 		if (IsActivation)
 		{
@@ -257,24 +263,13 @@ void APlayerShield::OrbWaveCrash(AActor * Orb)
 
 	if (MyCharacter)
 	{
-		ABossOrbWave* BossOrbWave = Cast<ABossOrbWave>(Orb);
+		ABossBlueOrbWave* BossBlueOrbWave = Cast<ABossBlueOrbWave>(Orb);
 
-		if (BossOrbWave)
+		if (BossBlueOrbWave)
 		{
-			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BossOrbWave->OrbWaveExplosion, BossOrbWave->GetActorLocation());
-			MyCharacter->UseStamina(BossOrbWave->GetOrbDamage()*1.2f);
-			BossOrbWave->Destroy();
-		}
-		else
-		{
-			ABossBlueOrbWave* BossBlueOrbWave = Cast<ABossBlueOrbWave>(Orb);
-
-			if (BossBlueOrbWave)
-			{
-				//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BossBlueOrbWave->OrbWaveExplosion, BossBlueOrbWave->GetActorLocation());
-				MyCharacter->UseStamina(BossOrbWave->GetOrbDamage()*1.2f);
-				BossOrbWave->Destroy();
-			}
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect , BossBlueOrbWave->GetActorLocation());
+			MyCharacter->UseStamina(BossBlueOrbWave->GetOrbDamage()*1.2f);
+			BossBlueOrbWave->Destroy();
 		}
 	}
 }

@@ -15,8 +15,6 @@ class PROJECTVR_API ANormalMonsterSpawnPosition : public ATargetPoint
 {
 	GENERATED_BODY()
 
-protected:
-	virtual void BeginPlay() override;
 public:
 	ANormalMonsterSpawnPosition();
 
@@ -25,10 +23,18 @@ public:
 	UPROPERTY()
 		class ANormalMonster* NormalMonster;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Monsterkind")
-		ENormalMonsterKind NormalMonsterkind;		
+		ENormalMonsterKind NormalMonsterkind;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Monsterkind")
+		bool NowSpawn;
 	UPROPERTY()
 		FTimerHandle FindTimer;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UParticleSystem* SpawnEffect;
+
+	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 		void FindTarget();
+	UFUNCTION()
+		void MonsterSpawn();
 };

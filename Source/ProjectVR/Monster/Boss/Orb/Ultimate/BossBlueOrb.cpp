@@ -29,7 +29,7 @@ ABossBlueOrb::ABossBlueOrb()
 		OrbExplosion = PT_BlueOrbExplosion.Object;
 	}
 
-	OrbWaveMaxCount = 100;
+	OrbWaveMaxCount = 20;
 }
 
 void ABossBlueOrb::BeginPlay()

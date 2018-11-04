@@ -80,7 +80,7 @@ void AMiniBossParryingPoint::ParryingPointBeginOverlap(UPrimitiveComponent* Over
 
 			if (MiniBoss)
 			{
-				if (PlayerSword->SwordMoveVelocity.Size() >= 1500)
+				if (PlayerSword->SwordMoveVelocity.Size() >= 1000.0f)
 				{
 					if (MiniBoss && !IsAttackMiniBossWeapon)
 					{
@@ -91,28 +91,6 @@ void AMiniBossParryingPoint::ParryingPointBeginOverlap(UPrimitiveComponent* Over
 					}
 				}
 			}
-		}
-
-		
-	}
-	if (OtherActor->ActorHasTag(TEXT("PlayerSword"))) //부딪힌 액터가 중간보스 무기인지 확인한다.
-	{
-		APlayerSword* PlayerSword = Cast<APlayerSword>(OtherActor);
-
-		if (PlayerSword)
-		{
-			AMiniBoss* MiniBoss = Cast<AMiniBoss>(GetAttachParentActor());
-			
-			if (PlayerSword->SwordMoveVelocity.Size() >= 1500)
-			{
-				if (MiniBoss && !IsAttackMiniBossWeapon)
-				{
-					IsAttackMiniBossWeapon = true;
-					MiniBoss->ParryingPointCount++;
-					//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingPointExplosionEffect, Sphere->GetComponentLocation());
-					Destroy();
-				}
-			}			
 		}		
-	}
+	}	
 }
