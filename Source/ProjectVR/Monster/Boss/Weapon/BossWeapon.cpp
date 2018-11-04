@@ -8,6 +8,8 @@
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Monster/Boss/Boss.h"
 #include "kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Particles/ParticleSystem.h"
 
 // Sets default values
 ABossWeapon::ABossWeapon()
@@ -25,6 +27,17 @@ ABossWeapon::ABossWeapon()
 	if (SM_Boss_Sword.Succeeded())
 	{
 		SwordMesh->SetStaticMesh(SM_Boss_Sword.Object);
+	}
+
+	SwordParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SwordWaveTailComponent"));
+	SwordParticleComponent->SetupAttachment(GetRootComponent());
+	SwordParticleComponent->SetRelativeLocation(FVector(21.0f, 4.0f, 196.0f));
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_SwordParticle(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/Monster/Boss/PT_BossWeapon.PT_BossWeapon'"));
+	if (PT_SwordParticle.Succeeded())
+	{
+		SwordParticle = PT_SwordParticle.Object;
+		SwordParticleComponent->Template = SwordParticle;
 	}
 
 	IsWeaponAttack = false;

@@ -17,21 +17,26 @@ EBTNodeResult::Type UBTTask_BossLongAttackReadyState::ExecuteTask(UBehaviorTreeC
 		{
 			if (Boss->OrbMaxCount < 1)
 			{
-				RandValue = 5;
+				RandValue = FMath::RandRange(5, 14);				
 			}
 			else if(Boss->OrbMaxCount >=1)
 			{
-				RandValue = FMath::RandRange(1, 10);
+				RandValue = FMath::RandRange(1, 14);
 			}			
 
-			if (RandValue > 4)
+			if (RandValue >= 9)
 			{
 				Boss->CurrentLongAttackState = EBossLongAttackState::DefaultLongAttack;
 			}
-			else if(RandValue <=4)
+			else if(RandValue >=5 && RandValue <=8)
+			{
+				Boss->CurrentLongAttackState = EBossLongAttackState::WaveAttack;				
+			}
+			else
 			{
 				Boss->CurrentLongAttackState = EBossLongAttackState::OrbCreate;
 			}
+			
 		}		
 	}
 	
