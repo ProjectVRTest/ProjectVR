@@ -33,6 +33,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "MyCharacter/Widget/HPStaminaBar_2.h"
 #include "MyCharacter/Widget/HPStaminaBar.h"
 
 #include "MyCharacter/Widget/Menu.h"									// 메뉴의 활성화 / 비활성화
