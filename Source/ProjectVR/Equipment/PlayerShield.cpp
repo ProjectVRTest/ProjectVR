@@ -18,6 +18,7 @@
 #include "MyCharacter/MotionControllerPC.h"
 #include "HandMotionController/LeftHandMotionController.h"
 #include "MyCharacter/MotionControllerCharacter.h"	// Setting Owner
+#include "MyCharacter/Widget/HPStaminaBar_2.h"			// Character State Bar
 #include "MyCharacter/Widget/HPStaminaBar.h"			// Character State Bar
 #include "TimerManager.h"
 #include "Monster/Boss/Weapon/BossWeapon.h"
@@ -95,7 +96,7 @@ void APlayerShield::BeginPlay()
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
 	//방패를 쉴드 씬 컴포넌트에 스폰시킨다.
-	StateBar = GetWorld()->SpawnActor<AHPStaminaBar>(StateBar->StaticClass(), StateBarScene->GetComponentLocation(), StateBarScene->GetComponentRotation(), SpawnActorOption);
+	StateBar = GetWorld()->SpawnActor<AHPStaminaBar_2>(StateBar->StaticClass(), StateBarScene->GetComponentLocation(), StateBarScene->GetComponentRotation(), SpawnActorOption);
 	//방패를 AttachRules를 토대로 쉴드 씬 컴포넌트에 붙인다.
 	StateBar->AttachToComponent(StateBarScene, AttachRules);
 	// 오너 설정

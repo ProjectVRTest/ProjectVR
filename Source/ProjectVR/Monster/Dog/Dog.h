@@ -63,6 +63,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "JumpData")
 		float height;
 
+	UPROPERTY(EditAnywhere, Category = "MaterialSelect")
+		bool bIsElite;
+
+	UMaterialInterface* NomalMaterial;
+	UMaterialInterface* EliteMaterial;
+
 	bool CurrentFalling;
 
 	bool OnLandFlag;

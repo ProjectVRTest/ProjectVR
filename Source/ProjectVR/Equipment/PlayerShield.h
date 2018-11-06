@@ -30,7 +30,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USceneComponent* StateBarScene;		// 캐릭터 상태 바
 	UPROPERTY(VisibleAnywhere, Category = "StateBar")
-		class AHPStaminaBar* StateBar;		// 캐릭터 상태 바
+		class AHPStaminaBar_2* StateBar;		// 캐릭터 상태 바
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* ParryingEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
