@@ -36,4 +36,6 @@ public:
 		bool IsParryingAttack;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UMaterialInterface* DefaultMaterials;
+	UPROPERTY()
+		float Damage;
 };

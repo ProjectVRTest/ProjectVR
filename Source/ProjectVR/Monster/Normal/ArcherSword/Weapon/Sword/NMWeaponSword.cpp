@@ -91,7 +91,7 @@ void ANMWeaponSword::SwordBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 
 			if (CameraLocation)
 			{
-				UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 5.0f, nullptr, this, nullptr);
+				UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), Damage, nullptr, this, nullptr);
 			}
 		}
 	}

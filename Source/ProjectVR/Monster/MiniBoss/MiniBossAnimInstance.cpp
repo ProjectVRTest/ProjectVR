@@ -35,7 +35,6 @@ void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentWaveAttackState = MiniBoss->CurrentWaveAttackState;
 		CurrentComboAttackState = MiniBoss->CurrentComboAttackState;
 		CurrentBackAttackState = MiniBoss->CurrentBackAttackState;
-		CurrentDashState = MiniBoss->CurrentDashState;
 		CurrentParryingState = MiniBoss->CurrentParryingState;
 
 		Yaw = MiniBoss->Yaw;
@@ -94,20 +93,23 @@ void UMiniBossAnimInstance::AnimNotify_SwordWaveSpawn(UAnimNotify * Notify)
 
 		ASwordWave* SwordWave = GetWorld()->SpawnActor<ASwordWave>(SwordWave->StaticClass(), MiniBoss->SwordWaveSpawn->GetComponentLocation(), MiniBoss->GetActorRotation(), SpawnActorOption);
 
-		switch (MiniBoss->SwordWaveCount)
+		if (SwordWave)
 		{
-		case 1:
-			MiniBoss->SwordWaveCount += 1;
-			break;
-		case 2:
-			FRotator NewRotator;
-			NewRotator.Roll = 90.0f;
-			NewRotator.Pitch = -20.0f;
-			NewRotator.Yaw = 90.0f;
-			SwordWave->SwordWaveRotatorModify(NewRotator);
-			MiniBoss->SwordWaveCount = 1;
-			break;
-		}
-		SwordWave->Homing(SwordWaveTarget);
+			switch (MiniBoss->SwordWaveCount)
+			{
+			case 1:
+				MiniBoss->SwordWaveCount += 1;
+				break;
+			case 2:
+				FRotator NewRotator;
+				NewRotator.Roll = 90.0f;
+				NewRotator.Pitch = -20.0f;
+				NewRotator.Yaw = 90.0f;
+				SwordWave->SwordWaveRotatorModify(NewRotator);
+				MiniBoss->SwordWaveCount = 1;
+				break;
+			}
+			SwordWave->Homing(SwordWaveTarget);
+		}		
 	}
 }

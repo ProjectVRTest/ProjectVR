@@ -19,7 +19,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -43,8 +42,6 @@ public:
 		EMiniBossComboAttackState CurrentComboAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EMiniBossBackAttackState CurrentBackAttackState;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-		EMiniBossDashState CurrentDashState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EMiniBossParryingState CurrentParryingState;
 
@@ -101,7 +98,12 @@ public:
 		bool AttackCompleteFlag; //공격이 완료 됏는지 판단
 	UPROPERTY()
 		bool StabFlag; //찌르기 애니메이션의 재생을 판단해줄 변수로 true이면 찌르기 노콤보 애니메이션이 재생되고, false이면 찌르기 콤보 애니메이션이 재생된다.
-	bool TwoHandWidthFlag; //가로베기 애니메이션의 재생을 판단해줄 변수로 true이면 가로베기 노콤보 애니메이션이 재생되고, false이면 가로베기 콤보 애니메이션이 재생된다.
+	UPROPERTY()
+		bool TwoHandWidthFlag; //가로베기 애니메이션의 재생을 판단해줄 변수로 true이면 가로베기 노콤보 애니메이션이 재생되고, false이면 가로베기 콤보 애니메이션이 재생된다.
+	UPROPERTY()
+		FTimerHandle MiniBossFresnelTimer;
+	UPROPERTY()
+		float FresnelValue;
 
 	UPROPERTY()
 		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열
@@ -114,6 +116,8 @@ public:
 		void ParryingPointValueSet(int ParryingCount); //HP가 50%이하인경우 지정한 패링포인트 수만큼 랜덤하게 스폰해주는 함수
 	UFUNCTION()
 		void OnSeeCharacter(APawn *Pawn); //캐릭터를 감지하면 실행해줄 함수
+	UFUNCTION()
+		void Fresnel();
 	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };

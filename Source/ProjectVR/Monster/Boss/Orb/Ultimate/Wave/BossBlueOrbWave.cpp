@@ -30,6 +30,8 @@ ABossBlueOrbWave::ABossBlueOrbWave()
 	Projecttile->MaxSpeed = 800.0f;
 
 	Sphere->ComponentTags.Add(FName(TEXT("BossBlueOrbWave")));
+	
+	Damage = 10.0f;
 
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));

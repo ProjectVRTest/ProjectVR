@@ -12,6 +12,35 @@ void UAnimNotifyState_NMAttackArea::NotifyBegin(USkeletalMeshComponent * MeshCom
 
 	if (NormalMonster)
 	{
+		switch (NormalMonster->CurrentState)
+		{
+		case ENormalMonsterState::Chase:
+			switch (NormalMonster->CurrentAnimState)
+			{
+			case ENormalMonsterAnimState::RageAttack:
+				NormalMonster->Sword->Damage = 20.0f;
+				break;
+			}
+			break;
+		case ENormalMonsterState::Battle:
+			switch (NormalMonster->CurrentAttackState)
+			{
+			case ENormalMonsterAttackState::StabAttack:
+				if (NormalMonster->CurrentStabAttackState == ENormalMonsterStabAttackState::StabAttackReady)
+				{
+					NormalMonster->Sword->Damage = 15.0f;
+				}
+				else if(NormalMonster->CurrentStabAttackState == ENormalMonsterStabAttackState::ClipplingAttackReady)
+				{
+					NormalMonster->Sword->Damage = 20.0f;
+				}
+				break;
+			case ENormalMonsterAttackState::ComboAttack:
+				NormalMonster->Sword->Damage = 10.0f;
+				break;
+			}
+			break;
+		}
 		NormalMonster->Sword->IsWeaponAttack = true;
 	}
 }

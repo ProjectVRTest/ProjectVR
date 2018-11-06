@@ -46,6 +46,8 @@ AMiniBossWeapon::AMiniBossWeapon()
 	IsWeaponAttack = false;
 	IsParryingAttack = false;
 		
+	Damage = 10.0f;
+
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 }
@@ -85,7 +87,7 @@ void AMiniBossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponen
 
 				if (MiniBoss)
 				{
-					UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 10.0f, nullptr, this, nullptr);
+					UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), Damage, nullptr, this, nullptr);
 				}				
 			}
 			GLog->Log(FString::Printf(TEXT("캐릭터 때림")));

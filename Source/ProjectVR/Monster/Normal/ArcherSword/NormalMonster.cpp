@@ -115,7 +115,7 @@ ANormalMonster::ANormalMonster()
 	ArrowSpawnLocation->SetupAttachment(GetRootComponent());
 	ArrowSpawnLocation->SetRelativeLocation(FVector(90.0f, 8.0f, 50.0f));
 	ArrowSpawnLocation->SetRelativeScale3D(FVector(-8.0f,90.0f,134.0f));
-	MaxHP = 10.0f;
+	MaxHP = 35.0f;
 	CurrentHP = MaxHP;
 
 	AIControllerClass = ANormalMonsterAIController::StaticClass();
@@ -290,8 +290,7 @@ void ANormalMonster::Fresnel()
 		GetWorld()->GetTimerManager().ClearTimer(FresnelTimer);
 		GetMesh()->SetVectorParameterValueOnMaterials(TEXT("Fresnel_color_3"), FVector(0, 0, 0));
 		GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Fresnel_exp_3"), FresnelValue);
-	}
-	
+	}	
 }
 
 float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)

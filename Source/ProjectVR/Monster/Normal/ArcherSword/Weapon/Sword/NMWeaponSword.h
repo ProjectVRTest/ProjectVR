@@ -22,6 +22,8 @@ public:
 		bool IsWeaponAttack;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool IsPlayerEquipment;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float Damage;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

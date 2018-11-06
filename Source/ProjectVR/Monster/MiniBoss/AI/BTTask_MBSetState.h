@@ -31,8 +31,6 @@ public:
 		EMiniBossComboAttackState SetComboAttackState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EMiniBossBackAttackState SetBackAttackState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		EMiniBossDashState SetDashState;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	
 };

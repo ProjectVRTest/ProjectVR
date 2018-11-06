@@ -10,13 +10,12 @@ UCLASS()
 class PROJECTVR_API ABossOrbWave : public AActor
 {
 	GENERATED_BODY()
-private:
-	UPROPERTY()
-		float Damage;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
+		float Damage;
 public:
 	// Sets default values for this actor's properties
 	ABossOrbWave();
@@ -34,7 +33,7 @@ public:
 		class UParticleSystem* OrbWaveParticle;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* OrbWaveExplosion;
-	
+
 	UFUNCTION()
 		void Homing(class AActor* Target);
 

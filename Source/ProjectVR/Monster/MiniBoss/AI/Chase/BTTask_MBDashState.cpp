@@ -23,7 +23,7 @@ EBTNodeResult::Type UBTTask_MBDashState::ExecuteTask(UBehaviorTreeComponent & Ow
 
 		if (MiniBoss)
 		{
-			MiniBoss->CurrentDashState = EMiniBossDashState::DashStart;
+			
 		}
 	}
 
@@ -42,7 +42,6 @@ void UBTTask_MBDashState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * N
 		if (CurrentFalling && PreviousFalling)
 		{
 			GLog->Log(FString::Printf(TEXT("DashLoop")));
-			MiniBoss->CurrentDashState = EMiniBossDashState::DashLoop;
 		}
 
 		if (!CurrentFalling && PreviousFalling)
@@ -52,7 +51,6 @@ void UBTTask_MBDashState::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * N
 			if (FloorDistance.FloorDist < 100.0f)
 			{
 				GLog->Log(FString::Printf(TEXT("DashEnd")));
-				MiniBoss->CurrentDashState = EMiniBossDashState::DashEnd;
 				MiniBoss->IsAttack = false;
 				FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 			}

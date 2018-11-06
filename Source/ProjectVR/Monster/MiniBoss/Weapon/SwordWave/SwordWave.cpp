@@ -29,7 +29,6 @@ ASwordWave::ASwordWave()
 	Projecttile->ProjectileGravityScale = 0;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	SetRootComponent(Sphere);
 	Mesh->SetupAttachment(Sphere);
 	Mesh->SetCollisionProfileName("NoCollision");
 	Mesh->SetRelativeRotation(FRotator(-90.0f, 0, 180.0f));
@@ -142,21 +141,15 @@ void ASwordWave::SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		if (CameraLocation)
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SwordWaveExplosion, OtherComp->GetComponentLocation());
-			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 10.0f, nullptr, this, nullptr);
+			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(),Damage, nullptr, this, nullptr);
 			Destroy();
 		}
 	}
-
-	if (OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
+	else if (OtherComp->ComponentHasTag(TEXT("SwordWaveTarget")))
 	{
-		GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
 		Projecttile->bIsHomingProjectile = false;
 		OtherActor->Destroy();
 	}
-	else if (OtherActor->ActorHasTag(TEXT("Land")))
-	{
-		Destroy();
-	}	
 }
 
 void ASwordWave::SwordWaveRotatorModify(FRotator NewRotator)

@@ -60,6 +60,7 @@ ANMWeaponArrow::ANMWeaponArrow()
 
 	ArrowEffectComponent->Template = ArrowEffect;
 	InitialLifeSpan = 2.5f;
+	Damage = 12.0f;
 
 	Tags.Add(FName(TEXT("NMArrow")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -92,19 +93,14 @@ void ANMWeaponArrow::ArrowBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		if (CameraLocation)
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ArrowExplosionEffect, OtherComp->GetComponentLocation());
-			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 5.0f, nullptr, this, nullptr);
+			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), Damage, nullptr, this, nullptr);
 			Destroy();
 		}
 	}
-	
-	if(OtherActor->ActorHasTag(TEXT("SwordWaveTarget")))
+	else if (OtherComp->ComponentHasTag(TEXT("SwordWaveTarget")))
 	{
-		GLog->Log(FString::Printf(TEXT("웨이브 타겟 때림")));
 		Projecttile->bIsHomingProjectile = false;
-	}
-	else if (OtherActor->ActorHasTag(TEXT("Land")))
-	{
-		Destroy();
+		OtherActor->Destroy();
 	}
 }
 

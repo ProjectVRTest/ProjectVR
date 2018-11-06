@@ -220,28 +220,115 @@ void ABoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABoss::ParryingPointInit()
 {
-
+	ParryingPoints.Add(TEXT(""));
+	ParryingPoints.Add(TEXT(""));
+	ParryingPoints.Add(TEXT(""));
+	ParryingPoints.Add(TEXT(""));
+	ParryingPoints.Add(TEXT(""));
+	ParryingPoints.Add(TEXT(""));
+	ParryingPoints.Add(TEXT(""));
 }
 
 void ABoss::ParryingPointSet()
 {
-	//float HPPercent = CurrentHP / MaxHP;
-	//int PreviousParryingPointName = -1;
-	//int RandomParryingPointName;
+	float HPPercent = CurrentHP / MaxHP;
+	int PreviousParryingPointName = -1;
+	int RandomParryingPointName;
 
-	//AMiniBossParryingPoint * MiniBossParryingPoint;
+	AMiniBossParryingPoint * MiniBossParryingPoint;
 
-	//FActorSpawnParameters SpawnActorOption;
-	//SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	//FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
+	if (HPPercent > 0.5f && HPPercent <= 1.0f)
+	{
+		int RandomParryingPointSpawn = FMath::RandRange(1, 2);
+
+		ParryingPointMaxCount = RandomParryingPointSpawn;
+
+		for (int i = 0; i < ParryingPointMaxCount; i++)
+		{
+			RandomParryingPointName = FMath::RandRange(0, 6);
+
+			if (RandomParryingPointName == PreviousParryingPointName)
+			{
+				i--;
+				continue;
+			}
+
+			MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+
+			FName ParryingPointSpawnLocation = ParryingPoints[RandomParryingPointName];
+			
+			MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, ParryingPointSpawnLocation);
+
+			PreviousParryingPointName = RandomParryingPointName;
+		}
+	}
+	else if (HPPercent > 0.4f &&HPPercent <= 0.5f)
+	{
+		ParryingPointValueSet(3); //3개 랜덤하게 스폰
+	}
+	else if (HPPercent > 0.3f && HPPercent <= 0.4f)
+	{
+		ParryingPointValueSet(5); //5개 랜덤하게 스폰
+	}
+	else if (HPPercent >= 0 && HPPercent <= 0.3f)
+	{
+		ParryingPointValueSet(7); //7개 스폰
+	}
 
 }
 
 void ABoss::ParryingPointValueSet(int ParryingCount)
 {
+	int RandomParryingPointName;
+	ParryingPointMaxCount = ParryingCount;
+	TArray<int32> RandomPointNotOverlap;
+	bool RandomFlag;
 
+	for (int k = 0; k < ParryingCount; k++)
+	{
+		RandomPointNotOverlap.Add(-1);
+	}
+
+	AMiniBossParryingPoint * MiniBossParryingPoint;
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+	for (int i = 0; i < ParryingCount; i++)
+	{
+		RandomParryingPointName = FMath::RandRange(0, 6);
+		RandomFlag = true;
+
+		for (int j = 0; j < ParryingCount; j++)
+		{
+			if (RandomPointNotOverlap[j] == RandomParryingPointName)
+			{
+				i--;
+				RandomFlag = false;
+			}
+		}
+
+		if (RandomFlag)
+		{
+			RandomPointNotOverlap[i] = RandomParryingPointName;
+		}
+	}
+
+	for (int j = 0; j < ParryingCount; j++)
+	{
+		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+
+		FName ParryingPointSpawnLocation = ParryingPoints[RandomPointNotOverlap[j]];
+		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, ParryingPointSpawnLocation);
+	}
+
+	ParryingPoints.Empty(); //
 }
 
 void ABoss::OnSeeCharacter(APawn * Pawn)

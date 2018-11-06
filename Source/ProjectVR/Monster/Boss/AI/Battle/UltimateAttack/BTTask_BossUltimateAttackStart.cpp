@@ -137,6 +137,7 @@ void UBTTask_BossUltimateAttackStart::TickTask(UBehaviorTreeComponent & OwnerCom
 			Boss->CurrentBattleState = EBossBattleState::AttackReady;
 			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		}
+
 	}
 }
 
@@ -144,17 +145,20 @@ void UBTTask_BossUltimateAttackStart::UltimateEnd()
 {
 	if (Boss->CurrentBattleState == EBossBattleState::UltimateAttack)
 	{
-		EndFlag = true;
+		EndFlag = true; //현재 상태를 탈출시켜 주기 위해 EndFlag를 켜준다.
 
-		for (auto Orb : Boss->UltimateOrbs)
+		if (Boss->UltimateOrbs.Num() > 0)
 		{
-			if (Orb)
+			for (auto Orb : Boss->UltimateOrbs)
 			{
-				Orb->Destroy();
+				if (Orb)
+				{
+					Orb->Destroy(); //남아있는 오브가 있으면 삭제 시킨다.
+				}
 			}
-		}
 
-		Boss->UltimateOrbs.Empty();
+			Boss->UltimateOrbs.Empty(); //궁극기 오브를 담아둔 배열을 깨끗하게 정리한다.
+		}		
 		GLog->Log(FString::Printf(TEXT("남아 있는 오브 수 %d"), Boss->UltimateOrbs.Num()));
 	}
 }

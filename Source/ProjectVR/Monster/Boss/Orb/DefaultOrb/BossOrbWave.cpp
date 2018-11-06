@@ -51,7 +51,7 @@ ABossOrbWave::ABossOrbWave()
 	Sphere->ComponentTags.Add(FName(TEXT("BossOrbWave")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
-	Damage = 10.0f;
+	Damage = 15.0f;
 
 	InitialLifeSpan = 5.0f;
 }

@@ -22,6 +22,7 @@
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "MiniBossParryingPoint.h"
+#include "TimerManager.h"
 
 // Sets default values
 AMiniBoss::AMiniBoss()
@@ -45,7 +46,6 @@ AMiniBoss::AMiniBoss()
 	CurrentAnimState = EMiniBossAnimState::Wait;
 	CurrentJumpState = EMiniBossJumpState::Idle;
 	CurrentShortAttackState = EMiniBossShortAttackState::Idle;
-	CurrentDashState = EMiniBossDashState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
@@ -78,7 +78,7 @@ AMiniBoss::AMiniBoss()
 	IsAttack = false; //공격할수 있게 해줌
 	StabFlag = false;
 	TwoHandWidthFlag = false;
-	MaxHP = 200.0f;
+	MaxHP = 300.0f;
 	CurrentHP = MaxHP;
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/M_MonsterOpacity.M_MonsterOpacity'"));
@@ -136,6 +136,8 @@ AMiniBoss::AMiniBoss()
 	}
 	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 	GetCharacterMovement()->MaxAcceleration = 2048.0f;
+	FresnelValue = 1.0f;
+
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
@@ -184,7 +186,6 @@ void AMiniBoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentWaveAttackState", (uint8)CurrentWaveAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentComboAttackState", (uint8)CurrentComboAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentBackAttackState", (uint8)CurrentBackAttackState);
-		AI->BBComponent->SetValueAsEnum("CurrentDashState", (uint8)CurrentDashState);
 		AI->BBComponent->SetValueAsEnum("CurrentParryingState", (uint8)CurrentParryingState);
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 	}
@@ -229,7 +230,7 @@ void AMiniBoss::ParryingPointSet()
 		ParryingPointMaxCount = RandomParryingPointSpawn; //패링 점이 최대 몇개 인지 저장해둔다.
 
 		//위에서 랜덤하게 받은 수만큼 반복하면서
-		for (int i = 0; i < RandomParryingPointSpawn; i++)
+		for (int i = 0; i < ParryingPointMaxCount; i++)
 		{
 			//7개의 패링 점중에서 랜덤한곳에 스폰시켜 주기 위해 0~6까지의 랜덤수를 받는다.
 			RandomParryingPointName = FMath::RandRange(0, 6);
@@ -273,7 +274,7 @@ void AMiniBoss::ParryingPointValueSet(int ParryingCount)
 	int RandomParryingPointName;
 	ParryingPointMaxCount = ParryingCount;
 	TArray<int32> RandomPointNotOverlap;
-	//int* RandomPointNotOverlap = new int[ParryingCount];
+
 	bool RandomFlag;
 
 	for (int k = 0; k < ParryingCount; k++)
@@ -312,17 +313,10 @@ void AMiniBoss::ParryingPointValueSet(int ParryingCount)
 		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
 
 		FName ParryingPointSpawnLocation = ParryingPoints[RandomPointNotOverlap[j]];
-		GLog->Log(FString::Printf(TEXT("%d"), RandomPointNotOverlap[j]));
-		GLog->Log(ParryingPointSpawnLocation.ToString());
-
 		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, ParryingPointSpawnLocation);
 	}
 
-	/*if (RandomPointNotOverlap != nullptr)
-	{
-		free(RandomPointNotOverlap);
-		RandomPointNotOverlap = nullptr;
-	}	*/
+	ParryingPoints.Empty(); //
 }
 
 void AMiniBoss::OnSeeCharacter(APawn * Pawn)
@@ -350,11 +344,28 @@ void AMiniBoss::OnSeeCharacter(APawn * Pawn)
 	}
 }
 
+void AMiniBoss::Fresnel()
+{
+	GetMesh()->SetVectorParameterValueOnMaterials(TEXT("Fresnel_color_3"), FVector(1.0f, 0.2f, 0));
+	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Fresnel_exp_3"), FresnelValue);
+	FresnelValue += 1.6f;
+
+	if (FresnelValue > 6.0f)
+	{
+		FresnelValue = 1.0f;
+		GetWorld()->GetTimerManager().ClearTimer(MiniBossFresnelTimer);
+		GetMesh()->SetVectorParameterValueOnMaterials(TEXT("Fresnel_color_3"), FVector(0, 0, 0));
+		GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Fresnel_exp_3"), FresnelValue);
+	}
+}
+
 float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
 	CurrentHP -= Damage;
+
+	GetWorld()->GetTimerManager().SetTimer(MiniBossFresnelTimer, this, &AMiniBoss::Fresnel, 0.1f, true, 0.1f);
 
 	if (CurrentHP < 0)
 	{

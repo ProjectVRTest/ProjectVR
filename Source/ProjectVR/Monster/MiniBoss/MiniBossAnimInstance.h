@@ -31,8 +31,6 @@ public:
 		EMiniBossComboAttackState CurrentComboAttackState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EMiniBossBackAttackState CurrentBackAttackState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		EMiniBossDashState CurrentDashState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EMiniBossParryingState CurrentParryingState;
 
