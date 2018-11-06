@@ -35,7 +35,6 @@ public:
 		class UParticleSystem* ParryingEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* ShieldBlockEffect;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")
 		class AMotionControllerCharacter* ShieldOwner;		// 오너
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ShieldVelocity")
@@ -54,6 +53,11 @@ public:
 		bool IsMiniBossWeaponOverlap; //중간보스 무기가 현재 방패와 겹쳐진 상태인지 확인해줄 변수
 	UPROPERTY()
 		bool IsBossWeaponOverlap; //보스 무기가 현재 방패와 겹쳐진 상태인지 확인해줄 변수
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
+		class UMaterialInterface* ShieldVisibleMaterial;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
+		class UMaterialInterface* ShieldInVisibleMaterial;
+
 
 	UFUNCTION()
 		void ConvertOfOpacity(float opacity); //방패를 활성,비활성 시킬때 투명도를 정해줄 함수

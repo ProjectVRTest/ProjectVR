@@ -152,7 +152,11 @@ void ANormalMonster::BeginPlay()
 
 	if (RandomMesh == 1)
 	{
-		GetMesh()->SetSkeletalMesh(ArcherSKMesh);
+		GetMesh()->SetSkeletalMesh(ArcherSKMesh);		
+	}
+	else
+	{
+		CurrentHP = 50.0f;
 	}
 
 	if (AI)
@@ -349,8 +353,7 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 					Boss->CurrentNormalMonsterCount--;
 				}
 			}
-
-			GLog->Log(FString::Printf(TEXT("HP가 0보다 작은데 공격 받음")));
+						
 			CurrentHP = 0;
 			if (Bow)
 			{

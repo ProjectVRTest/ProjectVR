@@ -15,7 +15,7 @@ EBTNodeResult::Type UBTTask_BossVisibleState::ExecuteTask(UBehaviorTreeComponent
 
 		if (Boss)
 		{
-			Boss->GetCharacterMovement()->GravityScale = 0;
+			//Boss->GetCharacterMovement()->GravityScale = 0;
 			Boss->SetActorLocation(AI->BBComponent->GetValueAsVector("TeleportLocation"));
 			Boss->GetMesh()->SetMaterial(0, Boss->DefaultBodyMaterials);
 			Boss->GetMesh()->SetMaterial(1, Boss->DefaultClothMaterials);

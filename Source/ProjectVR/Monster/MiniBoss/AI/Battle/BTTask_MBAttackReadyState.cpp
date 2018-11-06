@@ -7,7 +7,7 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 {
 	AMiniBossAIController* AI = Cast<AMiniBossAIController>(OwnerComp.GetAIOwner());
 
-	//루트모션을 켜주는 행위는
+	//루트모션을 켜주는 행위는ㅈ
 	//루트본을 원점좌표로 설정해서 컬리전이 루트본의 움직임을 따라가게 해주는 행위로
 	//루트모션 키기전,후 애니메이션 루트본 좌표의 차 만큼 컬리전을 움직여준다.
 	

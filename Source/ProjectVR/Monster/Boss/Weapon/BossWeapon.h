@@ -21,13 +21,15 @@ public:
 		bool IsWeaponAttack;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool IsParryingAttack;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystemComponent* SwordParticleComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
-		class UParticleSystem* SwordParticle;
+		class UParticleSystem* SwordParticle;*/
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	UPROPERTY()
+		float Damage;
 
 public:	
 	// Called every frame

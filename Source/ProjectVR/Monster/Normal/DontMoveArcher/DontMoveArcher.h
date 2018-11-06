@@ -66,6 +66,12 @@ public:
 		class UBehaviorTree* BehaviorTree;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class ADontMoveArcherBow* Bow;
+	UPROPERTY()
+		float FresnelValue;
+	UPROPERTY()
+		FTimerHandle FresnelTimer;
+	UFUNCTION()
+		void Fresnel();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pitch")
 		float Pitch;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

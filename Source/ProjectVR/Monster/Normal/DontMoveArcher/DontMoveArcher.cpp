@@ -15,6 +15,7 @@
 #include "MyCharacter/CameraLocation.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 // Sets default values
 ADontMoveArcher::ADontMoveArcher()
@@ -69,7 +70,7 @@ ADontMoveArcher::ADontMoveArcher()
 	ArrowSpawnLocation->SetRelativeLocation(FVector(90.0f, 8.0f, 50.0f));
 	ArrowSpawnLocation->SetRelativeScale3D(FVector(-8.0f, 90.0f, 134.0f));
 
-	MaxHP = 100;
+	MaxHP = 35.0f;
 	CurrentHP = MaxHP;
 
 	AIControllerClass = ADontMoveArcherAIController::StaticClass();
@@ -96,6 +97,7 @@ ADontMoveArcher::ADontMoveArcher()
 
 	Target = nullptr;
 	Pitch = 0;
+	FresnelValue = 1.0f;
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
@@ -189,7 +191,31 @@ void ADontMoveArcher::DeleteArrowMesh()
 	NMArrowComponent->SetStaticMesh(nullptr);
 }
 
+void ADontMoveArcher::Fresnel()
+{
+	GetMesh()->SetVectorParameterValueOnMaterials(TEXT("Fresnel_color_3"), FVector(1.0f, 0.2f, 0));
+	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Fresnel_exp_3"), FresnelValue);
+	FresnelValue += 1.6f;
+
+	if (FresnelValue > 6.0f)
+	{
+		FresnelValue = 1.0f;
+		GetWorld()->GetTimerManager().ClearTimer(FresnelTimer);
+		GetMesh()->SetVectorParameterValueOnMaterials(TEXT("Fresnel_color_3"), FVector(0, 0, 0));
+		GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Fresnel_exp_3"), FresnelValue);
+	}
+}
+
 float ADontMoveArcher::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
+	CurrentHP -= Damage;
+
+	GetWorld()->GetTimerManager().SetTimer(FresnelTimer, this, &ADontMoveArcher::Fresnel, 0.1f, true, 0.1f);
+
+	if (CurrentHP < 0)
+	{
+		CurrentHP = 0;
+		CurrentState = EDontMoveArcherState::Dead;
+	}
 	return Damage;
 }

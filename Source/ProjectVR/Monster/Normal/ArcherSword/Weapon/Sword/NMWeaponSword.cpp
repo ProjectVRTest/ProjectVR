@@ -30,6 +30,13 @@ ANMWeaponSword::ANMWeaponSword()
 		SwordMesh->SetStaticMesh(SM_Sword.Object);
 	}
 
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shover(TEXT("StaticMesh'/Game/Assets/MapBuild/Shover/shovel_low.shovel_low'"));
+
+	if (SM_Shover.Succeeded())
+	{
+		ShovelMesh = SM_Shover.Object;
+	}
+
 	//공격이 가능한 상태인지 알려주는 변수로 처음에는 꺼둔다.
 	IsWeaponAttack = false;
 	IsPlayerEquipment = false; 

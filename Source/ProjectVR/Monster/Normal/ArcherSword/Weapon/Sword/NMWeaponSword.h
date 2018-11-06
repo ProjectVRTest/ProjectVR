@@ -16,6 +16,8 @@ public:
 	ANMWeaponSword();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UStaticMeshComponent* SwordMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UStaticMesh* ShovelMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UCapsuleComponent* SwordCollision;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

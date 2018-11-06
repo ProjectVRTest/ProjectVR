@@ -46,6 +46,7 @@ enum class EBossLongAttackState : uint8
 	WaveAttack = 4 UMETA(DisplayName = "WaveAttack")
 };
 
+
 UENUM(BlueprintType)
 enum class EBossCloseAttackState : uint8
 {

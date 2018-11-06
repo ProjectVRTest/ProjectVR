@@ -33,7 +33,7 @@ void UBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 void UBossAnimInstance::AnimNotify_LongDistanceAttackBallSpawn(UAnimNotify * Notify)
 {
 	ABoss* Boss = Cast<ABoss>(TryGetPawnOwner());
-	
+	GLog->Log(FString::Printf(TEXT("원거리 공격 생성")));
 	if (Boss)
 	{
 		int LeftRightValue;
@@ -69,8 +69,14 @@ void UBossAnimInstance::AnimNotify_LongDistanceAttackBallSpawn(UAnimNotify * Not
 	}
 }
 
+void UBossAnimInstance::AnimNotify_Test(UAnimNotify * Notify)
+{
+	GLog->Log(FString::Printf(TEXT("애니메이션 실행")));
+}
+
 void UBossAnimInstance::AnimNotify_OrbCreate(UAnimNotify * Notify)
 {
+	GLog->Log(FString::Printf(TEXT("오브 생성")));
 	ABoss* Boss = Cast<ABoss>(TryGetPawnOwner());
 
 	if (Boss)

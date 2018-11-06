@@ -61,6 +61,18 @@ APlayerShield::APlayerShield()
 		ShieldBlockEffect = PT_ShieldBlockEffect.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_ShieldVisibleMaterial(TEXT("MaterialInstanceConstant'/Game/Assets/CharacterEquipment/Equipment/Shield/Materials/M_ShieldVisible_Inst.M_ShieldVisible_Inst'"));
+	if (M_ShieldVisibleMaterial.Succeeded())
+	{
+		ShieldVisibleMaterial = M_ShieldVisibleMaterial.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_ShieldInVisibleMaterial(TEXT("MaterialInstanceConstant'/Game/Assets/CharacterEquipment/Equipment/Shield/Materials/M_ShieldInVisibleInst.M_ShieldInVisibleInst'"));
+	if (M_ShieldInVisibleMaterial.Succeeded())
+	{
+		ShieldInVisibleMaterial = M_ShieldInVisibleMaterial.Object;
+	}
+
 	StateBar = nullptr;
 	ShieldMesh->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 	ShieldMesh->SetCollisionProfileName(TEXT("NoCollision"));

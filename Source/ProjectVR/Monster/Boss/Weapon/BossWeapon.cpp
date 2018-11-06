@@ -29,7 +29,7 @@ ABossWeapon::ABossWeapon()
 		SwordMesh->SetStaticMesh(SM_Boss_Sword.Object);
 	}
 
-	SwordParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SwordWaveTailComponent"));
+	/*SwordParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SwordWaveTailComponent"));
 	SwordParticleComponent->SetupAttachment(GetRootComponent());
 	SwordParticleComponent->SetRelativeLocation(FVector(21.0f, 4.0f, 196.0f));
 
@@ -38,10 +38,12 @@ ABossWeapon::ABossWeapon()
 	{
 		SwordParticle = PT_SwordParticle.Object;
 		SwordParticleComponent->Template = SwordParticle;
-	}
+	}*/
 
 	IsWeaponAttack = false;
 	IsParryingAttack = false;
+
+	Damage = 10.0f;
 
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -81,7 +83,7 @@ void ABossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 
 				if (Boss)
 				{
-					UGameplayStatics::ApplyDamage(MyCharacter, 10.0f, nullptr, nullptr, nullptr);
+					UGameplayStatics::ApplyDamage(MyCharacter, Damage, nullptr, nullptr, nullptr);
 				}
 			}			
 			GLog->Log(FString::Printf(TEXT("캐릭터 때림")));

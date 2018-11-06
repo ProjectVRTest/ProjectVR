@@ -28,11 +28,11 @@ ABoss::ABoss()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+	//GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 	
 	AIControllerClass = ABossAIController::StaticClass();
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Boss_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/SK_Boss.SK_Boss'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Boss_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/Boss/Mesh/ES_Boss_fin.ES_Boss_fin'"));
 
 	if (Boss_SK_Mesh.Succeeded())
 	{
@@ -68,7 +68,7 @@ ABoss::ABoss()
 		BehaviorTree = Boss_BT.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UClass>ABP_Boss(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Boss/Blueprints/ABP_Boss.ABP_Boss_C'"));
+	static ConstructorHelpers::FObjectFinder<UClass>ABP_Boss(TEXT("AnimBlueprint'/Game/Blueprints/Monster/Boss/Blueprints/ABP_Boss_Fin.ABP_Boss_Fin_C'"));
 
 	if (ABP_Boss.Succeeded())
 	{

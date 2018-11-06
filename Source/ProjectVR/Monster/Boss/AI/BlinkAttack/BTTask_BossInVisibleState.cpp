@@ -29,6 +29,11 @@ EBTNodeResult::Type UBTTask_BossInVisibleState::ExecuteTask(UBehaviorTreeCompone
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Boss->BlinkSmoke, Boss->GetActorLocation());			
 			Boss->GetMesh()->SetMaterial(0, Boss->OpacityMaterials);
 			Boss->GetMesh()->SetMaterial(1, Boss->OpacityMaterials);
+
+			if (Boss->Sickle)
+			{
+
+			}
 			Boss->GetMesh()->SetCollisionProfileName("NoCollision");
 			GetWorld()->GetTimerManager().SetTimer(InVisibleTimer, this, &UBTTask_BossInVisibleState::InVisible, 1.0f, false);
 		}
@@ -74,7 +79,7 @@ void UBTTask_BossInVisibleState::InVisible()
 				else // 캐릭터 앞으로 이동 
 				{
 					GLog->Log(FString::Printf(TEXT("캐릭터 앞으로 이동")));
-					TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(200.0f, 0, 0);
+					TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(500.0f, 0, 0);
 				}
 				break;
 			case EBossBattleState::UltimateAttack:				
