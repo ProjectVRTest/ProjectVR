@@ -93,7 +93,7 @@ ANormalMonster::ANormalMonster()
 	QuiverComponent->SetupAttachment(GetMesh(),TEXT("QuiverSocket"));
 	QuiverComponent->SetCollisionProfileName(TEXT("OverlapAll"));
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Quiver(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Bow/Arrow/Mesh/SM_Quiver.SM_Quiver'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Quiver(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Bow/Arrow/Mesh/SM_MoveArcherQuiver.SM_MoveArcherQuiver'"));
 
 	if (SM_Quiver.Succeeded())
 	{

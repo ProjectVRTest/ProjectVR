@@ -70,7 +70,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HP")
 		float MaxHp;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HP")
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "HP")
 		float CurrentHp;
 	UPROPERTY()
 		float RunningTime;
@@ -78,14 +78,13 @@ public:
 		bool bAllowBreathe;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float DashPower;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
 		float WalkSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
 		float RunSpeed;
 
-	// 스테미너 관련
-	float CurrentStamina;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
+		float CurrentStamina;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
 		float MaxStamina;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
