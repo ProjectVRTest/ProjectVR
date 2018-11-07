@@ -86,10 +86,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
 		float SwayTime;
-		float DefaultTime;
+	float DefaultTime;
 
-		int SwayCount;
-		int TolerateCount;
+	int SwayCount;
+	int TolerateCount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
 		int stack;				// 개를 떨어뜨리기위한 스택
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
@@ -97,7 +97,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Value")
 		float Currentlinear;				// 개를 떨어뜨리기위한 스택
 
-	//오른손에 붙인 검이 보이는지 안보이는지 판단해줄 변수
+											//오른손에 붙인 검이 보이는지 안보이는지 판단해줄 변수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sword")
 		bool VisibleSwordFlag;
 
@@ -159,7 +159,10 @@ public:
 	UPROPERTY(EditAnywhere)
 		class ALockKey* Key;
 	UPROPERTY(EditAnywhere)
-		class ADoorLock* Lock;
+		class ALockedDoor* LockedDoor;
 	UPROPERTY(EditAnywhere)
 		class USceneComponent* KeySocket;
+
+	UPROPERTY()
+		bool bGrabKey;
 };

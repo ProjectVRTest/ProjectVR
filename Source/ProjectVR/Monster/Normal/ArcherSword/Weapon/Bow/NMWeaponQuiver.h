@@ -23,6 +23,26 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UStaticMeshComponent* QuiverMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UStaticMeshComponent* NMArrowMeshOne;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UStaticMeshComponent* NMArrowMeshTwo;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UStaticMeshComponent* NMArrowMeshThree;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UStaticMeshComponent* NMArrowMeshFour;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UStaticMeshComponent* NMArrowMeshFive;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UStaticMesh* NMArrow;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		int ArrowCount;
+	UPROPERTY()
+		TArray<class UStaticMesh*> NMArrows;
+	UFUNCTION()
+		void ArrowPop();
+	UFUNCTION()
+		void ArrowPush(class UStaticMesh* Arrow);
 };

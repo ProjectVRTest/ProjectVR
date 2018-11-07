@@ -32,6 +32,7 @@
 #include "Monster/Dog/DogAIController.h"
 #include "Object/Door/LockKey.h"		// 문열 때 키 생성
 #include "Object/Door/DoorLock.h"		// 이벤트
+#include "Object/Door/LockedDoor.h"		// 이벤트
 
 // Sets default values
 ARightHandMotionController::ARightHandMotionController()
@@ -64,7 +65,7 @@ ARightHandMotionController::ARightHandMotionController()
 	HandMesh->SetCollisionProfileName(FName("NoCollision")); //콜리전 프리셋을 OverlapOnlyPawn으로 바꿔서 Pawn은 오버랩되고 나머지는 블록되게 바꿔준다. 
 
 
-															//손주위에 있는 물체들을 감지하기 위한 스피어 콜리전컴포넌트를 생성해서 GrabShpere에 넣는다.
+															 //손주위에 있는 물체들을 감지하기 위한 스피어 콜리전컴포넌트를 생성해서 GrabShpere에 넣는다.
 	GrabSphere = CreateDefaultSubobject<USphereComponent>(TEXT("GrabComponent"));
 	//생성한 스피어 콜리전 컴포넌트를 HandMesh에 붙인다.
 	GrabSphere->SetupAttachment(HandMesh);
@@ -144,7 +145,7 @@ ARightHandMotionController::ARightHandMotionController()
 
 	bGrabPotion = false;		// 포션 없음
 
-	// 개한테 물렸을 때, 한 방향으로 지속되는 시간
+								// 개한테 물렸을 때, 한 방향으로 지속되는 시간
 	DefaultTime = 0.2f;
 	SwayTime = DefaultTime;
 	SwayCount = 0;
@@ -180,14 +181,14 @@ void ARightHandMotionController::BeginPlay()
 
 	//현재 월드에 검을 스폰시킨다.
 	Sword = GetWorld()->SpawnActor<APlayerSword>(Sword->StaticClass(), SwordAttachScene->GetComponentLocation(), SwordAttachScene->GetComponentRotation(), SpawnActorOption);
-	
+
 	if (Sword)
 	{
 		Sword->AttachToComponent(HandMesh, AttachRules, TEXT("CharacterSwordSocket"));
 	}
 	//Sword->AttachToComponent(SwordAttachScene, AttachRules);//스폰한 검을 SwordAttachScene에 붙인다.
 
-															//손에 다른 액터가 부딪히면 호출할 함수(OnHandBeginOverlap)를 바인딩한다.
+	//손에 다른 액터가 부딪히면 호출할 함수(OnHandBeginOverlap)를 바인딩한다.
 	OverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &ARightHandMotionController::OnHandBeginOverlap);
 	//손에 다른 액터가 부딪히고 벗어날때 호출할 함수(OnHandEndOverlap)를 바인딩한다.
 	OverlapSphere->OnComponentEndOverlap.AddDynamic(this, &ARightHandMotionController::OnHandEndOverlap);
@@ -241,7 +242,7 @@ void ARightHandMotionController::Tick(float DeltaTime)
 		HandMoveDelta = HandCurrentPosistion - HandPreviousPosistion;
 		HandMoveVelocity = HandMoveDelta / DeltaTime;
 		HandPreviousPosistion = HandCurrentPosistion;
-		
+
 		Currentlinear = HandMoveVelocity.Size();
 
 
@@ -256,6 +257,7 @@ void ARightHandMotionController::Tick(float DeltaTime)
 //그립버튼을 눌럿을시 호출되는 함수
 void ARightHandMotionController::GrabActor()
 {
+	if (bGrabKey) return;
 	AActor* NearestMesh; //근처에 있는 액터를 저장해둘 변수
 	WantToGrip = true; //쥔상태로 바꾼다.
 	bisRightGrab = true;
@@ -360,6 +362,8 @@ void ARightHandMotionController::GrabActor()
 
 void ARightHandMotionController::ReleaseActor()
 {
+	if (bGrabKey) return;
+
 	bisRightGrab = false;
 	if (AttachedActor)
 	{
@@ -370,7 +374,7 @@ void ARightHandMotionController::ReleaseActor()
 		{
 			if (AttachedActor->ActorHasTag("Door"))
 			{
-				
+
 			}
 			else		// 문 이외의 것들
 			{
@@ -412,7 +416,7 @@ void ARightHandMotionController::ReleaseActor()
 						AttachPotion->BagInputFlag = true;
 						AttachPotion->Mesh->SetSimulatePhysics(true);
 						AttachedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);			// 잡은 물체와 뗀다		
-					}					
+					}
 				}
 			}
 		}
@@ -420,7 +424,7 @@ void ARightHandMotionController::ReleaseActor()
 	}
 	else			// 메뉴에서 그랩 후 릴리즈하면 아무것도 없는 오픈상태여야하기 때문에 잡힌 것이 없을 때 진행
 	{
-		if(Sword->bHidden)		// 칼이 숨겨져 있을 때(메뉴 범위에 손이 들어가있을 때)
+		if (Sword->bHidden)		// 칼이 숨겨져 있을 때(메뉴 범위에 손이 들어가있을 때)
 			HandOpenState();		// 릴리즈 시 오픈상태로 변환
 	}
 }
@@ -495,28 +499,31 @@ void ARightHandMotionController::HandGrabState()
 
 void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->ActorHasTag("Lock"))
+	if (OtherActor->ActorHasTag("LockedDoor"))
 	{
 		if (HandOwner->bHasKey)
-			Lock = Cast<ADoorLock>(OtherActor);
+			LockedDoor = Cast<ALockedDoor>(OtherActor);
 	}
 
 	if (OtherComp->ComponentHasTag("BodyLock"))
 	{
 		if (HandOwner->bHasKey)
 		{
-			Lock->GetLockKey();
+			LockedDoor->GetLockKey();
 			HandNomalState();
 			Key->Destroy();
-			Lock = NULL;
+			LockedDoor = NULL;
 		}
 		return;
 	}
+
+	if (bGrabKey) return;
 
 	if (OtherComp->ComponentHasTag("LockArea"))
 	{
 		if (HandOwner->bHasKey)
 		{
+			bGrabKey = true;
 			HandGrabState();
 			FActorSpawnParameters SpawnActorOption; //액터를 스폰할때 쓰일 구조체 변수
 			SpawnActorOption.Owner = this; //스폰할 액터의 주인을 현재 클래스로 정한다.
@@ -532,7 +539,7 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 		}
 		return;
 	}
-	
+
 	// 종류 : 포션박스, 머리, 문, 기타액터
 	// 컴포넌트 태그 중 왼손, 오른손 무시의 태그가 있으면 무시 (Head 무시)
 	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
@@ -577,13 +584,14 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 
 void ARightHandMotionController::OnHandEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->ActorHasTag("Lock"))
-		Lock = NULL;
+	if (OtherActor->ActorHasTag("LockedDoor"))
+		LockedDoor = NULL;
 
 	if (OtherComp->ComponentHasTag("LockArea"))
 	{
 		if (Key)
 		{
+			bGrabKey = false;
 			Key->Destroy();
 		}
 		HandNomalState();

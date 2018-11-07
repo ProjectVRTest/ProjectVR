@@ -12,7 +12,7 @@
 APotionBag::APotionBag()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	PotionBagMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PotionBagMesh"));
 	SetRootComponent(PotionBagMesh);
@@ -82,11 +82,11 @@ void APotionBag::PotionPush(APotion* PushPotion)
 
 	if (PushPotion)
 	{
-		int index =Potions.Add(PushPotion);
+		int index = Potions.Add(PushPotion);
 
 		int CurrentPotionCount = Potions.Num();
 
-		GLog->Log(FString::Printf(TEXT("Potion Index : %d"), CurrentPotionCount));
+		//GLog->Log(FString::Printf(TEXT("Potion Index : %d"), CurrentPotionCount));
 
 		if (PotionBagMesh)
 		{
