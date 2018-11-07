@@ -128,7 +128,7 @@ void ADoorLock::GetLockKey()
 
 void ADoorLock::OpenDoor()
 {
-	OpenEvent.ExecuteIfBound();
+	//OpenEvent.ExecuteIfBound();
 	Key->Destroy();
 	Destroy();
 }
