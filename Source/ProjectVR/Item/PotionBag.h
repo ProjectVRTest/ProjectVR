@@ -10,8 +10,8 @@ UCLASS()
 class PROJECTVR_API APotionBag : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	APotionBag();
 
@@ -19,21 +19,19 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UStaticMeshComponent* PotionBagMesh; //포션가방 메쉬
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UCapsuleComponent* PotionBagCollision; //포션 컬리젼
-					
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shield")
 		class USceneComponent* PotionAttachScene;
-	
+
 	TArray<class APotion*> Potions;
 
 	UPROPERTY()

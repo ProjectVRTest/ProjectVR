@@ -63,8 +63,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 		class ACameraLocation* TargetCamera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
-		class UStaticMeshComponent* QuiverComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
 		class UStaticMesh* QuiverMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
 		class UStaticMeshComponent* NMArrowComponent;
@@ -76,6 +74,8 @@ public:
 		class ANMWeaponSword* Sword;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class ANMWeaponBow* Bow;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+		class ANMWeaponQuiver* Quiver;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float MaxHP; //최대 HP

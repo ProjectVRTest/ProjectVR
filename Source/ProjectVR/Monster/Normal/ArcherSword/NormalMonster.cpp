@@ -89,10 +89,6 @@ ANormalMonster::ANormalMonster()
 		MoveArcherBehaviorTree = NormalMoveArcherMonster_BT.Object;
 	}
 
-	QuiverComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("QuiverComponent"));
-	QuiverComponent->SetupAttachment(GetMesh(),TEXT("QuiverSocket"));
-	QuiverComponent->SetCollisionProfileName(TEXT("OverlapAll"));
-
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Quiver(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Bow/Arrow/Mesh/SM_MoveArcherQuiver.SM_MoveArcherQuiver'"));
 
 	if (SM_Quiver.Succeeded())
@@ -399,10 +395,6 @@ void ANormalMonster::SetEquipment()
 		if (Bow)
 		{
 			Bow->AttachToComponent(GetMesh(), AttachRules, TEXT("BowSocket"));
-			if (QuiverMesh)
-			{
-				QuiverComponent->SetStaticMesh(QuiverMesh);
-			}
 		}
 		break;
 	}

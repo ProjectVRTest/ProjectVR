@@ -22,6 +22,7 @@ ANMWeaponArrow::ANMWeaponArrow()
 	SetRootComponent(Mesh);
 	Mesh->SetRelativeScale3D(FVector(2.0f, 3.0f, 2.0f));
 	Mesh->SetCollisionProfileName("NoCollision");
+
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Arrow(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Bow/Arrow/Mesh/SM_Arrow.SM_Arrow'"));
 
 	if (SM_Arrow.Succeeded())
