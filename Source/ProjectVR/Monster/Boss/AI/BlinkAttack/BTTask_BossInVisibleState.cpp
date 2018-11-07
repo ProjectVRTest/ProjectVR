@@ -4,7 +4,9 @@
 #include "Headers/BossAIHeader.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "MyCharacter/MotionControllerCharacter.h"
+#include "Monster/Boss/Weapon/BossWeapon.h"
 #include "MyCharacter/CameraLocation.h"
+#include "Components/StaticMeshComponent.h"
 #include "MyTargetPoint.h"
 
 void UBTTask_BossInVisibleState::InitializeFromAsset(UBehaviorTree & Asset)
@@ -29,10 +31,10 @@ EBTNodeResult::Type UBTTask_BossInVisibleState::ExecuteTask(UBehaviorTreeCompone
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Boss->BlinkSmoke, Boss->GetActorLocation());			
 			Boss->GetMesh()->SetMaterial(0, Boss->OpacityMaterials);
 			Boss->GetMesh()->SetMaterial(1, Boss->OpacityMaterials);
-
+			
 			if (Boss->Sickle)
 			{
-
+				Boss->Sickle->SwordMesh->SetMaterial(0, Boss->OpacityMaterials);
 			}
 			Boss->GetMesh()->SetCollisionProfileName("NoCollision");
 			GetWorld()->GetTimerManager().SetTimer(InVisibleTimer, this, &UBTTask_BossInVisibleState::InVisible, 1.0f, false);

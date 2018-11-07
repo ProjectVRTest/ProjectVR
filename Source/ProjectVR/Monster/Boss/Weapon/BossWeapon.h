@@ -21,6 +21,8 @@ public:
 		bool IsWeaponAttack;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool IsParryingAttack;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
+		class UMaterialInterface* DefaultSwordMaterials;
 	/*UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystemComponent* SwordParticleComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")

@@ -135,7 +135,7 @@ ANormalMonster::ANormalMonster()
 	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 	Target = nullptr;
 	FresnelValue = 1.0f;
-	CanbeDamaged = true;
+	CanbeDamaged = true;	
 
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -234,7 +234,7 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 						switch (MonsterKind)
 						{
 						case ENormalMonsterKind::SwordMan:
-							CurrentAnimState = ENormalMonsterAnimState::Wait;
+							CurrentAnimState = ENormalMonsterAnimState::Walk;
 							CurrentState = ENormalMonsterState::Chase;
 							break;
 						case ENormalMonsterKind::MoveArcher:
@@ -386,6 +386,7 @@ void ANormalMonster::SetEquipment()
 	switch (MonsterKind)
 	{
 	case ENormalMonsterKind::SwordMan:
+		ArrowCount = 0;
 		Sword = GetWorld()->SpawnActor<ANMWeaponSword>(Sword->StaticClass(), SpawnActorOption);
 		if (Sword)
 		{
@@ -393,6 +394,7 @@ void ANormalMonster::SetEquipment()
 		}
 		break;
 	case ENormalMonsterKind::MoveArcher:
+		ArrowCount = 5;
 		Bow = GetWorld()->SpawnActor<ANMWeaponBow>(Bow->StaticClass(), SpawnActorOption);
 		if (Bow)
 		{
@@ -433,4 +435,77 @@ void ANormalMonster::SetCurrentHP(float HP)
 {
 	CurrentHP = HP;
 }
+
+void ANormalMonster::ChangeFormSword()
+{
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.Owner = this;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+	ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
+
+	if (Bow)
+	{
+		Bow->Destroy();		
+
+		NMArrowComponent->SetStaticMesh(nullptr);
+
+		Sword = GetWorld()->SpawnActor<ANMWeaponSword>(Sword->StaticClass(), SpawnActorOption);
+		if (Sword)
+		{
+			Sword->AttachToComponent(GetMesh(), AttachRules, TEXT("SwordSocket"));
+		}
+		
+		if (AI)
+		{
+			MonsterKind = ENormalMonsterKind::SwordMan;
+			CurrentArcherAttackState = ENormalMonsterArcherAttackState::idle;
+			CurrentAttackState = ENormalMonsterAttackState::Idle;
+			CurrentAnimState = ENormalMonsterAnimState::Walk;
+			CurrentState = ENormalMonsterState::Chase;		
+		
+			AI->BTComponent->StartTree(*(SwordBehaviorTree));
+		}
+	}	
+}
+
+void ANormalMonster::ChangeFormBow()
+{
+	FActorSpawnParameters SpawnActorOption;
+	SpawnActorOption.Owner = this;
+	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+	ANormalMonsterAIController* AI = Cast<ANormalMonsterAIController>(GetController());
+
+	if (Sword)
+	{
+		Sword->Destroy();
+
+		Bow = GetWorld()->SpawnActor<ANMWeaponBow>(Bow->StaticClass(), SpawnActorOption);
+
+		if (Bow)
+		{
+			Bow->AttachToComponent(GetMesh(), AttachRules, TEXT("BowSocket"));
+		}
+
+		if (AI)
+		{
+			MonsterKind = ENormalMonsterKind::MoveArcher;
+
+			CurrentStabAttackState = ENormalMonsterStabAttackState::Idle;
+			CurrentComboAttackState = ENormalMonsterComboAttackState::Idle;
+			CurrentArcherAttackState = ENormalMonsterArcherAttackState::idle;
+			CurrentAttackState = ENormalMonsterAttackState::Idle;
+			CurrentAnimState = ENormalMonsterAnimState::Walk;
+			CurrentState = ENormalMonsterState::Chase;
+
+			AI->BTComponent->StartTree(*(MoveArcherBehaviorTree));
+		}
+	}
+}
+
 

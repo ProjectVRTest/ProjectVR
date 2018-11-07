@@ -29,6 +29,12 @@ ABossWeapon::ABossWeapon()
 		SwordMesh->SetStaticMesh(SM_Boss_Sword.Object);
 	}
 
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_DefaultSwordMaterials(TEXT("MaterialInstanceConstant'/Game/Assets/CharacterEquipment/Monster/Boss/Weapon/Materials/M_Boss_Weapon_Inst.M_Boss_Weapon_Inst'"));
+	if (M_DefaultSwordMaterials.Succeeded())
+	{
+		DefaultSwordMaterials = M_DefaultSwordMaterials.Object;
+	}
+
 	/*SwordParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SwordWaveTailComponent"));
 	SwordParticleComponent->SetupAttachment(GetRootComponent());
 	SwordParticleComponent->SetRelativeLocation(FVector(21.0f, 4.0f, 196.0f));

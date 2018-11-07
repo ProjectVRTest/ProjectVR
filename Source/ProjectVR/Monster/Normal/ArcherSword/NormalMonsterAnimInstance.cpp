@@ -53,9 +53,16 @@ void UNormalMonsterAnimInstance::AnimNotify_ArrowDestroy(UAnimNotify * Notify)
 		{
 			ANMWeaponArrow* NMArrow = GetWorld()->SpawnActor<ANMWeaponArrow>(NMArrow->StaticClass(), NormalMonster->ArrowSpawnLocation->GetComponentLocation(), NormalMonster->GetActorRotation(), SpawnActorOption);
 
+			NormalMonster->ArrowCount--;
+
 			if (NMArrow)
 			{
 				NMArrow->Homing(SwordWaveTarget);
+			}
+
+			if (NormalMonster->ArrowCount == 0)
+			{
+				NormalMonster->ChangeFormSword();
 			}
 		}		
 	}

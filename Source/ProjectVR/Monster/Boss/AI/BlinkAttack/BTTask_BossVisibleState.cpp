@@ -3,6 +3,8 @@
 #include "BTTask_BossVisibleState.h"
 #include "Headers/BossAIHeader.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Monster/Boss/Weapon/BossWeapon.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 EBTNodeResult::Type UBTTask_BossVisibleState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
@@ -15,10 +17,10 @@ EBTNodeResult::Type UBTTask_BossVisibleState::ExecuteTask(UBehaviorTreeComponent
 
 		if (Boss)
 		{
-			//Boss->GetCharacterMovement()->GravityScale = 0;
 			Boss->SetActorLocation(AI->BBComponent->GetValueAsVector("TeleportLocation"));
 			Boss->GetMesh()->SetMaterial(0, Boss->DefaultBodyMaterials);
 			Boss->GetMesh()->SetMaterial(1, Boss->DefaultClothMaterials);
+			Boss->Sickle->SwordMesh->SetMaterial(0, Boss->Sickle->DefaultSwordMaterials);
 			Boss->GetMesh()->SetCollisionProfileName("CharacterMesh");
 
 			switch (Boss->CurrentBattleState)
@@ -31,6 +33,7 @@ EBTNodeResult::Type UBTTask_BossVisibleState::ExecuteTask(UBehaviorTreeComponent
 				Boss->CurrentBattleState = EBossBattleState::AttackReady;		
 				break;
 			case EBossBattleState::UltimateAttack:
+				Boss->GetCharacterMovement()->GravityScale = 0;
 				Boss->CurrentUltimateAttackState = EBossUltimateAttackState::ManyOrbCreateReady;
 				break;
 			}

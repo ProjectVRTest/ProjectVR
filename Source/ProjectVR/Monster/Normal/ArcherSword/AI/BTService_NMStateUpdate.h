@@ -26,6 +26,8 @@ public:
 
 	UFUNCTION()
 		void RageAttackTimerCount();
-
-
+	UFUNCTION()
+		void SwordManLocomotion(class ANormalMonster* NormalMonster);
+	UFUNCTION()
+		void BowManLocomotion(class ANormalMonster* NormalMonster);
 };

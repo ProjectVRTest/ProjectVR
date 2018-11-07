@@ -87,6 +87,8 @@ public:
 		float FresnelValue;
 	UPROPERTY()
 		bool CanbeDamaged;
+	UPROPERTY()
+		int ArrowCount;
 
 	UFUNCTION()
 		void SpawnArrowMesh();
@@ -108,4 +110,8 @@ public:
 		void SetTarget();
 	UFUNCTION()
 		void SetCurrentHP(float HP);
+	UFUNCTION()
+		void ChangeFormSword();
+	UFUNCTION()
+		void ChangeFormBow();
 };
