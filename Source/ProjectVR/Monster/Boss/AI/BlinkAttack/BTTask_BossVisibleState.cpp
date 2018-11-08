@@ -33,8 +33,8 @@ EBTNodeResult::Type UBTTask_BossVisibleState::ExecuteTask(UBehaviorTreeComponent
 				Boss->CurrentBattleState = EBossBattleState::AttackReady;		
 				break;
 			case EBossBattleState::UltimateAttack:
-				Boss->GetCharacterMovement()->GravityScale = 0;
-				Boss->CurrentUltimateAttackState = EBossUltimateAttackState::UltimateAttackStart;
+				Boss->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
+				Boss->CurrentUltimateAttackState = EBossUltimateAttackState::UltimateAttackReady;
 				break;
 			}
 		}		
