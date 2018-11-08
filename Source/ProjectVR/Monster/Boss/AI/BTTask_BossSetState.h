@@ -30,7 +30,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		EBossConfrontationState SetConfrontationState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-		EBossUltimateAttackState SetUltimateAttackState;
+		EBossUltimateAttackState SetUltimateAttackState; 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		EBossWaveAttackState SetWaveAttackState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		EBossUpDownAttackState SetUpDownAttackState;
 private:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
 

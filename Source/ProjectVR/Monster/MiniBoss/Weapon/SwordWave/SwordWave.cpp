@@ -12,12 +12,13 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/BoxComponent.h"
+#include "TimerManager.h"
 
 // Sets default values
 ASwordWave::ASwordWave()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	SetRootComponent(Sphere);
@@ -86,6 +87,8 @@ void ASwordWave::BeginPlay()
 	if (SwordWaveHit)
 	{
 		SwordWaveHit->OnComponentBeginOverlap.AddDynamic(this, &ASwordWave::SwordWaveBeginOverlap);
+
+		GetWorld()->GetTimerManager().SetTimer(FloorSmokeTimer, this, &ASwordWave::FloorSmokeSpawn, 0.5f, true, 0.5f);
 	}	
 }
 
@@ -94,32 +97,6 @@ void ASwordWave::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector TraceEnd = GetActorLocation()+(GetActorUpVector()*-10000.0f);
-	TArray<TEnumAsByte<EObjectTypeQuery>>ObjectTypes;
-
-	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic));
-	
-	TArray<AActor*>IgonreActors;
-	IgonreActors.Add(this);
-
-	FHitResult HitResult;
-
-	bool CanSpawn=UKismetSystemLibrary::LineTraceSingleForObjects(
-		GetWorld(),
-		GetActorLocation(),
-		TraceEnd,
-		ObjectTypes,
-		true,
-		IgonreActors,
-		EDrawDebugTrace::None,
-		HitResult,
-		true
-	);
-
-	if (CanSpawn)
-	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SwordWaveGround, HitResult.Location);
-	}
 }
 
 void ASwordWave::Homing(AActor* Target)
@@ -155,5 +132,35 @@ void ASwordWave::SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 void ASwordWave::SwordWaveRotatorModify(FRotator NewRotator)
 {
 	Mesh->SetRelativeRotation(NewRotator);
+}
+
+void ASwordWave::FloorSmokeSpawn()
+{
+	FVector TraceEnd = GetActorLocation() + (GetActorUpVector()*-10000.0f);
+	TArray<TEnumAsByte<EObjectTypeQuery>>ObjectTypes;
+
+	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic));
+
+	TArray<AActor*>IgonreActors;
+	IgonreActors.Add(this);
+
+	FHitResult HitResult;
+
+	bool CanSpawn = UKismetSystemLibrary::LineTraceSingleForObjects(
+		GetWorld(),
+		GetActorLocation(),
+		TraceEnd,
+		ObjectTypes,
+		true,
+		IgonreActors,
+		EDrawDebugTrace::None,
+		HitResult,
+		true
+	);
+
+	if (CanSpawn)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SwordWaveGround, HitResult.Location);
+	}
 }
 

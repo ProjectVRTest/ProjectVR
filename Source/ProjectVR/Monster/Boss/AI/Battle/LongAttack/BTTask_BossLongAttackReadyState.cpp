@@ -30,6 +30,7 @@ EBTNodeResult::Type UBTTask_BossLongAttackReadyState::ExecuteTask(UBehaviorTreeC
 			}
 			else if(RandValue >=5 && RandValue <=8)
 			{
+				Boss->CurrentWaveAttackState = EBossWaveAttackState::WaveAttackStart;
 				Boss->CurrentLongAttackState = EBossLongAttackState::WaveAttack;				
 			}
 			else

@@ -189,6 +189,35 @@ void AMiniBoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentParryingState", (uint8)CurrentParryingState);
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 	}
+
+	/*FVector TraceEnd = (GetActorLocation()) + (GetActorForwardVector()*-10000.0f);
+	TArray<TEnumAsByte<EObjectTypeQuery>>ObjectTypes;
+
+	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic));
+
+	TArray<AActor*>IgonreActors;
+	IgonreActors.Add(this);
+	IgonreActors.Add(Sword);
+
+	FHitResult HitResult;
+
+	bool CanSpawn = UKismetSystemLibrary::LineTraceSingleForObjects(
+		GetWorld(),
+		GetActorLocation()+ FVector(0,0,80.0f),
+		TraceEnd,
+		ObjectTypes,
+		true,
+		IgonreActors,
+		EDrawDebugTrace::ForDuration,
+		HitResult,
+		true
+	);
+
+	if (CanSpawn)
+	{
+		float WallDistance = FVector::Distance(GetActorLocation(), HitResult.Location);
+		GLog->Log(FString::Printf(TEXT("WallDistance : %f "), WallDistance));
+	}*/
 }
 
 // Called to bind functionality to input

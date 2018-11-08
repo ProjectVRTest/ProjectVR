@@ -36,8 +36,7 @@ AMiniBossWeapon::AMiniBossWeapon()
 	}
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
 	SwordCollision->SetupAttachment(SwordMesh);	
-	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));
-
+	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));	
 	SwordCollision->SetRelativeLocation(FVector(62.0f, 0, 0));
 	SwordCollision->SetRelativeRotation(FRotator(90.0f, 0, 0));	
 	SwordCollision->SetRelativeScale3D(FVector(1.3f, 1.3f, 2.5f));

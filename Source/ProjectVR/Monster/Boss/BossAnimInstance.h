@@ -33,6 +33,10 @@ public:
 		EBossConfrontationState CurrentConfrontationState;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 		EBossUltimateAttackState CurrentUltimateAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossWaveAttackState CurrentWaveAttackState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+		EBossUpDownAttackState CurrentUpDownAttackState;
 
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;

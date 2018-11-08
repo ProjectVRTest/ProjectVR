@@ -34,7 +34,7 @@ EBTNodeResult::Type UBTTask_BossVisibleState::ExecuteTask(UBehaviorTreeComponent
 				break;
 			case EBossBattleState::UltimateAttack:
 				Boss->GetCharacterMovement()->GravityScale = 0;
-				Boss->CurrentUltimateAttackState = EBossUltimateAttackState::ManyOrbCreateReady;
+				Boss->CurrentUltimateAttackState = EBossUltimateAttackState::UltimateAttackStart;
 				break;
 			}
 		}		

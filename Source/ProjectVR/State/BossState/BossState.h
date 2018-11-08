@@ -48,6 +48,15 @@ enum class EBossLongAttackState : uint8
 
 
 UENUM(BlueprintType)
+enum class EBossWaveAttackState : uint8
+{
+	Idle=0 UMETA(DisplayName ="Idle"),
+	WaveAttackStart = 1 UMETA(DisplayName = "WaveAttackStart"),
+	LeftStep = 2 UMETA(DisplayName = "LeftStep"),
+	RightStep = 3 UMETA(DisplayName = "RightStep")
+};
+
+UENUM(BlueprintType)
 enum class EBossCloseAttackState : uint8
 {
 	Idle = 0 UMETA(DisplayName = "Idle"),
@@ -56,6 +65,14 @@ enum class EBossCloseAttackState : uint8
 	ComboAttack = 3 UMETA(DisplayName = "ComboAttack"),
 	UpDownAttack = 4 UMETA(DisplayName = "UpDownAttack"),
 	ParryingState = 5 UMETA(DisplayName = "ParryingState")
+};
+
+UENUM(BlueprintType)
+enum class EBossUpDownAttackState : uint8
+{
+	Idle = 0 UMETA(DisplayName = "Idle"),
+	UpDownAttackStart = 1 UMETA(DisplayName = "UpDownAttackStart"),
+	BackStep = 2 UMETA(DisplayName = "BackStep")
 };
 
 UENUM(BlueprintType)
@@ -94,6 +111,7 @@ enum class EBossUltimateAttackState : uint8
 	Idle = 0 UMETA(DisplayName = "Idle"),
 	InVisible = 1 UMETA(DisplayName = "InVisible"),
 	Visible = 2 UMETA(DisplayName = "Visible"),
-	ManyOrbCreateReady = 3 UMETA(DisplayName = "ManyOrbCreateReady"),
-	ManyOrbCreateStart = 4 UMETA(DisplayName = "ManyOrbCreateStart")
+	UltimateAttackReady = 3 UMETA(DisplayName = "UltimateAttackReady"),
+	UltimateAttackStart = 4 UMETA(DisplayName = "UltimateAttackStart"),
+	UltimateAttackEnd = 5 UMETA(DisplayName = "UltimateAttackEnd")
 };

@@ -27,6 +27,8 @@ void UBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentBattleWatchState = Boss->CurrentBattleWatchState;
 		CurrentConfrontationState = Boss->CurrentConfrontationState;
 		CurrentUltimateAttackState = Boss->CurrentUltimateAttackState;
+		CurrentWaveAttackState = Boss->CurrentWaveAttackState;
+		CurrentUpDownAttackState = Boss->CurrentUpDownAttackState;
 	}
 }
 

@@ -52,6 +52,8 @@ ABoss::ABoss()
 	CurrentParryingState = EBossParryingState::Idle;
 	CurrentBattleWatchState = EBossBattleWatchState::Idle;
 	CurrentUltimateAttackState = EBossUltimateAttackState::Idle;
+	CurrentWaveAttackState = EBossWaveAttackState::Idle;
+	CurrentUpDownAttackState = EBossUpDownAttackState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 	PawnSensing->bHearNoises = false;
@@ -208,6 +210,8 @@ void ABoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentBattleWatchState", (uint8)CurrentBattleWatchState);
 		AI->BBComponent->SetValueAsEnum("CurrentConfrontationState", (uint8)CurrentConfrontationState);
 		AI->BBComponent->SetValueAsEnum("CurrentUltimateAttackState", (uint8)CurrentUltimateAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentWaveAttackState", (uint8)CurrentWaveAttackState);
+		AI->BBComponent->SetValueAsEnum("CurrentUpDownAttackState", (uint8)CurrentUpDownAttackState);
 	} 
 }
 

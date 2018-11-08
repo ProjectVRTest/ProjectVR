@@ -25,6 +25,7 @@ EBTNodeResult::Type UBTTask_BossConfrontationState::ExecuteTask(UBehaviorTreeCom
 			{
 				Boss->CurrentConfrontationState = EBossConfrontationState::Idle;
 				Boss->CurrentBattleWatchState = EBossBattleWatchState::Idle;
+				Boss->CurrentWaveAttackState = EBossWaveAttackState::WaveAttackStart;				
 				Boss->CurrentLongAttackState = EBossLongAttackState::WaveAttack;
 				Boss->CurrentBattleState = EBossBattleState::LongAttack;
 			}

@@ -39,10 +39,14 @@ public:
 		class UParticleSystem* SwordWaveGround;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UBoxComponent* SwordWaveHit;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		FTimerHandle FloorSmokeTimer;
 	UFUNCTION()
 		void Homing(class AActor* Target);
 	UFUNCTION()
 		void SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	UFUNCTION()
 		void SwordWaveRotatorModify(FRotator NewRotator);
+	UFUNCTION()
+		void FloorSmokeSpawn();
 };

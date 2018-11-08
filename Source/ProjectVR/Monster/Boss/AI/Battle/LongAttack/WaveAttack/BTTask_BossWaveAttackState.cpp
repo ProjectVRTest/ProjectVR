@@ -13,7 +13,17 @@ EBTNodeResult::Type UBTTask_BossWaveAttackState::ExecuteTask(UBehaviorTreeCompon
 
 		if (Boss)
 		{
+			int RandomLeftRight = FMath::RandRange(1, 2);
 
+			switch (RandomLeftRight)
+			{
+			case 1:
+				Boss->CurrentWaveAttackState = EBossWaveAttackState::LeftStep;
+				break;
+			case 2:
+				Boss->CurrentWaveAttackState = EBossWaveAttackState::RightStep;
+				break;
+			}
 		}
 	}
 

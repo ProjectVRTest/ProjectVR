@@ -28,6 +28,7 @@ EBTNodeResult::Type UBTTask_BossCloseAttackReadyState::ExecuteTask(UBehaviorTree
 			} //위에서 아래로 찍는 공격
 			else if (RandValue > 11)
 			{
+				Boss->CurrentUpDownAttackState = EBossUpDownAttackState::UpDownAttackStart;
 				Boss->CurrentCloseAttackState = EBossCloseAttackState::UpDownAttack;
 			}
 
