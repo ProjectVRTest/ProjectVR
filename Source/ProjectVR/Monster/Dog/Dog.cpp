@@ -31,6 +31,9 @@
 #include "Components/SphereComponent.h"
 
 #include "Equipment/PlayerSword.h"			// 물고 있을때 검의 데미지를 안 받기 위해서 작업
+#include "TimerManager.h"			// 지속공격
+#include "Engine/World.h"
+
 // Sets default values
 ADog::ADog()
 {
@@ -117,6 +120,8 @@ ADog::ADog()
 	bIsDetach = false;
 
 	AttackWaite = false;
+
+	BiteDamage = 10.0f;
 
 	GetMesh()->SetSimulatePhysics(false);
 	GetMesh()->SetCollisionProfileName("Ragdoll");
@@ -209,16 +214,25 @@ void ADog::OnSeePlayer(APawn * Pawn)
 	}
 }
 
+void ADog::BiteAttack()
+{
+	if (AttachActor)
+	{
+		UGameplayStatics::ApplyDamage(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0), BiteDamage, GetController(), this, nullptr);		// 오버랩된 액터에 데미지 전달
+		GetWorld()->GetTimerManager().SetTimer(AttackHandle, this, &ADog::BiteAttack, 0.1f, false);
+	}
+	else
+		GetWorld()->GetTimerManager().ClearTimer(AttackHandle);			// 스테미너 사용 동작은 잠시 스테미너 회복을 멈춤
+}
+
 
 void ADog::OnAttackCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	if (OtherComp->ComponentHasTag("Head"))
 	{
-		UGameplayStatics::ApplyDamage(OtherActor, 20, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);		// 오버랩된 액터에 데미지 전달
-
 		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
-		if (Character)
+		if (AttachActor == NULL && Character)
 		{
 			ARightHandMotionController* RightController = Cast<ARightHandMotionController>(Character->RightHand);
 
@@ -240,6 +254,8 @@ void ADog::OnAttackCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor
 
 				AttachActor = RightController;
 				AI->BBComponent->SetValueAsBool("bIsBiting", true);
+
+				BiteAttack();
 			}
 		}
 	}
