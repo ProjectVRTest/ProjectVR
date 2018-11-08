@@ -16,6 +16,7 @@
 #include "HandMotionController/RightHandMotionController.h"
 #include "Monster/Dog/Dog.h"
 #include "Monster/Boss/Orb/Ultimate/Wave/BossRedOrbWave.h"
+#include "Monster/Boss/Orb/DefaultOrb/BossOrb.h"
 
 
 // Sets default values
@@ -136,7 +137,7 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 
 	if (OtherComp->ComponentHasTag(TEXT("BossRedOrbWave")))
 	{
-		if (SwordMoveVelocity.Size() >= 500.0f) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
+		if (SwordMoveVelocity.Size() >= 500.0f) 
 		{
 			ABossRedOrbWave* RedOrbWave = Cast<ABossRedOrbWave>(OtherComp->GetOwner());
 
@@ -146,6 +147,19 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 				RedOrbWave->Destroy();
 			}
 		}		
+	}
+	else if (OtherComp->ComponentHasTag(TEXT("BossDefaultOrb")))
+	{
+		if (SwordMoveVelocity.Size() >= 500.0f)
+		{
+			ABossOrb* DefaultOrb = Cast<ABossOrb>(OtherComp->GetOwner());
+
+			if (DefaultOrb)
+			{
+				Damage = 10.0f;
+				UGameplayStatics::ApplyDamage(OtherActor, Damage, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);				
+			}
+		}
 	}
 }
 

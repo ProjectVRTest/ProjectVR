@@ -116,7 +116,8 @@ public:
 		int32 CurrentNormalMonsterCount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
 		int ParryingPointMaxCount; //HP에 따라서 확정된 패링카운트 갯수
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
+		int ParryingPointCount; //현재 기록된 패링카운트 갯수
 	UPROPERTY()
 		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeleportPoint")

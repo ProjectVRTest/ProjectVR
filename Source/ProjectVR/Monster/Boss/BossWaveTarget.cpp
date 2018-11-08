@@ -15,7 +15,7 @@ ABossWaveTarget::ABossWaveTarget()
 	BossWaveTargetBox->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
 
 	BossWaveTargetBox->bHiddenInGame = false;
-	Tags.Add(FName(TEXT("BossWaveTarget")));
+	BossWaveTargetBox->ComponentTags.Add(FName(TEXT("BossWaveTarget")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 

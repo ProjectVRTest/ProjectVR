@@ -9,6 +9,7 @@
 #include "Components/SphereComponent.h"
 #include "BossWaveTarget.h"
 #include "Orb/DefaultOrb/BossOrb.h"
+#include "Weapon/BossWaveAttackWave.h"
 
 void UBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
@@ -94,6 +95,36 @@ void UBossAnimInstance::AnimNotify_OrbCreate(UAnimNotify * Notify)
 			Boss->OrbMaxCount--;
 		}
 	}	
+}
+
+void UBossAnimInstance::AnimNotify_WaveAttackWaveSpawn(UAnimNotify * Notify)
+{
+	ABoss* Boss = Cast<ABoss>(TryGetPawnOwner());
+
+	if (Boss)
+	{
+		FVector LockonTargetLocation;
+		FVector Location;
+		ABossWaveTarget* BossWaveTarget;
+		ABossWaveAttackWave* WaveAttackWave;
+
+		FActorSpawnParameters SpawnActorOption;
+		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		
+		LockonTargetLocation = Boss->TargetCamera->GetActorLocation();
+
+		BossWaveTarget = GetWorld()->SpawnActor<ABossWaveTarget>(BossWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
+
+		WaveAttackWave = GetWorld()->SpawnActor<ABossWaveAttackWave>(WaveAttackWave->StaticClass(), Boss->SwordWaveSpawn->GetComponentLocation(), Boss->GetActorRotation(), SpawnActorOption);
+
+		if (WaveAttackWave)
+		{
+			if (BossWaveTarget)
+			{
+				WaveAttackWave->Homing(BossWaveTarget);
+			}
+		}
+	}
 }
 
 

@@ -32,9 +32,10 @@ EBTNodeResult::Type UBTTask_BossUltimateAttackStart::ExecuteTask(UBehaviorTreeCo
 			Boss->UltimateAuraEffectComponent->SetVisibility(true);
 			OrbMaxCount = Boss->UltimateOrbColor.GetUltimateOrbMaxCount();
 			SpawnNormalMaxCount = Boss->UltimateOrbColor.GetUltimateNormalMonsterSpawnMaxCount();
-			
-			GetWorld()->GetTimerManager().SetTimer(UltimateEndTimer, this, &UBTTask_BossUltimateAttackStart::UltimateEnd, 20.0f, false);
+
+			//GetWorld()->GetTimerManager().SetTimer(UltimateEndTimer, this, &UBTTask_BossUltimateAttackStart::UltimateEnd, 20.0f, false);
 			GetWorld()->GetTimerManager().SetTimer(UltimateSpawnLoopTimer, this, &UBTTask_BossUltimateAttackStart::UltimateLoop, 0.2f, true, 0.2f);
+			EndFlag = true;
 		}
 
 	}
@@ -55,10 +56,8 @@ void UBTTask_BossUltimateAttackStart::UltimateLoop()
 
 		if (Boss->ManyOrbBound)
 		{
-			GLog->Log(FString::Printf(TEXT("OrbMaxCount : %d"), OrbMaxCount));
 			if (OrbMaxCount > 0)
 			{
-				
 				UKismetSystemLibrary::GetComponentBounds(Boss->ManyOrbBound, Origin, Extent, BoundRadius);
 
 				FVector RandomManyOrbCreatePoint = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
@@ -86,7 +85,7 @@ void UBTTask_BossUltimateAttackStart::UltimateLoop()
 			}
 			else
 			{
-				//GetWorld()->GetTimerManager().ClearTimer(UltimateSpawnLoopTimer);
+				GetWorld()->GetTimerManager().ClearTimer(UltimateSpawnLoopTimer);
 			}
 		}
 
@@ -94,13 +93,12 @@ void UBTTask_BossUltimateAttackStart::UltimateLoop()
 		{
 			if (SpawnNormalMaxCount > 0)
 			{
-				GLog->Log(FString::Printf(TEXT("일반몬스터 소환")));
 				UKismetSystemLibrary::GetComponentBounds(Boss->MonsterSpawnBoound, Origin, Extent, BoundRadius);
 
 				FVector RandomNormalMonsterSpawnLocation = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
 
 				ANormalMonsterSpawnPosition* NormalSpawnPosition = GetWorld()->SpawnActor<ANormalMonsterSpawnPosition>(NormalSpawnPosition->StaticClass(), RandomNormalMonsterSpawnLocation, Boss->GetActorRotation(), SpawnActorOption);
-				
+
 				int RandomMonsterKind = FMath::RandRange(1, 2);
 
 				if (RandomMonsterKind == 1)
@@ -126,44 +124,10 @@ void UBTTask_BossUltimateAttackStart::TickTask(UBehaviorTreeComponent & OwnerCom
 
 	if (Boss)
 	{
-		CurrentNormalMonsterCount = Boss->CurrentNormalMonsterCount;
-
-		if (EndFlag || CurrentNormalMonsterCount <=0)
+		if (EndFlag)
 		{
-			if (CurrentNormalMonsterCount <= 0)
-			{
-				UltimateEnd(); //동시에 끝날 경우를 판정해줘야할 조건이 필요함
-			}
-
-			GLog->Log(FString::Printf(TEXT("궁극기 시전 시간 끝남")));
-			Boss->CurrentNormalMonsterCount = 3;
-			Boss->UltimateAuraEffectComponent->SetVisibility(false);			
-			Boss->CurrentUltimateAttackState = EBossUltimateAttackState::UltimateAttackEnd;
+			Boss->CurrentUltimateAttackState = EBossUltimateAttackState::UltimateAttackStart;
 			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-		}
-
-	}
-}
-
-void UBTTask_BossUltimateAttackStart::UltimateEnd()
-{
-	if (Boss->CurrentBattleState == EBossBattleState::UltimateAttack)
-	{
-		EndFlag = true; //현재 상태를 탈출시켜 주기 위해 EndFlag를 켜준다.
-
-		if (Boss->UltimateOrbs.Num() > 0)
-		{
-			for (auto Orb : Boss->UltimateOrbs)
-			{
-				if (Orb)
-				{
-					Orb->Destroy(); //남아있는 오브가 있으면 삭제 시킨다.
-				}
-			}
-
-			Boss->UltimateOrbs.Empty(); //궁극기 오브를 담아둔 배열을 깨끗하게 정리한다.
 		}		
-		GLog->Log(FString::Printf(TEXT("남아 있는 오브 수 %d"), Boss->UltimateOrbs.Num()));
 	}
 }
-

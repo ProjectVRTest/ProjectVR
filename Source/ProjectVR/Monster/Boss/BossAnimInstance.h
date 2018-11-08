@@ -40,11 +40,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		virtual void NativeUpdateAnimation(float DeltaSeconds) override;
-
 	UFUNCTION(BlueprintCallable, Category = "AI")
 		void AnimNotify_LongDistanceAttackBallSpawn(UAnimNotify* Notify);
 	UFUNCTION(BlueprintCallable, Category = "AI")
 		void AnimNotify_Test(UAnimNotify* Notify);
 	UFUNCTION(BlueprintCallable, Category = "AI")
 		void AnimNotify_OrbCreate(UAnimNotify* Notify);
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		void AnimNotify_WaveAttackWaveSpawn(UAnimNotify* Notify);
 };

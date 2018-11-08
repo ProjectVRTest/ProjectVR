@@ -13,6 +13,14 @@ UCLASS()
 class PROJECTVR_API UBTTask_BossParryingLoopState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
+private:
+	class ABoss* Boss;
+	bool CountAttackFlag;
+	FTimerHandle BossParryingTimeTimer;
 public:
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+	UFUNCTION()
+		void CountAttack();
 };

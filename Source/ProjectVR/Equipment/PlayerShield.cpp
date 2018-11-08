@@ -220,7 +220,7 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, OtherComp->GetComponentLocation());
 							//Boss->ParryingPointSet();
 							Boss->CurrentParryingState = EBossParryingState::ParryingStart;
-							Boss->CurrentCloseAttackState = EBossCloseAttackState::ParryingState;
+							Boss->CurrentCloseAttackState = EBossCloseAttackState::ParryingState;						
 						}
 					}
 				}

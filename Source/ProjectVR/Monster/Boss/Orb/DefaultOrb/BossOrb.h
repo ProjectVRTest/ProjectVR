@@ -32,6 +32,10 @@ public:
 		class ABoss* OrbOwner;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool CanbeDamaged;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float CurrentHP;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float MaxHP;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

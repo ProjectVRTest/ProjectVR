@@ -43,12 +43,19 @@ ABossOrb::ABossOrb()
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(GetRootComponent());
 	Sphere->SetCollisionProfileName("OverlapOnlyPawn");
+	Sphere->ComponentTags.Add(FName(TEXT("BossDefaultOrb")));
 
 	OrbWaveSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("OrbWaveSpawn"));
 	OrbWaveSpawn->SetupAttachment(GetRootComponent());
 	OrbWaveSpawn->SetRelativeLocation(FVector(30.0f, 0, 0));
 
+	MaxHP = 20.0f;
+	CurrentHP = MaxHP;
+
 	OrbWaveMaxCount = 5;
+
+	Tags.Add(FName(TEXT("DisregardForLeftHand")));
+	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
 // Called when the game starts or when spawned
@@ -118,7 +125,9 @@ void ABossOrb::DefaultOrbExplosionStart()
 	if (OrbOwner)
 	{
 		OrbOwner->OrbMaxCount++;
+		
 	}
+
 	Destroy();
 }
 
@@ -154,6 +163,13 @@ float ABossOrb::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACont
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
+	CurrentHP -= Damage;
 
+	if (CurrentHP <= 0)
+	{
+		CurrentHP = 0;
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbExplosion, GetActorLocation());
+		Destroy();
+	}
 	return Damage;
 }

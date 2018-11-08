@@ -19,8 +19,6 @@ private:
 	UPROPERTY()
 		class ABoss* Boss;
 	UPROPERTY()
-		FTimerHandle UltimateEndTimer;
-	UPROPERTY()
 		FTimerHandle UltimateSpawnLoopTimer;
 	UPROPERTY()
 		bool EndFlag;
@@ -34,8 +32,6 @@ private:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
-	UFUNCTION()
-		void UltimateEnd();	
 	UFUNCTION()
 		void UltimateLoop();
 };

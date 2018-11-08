@@ -87,6 +87,10 @@ ABoss::ABoss()
 	SwordWaveSpawn->SetupAttachment(GetRootComponent());
 	SwordWaveSpawn->SetRelativeLocation(FVector(150.0f,0, 0));
 
+	WaveSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("WaveSpawn"));
+	WaveSpawn->SetupAttachment(GetRootComponent());
+	WaveSpawn->SetRelativeLocation(FVector(200.0f, 0, 200.0f));
+
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> M_Opacity(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/M_MonsterOpacity.M_MonsterOpacity'"));
 	if (M_Opacity.Succeeded())
 	{
@@ -133,7 +137,7 @@ ABoss::ABoss()
 	UltimateAuraEffectComponent->SetupAttachment(GetRootComponent());
 	UltimateAuraEffectComponent->SetRelativeLocation(FVector(0, 0, -200.0f));
 
-	MaxHP = 100.0f;
+	MaxHP = 500.0f;
 	CurrentHP = MaxHP;
 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BlinkSmoke(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PT_BossBlinkSmoke.PT_BossBlinkSmoke'"));
@@ -154,6 +158,9 @@ ABoss::ABoss()
 	TargetCamera = nullptr;
 
 	OrbMaxCount = 3;
+	ParryingPointMaxCount = 0;
+	ParryingPointCount = 0;
+
 	UltimateOrbColor.SetUltimateNormalMonsterSpawnMaxCount(3);
 	UltimateOrbColor.SetUltimateOrbMaxCount(15);
 	CurrentNormalMonsterCount = UltimateOrbColor.GetUltimateNormalMonsterSpawnMaxCount();
@@ -224,13 +231,13 @@ void ABoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABoss::ParryingPointInit()
 {
-	ParryingPoints.Add(TEXT(""));
-	ParryingPoints.Add(TEXT(""));
-	ParryingPoints.Add(TEXT(""));
-	ParryingPoints.Add(TEXT(""));
-	ParryingPoints.Add(TEXT(""));
-	ParryingPoints.Add(TEXT(""));
-	ParryingPoints.Add(TEXT(""));
+	ParryingPoints.Add(TEXT("HeadParryingPoint"));
+	ParryingPoints.Add(TEXT("RightHandParryingPoint"));
+	ParryingPoints.Add(TEXT("LeftHandParryingPoint"));
+	ParryingPoints.Add(TEXT("LeftHandFingerParryingPoint"));
+	ParryingPoints.Add(TEXT("SpineParryingPoint"));
+	ParryingPoints.Add(TEXT("LeftKneeParryingPoint"));
+	ParryingPoints.Add(TEXT("RightKneeParryingPoint"));
 }
 
 void ABoss::ParryingPointSet()
@@ -239,7 +246,7 @@ void ABoss::ParryingPointSet()
 	int PreviousParryingPointName = -1;
 	int RandomParryingPointName;
 
-	AMiniBossParryingPoint * MiniBossParryingPoint;
+	AMiniBossParryingPoint* MiniBossParryingPoint;
 
 	FActorSpawnParameters SpawnActorOption;
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
