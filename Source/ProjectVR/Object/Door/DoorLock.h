@@ -6,14 +6,14 @@
 #include "GameFramework/Actor.h"
 #include "DoorLock.generated.h"
 
-DECLARE_DELEGATE(FOpenEvent);
+//DECLARE_DELEGATE(FOpenEvent);
 
 UCLASS()
 class PROJECTVR_API ADoorLock : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ADoorLock();
 
@@ -21,11 +21,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Scene")
 		class USceneComponent* Scene;
 
@@ -54,7 +54,7 @@ public:
 
 	FTimerHandle OpenHandle;			// 타이머핸들
 
-	FOpenEvent OpenEvent;
+										//FOpenEvent OpenEvent;
 
 	UFUNCTION()
 		void OpenDoor();

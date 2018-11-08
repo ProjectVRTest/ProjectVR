@@ -38,15 +38,17 @@ ALever::ALever()
 		LeverScene->SetStaticMesh(SM_Door.Object);			// 스태틱 메쉬에 검 모양 설정
 	}
 
+	Scene->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+
 	LeverScene->SetRelativeScale3D(FVector(4.0f, 4.0f, 4.0f));
 
-	Lever->SetRelativeLocation(FVector(-62.0f, 0.0f, 40.0f));
-	Lever->SetRelativeScale3D(FVector(0.09f, 0.09f, 1.0f));
+	Lever->SetRelativeLocation(FVector(-157.43f, 0.6f, 78.95f));
+	Lever->SetRelativeScale3D(FVector(0.09f, 0.09f, 2.03f));
 
-	Collision->SetRelativeLocation(FVector(360.0f, 0.0f, -40.0f));
-	Collision->SetRelativeScale3D(FVector(10.0f, 0.7f, 2.6f));
+	Collision->SetRelativeLocation(FVector(886.22f, 0.0f, 0.09f));
+	Collision->SetRelativeScale3D(FVector(26.28f, 0.7f, 1.0f));
 
-	AutoRot = FRotator(LeverScene->RelativeRotation.Pitch, LeverScene->RelativeRotation.Yaw+60.0f, LeverScene->RelativeRotation.Roll);
+	AutoRot = FRotator(LeverScene->RelativeRotation.Pitch, LeverScene->RelativeRotation.Yaw + 60.0f, LeverScene->RelativeRotation.Roll);
 	DefaultYaw = LeverScene->GetComponentRotation().Yaw;
 
 	Collision->bGenerateOverlapEvents = false;
@@ -85,10 +87,11 @@ void ALever::Tick(float DeltaTime)
 
 				float degree = UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(-Cal.Y, -Cal.X));
 
-				LeverScene->SetRelativeRotation(FRotator(0.0f, degree, 0.0f));
+				if (degree > 0.0f)
+					LeverScene->SetRelativeRotation(FRotator(0.0f, degree, 0.0f));
 			}
 		}
-		else if(LeftHand)
+		else if (LeftHand)
 		{
 			if (LeftHand->bisLeftGrab)		// 참이면 상호작용 실행
 			{
@@ -97,11 +100,12 @@ void ALever::Tick(float DeltaTime)
 
 				float degree = UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(-Cal.Y, -Cal.X));
 
-				LeverScene->SetRelativeRotation(FRotator(0.0f, degree, 0.0f));
+				if (degree > 0.0f)
+					LeverScene->SetRelativeRotation(FRotator(0.0f, degree, 0.0f));
 			}
 		}
 	}
-	
+
 	if (LeverScene->RelativeRotation.Yaw > 10.0f)
 	{
 		LeverScene->SetRelativeRotation(FMath::Lerp(LeverScene->RelativeRotation, AutoRot, 0.01f));
@@ -122,7 +126,7 @@ void ALever::OnLeverOverlap(UPrimitiveComponent * OverlappedComp, AActor * Other
 				TouchActor = Character->RightHand;
 		}
 	}
-	
+
 	if (OtherActor->ActorHasTag("LeftHand"))
 	{
 		AMotionControllerCharacter* Character = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -138,6 +142,6 @@ void ALever::OnLeverOverlap(UPrimitiveComponent * OverlappedComp, AActor * Other
 
 void ALever::OnLeverEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	
+
 }
 
