@@ -86,7 +86,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 
 	Widget->SetWidgetSpace(EWidgetSpace::World);
 	Widget->SetDrawSize(FVector2D(1000.0f, 1000.0f));
-	Widget->bVisible = true;
+	Widget->bVisible = false;
 
 	HeadBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HeadBox"));
 	HeadBox->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
@@ -421,14 +421,14 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 		bisHit = true;
 		Widget->bVisible = true;
 
-		if (Widget->bVisible)		// 피격 위젯이 활성화 될때 실행
-		{
-			UHitBloodyWidget* bloodyWidget = Cast<UHitBloodyWidget>(Widget->GetUserWidgetObject());		// UHitBloodyWidget함수를 사용할수 있게 함
-			if (bloodyWidget)
-			{
-				bloodyWidget->PlayAnimationByName("Bloody", 0.0, 1, EUMGSequencePlayMode::Forward, 1.0f);		// 애니메이션 실행
-			}
-		}
+		//if (Widget->bVisible)		// 피격 위젯이 활성화 될때 실행
+		//{
+		//	UHitBloodyWidget* bloodyWidget = Cast<UHitBloodyWidget>(Widget->GetUserWidgetObject());		// UHitBloodyWidget함수를 사용할수 있게 함
+		//	if (bloodyWidget)
+		//	{
+		//		bloodyWidget->PlayAnimationByName("Bloody", 0.0, 1, EUMGSequencePlayMode::Forward, 1.0f);		// 애니메이션 실행
+		//	}
+		//}
 
 		// 체력 감소
 		if (CurrentHp > 0.0f)

@@ -69,6 +69,12 @@ public:
 	UMaterialInterface* NomalMaterial;
 	UMaterialInterface* EliteMaterial;
 
+	UPROPERTY(EditAnywhere, Category = "Damage")
+		float BiteDamage;
+	FTimerHandle AttackHandle;			// 지속공격
+	UFUNCTION()
+		void BiteAttack();
+
 	bool CurrentFalling;
 
 	bool OnLandFlag;

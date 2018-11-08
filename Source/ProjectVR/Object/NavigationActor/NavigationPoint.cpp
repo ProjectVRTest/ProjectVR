@@ -12,6 +12,8 @@ ANavigationPoint::ANavigationPoint()
 	Collision->bGenerateOverlapEvents = true;
 	Collision->SetCollisionProfileName("OverlapAll");
 
+	Collision->ComponentTags.Add(FName("DisregardForLeftHand"));
+	Collision->ComponentTags.Add(FName("DisregardForRightHand"));
 	Tags.Add(FName("NavigationEvent"));
 }
 
