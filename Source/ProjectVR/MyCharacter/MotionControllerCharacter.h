@@ -95,12 +95,16 @@ public:
 		float DashPoint;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
 		float RecoveryPoint;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StateInfo")
+		bool bDeath;
 
 	bool bIsUseStamina;
 
 	FTimerHandle AutoTimerHandle;			// 타이머핸들
+	FTimerHandle MoveMainHandle;				// 몇초후 메인화면으로 이동
+
 	UFUNCTION()
-		void UseStamina(float _stamina);
+		bool UseStamina(float _stamina);
 	UFUNCTION()
 		void AutoStamina();			// 자동으로 스테미너 채워주는 함수
 
@@ -153,7 +157,8 @@ public:
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;		// 데미지 받기
 	UFUNCTION()
 		void DamageTimer();			// 무적시간 On 함수
-
+	UFUNCTION()
+		void MainScene();
 
 	UFUNCTION()
 		void OnHeadOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,

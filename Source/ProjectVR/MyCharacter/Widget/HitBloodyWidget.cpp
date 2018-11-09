@@ -27,7 +27,7 @@ void UHitBloodyWidget::NativeTick(const FGeometry & MyGeometry, float InDeltaTim
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	
+
 }
 
 UWidgetAnimation * UHitBloodyWidget::GetAnimationByName(FName AnimationName) const			// 애니메이션 찾기
@@ -83,7 +83,7 @@ void UHitBloodyWidget::FillAnimationsMap()			// 위젯 애니메이션 탐색
 						}
 					}
 				}
-			}			
+			}
 		}
 
 		Prop = Prop->PropertyLinkNext;		// 다음 탐색

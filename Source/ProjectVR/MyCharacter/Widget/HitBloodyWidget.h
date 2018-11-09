@@ -7,8 +7,8 @@
 #include "HitBloodyWidget.generated.h"
 
 /**
- * 
- */
+*
+*/
 UCLASS()
 class PROJECTVR_API UHitBloodyWidget : public UUserWidget
 {
@@ -24,7 +24,7 @@ public:
 		class AMotionControllerCharacter* MyCharacter; //플레이어 캐릭터. 매틱마다 체력과 스테미너를 불러옴 -> 나중에 메모리사용량 줄일거임
 
 
-	// 애니메이션 
+													   // 애니메이션 
 	UFUNCTION()
 		UWidgetAnimation* GetAnimationByName(FName AnimationName)const;
 	UFUNCTION()

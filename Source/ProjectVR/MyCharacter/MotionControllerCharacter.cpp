@@ -43,6 +43,8 @@
 #include "CameraLocation.h"
 #include "Components/PawnNoiseEmitterComponent.h"
 
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 AMotionControllerCharacter::AMotionControllerCharacter()
 {
@@ -112,6 +114,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	RecoveryPoint = 1.0f;
 	bIsUseStamina = false;
 
+	bDeath = false;
 	InvincibleTimeOn = false;
 	CurrentState = EPlayerState::Idle;
 	bAllowBreathe = true;
@@ -365,11 +368,10 @@ void AMotionControllerCharacter::RunOff()
 
 void AMotionControllerCharacter::DashOn()
 {
-	if (CurrentStamina > DashPoint)
+	if (GetVelocity().Size() >= 20.0f)
 	{
-		if (GetVelocity().Size() >= 20.0f)
+		if (UseStamina(DashPoint))
 		{
-			UseStamina(DashPoint);
 			FVector DashVector = FVector::ZeroVector;
 			GetCharacterMovement()->GroundFriction = 0;
 			DashVector = GetVelocity().GetSafeNormal()*3000.0f;
@@ -419,16 +421,8 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 	{
 
 		bisHit = true;
-		Widget->bVisible = true;
+		//Widget->bVisible = true;
 
-		//if (Widget->bVisible)		// 피격 위젯이 활성화 될때 실행
-		//{
-		//	UHitBloodyWidget* bloodyWidget = Cast<UHitBloodyWidget>(Widget->GetUserWidgetObject());		// UHitBloodyWidget함수를 사용할수 있게 함
-		//	if (bloodyWidget)
-		//	{
-		//		bloodyWidget->PlayAnimationByName("Bloody", 0.0, 1, EUMGSequencePlayMode::Forward, 1.0f);		// 애니메이션 실행
-		//	}
-		//}
 
 		// 체력 감소
 		if (CurrentHp > 0.0f)
@@ -436,6 +430,21 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 			CurrentHp -= Damage;
 			if (CurrentHp < 0.0f)
 				CurrentHp = 0.0f;
+		}
+
+		if (CurrentHp <= 0.0f && !bDeath)		// 피격 위젯이 활성화 될때 실행
+		{
+			bDeath = true;
+			Widget->bVisible = true;
+			UHitBloodyWidget* bloodyWidget = Cast<UHitBloodyWidget>(Widget->GetUserWidgetObject());		// UHitBloodyWidget함수를 사용할수 있게 함
+			if (bloodyWidget)
+			{
+				bloodyWidget->PlayAnimationByName("Died", 0.0, 1, EUMGSequencePlayMode::Forward, 1.0f);		// 애니메이션 실행
+
+				class APlayerController* MyPC = Cast<APlayerController>(GetController());
+				MyPC->ClientSetCameraFade(true, FColor::Black, FVector2D(0.0, 1.0), 2.0);
+				GetWorld()->GetTimerManager().SetTimer(MoveMainHandle, this, &AMotionControllerCharacter::MainScene, 2.5f, false);
+			}
 		}
 
 		LeftHand->Shield->StateBar->GetDamage(Damage);
@@ -450,6 +459,11 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 void AMotionControllerCharacter::DamageTimer()
 {
 	InvincibleTimeOn = false;			// 무적시간 비활성화
+}
+
+void AMotionControllerCharacter::MainScene()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "Main");
 }
 
 
@@ -491,13 +505,18 @@ void AMotionControllerCharacter::MakeNoiseEmitter()
 	NoiseEmitter->NoiseLifetime = 0.2f;
 }
 
-void AMotionControllerCharacter::UseStamina(float _stamina)
+bool AMotionControllerCharacter::UseStamina(float _stamina)
 {
+	if (CurrentStamina < _stamina)
+	{
+		return false;
+	}
 	CurrentStamina -= _stamina;
 	bIsUseStamina = true;
 
 	GetWorld()->GetTimerManager().ClearTimer(AutoTimerHandle);			// 스테미너 사용 동작은 잠시 스테미너 회복을 멈춤
 	GetWorld()->GetTimerManager().SetTimer(AutoTimerHandle, this, &AMotionControllerCharacter::AutoStamina, 3.0f, false);		// 그리고 바로 3초후 예약(스테미너 자동 회복
+	return true;
 }
 
 void AMotionControllerCharacter::AutoStamina()
