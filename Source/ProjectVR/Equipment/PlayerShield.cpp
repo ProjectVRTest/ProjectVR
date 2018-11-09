@@ -25,6 +25,7 @@
 #include "Monster/Boss/Boss.h"
 #include "Monster/Boss/Orb/DefaultOrb/BossOrbWave.h"
 #include "Monster/Boss/Orb/Ultimate/Wave/BossBlueOrbWave.h"
+#include "Monster/Boss/AI/AddAttack/BossAddAttackBall.h"
 
 // Sets default values
 APlayerShield::APlayerShield()
@@ -49,7 +50,7 @@ APlayerShield::APlayerShield()
 	StateBarScene = CreateDefaultSubobject<USceneComponent>(TEXT("StateScene"));
 	StateBarScene->SetupAttachment(ShieldMesh);
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingEffect(TEXT("ParticleSystem'/Game/Assets/Effect/HitFeedback/BT_ShieldParrying.BT_ShieldParrying'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingEffect(TEXT("ParticleSystem'/Game/Assets/Effect/HitFeedback/PT_ShieldParrying.PT_ShieldParrying'"));
 	if (PT_ParryingEffect.Succeeded())
 	{
 		ParryingEffect = PT_ParryingEffect.Object;
@@ -146,10 +147,12 @@ void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭
 
 	if (IsActivation)
 	{
+		ShieldMesh->SetVectorParameterValueOnMaterials(TEXT("fresnel_color"), FVector(0, 0, 0));
 		IsActivation = false;
 	}
 	else
 	{
+		ShieldMesh->SetVectorParameterValueOnMaterials(TEXT("fresnel_color"), FVector(1.0f, 0, 0.39f));
 		IsActivation = true;
 	}
 }
@@ -158,7 +161,6 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 {
 	if (OtherComp->ComponentHasTag(TEXT("MiniBossWeaponCollision")))
 	{
-		GLog->Log(FString::Printf(TEXT("중간보스 검 겹힘")));
 		IsMiniBossWeaponOverlap = true;
 		AMiniBossWeapon* MiniBossWeapon = Cast<AMiniBossWeapon>(OtherComp->GetOwner()); //확인되면 중간보스 무기로 변환해서 저장한다.
 
@@ -193,8 +195,7 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 	}
 	else if (OtherComp->ComponentHasTag(TEXT("BossWeapon")))
 	{
-		GLog->Log(FString::Printf(TEXT("보스 검 겹힘")));
-
+	
 		IsBossWeaponOverlap = true;
 
 		ABossWeapon* BossWeapon = Cast<ABossWeapon>(OtherComp->GetOwner());
@@ -210,15 +211,14 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 					if (IsActivation && IsBossWeaponOverlap && ShieldMoveVelocity.Size() > 90.0f)
 					{
 						if (ShieldOwner->CurrentStamina > ShieldOwner->DefencePoint)
-						{
-							GLog->Log(FString::Printf(TEXT("보스 패링 성공")));
+						{							
 							UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.5f);
 							GetWorld()->GetTimerManager().SetTimer(GlobalTimeTimer, this, &APlayerShield::GlobalTimeInit, 0.5f, false);
 							ShieldOwner->UseStamina(ShieldOwner->DefencePoint);
 							RumbleLeftController(1.0f);
 							BossWeapon->IsParryingAttack = false;
 							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, OtherComp->GetComponentLocation());
-							//Boss->ParryingPointSet();
+							Boss->ParryingPointSet();
 							Boss->CurrentParryingState = EBossParryingState::ParryingStart;
 							Boss->CurrentCloseAttackState = EBossCloseAttackState::ParryingState;						
 						}
@@ -231,7 +231,28 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 	{
 		if (IsActivation)
 		{
+			GetWorld()->GetTimerManager().SetTimer(ShieldFresnelTimer, this, &APlayerShield::Fresnel, 0.1f, true, 0.1f);
 			OrbWaveCrash(OtherComp->GetOwner());
+		}
+	}
+	else if (OtherComp->ComponentHasTag(TEXT("AttackBall")))
+	{
+		if (IsActivation)
+		{
+			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+			if (MyCharacter)
+			{
+				ABossAddAttackBall* AttackBall = Cast<ABossAddAttackBall>(OtherComp->GetOwner());
+
+				if (AttackBall)
+				{
+					GetWorld()->GetTimerManager().SetTimer(ShieldFresnelTimer, this, &APlayerShield::Fresnel, 0.1f, true, 0.1f);
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, AttackBall->GetActorLocation());
+					MyCharacter->UseStamina(AttackBall->GetDamage()*1.2f);
+					AttackBall->Destroy();
+				}
+			}			
 		}
 	}
 }
@@ -246,7 +267,6 @@ void APlayerShield::OnShieldOverlapEnd(UPrimitiveComponent* OverlappedComponent,
 	{
 		IsBossWeaponOverlap = false;
 	}
-
 }
 
 void APlayerShield::RumbleLeftController(float Intensity)
@@ -285,4 +305,10 @@ void APlayerShield::OrbWaveCrash(AActor * Orb)
 			BossBlueOrbWave->Destroy();
 		}
 	}
+}
+
+void APlayerShield::Fresnel()
+{
+	//ShieldMesh()->
+
 }

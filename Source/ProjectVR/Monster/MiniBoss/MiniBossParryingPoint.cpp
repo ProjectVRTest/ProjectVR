@@ -10,6 +10,7 @@
 #include "Monster/MiniBoss/MiniBoss.h"
 #include "kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "Monster/Boss/Boss.h"
 
 // Sets default values
 AMiniBossParryingPoint::AMiniBossParryingPoint()
@@ -47,6 +48,7 @@ AMiniBossParryingPoint::AMiniBossParryingPoint()
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 
 	IsAttackMiniBossWeapon = false;
+	IsAttackBossWeapon = false;
 	InitialLifeSpan = 2.0f; //패링포인트 수명
 }
 
@@ -88,6 +90,24 @@ void AMiniBossParryingPoint::ParryingPointBeginOverlap(UPrimitiveComponent* Over
 						MiniBoss->ParryingPointCount++;
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingPointExplosionEffect, OtherComp->GetComponentLocation());
 						Destroy();
+					}
+				}
+			}
+			else
+			{
+				ABoss* Boss = Cast<ABoss>(GetAttachParentActor());
+
+				if (Boss)
+				{
+					if (PlayerSword->SwordMoveVelocity.Size() >= 1000.0f)
+					{
+						if (Boss && !IsAttackBossWeapon)
+						{
+							IsAttackBossWeapon = true;
+							Boss->ParryingPointCount++;
+							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingPointExplosionEffect, OtherComp->GetComponentLocation());
+							Destroy();
+						}
 					}
 				}
 			}

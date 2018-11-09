@@ -36,6 +36,8 @@ public:
 		class AMotionControllerCharacter* SwordOwner;			// 오너 설정
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect")
 		class UParticleSystem* BloodEffect;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect")
+		class UParticleSystem* OrbHitEffect;
 
 	// 칼의 운동 값
 	FVector SwordCurrentPosistion, SwordMoveDelta, SwordPreviousPosistion, SwordMoveVelocity;

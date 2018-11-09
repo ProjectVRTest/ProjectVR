@@ -62,7 +62,7 @@ void ANormalMonsterSpawnPosition::MonsterSpawn()
 		
 		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		NormalMonster = GetWorld()->SpawnActor<ANormalMonster>(NormalMonster->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
+		NormalMonster = GetWorld()->SpawnActor<ANormalMonster>(NormalMonster->StaticClass(), GetActorLocation(), FRotator::ZeroRotator, SpawnActorOption);
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SpawnEffect, NormalMonster->GetActorLocation());
 

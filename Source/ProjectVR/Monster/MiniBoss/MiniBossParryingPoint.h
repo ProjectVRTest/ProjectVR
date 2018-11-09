@@ -27,6 +27,8 @@ public:
 		class UParticleSystemComponent* ParryingPointEffectComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
 		bool IsAttackMiniBossWeapon;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
+		bool IsAttackBossWeapon;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
