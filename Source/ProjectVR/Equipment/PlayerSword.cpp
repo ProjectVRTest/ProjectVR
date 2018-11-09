@@ -53,6 +53,12 @@ APlayerSword::APlayerSword()
 		BloodEffect = PT_BloodEffect.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_OrbHitEffect(TEXT("ParticleSystem'/Game/Assets/Effect/HitFeedback/PT_OrbHitEffect.PT_OrbHitEffect'"));
+	if (PT_OrbHitEffect.Succeeded())
+	{
+		OrbHitEffect = PT_OrbHitEffect.Object;
+	}
+
 	Timer = 0.0f;		// 타이머 초기화
 
 	// 태그

@@ -11,18 +11,20 @@ class PROJECTVR_API APlayerShield : public AActor
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this actor's properties
-	APlayerShield();
-
+private:
+	
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:	
+	// Sets default values for this actor's properties
+	APlayerShield();
 
+	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(VisibleAnywhere)
+		float FresnelValue;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
 		class UStaticMeshComponent* ShieldMesh;			// 메쉬에 방패를 붙일 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
@@ -48,6 +50,8 @@ public:
 	UPROPERTY()
 		FTimerHandle GlobalTimeTimer; //패링성공시 글로벌 타임을 조절할때 필요한 타이머 변수
 	UPROPERTY()
+		FTimerHandle ShieldFresnelTimer; //패링성공시 글로벌 타임을 조절할때 필요한 타이머 변수
+	UPROPERTY()
 		bool IsActivation; //방패가 활성화 중인지 아닌지 확인해줄 변수
 	UPROPERTY()
 		bool IsMiniBossWeaponOverlap; //중간보스 무기가 현재 방패와 겹쳐진 상태인지 확인해줄 변수
@@ -70,5 +74,7 @@ public:
 	UFUNCTION()
 		void GlobalTimeInit();
 	UFUNCTION()
-		void OrbWaveCrash(class AActor* Orb);
+		void OrbWaveCrash(class AActor* Orb);	
+	UFUNCTION()
+		void Fresnel();
 };

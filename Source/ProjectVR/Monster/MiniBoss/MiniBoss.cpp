@@ -341,8 +341,11 @@ void AMiniBoss::ParryingPointValueSet(int ParryingCount)
 	{
 		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
 
-		FName ParryingPointSpawnLocation = ParryingPoints[RandomPointNotOverlap[j]];
-		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, ParryingPointSpawnLocation);
+		if (MiniBossParryingPoint)
+		{
+			FName ParryingPointSpawnLocation = ParryingPoints[RandomPointNotOverlap[j]];
+			MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, ParryingPointSpawnLocation);
+		}		
 	}
 
 	ParryingPoints.Empty(); //

@@ -10,15 +10,17 @@ UCLASS()
 class PROJECTVR_API ABossAddAttackBall : public AActor
 {
 	GENERATED_BODY()
+private:
+	UPROPERTY(VisibleAnywhere)
+		float Damage;
 
-public:
-	// Sets default values for this actor's properties
-	ABossAddAttackBall();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
+	// Sets default values for this actor's properties
+	ABossAddAttackBall();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -37,5 +39,6 @@ public:
 		void Homing(class AActor* Target);
 	UFUNCTION()
 		void AttackBallBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-
+	UFUNCTION()
+		float GetDamage();
 };

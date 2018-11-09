@@ -176,6 +176,7 @@ void ABoss::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	ParryingPointInit();
 	FActorSpawnParameters SpawnActorOption;
 	SpawnActorOption.Owner = this;
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;

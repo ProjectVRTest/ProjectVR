@@ -4,6 +4,7 @@
 #include "Headers/BossAIHeader.h"
 #include "Monster/Boss/Orb/DefaultOrb/BossOrb.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void UBTTask_BossUltimateAttackLoop::InitializeFromAsset(UBehaviorTree & Asset)
 {
@@ -40,6 +41,7 @@ void UBTTask_BossUltimateAttackLoop::TickTask(UBehaviorTreeComponent & OwnerComp
 		{
 			if (CurrentNormalMonsterCount <= 0)
 			{
+				Boss->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 				UltimateEnd();
 			}
 
