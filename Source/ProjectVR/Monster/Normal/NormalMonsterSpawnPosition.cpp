@@ -77,7 +77,7 @@ void ANormalMonsterSpawnPosition::MonsterSpawn()
 				if (NormalMonsterAI)
 				{
 					NormalMonsterAI->Possess(NormalMonster);
-					NormalMonster->SetCurrentHP(5.0f);
+					NormalMonster->SetCurrentHP(MonsterHP);
 				}
 			}
 			break;
@@ -89,7 +89,7 @@ void ANormalMonsterSpawnPosition::MonsterSpawn()
 				if (NormalMonsterAI)
 				{
 					NormalMonsterAI->Possess(NormalMonster);
-					NormalMonster->SetCurrentHP(5.0f);
+					NormalMonster->SetCurrentHP(MonsterHP);
 				}
 			}
 			break;

@@ -12,13 +12,19 @@
 
 ABossBlueOrbWave::ABossBlueOrbWave()
 {
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BlueOrbWave(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_GPP_BlueMagicball.PS_GPP_BlueMagicball'"));
+	if (PT_BlueOrbWave.Succeeded())
+	{
+		OrbWaveParticle = PT_BlueOrbWave.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BlueOrbWaveExplosion(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_BlueOrbWaveExplosion.PS_BlueOrbWaveExplosion'"));
 	if (PT_BlueOrbWaveExplosion.Succeeded())
 	{
 		OrbWaveExplosion = PT_BlueOrbWaveExplosion.Object;
 	}
 
-	OrbWaveParticleComponent->Template = nullptr;
+	OrbWaveParticleComponent->Template = OrbWaveParticle;
 
 	Projecttile->InitialSpeed = 800.0f;
 	Projecttile->MaxSpeed = 800.0f;

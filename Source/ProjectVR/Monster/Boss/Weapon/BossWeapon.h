@@ -10,9 +10,13 @@ UCLASS()
 class PROJECTVR_API ABossWeapon : public AActor
 {
 	GENERATED_BODY()
-	
+private:
+	UPROPERTY(VisibleAnywhere)
+		float Damage;
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;	
 public:	
-	// Sets default values for this actor's properties
 	ABossWeapon();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -23,23 +27,16 @@ public:
 		bool IsParryingAttack;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
 		class UMaterialInterface* DefaultSwordMaterials;
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
-		class UParticleSystemComponent* SwordParticleComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
-		class UParticleSystem* SwordParticle;*/
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	UPROPERTY()
-		float Damage;
 
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	void WeaponBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
-	
+	UFUNCTION()
+		float GetDamage();
+	UFUNCTION()
+		void SetDamage(float NewDamage);
 	
 };

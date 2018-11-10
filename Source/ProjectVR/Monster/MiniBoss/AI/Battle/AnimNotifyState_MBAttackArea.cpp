@@ -22,13 +22,13 @@ void UAnimNotifyState_MBAttackArea::NotifyBegin(USkeletalMeshComponent * MeshCom
 				switch (MiniBoss->CurrentShortAttackState)
 				{
 				case EMiniBossShortAttackState::RightUpLeftDownReady:
-					MiniBoss->Sword->Damage = 15.0f;
+					MiniBoss->Sword->SetDamage(15.0f);
 					break;
 				case EMiniBossShortAttackState::TwoHandWidthReady:
-					MiniBoss->Sword->Damage = 10.0f;
+					MiniBoss->Sword->SetDamage(10.0f);					
 					break;
 				case EMiniBossShortAttackState::StabReady:
-					MiniBoss->Sword->Damage = 15.0f;
+					MiniBoss->Sword->SetDamage(15.0f);
 					break;
 				}
 				break;
@@ -36,25 +36,25 @@ void UAnimNotifyState_MBAttackArea::NotifyBegin(USkeletalMeshComponent * MeshCom
 				switch (MiniBoss->CurrentWaveAttackState)
 				{
 				case EMiniBossWaveAttackState::TwoHandWidthReady:
-					MiniBoss->Sword->Damage = 20.0f;
+					MiniBoss->Sword->SetDamage(20.0f);
 					break;
 				}
 				break;
 			case EMiniBossAttackState::ComboAttack:
-				MiniBoss->Sword->Damage = 12.0f;
+				MiniBoss->Sword->SetDamage(12.0f);
 				break;
 			case EMiniBossAttackState::BackAttack:
-				MiniBoss->Sword->Damage = 10.0f;
+				MiniBoss->Sword->SetDamage(10.0f);
 				break;
 			case EMiniBossAttackState::ParryingState:
-				MiniBoss->Sword->Damage = 15.0f;
+				MiniBoss->Sword->SetDamage(15.0f);
 				break;
 			}
 
 			switch (MiniBoss->CurrentAnimState)
 			{
 			case EMiniBossAnimState::JumpAttack:
-				MiniBoss->Sword->Damage = 25.0f;
+				MiniBoss->Sword->SetDamage(25.0f);
 				break;
 			}
 
@@ -71,6 +71,6 @@ void UAnimNotifyState_MBAttackArea::NotifyEnd(USkeletalMeshComponent * MeshComp,
 
 	if (MiniBoss)
 	{
-		MiniBoss->Sword->IsWeaponAttack = false;
+		MiniBoss->Sword->IsWeaponAttack = false;		
 	}
 }

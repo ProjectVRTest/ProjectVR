@@ -123,12 +123,12 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 
 					if (SwordMoveVelocity.Size() <= 1000)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
 					{
-						RumbleRightController(0.25f);
+						RumbleRightController(0.5f);
 						Damage = 10.0f;
 					}
 					else // 선속도의 크기가 500초과일 때 데미지 15 (조건4)
 					{
-						RumbleRightController(0.5f);
+						RumbleRightController(1.0f);
 						Damage = 15.0f;
 					}
 					// 이하 캐릭터 스테미너 감소

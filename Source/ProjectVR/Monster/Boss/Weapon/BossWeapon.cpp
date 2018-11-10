@@ -35,17 +35,6 @@ ABossWeapon::ABossWeapon()
 		DefaultSwordMaterials = M_DefaultSwordMaterials.Object;
 	}
 
-	/*SwordParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SwordWaveTailComponent"));
-	SwordParticleComponent->SetupAttachment(GetRootComponent());
-	SwordParticleComponent->SetRelativeLocation(FVector(21.0f, 4.0f, 196.0f));
-
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_SwordParticle(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/Monster/Boss/PT_BossWeapon.PT_BossWeapon'"));
-	if (PT_SwordParticle.Succeeded())
-	{
-		SwordParticle = PT_SwordParticle.Object;
-		SwordParticleComponent->Template = SwordParticle;
-	}*/
-
 	IsWeaponAttack = false;
 	IsParryingAttack = false;
 
@@ -95,5 +84,15 @@ void ABossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 			GLog->Log(FString::Printf(TEXT("캐릭터 때림")));
 		}
 	}
+}
+
+float ABossWeapon::GetDamage()
+{
+	return Damage;
+}
+
+void ABossWeapon::SetDamage(float NewDamage)
+{
+	Damage = NewDamage;
 }
 

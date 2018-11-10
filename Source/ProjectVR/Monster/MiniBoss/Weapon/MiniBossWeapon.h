@@ -10,32 +10,34 @@ UCLASS()
 class PROJECTVR_API AMiniBossWeapon : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AMiniBossWeapon();
+private:
+	UPROPERTY(VisibleAnywhere)
+		float Damage;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	AMiniBossWeapon();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	void WeaponBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+		void WeaponBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UStaticMeshComponent* SwordMesh;			
+		class UStaticMeshComponent* SwordMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UCapsuleComponent* SwordCollision;				
+		class UCapsuleComponent* SwordCollision;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool IsWeaponAttack;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool IsParryingAttack;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UMaterialInterface* DefaultMaterials;
-	UPROPERTY()
-		float Damage;
+		class UMaterialInterface* DefaultMaterials;	
+	UFUNCTION()
+		float GetDamage();
+	UFUNCTION()
+		void SetDamage(float NewDamge);
 };

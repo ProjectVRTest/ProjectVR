@@ -35,6 +35,7 @@ ANMWeaponArrow::ANMWeaponArrow()
 	ArrowHit->SetCollisionProfileName("OverlapAll");
 	ArrowHit->SetRelativeLocation(FVector(44.0f, 0, 0));	
 	ArrowHit->SetRelativeScale3D(FVector(1.46f, 0.04f, 0.12f));
+	ArrowHit->ComponentTags.Add(FName(TEXT("NMArrow")));	
 
 	Projecttile = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projecttile"));
 	Projecttile->InitialSpeed = 3000.0f;
@@ -63,7 +64,7 @@ ANMWeaponArrow::ANMWeaponArrow()
 	InitialLifeSpan = 2.5f;
 	Damage = 12.0f;
 
-	Tags.Add(FName(TEXT("NMArrow")));
+	
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
@@ -113,5 +114,15 @@ void ANMWeaponArrow::Homing(AActor * Target)
 		Projecttile->bIsHomingProjectile = true;
 		Projecttile->HomingAccelerationMagnitude = 30000.0f;
 	}
+}
+
+float ANMWeaponArrow::GetDamage()
+{
+	return Damage;
+}
+
+void ANMWeaponArrow::SetDamage(float NewDamage)
+{
+	Damage = NewDamage;
 }
 

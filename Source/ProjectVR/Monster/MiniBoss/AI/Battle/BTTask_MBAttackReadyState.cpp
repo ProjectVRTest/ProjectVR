@@ -27,11 +27,11 @@ EBTNodeResult::Type UBTTask_MBAttackReadyState::ExecuteTask(UBehaviorTreeCompone
 
 				if (WallDistance < 1200.f)
 				{
-					RandomPattern = FMath::RandRange(1, 11);
+					RandomPattern = FMath::RandRange(1, 7); //1~11
 				}
 				else
 				{
-					RandomPattern = FMath::RandRange(1, 15);
+					RandomPattern = FMath::RandRange(1, 7); //1~15
 				}			
 
 				if (RandomPattern > 0 && RandomPattern < 8)

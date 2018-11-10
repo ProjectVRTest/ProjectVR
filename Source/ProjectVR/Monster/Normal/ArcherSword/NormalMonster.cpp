@@ -425,6 +425,7 @@ void ANormalMonster::SetTarget()
 
 void ANormalMonster::SetCurrentHP(float HP)
 {
+	MaxHP = HP;
 	CurrentHP = HP;
 }
 

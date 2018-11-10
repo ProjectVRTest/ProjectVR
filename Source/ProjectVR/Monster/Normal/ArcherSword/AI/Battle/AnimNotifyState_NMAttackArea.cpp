@@ -18,7 +18,7 @@ void UAnimNotifyState_NMAttackArea::NotifyBegin(USkeletalMeshComponent * MeshCom
 			switch (NormalMonster->CurrentAnimState)
 			{
 			case ENormalMonsterAnimState::RageAttack:
-				NormalMonster->Sword->Damage = 20.0f;
+				NormalMonster->Sword->SetDamage(20.0f);				
 				break;
 			}
 			break;
@@ -28,20 +28,24 @@ void UAnimNotifyState_NMAttackArea::NotifyBegin(USkeletalMeshComponent * MeshCom
 			case ENormalMonsterAttackState::StabAttack:
 				if (NormalMonster->CurrentStabAttackState == ENormalMonsterStabAttackState::StabAttackReady)
 				{
-					NormalMonster->Sword->Damage = 15.0f;
+					NormalMonster->Sword->SetDamage(15.0f);
 				}
 				else if(NormalMonster->CurrentStabAttackState == ENormalMonsterStabAttackState::ClipplingAttackReady)
 				{
-					NormalMonster->Sword->Damage = 20.0f;
+					NormalMonster->Sword->SetDamage(20.0f);
 				}
 				break;
 			case ENormalMonsterAttackState::ComboAttack:
-				NormalMonster->Sword->Damage = 10.0f;
+				NormalMonster->Sword->SetDamage(10.0f);
 				break;
 			}
 			break;
 		}
-		NormalMonster->Sword->IsWeaponAttack = true;
+
+		if (NormalMonster->Sword)
+		{
+			NormalMonster->Sword->IsWeaponAttack = true;
+		}		
 	}
 }
 
@@ -58,7 +62,10 @@ void UAnimNotifyState_NMAttackArea::NotifyEnd(USkeletalMeshComponent * MeshComp,
 
 	if (NormalMonster)
 	{
-		NormalMonster->Sword->IsWeaponAttack = false;
+		if (NormalMonster->Sword)
+		{
+			NormalMonster->Sword->IsWeaponAttack = false;
+		}		
 	}
 }
 

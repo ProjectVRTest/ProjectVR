@@ -18,8 +18,9 @@ AMiniBossWeapon::AMiniBossWeapon()
 
 	SwordMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwordMesh"));
 	SetRootComponent(SwordMesh);
-	SwordMesh->SetCollisionProfileName(TEXT("NoCollision"));		
-	
+	SwordMesh->SetCollisionProfileName(TEXT("OverlapAll"));		
+	SwordMesh->ComponentTags.Add(FName(TEXT("MBWeapon")));
+
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Weapon/Mesh/SM_MBWeapon.SM_MBWeapon'"));
 
 	if (SM_Sword.Succeeded())
@@ -36,15 +37,15 @@ AMiniBossWeapon::AMiniBossWeapon()
 	}
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
 	SwordCollision->SetupAttachment(SwordMesh);	
-	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));	
+	SwordCollision->SetCollisionProfileName(TEXT("NoCollision"));	
 	SwordCollision->SetRelativeLocation(FVector(62.0f, 0, 0));
 	SwordCollision->SetRelativeRotation(FRotator(90.0f, 0, 0));	
 	SwordCollision->SetRelativeScale3D(FVector(1.3f, 1.3f, 2.5f));
 	SwordCollision->bHiddenInGame = false;
-	SwordCollision->ComponentTags.Add(FName(TEXT("MiniBossWeaponCollision")));
+	
 	IsWeaponAttack = false;
 	IsParryingAttack = false;
-		
+
 	Damage = 10.0f;
 
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
@@ -56,9 +57,9 @@ void AMiniBossWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (SwordCollision)
+	if (SwordMesh)
 	{
-		SwordCollision->OnComponentBeginOverlap.AddDynamic(this, &AMiniBossWeapon::WeaponBeginOverlap);
+		SwordMesh->OnComponentBeginOverlap.AddDynamic(this, &AMiniBossWeapon::WeaponBeginOverlap);
 	}
 }
 
@@ -77,7 +78,7 @@ void AMiniBossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponen
 		if (OtherComp->ComponentHasTag(TEXT("CameraLocation")))
 		{
 			IsWeaponAttack = false;
-			
+
 			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(OtherComp->GetOwner()->GetAttachParentActor());
 
 			if (MyCharacter)
@@ -87,9 +88,18 @@ void AMiniBossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponen
 				if (MiniBoss)
 				{
 					UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), Damage, nullptr, this, nullptr);
-				}				
+				}
 			}
-			GLog->Log(FString::Printf(TEXT("캐릭터 때림")));
 		}
 	}	
+}
+
+float AMiniBossWeapon::GetDamage()
+{
+	return Damage;
+}
+
+void AMiniBossWeapon::SetDamage(float NewDamge)
+{
+	Damage = NewDamge;
 }

@@ -19,6 +19,7 @@ ANMWeaponSword::ANMWeaponSword()
 	SwordMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwordMesh")); //스테틱 메쉬 컴포넌트를 생성해주고
 	SetRootComponent(SwordMesh); //루트 컴포넌트로 정한다.
 	SwordMesh->SetCollisionProfileName("NoCollision"); //콜리전반응을 제거한다.
+	
 
 	//에디터로부터 일반몬스터 검 메쉬를 찾고
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Sword(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Weapon/Sword/Mesh/SM_NormalMonsterSword.SM_NormalMonsterSword'"));
@@ -31,7 +32,7 @@ ANMWeaponSword::ANMWeaponSword()
 	}
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Shover(TEXT("StaticMesh'/Game/Assets/MapBuild/Shover/shovel_low.shovel_low'"));
-
+	
 	if (SM_Shover.Succeeded())
 	{
 		ShovelMesh = SM_Shover.Object;
@@ -39,18 +40,16 @@ ANMWeaponSword::ANMWeaponSword()
 
 	//공격이 가능한 상태인지 알려주는 변수로 처음에는 꺼둔다.
 	IsWeaponAttack = false;
-	IsPlayerEquipment = false; 
+	IsBlockShieldAttack = false;
 
 	//오버랩반응을 구현하기 위해서 캡슐콜리전컴포넌트를 생성해주고
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
 	SwordCollision->SetupAttachment(SwordMesh); //스테틱메쉬 아래에 붙인다.
 	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll")); //콜리전반응을 OverlapAll로 정해준다.
 	SwordCollision->SetRelativeScale3D(FVector(0.6f, 0.6f, 1.2f)); //크기를 정한다.
-	
+	SwordCollision->ComponentTags.Add(FName(TEXT("NormalMonsterWeapon")));
 	SwordCollision->bHiddenInGame = false; //게임상에서 보이게 해준다.
 
-	//일반몬스터검을 의미하는 태그를 달아준다.
-	Tags.Add(FName(TEXT("NormalMonsterSword")));
 	//왼손과 오른손에 반응이 없게 태그를 달아준다.
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));	
@@ -98,8 +97,23 @@ void ANMWeaponSword::SwordBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 
 			if (CameraLocation)
 			{
-				UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), Damage, nullptr, this, nullptr);
+				ANormalMonster* NMMonster = Cast<ANormalMonster>(GetAttachParentActor());
+
+				if (NMMonster)
+				{
+					UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), Damage, nullptr, this, nullptr);
+				}
 			}
-		}
+		}		
 	}
+}
+
+float ANMWeaponSword::GetDamage()
+{
+	return Damage;
+}
+
+void ANMWeaponSword::SetDamage(float NewDamage)
+{
+	Damage = NewDamage;
 }

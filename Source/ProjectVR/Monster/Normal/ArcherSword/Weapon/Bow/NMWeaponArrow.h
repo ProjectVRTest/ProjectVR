@@ -10,9 +10,14 @@ UCLASS()
 class PROJECTVR_API ANMWeaponArrow : public AActor
 {
 	GENERATED_BODY()
-	
+
+private:
+	UPROPERTY(VisibleAnywhere)
+		float Damage;
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 public:	
-	// Sets default values for this actor's properties
 	ANMWeaponArrow();
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UStaticMeshComponent* Mesh;
@@ -26,14 +31,7 @@ public:
 		class UParticleSystem* ArrowEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* ArrowExplosionEffect;
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	UPROPERTY()
-		float Damage;
-
-public:	
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -43,4 +41,8 @@ public:
 	UFUNCTION()
 		void Homing(class AActor* Target);
 	
+	UFUNCTION()
+		float GetDamage();
+	UFUNCTION()
+		void SetDamage(float NewDamage);
 };

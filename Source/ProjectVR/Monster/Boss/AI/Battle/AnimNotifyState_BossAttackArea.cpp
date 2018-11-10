@@ -13,6 +13,41 @@ void UAnimNotifyState_BossAttackArea::NotifyBegin(USkeletalMeshComponent * MeshC
 
 	if (Boss)
 	{
+		if (Boss->Sickle)
+		{
+			switch (Boss->CurrentBattleState)
+			{
+			case EBossBattleState::CloseAttack:
+				switch (Boss->CurrentCloseAttackState)
+				{
+				case EBossCloseAttackState::RightUpLeftDownAttack:
+					Boss->Sickle->SetDamage(18.0f);
+					break;
+				case EBossCloseAttackState::ComboAttack:
+					Boss->Sickle->SetDamage(15.0f);
+					break;
+				case EBossCloseAttackState::UpDownAttack:
+					Boss->Sickle->SetDamage(20.0f);
+					break;
+				}
+
+				switch (Boss->CurrentParryingState)
+				{
+				case EBossParryingState::CounterAttack:
+					Boss->Sickle->SetDamage(20.0f);
+					break;
+				}
+				break;
+			case EBossBattleState::AddAttack:
+				switch (Boss->CurrentBlinkAttackState)
+				{
+				case EBossBlinkAttackState::BlinkAttack:
+					Boss->Sickle->SetDamage(20.0f);
+					break;
+				}
+				break;
+			}
+		}
 		Boss->Sickle->IsWeaponAttack = true;
 	}
 }

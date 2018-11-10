@@ -12,15 +12,17 @@ class PROJECTVR_API ANormalMonster : public ACharacter
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this character's properties
-	ANormalMonster();
-
+private:	
+	UPROPERTY(VisibleAnywhere, Category = "Stat")
+		float MaxHP; //최대 HP
+	UPROPERTY(VisibleAnywhere, Category = "Stat")
+		float CurrentHP; //현재 HP
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
+	ANormalMonster();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -76,11 +78,7 @@ public:
 		class ANMWeaponBow* Bow;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class ANMWeaponQuiver* Quiver;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
-		float MaxHP; //최대 HP
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
-		float CurrentHP; //현재 HP
+		
 	UPROPERTY()
 		FTimerHandle FresnelTimer;
 	UPROPERTY()

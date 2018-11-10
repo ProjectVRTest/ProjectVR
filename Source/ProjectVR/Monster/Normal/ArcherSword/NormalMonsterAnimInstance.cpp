@@ -5,6 +5,7 @@
 #include "Monster/Normal/ArcherSword/Weapon/Bow/NMWeaponArrow.h"
 #include "Monster/SwordWaveTarget.h"
 #include "MyCharacter/CameraLocation.h"
+#include "Monster/Normal/ArcherSword/Weapon/Sword/NMWeaponSword.h"
 
 void UNormalMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {

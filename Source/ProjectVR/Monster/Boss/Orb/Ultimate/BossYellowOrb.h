@@ -16,7 +16,6 @@ class PROJECTVR_API ABossYellowOrb : public ABossOrb
 public:
 	ABossYellowOrb();
 protected:
-	int a;
 	virtual void BeginPlay() override;
 
 	UFUNCTION()

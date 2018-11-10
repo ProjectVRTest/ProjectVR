@@ -306,7 +306,7 @@ void AMiniBoss::ParryingPointValueSet(int ParryingCount)
 
 	bool RandomFlag;
 
-	for (int k = 0; k < ParryingCount; k++)
+	for (int k = 0; k < ParryingPointMaxCount; k++)
 	{
 		RandomPointNotOverlap.Add(-1);
 	}
@@ -317,12 +317,12 @@ void AMiniBoss::ParryingPointValueSet(int ParryingCount)
 
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
-	for (int i = 0; i < ParryingCount; i++)
+	for (int i = 0; i < ParryingPointMaxCount; i++)
 	{
 		RandomParryingPointName = FMath::RandRange(0, 6);
 		RandomFlag = true;
 
-		for (int j = 0; j < ParryingCount; j++)
+		for (int j = 0; j < ParryingPointMaxCount; j++)
 		{
 			if (RandomPointNotOverlap[j] == RandomParryingPointName)
 			{
@@ -337,7 +337,7 @@ void AMiniBoss::ParryingPointValueSet(int ParryingCount)
 		}
 	}
 
-	for (int j = 0; j < ParryingCount; j++)
+	for (int j = 0; j < ParryingPointMaxCount; j++)
 	{
 		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
 
@@ -348,7 +348,7 @@ void AMiniBoss::ParryingPointValueSet(int ParryingCount)
 		}		
 	}
 
-	ParryingPoints.Empty(); //
+	RandomPointNotOverlap.Empty(); //
 }
 
 void AMiniBoss::OnSeeCharacter(APawn * Pawn)

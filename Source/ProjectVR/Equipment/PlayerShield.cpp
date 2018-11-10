@@ -26,6 +26,8 @@
 #include "Monster/Boss/Orb/DefaultOrb/BossOrbWave.h"
 #include "Monster/Boss/Orb/Ultimate/Wave/BossBlueOrbWave.h"
 #include "Monster/Boss/AI/AddAttack/BossAddAttackBall.h"
+#include "Monster/Normal/ArcherSword/Weapon/Sword/NMWeaponSword.h"
+#include "Monster/Normal/ArcherSword/Weapon/Bow/NMWeaponArrow.h"
 
 // Sets default values
 APlayerShield::APlayerShield()
@@ -159,13 +161,25 @@ void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭
 
 void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherComp->ComponentHasTag(TEXT("MiniBossWeaponCollision")))
+	if (OtherComp->ComponentHasTag(TEXT("MBWeapon")))
 	{
 		IsMiniBossWeaponOverlap = true;
 		AMiniBossWeapon* MiniBossWeapon = Cast<AMiniBossWeapon>(OtherComp->GetOwner()); //확인되면 중간보스 무기로 변환해서 저장한다.
 
 		if (MiniBossWeapon) //변환이 성공하면
 		{
+			if (MiniBossWeapon->IsWeaponAttack)
+			{
+				if (ShieldOwner)
+				{
+					if (ShieldOwner->UseStamina(MiniBossWeapon->GetDamage()*1.2f))
+					{
+						MiniBossWeapon->IsWeaponAttack = false;
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
+					}
+				}
+			}			
+
 			if (MiniBossWeapon->IsParryingAttack) //무기가 패링 가능한 상태인지 확인한다.
 			{
 				//패링가능한 상태라면 MiniBoss를 가지고 와서 저장하고
@@ -194,14 +208,25 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 		}
 	}
 	else if (OtherComp->ComponentHasTag(TEXT("BossWeapon")))
-	{
-	
+	{	
 		IsBossWeaponOverlap = true;
 
 		ABossWeapon* BossWeapon = Cast<ABossWeapon>(OtherComp->GetOwner());
 
 		if (BossWeapon)
 		{
+			if (BossWeapon->IsWeaponAttack)
+			{
+				if (ShieldOwner)
+				{
+					if (ShieldOwner->UseStamina(BossWeapon->GetDamage()*1.2f))
+					{
+						BossWeapon->IsWeaponAttack = false;
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
+					}
+				}
+			}
+
 			if (BossWeapon->IsParryingAttack)
 			{
 				ABoss* Boss = Cast<ABoss>(BossWeapon->GetAttachParentActor());
@@ -210,18 +235,17 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 				{
 					if (IsActivation && IsBossWeaponOverlap && ShieldMoveVelocity.Size() > 90.0f)
 					{
-						if (ShieldOwner->CurrentStamina > ShieldOwner->DefencePoint)
-						{							
+						if (ShieldOwner->UseStamina(ShieldOwner->DefencePoint))
+						{
 							UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.5f);
 							GetWorld()->GetTimerManager().SetTimer(GlobalTimeTimer, this, &APlayerShield::GlobalTimeInit, 0.5f, false);
-							ShieldOwner->UseStamina(ShieldOwner->DefencePoint);
 							RumbleLeftController(1.0f);
 							BossWeapon->IsParryingAttack = false;
 							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, OtherComp->GetComponentLocation());
 							Boss->ParryingPointSet();
 							Boss->CurrentParryingState = EBossParryingState::ParryingStart;
-							Boss->CurrentCloseAttackState = EBossCloseAttackState::ParryingState;						
-						}
+							Boss->CurrentCloseAttackState = EBossCloseAttackState::ParryingState;
+						}						
 					}
 				}
 			}
@@ -231,17 +255,28 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 	{
 		if (IsActivation)
 		{
+			ABossBlueOrbWave* BossBlueOrbWave = Cast<ABossBlueOrbWave>(OtherComp->GetOwner());
+
+			if (BossBlueOrbWave)
+			{
+				if (ShieldOwner)
+				{
+					if (ShieldOwner->UseStamina(BossBlueOrbWave->GetOrbDamage()*1.2f))
+					{
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, BossBlueOrbWave->GetActorLocation());
+						BossBlueOrbWave->Destroy();
+					}
+				}
+			}			
+			
 			GetWorld()->GetTimerManager().SetTimer(ShieldFresnelTimer, this, &APlayerShield::Fresnel, 0.1f, true, 0.1f);
-			OrbWaveCrash(OtherComp->GetOwner());
 		}
 	}
 	else if (OtherComp->ComponentHasTag(TEXT("AttackBall")))
 	{
 		if (IsActivation)
 		{
-			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-			if (MyCharacter)
+			if (ShieldOwner)
 			{
 				ABossAddAttackBall* AttackBall = Cast<ABossAddAttackBall>(OtherComp->GetOwner());
 
@@ -249,12 +284,57 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 				{
 					GetWorld()->GetTimerManager().SetTimer(ShieldFresnelTimer, this, &APlayerShield::Fresnel, 0.1f, true, 0.1f);
 					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, AttackBall->GetActorLocation());
-					MyCharacter->UseStamina(AttackBall->GetDamage()*1.2f);
-					AttackBall->Destroy();
+					
+					if (ShieldOwner->UseStamina(AttackBall->GetDamage()*1.2f))
+					{
+						AttackBall->Destroy();
+					}					
 				}
 			}			
 		}
 	}
+	else if (OtherComp->ComponentHasTag(TEXT("NMArrow")))
+	{
+		if (IsActivation)
+		{
+			ANMWeaponArrow* NMArrow = Cast<ANMWeaponArrow>(OtherComp->GetOwner());
+
+			if (NMArrow)
+			{
+				if (ShieldOwner)
+				{
+					if (ShieldOwner->UseStamina(NMArrow->GetDamage()*1.2f))
+					{
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
+						NMArrow->Destroy();
+					}
+				}
+			}
+		}
+	}
+	else if (OtherComp->ComponentHasTag(TEXT("NormalMonsterWeapon")))
+	{
+		if (IsActivation)
+		{
+			ANMWeaponSword* NMSword = Cast<ANMWeaponSword>(OtherComp->GetOwner());
+
+			if (NMSword)
+			{
+				if (NMSword->IsWeaponAttack)
+				{
+					if (ShieldOwner)
+					{
+						if (ShieldOwner->UseStamina(NMSword->GetDamage()*1.2f))
+						{
+							NMSword->IsWeaponAttack = false;
+							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
+						}
+					}
+				}				
+			}
+		}
+	}
+	
 }
 
 void APlayerShield::OnShieldOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -292,19 +372,7 @@ void APlayerShield::GlobalTimeInit()
 
 void APlayerShield::OrbWaveCrash(AActor * Orb)
 {
-	AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-	if (MyCharacter)
-	{
-		ABossBlueOrbWave* BossBlueOrbWave = Cast<ABossBlueOrbWave>(Orb);
-
-		if (BossBlueOrbWave)
-		{
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect , BossBlueOrbWave->GetActorLocation());
-			MyCharacter->UseStamina(BossBlueOrbWave->GetOrbDamage()*1.2f);
-			BossBlueOrbWave->Destroy();
-		}
-	}
+	
 }
 
 void APlayerShield::Fresnel()

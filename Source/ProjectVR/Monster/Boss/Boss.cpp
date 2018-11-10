@@ -20,7 +20,9 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "Monster/MiniBoss/MiniBossParryingPoint.h"
+#include "MyTargetPoint.h"
 
 // Sets default values
 ABoss::ABoss()
@@ -177,6 +179,20 @@ void ABoss::BeginPlay()
 	Super::BeginPlay();
 	
 	ParryingPointInit();
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMyTargetPoint::StaticClass(), TeleportPoints);
+	
+	for (int i = 0; i < TeleportPoints.Num(); i++)
+	{
+		if (TeleportPoints[i]->GetName() == TEXT("BossMapCenterPosition"))
+		{
+			MapCenterLocation = TeleportPoints[i]->GetActorLocation();
+		}
+		else
+		{
+			UltimateStartLocation = TeleportPoints[i]->GetActorLocation();
+		}
+	}
+
 	FActorSpawnParameters SpawnActorOption;
 	SpawnActorOption.Owner = this;
 	SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -336,11 +352,14 @@ void ABoss::ParryingPointValueSet(int ParryingCount)
 	{
 		MiniBossParryingPoint = GetWorld()->SpawnActor<AMiniBossParryingPoint>(MiniBossParryingPoint->StaticClass(), GetActorLocation(), GetActorRotation(), SpawnActorOption);
 
-		FName ParryingPointSpawnLocation = ParryingPoints[RandomPointNotOverlap[j]];
-		MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, ParryingPointSpawnLocation);
+		if (MiniBossParryingPoint)
+		{
+			FName ParryingPointSpawnLocation = ParryingPoints[RandomPointNotOverlap[j]];
+			MiniBossParryingPoint->AttachToComponent(GetMesh(), AttachRules, ParryingPointSpawnLocation);
+		}		
 	}
 
-	ParryingPoints.Empty(); //
+	RandomPointNotOverlap.Empty(); //
 }
 
 void ABoss::OnSeeCharacter(APawn * Pawn)
