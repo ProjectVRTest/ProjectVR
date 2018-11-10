@@ -38,13 +38,11 @@ ABossWaveAttackWave::ABossWaveAttackWave()
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
-
-
 void ABossWaveAttackWave::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorld()->GetTimerManager().SetTimer(GroundEffectSpawnTimer, this, &ABossWaveAttackWave::GroundEffectSpawn, 0.1f, true, 0.1f);
+	GetWorld()->GetTimerManager().SetTimer(GroundEffectSpawnTimer, this, &ABossWaveAttackWave::GroundEffectSpawn, 0.2f, true, 0.2f);
 }
 
 void ABossWaveAttackWave::BossOrbWaveBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

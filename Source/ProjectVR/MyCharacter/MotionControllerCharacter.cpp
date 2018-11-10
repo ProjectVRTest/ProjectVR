@@ -62,12 +62,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	SpringArm->bInheritYaw = true;
 	SpringArm->bInheritRoll = false;
 	SpringArm->TargetArmLength = 1.0f;
-
-	//GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
-	//GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
-	//GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Overlap);
-
-	GetCapsuleComponent()->bHiddenInGame = false;
+		
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 
