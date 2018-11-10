@@ -44,7 +44,7 @@
 #include "Components/PawnNoiseEmitterComponent.h"
 
 #include "Kismet/GameplayStatics.h"
-
+#include "Engine/StaticMesh.h"
 // Sets default values
 AMotionControllerCharacter::AMotionControllerCharacter()
 {
@@ -99,6 +99,17 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 
 	GetCharacterMovement()->MaxWalkSpeed = 280.0f;
 
+	DamagedBlood = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DamagedBlood"));
+	DamagedBlood->SetupAttachment(Camera);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Blood(TEXT("StaticMesh'/Game/Assets/Effect/HitFeedback/blood.blood'"));
+	if (SM_Blood.Succeeded())
+	{
+		DamagedBlood->SetStaticMesh(SM_Blood.Object);
+	}
+	DamagedBlood->SetRelativeScale3D(FVector(4.0f, 4.0f, 4.0f));
+	DamagedBlood->SetCollisionProfileName("NoCollision");
+	DamagedBlood->bVisible = false;
+
 	MaxHp = 100.0f;
 	CurrentHp = MaxHp;
 	MaxStamina = 100.0f;
@@ -111,6 +122,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	RecoveryPoint = 1.0f;
 	bIsUseStamina = false;
 
+	bDash = false;
 	bDeath = false;
 	InvincibleTimeOn = false;
 	CurrentState = EPlayerState::Idle;
@@ -367,20 +379,23 @@ void AMotionControllerCharacter::DashOn()
 {
 	if (GetVelocity().Size() >= 20.0f)
 	{
-		if (UseStamina(DashPoint))
+		if (!bDash)
 		{
-			FVector DashVector = FVector::ZeroVector;
-			GetCharacterMovement()->GroundFriction = 0;
-			DashVector = GetVelocity().GetSafeNormal()*3000.0f;
-			DashVector.Z = 0;
-			LaunchCharacter(DashVector, false, false);
+			if (UseStamina(DashPoint))
+			{
+				FVector DashVector = FVector::ZeroVector;
+				DashVector = GetVelocity().GetSafeNormal()*3000.0f;
+				DashVector.Z = 0;
+				LaunchCharacter(DashVector, false, false);
+				bDash = true;
+			}
 		}
 	}
 }
 
 void AMotionControllerCharacter::DashOff()
 {
-	GetCharacterMovement()->GroundFriction = 8.0f;
+	bDash = false;
 }
 
 void AMotionControllerCharacter::GameMenu()
@@ -419,9 +434,11 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 		GLog->Log(FString::Printf(TEXT("데미지 받음")));
 		bisHit = true;
 		//Widget->bVisible = true;
+		DamagedBlood->bVisible = true;
 
+		GetWorld()->GetTimerManager().SetTimer(DamagedHandle, this, &AMotionControllerCharacter::FinishDamaged, 0.5f, false);		// 그리고 바로 3초후 예약(스테미너 자동 회복
 
-		// 체력 감소
+																																	// 체력 감소
 		if (CurrentHp > 0.0f)
 		{
 			CurrentHp -= Damage;
@@ -444,7 +461,7 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 			}
 		}
 
-		LeftHand->Shield->StateBar->GetDamage(Damage);		
+		LeftHand->Shield->StateBar->GetDamage(Damage);
 		InvincibleTimeOn = true;		// 피격되면 즉시 무적시간 활성화
 		GetWorld()->GetTimerManager().SetTimer(DamageTimerHandle, this, &AMotionControllerCharacter::DamageTimer, 1.5f, false);		// 1.5초 후 무적시간을 비활성화
 	}
@@ -484,7 +501,7 @@ void AMotionControllerCharacter::OnHeadOverlap(UPrimitiveComponent * OverlappedC
 	if (OtherActor->ActorHasTag("Potion") && GrabState == E_HandState::Grab)		// 컴포넌트 기준, 액터 기준이면 첫번째 조건 OtherActor->ActorHasTas("Potion") 으로 변환
 	{
 		RightHand->HandFormState = EHandFormState::WeaponHandGrab;
-		
+
 		CurrentHp += 30;		// 회복량
 
 	}
@@ -494,6 +511,13 @@ void AMotionControllerCharacter::MakeNoiseEmitter()
 {
 	NoiseEmitter->MakeNoise(this, 0.8f, GetActorLocation());
 	NoiseEmitter->NoiseLifetime = 0.2f;
+}
+
+void AMotionControllerCharacter::FinishDamaged()
+{
+	GLog->Log(FString::Printf(TEXT("데미지 받음222222")));
+	DamagedBlood->bVisible = false;
+	GetWorld()->GetTimerManager().ClearTimer(DamagedHandle);			// 스테미너 사용 동작은 잠시 스테미너 회복을 멈춤
 }
 
 bool AMotionControllerCharacter::UseStamina(float _stamina)
@@ -506,7 +530,7 @@ bool AMotionControllerCharacter::UseStamina(float _stamina)
 	bIsUseStamina = true;
 
 	GetWorld()->GetTimerManager().ClearTimer(AutoTimerHandle);			// 스테미너 사용 동작은 잠시 스테미너 회복을 멈춤
-	GetWorld()->GetTimerManager().SetTimer(AutoTimerHandle, this, &AMotionControllerCharacter::AutoStamina, 3.0f, false);		// 그리고 바로 3초후 예약(스테미너 자동 회복
+	GetWorld()->GetTimerManager().SetTimer(AutoTimerHandle, this, &AMotionControllerCharacter::AutoStamina, 1.5f, false);		// 그리고 바로 3초후 예약(스테미너 자동 회복
 	return true;
 }
 

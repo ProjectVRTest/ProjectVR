@@ -62,6 +62,8 @@ public:
 		class ACameraLocation* CameraLocation;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class UPawnNoiseEmitterComponent* NoiseEmitter;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+		class UStaticMeshComponent* DamagedBlood;
 
 	FTimerHandle DamageTimerHandle;
 	FTimerHandle HitBloodyTimerHandle;
@@ -78,6 +80,8 @@ public:
 		bool bAllowBreathe;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float DashPower;
+	UPROPERTY()
+		bool bDash;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
 		float WalkSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
@@ -102,7 +106,10 @@ public:
 
 	FTimerHandle AutoTimerHandle;			// 타이머핸들
 	FTimerHandle MoveMainHandle;				// 몇초후 메인화면으로 이동
+	FTimerHandle DamagedHandle;			// 피격 화면 종료시간
 
+	UFUNCTION()
+		void FinishDamaged();
 	UFUNCTION()
 		bool UseStamina(float _stamina);
 	UFUNCTION()
