@@ -356,7 +356,7 @@ void AMiniBoss::OnSeeCharacter(APawn * Pawn)
 	if (!Target)
 	{
 		if (Pawn->ActorHasTag("Character"))
-		{
+		{			
 			AMiniBossAIController* AI = Cast<AMiniBossAIController>(GetController());
 			if (AI)
 			{

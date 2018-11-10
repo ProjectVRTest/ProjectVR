@@ -5,7 +5,6 @@
 #include "Components/BoxComponent.h"
 #include "Monster/Boss/Orb/Ultimate/BossRedOrb.h"
 #include "Monster/Boss/Orb/Ultimate/BossBlueOrb.h"
-#include "Monster/Boss/Orb/Ultimate/BossYellowOrb.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Monster/Normal/NormalMonsterSpawnPosition.h"

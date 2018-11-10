@@ -13,7 +13,6 @@ class PROJECTVR_API ABossOrbWave : public AActor
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 	UPROPERTY()
 		float Damage;
 public:

@@ -17,7 +17,7 @@ EBTNodeResult::Type UBTTask_MBShortAttackReadyState::ExecuteTask(UBehaviorTreeCo
 		float WaitTime = 0;
 		if (MiniBoss)
 		{
-			int RandomAttackValue = 1;// FMath::RandRange(1, 1);//1~3
+			int RandomAttackValue = FMath::RandRange(1, 3);//1~3
 
 			switch (RandomAttackValue)
 			{

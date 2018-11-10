@@ -8,8 +8,10 @@
 #include "Runtime/Engine/Classes/Materials/MaterialParameterCollectionInstance.h"
 #include "Runtime/Engine/Classes/Materials/MaterialParameterCollection.h"
 #include "Engine/StaticMesh.h"
-#include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
+
 #include "Monster/MiniBoss/MiniBoss.h"
+#include "Monster/Boss/Boss.h"
+
 #include "Particles/ParticleSystem.h"
 #include "kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
@@ -21,13 +23,15 @@
 #include "MyCharacter/Widget/HPStaminaBar_2.h"			// Character State Bar
 #include "MyCharacter/Widget/HPStaminaBar.h"			// Character State Bar
 #include "TimerManager.h"
+
 #include "Monster/Boss/Weapon/BossWeapon.h"
-#include "Monster/Boss/Boss.h"
 #include "Monster/Boss/Orb/DefaultOrb/BossOrbWave.h"
 #include "Monster/Boss/Orb/Ultimate/Wave/BossBlueOrbWave.h"
 #include "Monster/Boss/AI/AddAttack/BossAddAttackBall.h"
 #include "Monster/Normal/ArcherSword/Weapon/Sword/NMWeaponSword.h"
 #include "Monster/Normal/ArcherSword/Weapon/Bow/NMWeaponArrow.h"
+#include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
+#include "Monster/MiniBoss/Weapon/SwordWave/MiniBossSwordWave.h"
 
 // Sets default values
 APlayerShield::APlayerShield()
@@ -307,6 +311,25 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 					{
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
 						NMArrow->Destroy();
+					}
+				}
+			}
+		}
+	}
+	else if (OtherComp->ComponentHasTag(TEXT("MiniBossSwordWave")))
+	{
+		if (IsActivation)
+		{
+			AMiniBossSwordWave* MBSwordWave = Cast<AMiniBossSwordWave>(OtherComp->GetOwner());
+
+			if (MBSwordWave)
+			{
+				if (ShieldOwner)
+				{
+					if (ShieldOwner->UseStamina(MBSwordWave->GetDamage()*1.2f))
+					{
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
+						MBSwordWave->Destroy();
 					}
 				}
 			}

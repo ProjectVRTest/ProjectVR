@@ -4,49 +4,50 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SwordWave.generated.h"
+#include "MiniBossSwordWave.generated.h"
 
 UCLASS()
-class PROJECTVR_API ASwordWave : public AActor
+class PROJECTVR_API AMiniBossSwordWave : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ASwordWave();
 
+private:
+	UPROPERTY(VisibleAnywhere)
+		float Damage;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	float Damage;
-public:	
+public:
+	AMiniBossSwordWave();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class USphereComponent* Sphere;
+		class UBoxComponent* SwordBox;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UProjectileMovementComponent* Projecttile;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
-		class UParticleSystem* SwordWaveExplosion;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystemComponent* SwordWaveTailComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
-		class UParticleSystem* SwordWaveTail;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
-		class UParticleSystem* SwordWaveGround;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UBoxComponent* SwordWaveHit;
+		class UParticleSystem* SwordWaveTail;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UParticleSystem* SwordWaveExplosion;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UParticleSystem* SwordWaveGround;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UProjectileMovementComponent* Projecttile;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FTimerHandle FloorSmokeTimer;
+
 	UFUNCTION()
 		void Homing(class AActor* Target);
 	UFUNCTION()
-		void SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+		float GetDamage();
 	UFUNCTION()
-		void SwordWaveRotatorModify(FRotator NewRotator);
+		void SetDamage(float NewDamage);
+	UFUNCTION()
+		void SwordWaveBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	UFUNCTION()
 		void FloorSmokeSpawn();
 };

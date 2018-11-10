@@ -1,39 +1,36 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "SwordWave.h"
-#include "GameFramework/ProjectileMovementComponent.h"
-#include "Components/StaticMeshComponent.h"
-#include "UObject/ConstructorHelpers.h"
-#include "Engine/StaticMesh.h"
-#include "MyCharacter/CameraLocation.h"
-#include "Kismet/GameplayStatics.h"
-#include "Particles/ParticleSystem.h"
-#include "Components/SphereComponent.h"
-#include "Particles/ParticleSystemComponent.h"
-#include "Kismet/KismetSystemLibrary.h"
+#include "MiniBossSwordWave.h"
 #include "Components/BoxComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Particles/ParticleSystem.h"
+#include "MyCharacter/CameraLocation.h"
 #include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
-ASwordWave::ASwordWave()
+AMiniBossSwordWave::AMiniBossSwordWave()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
-	SetRootComponent(Sphere);
-	Sphere->SetCollisionProfileName("NoCollision");
-
-	Projecttile = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projecttile"));
-	Projecttile->InitialSpeed = 3000.0f;
-	Projecttile->MaxSpeed = 3000.0f;
-	Projecttile->ProjectileGravityScale = 0;
+	SwordBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
+	SetRootComponent(SwordBox);
+	SwordBox->SetCollisionProfileName("OverlapAll");
+	SwordBox->SetBoxExtent(FVector(40.0f, 60.0f, 32.0f));
+	SwordBox->ComponentTags.Add(FName(TEXT("MiniBossSwordWave")));
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh->SetupAttachment(Sphere);
+	Mesh->SetupAttachment(SwordBox);
 	Mesh->SetCollisionProfileName("NoCollision");
-	Mesh->SetRelativeRotation(FRotator(-90.0f, 0, 180.0f));
-	Mesh->SetRelativeScale3D(FVector(0.5f, 2.5f, 5.0f));
+	Mesh->SetRelativeLocation(FVector(-117.0f, 0, 0));
+	Mesh->SetRelativeRotation(FRotator(90.0f, 0, 0));
+	Mesh->SetRelativeScale3D(FVector(0.5f, 2.5f, 3.0f));
 	
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Mesh(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/AttackEffect/Sphere.Sphere'"));
 
@@ -42,74 +39,84 @@ ASwordWave::ASwordWave()
 		Mesh->SetStaticMesh(SM_Mesh.Object);
 	}
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_SwordWaveExplosion(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/SwordWave/P_SwordWaveEnd.P_SwordWaveEnd'"));
-	if (PT_SwordWaveExplosion.Succeeded())
-	{
-		SwordWaveExplosion = PT_SwordWaveExplosion.Object;
-	}
-
 	SwordWaveTailComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SwordWaveTailComponent"));
-	SwordWaveTailComponent->SetupAttachment(Sphere);
+	SwordWaveTailComponent->SetupAttachment(SwordBox);
+	SwordWaveTailComponent->SetRelativeLocation(FVector(-105.0f, 0, 0));
 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_SwordWaveTail(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/AttackEffect/NewParticleSystem1.NewParticleSystem1'"));
+
 	if (PT_SwordWaveTail.Succeeded())
 	{
 		SwordWaveTail = PT_SwordWaveTail.Object;
 	}
 
-	SwordWaveTailComponent->Template = SwordWaveTail;
-
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_SwordWaveExplosion(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/Monster/MiniBoss/Effect/SwordWave/P_SwordWaveEnd.P_SwordWaveEnd'"));
+	if (PT_SwordWaveExplosion.Succeeded())
+	{
+		SwordWaveExplosion = PT_SwordWaveExplosion.Object;
+	}
+	
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_SwordWaveGround(TEXT("ParticleSystem'/Game/Assets/CharacterEquipment/StarterContent/Particles/P_Steam_Lit.P_Steam_Lit'"));
 	if (PT_SwordWaveGround.Succeeded())
 	{
 		SwordWaveGround = PT_SwordWaveGround.Object;
 	}
 
-	SwordWaveHit = CreateDefaultSubobject<UBoxComponent>(TEXT("SwordWaveHit"));
-	SwordWaveHit->SetupAttachment(Mesh);
-	SwordWaveHit->SetCollisionProfileName("OverlapAll");
-	SwordWaveHit->SetRelativeLocation(FVector(0, 0, -42.0f));
-	SwordWaveHit->SetRelativeRotation(FRotator(90.0f, 0, 0));
-	SwordWaveHit->SetRelativeScale3D(FVector(1.6f, 0.5f, 0.1f));
+	SwordWaveTailComponent->Template = SwordWaveTail;
 
-	Tags.Add(FName(TEXT("SwordWave")));
+	Projecttile = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projecttile"));
+	Projecttile->InitialSpeed = 2500.0f;
+	Projecttile->MaxSpeed = 2500.0f;
+	Projecttile->ProjectileGravityScale = 0;
+	Projecttile->bRotationFollowsVelocity = true;
+	
+	Damage = 15.0f;
+
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
-
-	InitialLifeSpan = 4.0f; //검기 수명
 }
 
 // Called when the game starts or when spawned
-void ASwordWave::BeginPlay()
+void AMiniBossSwordWave::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (SwordWaveHit)
+	
+	if (SwordBox)
 	{
-		SwordWaveHit->OnComponentBeginOverlap.AddDynamic(this, &ASwordWave::SwordWaveBeginOverlap);
+		SwordBox->OnComponentBeginOverlap.AddDynamic(this, &AMiniBossSwordWave::SwordWaveBeginOverlap);
 
-		GetWorld()->GetTimerManager().SetTimer(FloorSmokeTimer, this, &ASwordWave::FloorSmokeSpawn, 0.5f, true, 0.5f);
-	}	
+		GetWorld()->GetTimerManager().SetTimer(FloorSmokeTimer, this, &AMiniBossSwordWave::FloorSmokeSpawn, 0.7f, true, 0.7f);
+	}
 }
 
 // Called every frame
-void ASwordWave::Tick(float DeltaTime)
+void AMiniBossSwordWave::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void ASwordWave::Homing(AActor* Target)
+void AMiniBossSwordWave::Homing(AActor * Target)
 {
 	if (Target)
 	{
 		Projecttile->HomingTargetComponent = Target->GetRootComponent();
 		Projecttile->bIsHomingProjectile = true;
 		Projecttile->HomingAccelerationMagnitude = 30000.0f;
-	}	
+	}
 }
 
-void ASwordWave::SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+float AMiniBossSwordWave::GetDamage()
+{
+	return Damage;
+}
+
+void AMiniBossSwordWave::SetDamage(float NewDamage)
+{
+	Damage = NewDamage;
+}
+
+void AMiniBossSwordWave::SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	if (OtherComp->ComponentHasTag(TEXT("CameraLocation")))
 	{
@@ -118,7 +125,8 @@ void ASwordWave::SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		if (CameraLocation)
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SwordWaveExplosion, OtherComp->GetComponentLocation());
-			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(),Damage, nullptr, this, nullptr);
+			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), Damage, nullptr, this, nullptr);
+			GetWorld()->GetTimerManager().ClearTimer(FloorSmokeTimer);
 			Destroy();
 		}
 	}
@@ -129,12 +137,7 @@ void ASwordWave::SwordWaveBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	}
 }
 
-void ASwordWave::SwordWaveRotatorModify(FRotator NewRotator)
-{
-	Mesh->SetRelativeRotation(NewRotator);
-}
-
-void ASwordWave::FloorSmokeSpawn()
+void AMiniBossSwordWave::FloorSmokeSpawn()
 {
 	FVector TraceEnd = GetActorLocation() + (GetActorUpVector()*-10000.0f);
 	TArray<TEnumAsByte<EObjectTypeQuery>>ObjectTypes;
@@ -163,4 +166,3 @@ void ASwordWave::FloorSmokeSpawn()
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SwordWaveGround, HitResult.Location);
 	}
 }
-
