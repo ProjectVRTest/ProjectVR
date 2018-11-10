@@ -83,7 +83,7 @@ APlayerShield::APlayerShield()
 	// 위치, 각도 및 크기 설정
 	ShieldCollision->SetRelativeLocation(FVector(2.7f, 8.2f, 9.0f));
 	ShieldCollision->SetRelativeRotation(FRotator(0, -20.0f, 0));
-	ShieldCollision->SetRelativeScale3D(FVector(1.25f, 1.9f, 0.6f));
+	ShieldCollision->SetRelativeScale3D(FVector(1.25f, 2.2f, 0.8f));
 	ShieldCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 	ShieldCollision->bHiddenInGame = false;
 	ShieldCollision->ComponentTags.Add(FName(TEXT("PlayerShield")));

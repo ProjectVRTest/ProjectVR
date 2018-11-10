@@ -87,7 +87,6 @@ public:
 		bool CanbeDamaged;
 	UPROPERTY()
 		int ArrowCount;
-
 	UFUNCTION()
 		void SpawnArrowMesh();
 	UFUNCTION()
