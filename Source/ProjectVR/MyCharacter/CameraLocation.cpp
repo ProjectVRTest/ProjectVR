@@ -20,6 +20,7 @@ ACameraLocation::ACameraLocation()
 	Sphere->SetupAttachment(Capsule);
 	Sphere->SetCollisionProfileName("OverlapAll");
 	Sphere->bHiddenInGame = false;
+	Sphere->SetSphereRadius(30.0f);
 
 	Sphere->ComponentTags.Add(FName(TEXT("CameraLocation")));
 	Sphere->ComponentTags.Add(FName(TEXT("DisregardForLeftHand")));

@@ -154,7 +154,7 @@ void AMotionControllerCharacter::BeginPlay()
 	{
 		LeftHand->AttachToComponent(GetMesh(), AttachRules);
 	}
-
+	
 	RightHand = GetWorld()->SpawnActor<ARightHandMotionController>(RightHand->StaticClass(), GetMesh()->GetComponentLocation(), GetMesh()->GetComponentRotation(), SpawnActorOption);
 
 	if (RightHand)
