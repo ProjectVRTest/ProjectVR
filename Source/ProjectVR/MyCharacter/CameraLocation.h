@@ -25,6 +25,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USphereComponent* Sphere;
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UCapsuleComponent* Capsule;*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UCapsuleComponent* Capsule;
 };

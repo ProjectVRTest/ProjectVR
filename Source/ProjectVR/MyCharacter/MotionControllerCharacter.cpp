@@ -53,6 +53,8 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 
 	bUseControllerRotationYaw = true;
 
+	GetCapsuleComponent()->SetCollisionProfileName(FName(TEXT("MyCharacter")));
+
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
 	SpringArm->bUsePawnControlRotation = true;

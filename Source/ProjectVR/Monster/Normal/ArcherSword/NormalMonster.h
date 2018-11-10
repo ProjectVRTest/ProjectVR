@@ -62,7 +62,7 @@ public:
 		TArray<class AMyTargetPoint*> PatrolPoints;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class AActor* Target;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class ACameraLocation* TargetCamera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Waepon")
 		class UStaticMesh* QuiverMesh;
