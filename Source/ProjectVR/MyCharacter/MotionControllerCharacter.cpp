@@ -45,6 +45,7 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Engine/StaticMesh.h"
+#include "Materials/MaterialInstanceDynamic.h"
 // Sets default values
 AMotionControllerCharacter::AMotionControllerCharacter()
 {
@@ -106,7 +107,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	{
 		DamagedBlood->SetStaticMesh(SM_Blood.Object);
 	}
-	DamagedBlood->SetRelativeScale3D(FVector(4.0f, 4.0f, 4.0f));
+	DamagedBlood->SetRelativeScale3D(FVector(2.0f, 1.573f, 2.0f));
 	DamagedBlood->SetCollisionProfileName("NoCollision");
 	DamagedBlood->bVisible = false;
 
@@ -122,6 +123,8 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	RecoveryPoint = 1.0f;
 	bIsUseStamina = false;
 
+	DamagedValue = -1.0f;
+	bisHit = false;
 	bDash = false;
 	bDeath = false;
 	InvincibleTimeOn = false;
@@ -141,6 +144,10 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 void AMotionControllerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	DamagedMat_Inst = DamagedBlood->CreateDynamicMaterialInstance(0, DamagedBlood->GetMaterial(0));
+	DamagedMat_Inst->SetScalarParameterValue("main", -1.0f);
+
 
 	FName DeviceName = UHeadMountedDisplayFunctionLibrary::GetHMDDeviceName();
 
@@ -215,6 +222,24 @@ void AMotionControllerCharacter::Tick(float DeltaTime)
 	{
 		DogArray.Shrink();	// 메모리 최적화
 	}
+
+	//if (DamagedBlood->bVisible)
+	//{
+	//	accTime += DeltaTime;
+	//	if (accTime >= 2.0f)
+	//	{
+	//		accTime = 0.0f;
+	//		GetWorld()->GetTimerManager().SetTimer(DamagedHandle, this, &AMotionControllerCharacter::FinishDamaged, 2.0f, false);
+	//		/*DamagedMat_Inst->SetScalarParameterValue("main", DamagedValue);
+	//		DamagedValue += 0.01f;
+	//		if (DamagedValue >= 1.0f)
+	//		{
+	//			accTime = 0.0f;
+	//			DamagedValue = -1.0f;
+	//			DamagedBlood->bVisible = false;
+	//		}*/
+	//	}
+	//}
 
 	//UE_LOG(LogTemp, Log, TEXT("-- %f / %f / %f"), Camera->GetForwardVector().X, Camera->GetForwardVector().Y, Camera->GetForwardVector().Z);
 	//UE_LOG(LogTemp, Log, TEXT("== %f / %f / %f"), Camera->GetUpVector().X, Camera->GetUpVector().Y, Camera->GetUpVector().Z);
@@ -434,11 +459,12 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 		GLog->Log(FString::Printf(TEXT("데미지 받음")));
 		bisHit = true;
 		//Widget->bVisible = true;
+		DamagedMat_Inst->SetScalarParameterValue("main", -1.0f);
 		DamagedBlood->bVisible = true;
 
-		GetWorld()->GetTimerManager().SetTimer(DamagedHandle, this, &AMotionControllerCharacter::FinishDamaged, 0.5f, false);		// 그리고 바로 3초후 예약(스테미너 자동 회복
+		GetWorld()->GetTimerManager().SetTimer(DamagedHandle, this, &AMotionControllerCharacter::FinishDamaged, 2.3f, false);
 
-																																	// 체력 감소
+																															// 체력 감소
 		if (CurrentHp > 0.0f)
 		{
 			CurrentHp -= Damage;
@@ -515,8 +541,9 @@ void AMotionControllerCharacter::MakeNoiseEmitter()
 
 void AMotionControllerCharacter::FinishDamaged()
 {	
+	DamagedMat_Inst->SetScalarParameterValue("main", 1);
 	DamagedBlood->bVisible = false;
-	GetWorld()->GetTimerManager().ClearTimer(DamagedHandle);			// 스테미너 사용 동작은 잠시 스테미너 회복을 멈춤
+	GetWorld()->GetTimerManager().ClearTimer(DamagedHandle);
 }
 
 bool AMotionControllerCharacter::UseStamina(float _stamina)

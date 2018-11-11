@@ -108,6 +108,8 @@ public:
 	FTimerHandle MoveMainHandle;				// 몇초후 메인화면으로 이동
 	FTimerHandle DamagedHandle;			// 피격 화면 종료시간
 
+	UPROPERTY()
+		class UMaterialInstanceDynamic* DamagedMat_Inst;
 	UFUNCTION()
 		void FinishDamaged();
 	UFUNCTION()
@@ -127,7 +129,9 @@ public:
 	UFUNCTION()
 		void DisableBloody();
 	UPROPERTY()
-		bool bisHit = true;
+		bool bisHit;
+	float DamagedValue;
+	float accTime;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttackPoint")
 		TArray<class AMyTargetPoint*> AttackPoints;

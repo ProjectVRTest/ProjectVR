@@ -30,7 +30,7 @@ ANavigationActor::ANavigationActor()
 	{
 		StartNavigate = P_Navigate.Object;
 	}
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> P_EndNavigate(TEXT("ParticleSystem'/Game/Assets/Effect/Navigation/PS_GPP_Butterfly.PS_GPP_Butterfly'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> P_EndNavigate(TEXT("ParticleSystem'/Game/Assets/Effect/Navigation/PS_GPP_CannonPurple_Explosion_2.PS_GPP_CannonPurple_Explosion_2'"));
 	if (P_EndNavigate.Succeeded())
 	{
 		EndNavigate= P_EndNavigate.Object;
