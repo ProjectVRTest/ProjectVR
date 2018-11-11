@@ -124,8 +124,7 @@ void ABossOrb::DefaultOrbExplosionStart()
 
 	if (OrbOwner)
 	{
-		OrbOwner->OrbMaxCount++;
-		
+		OrbOwner->OrbMaxCount++;		
 	}
 
 	Destroy();

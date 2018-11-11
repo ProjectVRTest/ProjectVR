@@ -172,17 +172,20 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 
 		if (MiniBossWeapon) //변환이 성공하면
 		{
-			if (MiniBossWeapon->IsWeaponAttack)
+			if (IsActivation)
 			{
-				if (ShieldOwner)
+				if (MiniBossWeapon->IsWeaponAttack)
 				{
-					if (ShieldOwner->UseStamina(MiniBossWeapon->GetDamage()*1.2f))
+					if (ShieldOwner)
 					{
-						MiniBossWeapon->IsWeaponAttack = false;
-						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
+						if (ShieldOwner->UseStamina(MiniBossWeapon->GetDamage()*1.2f))
+						{
+							MiniBossWeapon->IsWeaponAttack = false;
+							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
+						}
 					}
 				}
-			}			
+			}						
 
 			if (MiniBossWeapon->IsParryingAttack) //무기가 패링 가능한 상태인지 확인한다.
 			{
@@ -216,20 +219,22 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 		IsBossWeaponOverlap = true;
 
 		ABossWeapon* BossWeapon = Cast<ABossWeapon>(OtherComp->GetOwner());
-
 		if (BossWeapon)
 		{
-			if (BossWeapon->IsWeaponAttack)
+			if (IsActivation)
 			{
-				if (ShieldOwner)
+				if (BossWeapon->IsWeaponAttack)
 				{
-					if (ShieldOwner->UseStamina(BossWeapon->GetDamage()*1.2f))
+					if (ShieldOwner)
 					{
-						BossWeapon->IsWeaponAttack = false;
-						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
+						if (ShieldOwner->UseStamina(BossWeapon->GetDamage()*1.2f))
+						{
+							BossWeapon->IsWeaponAttack = false;
+							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
+						}
 					}
 				}
-			}
+			}			
 
 			if (BossWeapon->IsParryingAttack)
 			{
@@ -250,6 +255,25 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 							Boss->CurrentParryingState = EBossParryingState::ParryingStart;
 							Boss->CurrentCloseAttackState = EBossCloseAttackState::ParryingState;
 						}						
+					}
+				}
+			}
+		}
+	}
+	else if (OtherComp->ComponentHasTag(TEXT("BossOrbWave")))
+	{
+		if (IsActivation)
+		{
+			ABossOrbWave* DefaultOrb = Cast<ABossOrbWave>(OtherComp->GetOwner());
+
+			if (DefaultOrb)
+			{
+				if (ShieldOwner)
+				{
+					if (ShieldOwner->UseStamina(DefaultOrb->GetOrbDamage()*1.2f))
+					{
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, DefaultOrb->GetActorLocation());
+						DefaultOrb->Destroy();
 					}
 				}
 			}

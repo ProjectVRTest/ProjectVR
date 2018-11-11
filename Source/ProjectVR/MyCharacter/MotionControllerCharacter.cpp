@@ -463,7 +463,7 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 
 		LeftHand->Shield->StateBar->GetDamage(Damage);
 		InvincibleTimeOn = true;		// 피격되면 즉시 무적시간 활성화
-		GetWorld()->GetTimerManager().SetTimer(DamageTimerHandle, this, &AMotionControllerCharacter::DamageTimer, 1.5f, false);		// 1.5초 후 무적시간을 비활성화
+		GetWorld()->GetTimerManager().SetTimer(DamageTimerHandle, this, &AMotionControllerCharacter::DamageTimer, 1.0f, false);		// 1.5초 후 무적시간을 비활성화
 	}
 
 	return Damage;
@@ -514,8 +514,7 @@ void AMotionControllerCharacter::MakeNoiseEmitter()
 }
 
 void AMotionControllerCharacter::FinishDamaged()
-{
-	GLog->Log(FString::Printf(TEXT("데미지 받음222222")));
+{	
 	DamagedBlood->bVisible = false;
 	GetWorld()->GetTimerManager().ClearTimer(DamagedHandle);			// 스테미너 사용 동작은 잠시 스테미너 회복을 멈춤
 }

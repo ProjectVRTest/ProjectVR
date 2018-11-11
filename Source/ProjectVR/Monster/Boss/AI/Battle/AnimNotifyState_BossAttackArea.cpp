@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AnimNotifyState_BossAttackArea.h"
 #include "Headers/BossAIHeader.h"
@@ -15,6 +15,7 @@ void UAnimNotifyState_BossAttackArea::NotifyBegin(USkeletalMeshComponent * MeshC
 	{
 		if (Boss->Sickle)
 		{
+
 			switch (Boss->CurrentBattleState)
 			{
 			case EBossBattleState::CloseAttack:
