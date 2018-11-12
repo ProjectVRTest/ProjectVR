@@ -105,7 +105,9 @@ ADog::ADog()
 	DogAttackCollision->ComponentTags.Add("DogAttackCollision");
 	DogAttackCollision->bGenerateOverlapEvents = false;
 
-	PawnSensing->bHearNoises = false;
+	PawnSensing->bHearNoises = true;
+	PawnSensing->HearingThreshold = 1200.0f;
+	PawnSensing->LOSHearingThreshold = 1400.0f;
 	PawnSensing->bSeePawns = true;
 	PawnSensing->SetPeripheralVisionAngle(40.0f);
 	PawnSensing->SightRadius = 1200.0f;
@@ -154,6 +156,7 @@ void ADog::BeginPlay()
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &ADog::OnSeePlayer);
+		PawnSensing->OnHearNoise.AddDynamic(this, &ADog::OnHearNoise);
 	}
 }
 
@@ -194,6 +197,7 @@ void ADog::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ADog::OnSeePlayer(APawn * Pawn)
 {
+	UE_LOG(LogTemp, Log, TEXT("Press Tutorial"));
 	FFindFloorResult FloorDistance;;
 	GetCharacterMovement()->ComputeFloorDist(GetCapsuleComponent()->GetComponentLocation(), 10000.0f, 10000.0f, FloorDistance, 34, 0);
 
@@ -210,6 +214,28 @@ void ADog::OnSeePlayer(APawn * Pawn)
 			CurrentDogCircleState = EDogCircleState::Nothing;
 			AI->BBComponent->SetValueAsObject("Player", Pawn);
 			GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+		}
+	}
+}
+
+void ADog::OnHearNoise(APawn * Pawn, const FVector & Location, float Volume)
+{
+	if (!Target)
+	{
+		if (Pawn->ActorHasTag(TEXT("Character")))
+		{
+			AMotionControllerCharacter* Mycharacter = Cast<AMotionControllerCharacter>(Pawn);
+
+			if (Mycharacter)
+			{
+				Target = Mycharacter;
+				CurrentDogState = EDogState::Chase;
+				CurrentDogAnimState = EDogAnimState::Run;
+				CurrentDogJumpState = EDogJumpState::Nothing;
+				CurrentDogCircleState = EDogCircleState::Nothing;
+				AI->BBComponent->SetValueAsObject("Player", Pawn);
+				GetCharacterMovement()->MaxWalkSpeed = 550.0f;
+			}
 		}
 	}
 }

@@ -141,7 +141,6 @@ ARightHandMotionController::ARightHandMotionController()
 	KeySocket->SetRelativeRotation(FRotator(88.0f, 180.0f, 180.0f));
 	// 88.0f 
 	interaction->InteractionDistance = 100.0f;
-	interaction->bShowDebug = true;
 
 	bGrabPotion = false;		// 포션 없음
 

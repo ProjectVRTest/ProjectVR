@@ -505,6 +505,12 @@ void AMotionControllerCharacter::MainScene()
 	UGameplayStatics::OpenLevel(GetWorld(), "Main");
 }
 
+void AMotionControllerCharacter::MoveMainScene()
+{
+	class APlayerController* MyPC = Cast<APlayerController>(GetController());
+	MyPC->ClientSetCameraFade(true, FColor::Black, FVector2D(0.0, 1.0), 2.0);
+	GetWorld()->GetTimerManager().SetTimer(MoveMainHandle, this, &AMotionControllerCharacter::MainScene, 2.5f, false);
+}
 
 bool AMotionControllerCharacter::PlayBloodyOverlay()
 {
