@@ -84,27 +84,10 @@ void UMiniBossAnimInstance::AnimNotify_SwordWaveSpawn(UAnimNotify * Notify)
 		ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
 
 		AMiniBossSwordWave* SwordWave = GetWorld()->SpawnActor<AMiniBossSwordWave>(SwordWave->StaticClass(), MiniBoss->SwordWaveSpawn->GetComponentLocation(), MiniBoss->GetActorRotation(), SpawnActorOption);
-		/*ASwordWave* SwordWave = GetWorld()->SpawnActor<ASwordWave>(SwordWave->StaticClass(), MiniBoss->SwordWaveSpawn->GetComponentLocation(), MiniBoss->GetActorRotation(), SpawnActorOption);*/
-
-		SwordWave->Homing(SwordWaveTarget);
-
-		/*if (SwordWave)
+	
+		if (SwordWave)
 		{
-			switch (MiniBoss->SwordWaveCount)
-			{
-			case 1:
-				MiniBoss->SwordWaveCount += 1;
-				break;
-			case 2:
-				FRotator NewRotator;
-				NewRotator.Roll = 90.0f;
-				NewRotator.Pitch = -20.0f;
-				NewRotator.Yaw = 90.0f;
-				SwordWave->SwordWaveRotatorModify(NewRotator);
-				MiniBoss->SwordWaveCount = 1;
-				break;
-			}
 			SwordWave->Homing(SwordWaveTarget);
-		}		*/
+		}
 	}
 }

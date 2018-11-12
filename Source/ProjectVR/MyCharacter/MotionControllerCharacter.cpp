@@ -462,7 +462,7 @@ float AMotionControllerCharacter::TakeDamage(float Damage, FDamageEvent const & 
 		DamagedMat_Inst->SetScalarParameterValue("main", -1.0f);
 		DamagedBlood->bVisible = true;
 
-		GetWorld()->GetTimerManager().SetTimer(DamagedHandle, this, &AMotionControllerCharacter::FinishDamaged, 2.3f, false);
+		GetWorld()->GetTimerManager().SetTimer(DamagedHandle, this, &AMotionControllerCharacter::FinishDamaged, 0.1f, true,0.1f);
 
 																															// 체력 감소
 		if (CurrentHp > 0.0f)
@@ -541,9 +541,15 @@ void AMotionControllerCharacter::MakeNoiseEmitter()
 
 void AMotionControllerCharacter::FinishDamaged()
 {	
-	DamagedMat_Inst->SetScalarParameterValue("main", 1);
-	DamagedBlood->bVisible = false;
-	GetWorld()->GetTimerManager().ClearTimer(DamagedHandle);
+	DamagedValue += 0.1f;
+	DamagedMat_Inst->SetScalarParameterValue(TEXT("main"),DamagedValue);
+
+	if (DamagedValue > 0.9f)
+	{
+		DamagedValue = -1.0f;
+		DamagedBlood->bVisible = false;
+		GetWorld()->GetTimerManager().ClearTimer(DamagedHandle);
+	}	
 }
 
 bool AMotionControllerCharacter::UseStamina(float _stamina)

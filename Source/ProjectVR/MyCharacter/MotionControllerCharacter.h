@@ -130,7 +130,8 @@ public:
 		void DisableBloody();
 	UPROPERTY()
 		bool bisHit;
-	float DamagedValue;
+	UPROPERTY(VisibleAnywhere)
+		float DamagedValue;
 	float accTime;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttackPoint")

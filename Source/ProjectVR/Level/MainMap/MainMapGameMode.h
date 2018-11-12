@@ -13,8 +13,11 @@ UCLASS()
 class PROJECTVR_API AMainMapGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
-	
-	
-	
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,Category = "SpawnNormalMonsterCount")
+		int32 NormalMonsterCount;
+	AMainMapGameMode();	
+
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 };

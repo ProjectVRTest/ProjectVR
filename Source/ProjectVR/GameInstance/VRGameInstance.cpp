@@ -22,7 +22,7 @@ void UVRGameInstance::Shutdown()
 void UVRGameInstance::MyCharacterInfoUpdate(AMotionControllerCharacter* MyCharacter)
 {
 	MyCharacterInfo.CurrentHP = MyCharacter->CurrentHp;
-	//MyCharacterInfo.CurrentSP = MyCharacter->CurrentSP;
+	MyCharacterInfo.CurrentSP = MyCharacter->CurrentStamina;
 }
 
 void UVRGameInstance::PotionCountUpdate(int PotionCount)

@@ -67,20 +67,20 @@ ADog::ADog()
 	}
 
 
-		static ConstructorHelpers::FObjectFinder<UMaterialInterface>Monster_Material(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Dog/Materials/M_Dog.M_Dog'"));
-		if (Monster_Material.Succeeded())
-		{
-			NomalMaterial = Monster_Material.Object;
-			//GetMesh()->SetMaterial(0, Monster_Material.Object);
-		}
-	
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>Monster_Material(TEXT("MaterialInstanceConstant'/Game/Assets/CharacterEquipment/Monster/Dog/Materials/NewFolder/M_Dog_noElite_Inst.M_Dog_noElite_Inst'"));
+	if (Monster_Material.Succeeded())
+	{
+		NomalMaterial = Monster_Material.Object;
+		//GetMesh()->SetMaterial(0, Monster_Material.Object);
+	}
 
-		static ConstructorHelpers::FObjectFinder<UMaterialInterface>Monster_Material_Elite(TEXT("Material'/Game/Assets/CharacterEquipment/Monster/Dog/Materials/NewFolder/M_Dog_Elite.M_Dog_Elite'"));
-		if (Monster_Material_Elite.Succeeded())
-		{
-			EliteMaterial = Monster_Material_Elite.Object;
-			//GetMesh()->SetMaterial(0, Monster_Material_Elite.Object);
-		}
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>Monster_Material_Elite(TEXT("MaterialInstanceConstant'/Game/Assets/CharacterEquipment/Monster/Dog/Materials/NewFolder/M_Dog_Elite_Inst.M_Dog_Elite_Inst'"));
+	if (Monster_Material_Elite.Succeeded())
+	{
+		EliteMaterial = Monster_Material_Elite.Object;
+		//GetMesh()->SetMaterial(0, Monster_Material_Elite.Object);
+	}
 
 
 
@@ -137,7 +137,7 @@ void ADog::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(bIsElite)
+	if (bIsElite)
 		GetMesh()->SetMaterial(0, EliteMaterial);
 	else
 		GetMesh()->SetMaterial(0, NomalMaterial);

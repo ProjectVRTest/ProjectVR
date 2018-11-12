@@ -26,6 +26,8 @@
 #include "Components/CapsuleComponent.h"
 #include "TimerManager.h"
 #include "Monster/Boss/Boss.h"
+#include "Monster/Normal/NormalMonsterSpawnPosition.h"
+#include "Level/MainMap/MainMapGameMode.h"
 
 // Sets default values
 ANormalMonster::ANormalMonster()
@@ -348,6 +350,20 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 				if (Boss)
 				{
 					Boss->CurrentNormalMonsterCount--;
+				}
+				else
+				{
+					ANormalMonsterSpawnPosition* NMSpawnPosition = Cast<ANormalMonsterSpawnPosition>(GetOwner());
+
+					if (NMSpawnPosition)
+					{
+						AMainMapGameMode* MainMapGM = Cast<AMainMapGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+						if (MainMapGM)
+						{
+							MainMapGM->NormalMonsterCount--;
+						}
+					}
 				}
 			}
 						

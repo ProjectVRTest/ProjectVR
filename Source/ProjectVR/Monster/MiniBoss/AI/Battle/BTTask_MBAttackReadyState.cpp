@@ -92,7 +92,7 @@ float UBTTask_MBAttackReadyState::WallCheckDistance()
 			ObjectTypes,
 			true,
 			IgonreActors,
-			EDrawDebugTrace::ForDuration,
+			EDrawDebugTrace::None,
 			HitResult,
 			true
 		);
