@@ -2,32 +2,24 @@
 
 #include "MiniBossAnimInstance.h"
 #include "Monster/MiniBoss/MiniBoss.h" //중간보스 헤더파일
-#include "Kismet/GameplayStatics.h" 
+#include "Kismet/GameplayStatics.h"   //스폰액터 등 주요한 기능이 있는 헤더파일
 #include "Kismet/KismetMathLibrary.h" //각종 수학 관련 함수 헤더파일
-
-#include "GameFramework/CharacterMovementComponent.h"
-#include "MyCharacter/MotionControllerCharacter.h"
-#include "Camera/CameraComponent.h"
-
-#include "MyTargetPoint.h"
-#include "TimerManager.h"
-#include "MyCharacter/MotionControllerPC.h"
-
-#include "Monster/MiniBoss/Weapon/SwordWave/SwordWave.h"
-#include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
-#include "Components/StaticMeshComponent.h"
-#include "MyCharacter/CameraLocation.h"
-#include "Monster/SwordWaveTarget.h"
+#include "GameFramework/CharacterMovementComponent.h" //캐릭터의 속력이 관련된 컴포넌트 헤더파일
+#include "MyCharacter/MotionControllerCharacter.h" //내 캐릭터 헤더파일
+#include "Monster/MiniBoss/Weapon/SwordWave/MiniBossSwordWave.h" //중간보스 검기 헤더파일
+#include "MyCharacter/CameraLocation.h" //내 캐릭터 카메라 헤더파일
+#include "Monster/SwordWaveTarget.h" //검기를 락온 시킬때 필요한 액터 헤더파일
 
 void UMiniBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner());
+	AMiniBoss* MiniBoss = Cast<AMiniBoss>(TryGetPawnOwner()); //이 AnimInstance를 사용하고 있는 Pawn을 가지고 온다.
 
-	if (MiniBoss && MiniBoss->IsValidLowLevelFast())
+	if (MiniBoss && MiniBoss->IsValidLowLevelFast()) //중간보스가 있고, 중간보스가 유효하면
 	{
-		CurrentState = MiniBoss->CurrentState;
+		//각종 상태값을 업데이트해준다.
+		CurrentState = MiniBoss->CurrentState; 
 		CurrentAnimState = MiniBoss->CurrentAnimState;
 		CurrentJumpState = MiniBoss->CurrentJumpState;
 		CurrentAttackState = MiniBoss->CurrentAttackState;
@@ -91,9 +83,12 @@ void UMiniBossAnimInstance::AnimNotify_SwordWaveSpawn(UAnimNotify * Notify)
 
 		ASwordWaveTarget* SwordWaveTarget = GetWorld()->SpawnActor<ASwordWaveTarget>(SwordWaveTarget->StaticClass(), LockonTargetLocation, FRotator::ZeroRotator);
 
-		ASwordWave* SwordWave = GetWorld()->SpawnActor<ASwordWave>(SwordWave->StaticClass(), MiniBoss->SwordWaveSpawn->GetComponentLocation(), MiniBoss->GetActorRotation(), SpawnActorOption);
+		AMiniBossSwordWave* SwordWave = GetWorld()->SpawnActor<AMiniBossSwordWave>(SwordWave->StaticClass(), MiniBoss->SwordWaveSpawn->GetComponentLocation(), MiniBoss->GetActorRotation(), SpawnActorOption);
+		/*ASwordWave* SwordWave = GetWorld()->SpawnActor<ASwordWave>(SwordWave->StaticClass(), MiniBoss->SwordWaveSpawn->GetComponentLocation(), MiniBoss->GetActorRotation(), SpawnActorOption);*/
 
-		if (SwordWave)
+		SwordWave->Homing(SwordWaveTarget);
+
+		/*if (SwordWave)
 		{
 			switch (MiniBoss->SwordWaveCount)
 			{
@@ -110,6 +105,6 @@ void UMiniBossAnimInstance::AnimNotify_SwordWaveSpawn(UAnimNotify * Notify)
 				break;
 			}
 			SwordWave->Homing(SwordWaveTarget);
-		}		
+		}		*/
 	}
 }

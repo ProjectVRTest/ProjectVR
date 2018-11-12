@@ -2,7 +2,6 @@
 
 #include "SwordWaveTarget.h"
 #include "Components/BoxComponent.h"
-#include "MiniBoss/Weapon/SwordWave/SwordWave.h"
 #include "Normal/ArcherSword/Weapon/Bow/NMWeaponArrow.h"
 #include "Monster/Boss/AI/AddAttack/BossAddAttackBall.h"
 #include "GameFramework/ProjectileMovementComponent.h"

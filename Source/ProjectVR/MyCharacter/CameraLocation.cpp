@@ -14,12 +14,12 @@ ACameraLocation::ACameraLocation()
 	SetRootComponent(Capsule);
 	Capsule->SetRelativeScale3D(FVector(1.5f, 1.5f, 2.0f));
 	Capsule->SetCollisionProfileName(FName(TEXT("MyCharacterCamera")));
-	Capsule->bHiddenInGame = false;
-	
+		
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(Capsule);
 	Sphere->SetCollisionProfileName("OverlapAll");
 	Sphere->bHiddenInGame = false;
+	Sphere->SetSphereRadius(30.0f);
 
 	Sphere->ComponentTags.Add(FName(TEXT("CameraLocation")));
 	Sphere->ComponentTags.Add(FName(TEXT("DisregardForLeftHand")));

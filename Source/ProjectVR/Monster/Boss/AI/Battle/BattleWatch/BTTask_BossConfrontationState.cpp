@@ -6,28 +6,28 @@
 EBTNodeResult::Type UBTTask_BossConfrontationState::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
 	ABossAIController* AI = Cast<ABossAIController>(OwnerComp.GetAIOwner());
-	
+
 	if (AI)
 	{
 		ABoss* Boss = Cast<ABoss>(AI->GetPawn());
 
+		float Distance = AI->BBComponent->GetValueAsFloat("Distance");
+
 		if (Boss)
 		{
-			int RandomPattern = FMath::RandRange(0,1);
-
-			if (RandomPattern == 0)
+			if (Distance > 500.0f)
 			{
 				Boss->CurrentConfrontationState = EBossConfrontationState::Idle;
 				Boss->CurrentBattleWatchState = EBossBattleWatchState::Idle;
-				Boss->CurrentBattleState = EBossBattleState::AttackReady;
+				Boss->CurrentWaveAttackState = EBossWaveAttackState::WaveAttackStart;
+				Boss->CurrentLongAttackState = EBossLongAttackState::WaveAttack;
+				Boss->CurrentBattleState = EBossBattleState::LongAttack;
 			}
 			else
 			{
 				Boss->CurrentConfrontationState = EBossConfrontationState::Idle;
 				Boss->CurrentBattleWatchState = EBossBattleWatchState::Idle;
-				Boss->CurrentWaveAttackState = EBossWaveAttackState::WaveAttackStart;				
-				Boss->CurrentLongAttackState = EBossLongAttackState::WaveAttack;
-				Boss->CurrentBattleState = EBossBattleState::LongAttack;
+				Boss->CurrentBattleState = EBossBattleState::AttackReady;
 			}
 		}
 	}

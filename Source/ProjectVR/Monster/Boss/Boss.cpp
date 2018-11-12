@@ -139,7 +139,7 @@ ABoss::ABoss()
 	UltimateAuraEffectComponent->SetupAttachment(GetRootComponent());
 	UltimateAuraEffectComponent->SetRelativeLocation(FVector(0, 0, -200.0f));
 
-	MaxHP = 500.0f;
+	MaxHP = 400.0f;
 	CurrentHP = MaxHP;
 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BlinkSmoke(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PT_BossBlinkSmoke.PT_BossBlinkSmoke'"));

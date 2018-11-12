@@ -16,7 +16,7 @@ EBTNodeResult::Type UBTTask_BossBattleWatchIdleState::ExecuteTask(UBehaviorTreeC
 		{
 			float Distance = AI->BBComponent->GetValueAsFloat("Distance"); //거리를 가져온다.
 
-			if (Distance < 600.0f) //거리가 6M 아래로 가까워지면
+			if (Distance < 800.0f) //거리가 8M 아래로 가까워지면
 			{
 				//3초후에 전투 주시 거리 판단 상태로 바꿔주고
 				GetWorld()->GetTimerManager().SetTimer(BattleWatchTimer, this, &UBTTask_BossBattleWatchIdleState::BattleWatchWalk, 3.0f, false);
@@ -24,8 +24,7 @@ EBTNodeResult::Type UBTTask_BossBattleWatchIdleState::ExecuteTask(UBehaviorTreeC
 				Boss->CurrentBattleWatchState = EBossBattleWatchState::Walk;
 			}
 			else
-			{
-				//거리가 6M 보다 멀어지면
+			{				
 				//오브 or 원거리 공격을 할 수 있는 상태로 바꿔준다.
 				Boss->CurrentBattleWatchState = EBossBattleWatchState::Idle;
 				Boss->CurrentBattleState = EBossBattleState::AttackReady;

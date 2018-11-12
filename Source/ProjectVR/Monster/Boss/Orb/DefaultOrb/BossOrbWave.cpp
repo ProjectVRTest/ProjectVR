@@ -29,8 +29,8 @@ ABossOrbWave::ABossOrbWave()
 	OrbWaveParticleComponent->SetRelativeScale3D(FVector(0.8f, 0.8f, 0.8f));	
 	
 	Projecttile = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projecttile"));	
-	Projecttile->InitialSpeed = 3000.0f;
-	Projecttile->MaxSpeed = 3000.0f;
+	Projecttile->InitialSpeed = 2000.0f;
+	Projecttile->MaxSpeed = 2000.0f;
 	Projecttile->ProjectileGravityScale = 0;
 	Projecttile->bRotationFollowsVelocity = true;
 

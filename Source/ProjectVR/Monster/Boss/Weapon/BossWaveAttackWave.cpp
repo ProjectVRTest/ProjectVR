@@ -38,13 +38,11 @@ ABossWaveAttackWave::ABossWaveAttackWave()
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
 }
 
-
-
 void ABossWaveAttackWave::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorld()->GetTimerManager().SetTimer(GroundEffectSpawnTimer, this, &ABossWaveAttackWave::GroundEffectSpawn, 0.1f, true, 0.1f);
+	GetWorld()->GetTimerManager().SetTimer(GroundEffectSpawnTimer, this, &ABossWaveAttackWave::GroundEffectSpawn, 0.8f, true, 0.8f);
 }
 
 void ABossWaveAttackWave::BossOrbWaveBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
@@ -57,8 +55,9 @@ void ABossWaveAttackWave::BossOrbWaveBeginOverlap(UPrimitiveComponent * Overlapp
 
 		if (CameraLocation)
 		{
-			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherComp->GetComponentLocation());
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherComp->GetComponentLocation());
 			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 5.0f, nullptr, this, nullptr);
+			GetWorld()->GetTimerManager().ClearTimer(GroundEffectSpawnTimer);
 			Destroy();
 		}
 	}
@@ -68,6 +67,7 @@ void ABossWaveAttackWave::BossOrbWaveBeginOverlap(UPrimitiveComponent * Overlapp
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherActor->GetActorLocation());
 		Projecttile->bIsHomingProjectile = false;
 		OtherActor->Destroy();
+		GetWorld()->GetTimerManager().ClearTimer(GroundEffectSpawnTimer);
 		Destroy();
 	}
 }

@@ -67,7 +67,7 @@ void UBTTask_BossInVisibleState::InVisible()
 			switch (Boss->CurrentBattleState)
 			{
 			case EBossBattleState::AddAttack:
-				TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(300.0f, 0, 0);
+				TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + MyCharacer->CameraLocation->GetActorForwardVector()*200.0f;
 				break;			
 			case EBossBattleState::BattleWatch:
 				RandomValue = FMath::RandRange(1, 10);
