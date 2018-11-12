@@ -47,7 +47,7 @@ AMenu::AMenu()
 	RangeBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Vehicle, ECollisionResponse::ECR_Overlap);
 	RangeBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Ignore);
 
-	RangeBox->SetRelativeScale3D(FVector(2.0f, 5.7f, 2.7f));
+	RangeBox->SetRelativeScale3D(FVector(2.0f, 8.0f, 5.0f));
 	RangeBox->SetRelativeLocation(FVector(50.0f, 0.0f, 0.0f));
 	RangeBox->bHiddenInGame = false;
 

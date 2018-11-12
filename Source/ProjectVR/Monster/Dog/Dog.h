@@ -55,6 +55,8 @@ public:
 		class AActor* AttachActor;
 	UFUNCTION()
 		void OnSeePlayer(APawn * Pawn);
+	UFUNCTION()
+		void OnHearNoise(APawn * Pawn, const FVector & Location, float Volume);
 	class ADogAIController* AI;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)

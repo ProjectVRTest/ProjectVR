@@ -2,7 +2,8 @@
 
 #include "CustomWidget_1.h"
 #include "Widgets/CustomButton.h"
-
+#include "Kismet/GameplayStatics.h"
+#include "MyCharacter/MotionControllerCharacter.h"
 // À§Á¬ ÀÚÃ¼
 
 void UCustomWidget_1::NativeConstruct()
@@ -18,10 +19,10 @@ void UCustomWidget_1::NativeConstruct()
 
 void UCustomWidget_1::OnClickedCB_1()
 {
-	UE_LOG(LogTemp, Log, TEXT("Press CB_1"));
+	Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))->MoveMainScene();
 }
 
 void UCustomWidget_1::OnClickedCB_2()
 {
-	UE_LOG(LogTemp, Log, TEXT("Press CB_2"));
+	Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))->GameMenu();
 }

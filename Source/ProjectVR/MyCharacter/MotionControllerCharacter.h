@@ -170,6 +170,8 @@ public:
 	UFUNCTION()
 		void DamageTimer();			// 무적시간 On 함수
 	UFUNCTION()
+		void MoveMainScene();
+	UFUNCTION()
 		void MainScene();
 
 	UFUNCTION()
