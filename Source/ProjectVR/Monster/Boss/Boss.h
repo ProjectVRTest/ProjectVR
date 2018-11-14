@@ -120,14 +120,17 @@ public:
 		int32 ParryingPointCount; //현재 기록된 패링카운트 갯수
 	UPROPERTY()
 		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열
-	UPROPERTY(VisibleAnyWhere)
+	UPROPERTY(VisibleAnyWhere,Category = "TeleportPoint")
 		FVector MapCenterLocation;
-	UPROPERTY(VisibleAnyWhere)
+	UPROPERTY(VisibleAnyWhere,Category = "TeleportPoint")
 		FVector UltimateStartLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeleportPoint")
 		TArray<class AActor*> TeleportPoints; //순간이동 지점을 저장해둘 배열
 	UPROPERTY()
 		TArray<class ABossOrb*> UltimateOrbs;
+	UPROPERTY(VisibleAnyWhere, Category = "UltimateNMSPawnPosition")
+		TArray<FVector> UltimateNormalMonsterSPawnPosition;
+		
 
 protected:
 	// Called when the game starts or when spawned

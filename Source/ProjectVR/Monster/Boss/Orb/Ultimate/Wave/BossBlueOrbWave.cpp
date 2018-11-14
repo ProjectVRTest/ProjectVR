@@ -18,12 +18,6 @@ ABossBlueOrbWave::ABossBlueOrbWave()
 		OrbWaveParticle = PT_BlueOrbWave.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BlueOrbWaveExplosion(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PS_BlueOrbWaveExplosion.PS_BlueOrbWaveExplosion'"));
-	if (PT_BlueOrbWaveExplosion.Succeeded())
-	{
-		OrbWaveExplosion = PT_BlueOrbWaveExplosion.Object;
-	}
-
 	OrbWaveParticleComponent->Template = OrbWaveParticle;
 
 	Projecttile->InitialSpeed = 800.0f;
@@ -52,14 +46,12 @@ void ABossBlueOrbWave::BossOrbWaveBeginOverlap(UPrimitiveComponent * OverlappedC
 
 		if (CameraLocation)
 		{
-			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherComp->GetComponentLocation());
 			UGameplayStatics::ApplyDamage(OtherComp->GetOwner()->GetAttachParentActor(), 5.0f, nullptr, this, nullptr);
 			Destroy();
 		}
 	}
 	else if (OtherComp->ComponentHasTag(TEXT("SwordWaveTarget")))
 	{
-		//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OrbWaveExplosion, OtherActor->GetActorLocation());
 		Projecttile->bIsHomingProjectile = false;
 		OtherActor->Destroy();
 	}

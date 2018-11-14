@@ -89,11 +89,11 @@ APlayerShield::APlayerShield()
 	ShieldCollision->SetRelativeRotation(FRotator(0, -20.0f, 0));
 	ShieldCollision->SetRelativeScale3D(FVector(1.25f, 2.2f, 0.8f));
 	ShieldCollision->SetCollisionProfileName(TEXT("OverlapAll"));
-	ShieldCollision->bHiddenInGame = false;
+	ShieldCollision->bHiddenInGame = true;
 	ShieldCollision->ComponentTags.Add(FName(TEXT("PlayerShield")));
 
 	// 스테이트바 씬의 위기값과 회전값 설정
-	StateBarScene->SetRelativeLocation(FVector(-4.5f, -16.0f, 0.0f));
+	StateBarScene->SetRelativeLocation(FVector(-6.9f, -23.0f, 9.4f));
 	StateBarScene->SetRelativeRotation(FRotator(0.0f, -19.0f, -90.0f));
 	IsActivation = false;
 	IsMiniBossWeaponOverlap = false;
@@ -121,7 +121,7 @@ void APlayerShield::BeginPlay()
 	// 오너 설정
 	ShieldOwner = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
-	if (ShieldMesh)
+	if (ShieldCollision)
 	{
 		ShieldCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerShield::OnShieldOverlapStart);
 		ShieldCollision->OnComponentEndOverlap.AddDynamic(this, &APlayerShield::OnShieldOverlapEnd);

@@ -62,7 +62,7 @@ ANMWeaponArrow::ANMWeaponArrow()
 
 	ArrowEffectComponent->Template = ArrowEffect;
 	InitialLifeSpan = 2.5f;
-	Damage = 12.0f;
+	Damage = 6.0f;
 
 	
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));

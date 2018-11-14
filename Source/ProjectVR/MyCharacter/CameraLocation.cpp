@@ -18,7 +18,7 @@ ACameraLocation::ACameraLocation()
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(Capsule);
 	Sphere->SetCollisionProfileName("OverlapAll");
-	Sphere->bHiddenInGame = false;
+	Sphere->bHiddenInGame = true;
 	Sphere->SetSphereRadius(30.0f);
 
 	Sphere->ComponentTags.Add(FName(TEXT("CameraLocation")));

@@ -25,18 +25,19 @@
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "TimerManager.h"
-#include "Monster/Boss/Boss.h"
 #include "Monster/Normal/NormalMonsterSpawnPosition.h"
 #include "Level/MainMap/MainMapGameMode.h"
+#include "Kismet/GameplayStatics.h"
+#include "Monster/Boss/Boss.h"
 
 // Sets default values
 ANormalMonster::ANormalMonster()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	GetCapsuleComponent()->SetCollisionProfileName(FName(TEXT("Monster")));
-
+	
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>Normal_Monster_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Character/SK_NormalMonster.SK_NormalMonster'"));
 
 	if (Normal_Monster_SK_Mesh.Succeeded())
@@ -44,8 +45,8 @@ ANormalMonster::ANormalMonster()
 		SwordSKMesh = Normal_Monster_SK_Mesh.Object;
 		GetMesh()->SetSkeletalMesh(SwordSKMesh);
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -88.0f));
-		GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));		
-	}	
+		GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
+	}
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>NM_Archer_SK_Mesh(TEXT("SkeletalMesh'/Game/Assets/CharacterEquipment/Monster/NormalMonster/Mesh/Character/SK_NormalMonsterTwo.SK_NormalMonsterTwo'"));
 
@@ -113,7 +114,7 @@ ANormalMonster::ANormalMonster()
 	ArrowSpawnLocation = CreateDefaultSubobject<USceneComponent>(TEXT("ArrowSpawnLocation"));
 	ArrowSpawnLocation->SetupAttachment(GetRootComponent());
 	ArrowSpawnLocation->SetRelativeLocation(FVector(90.0f, 8.0f, 50.0f));
-	ArrowSpawnLocation->SetRelativeScale3D(FVector(-8.0f,90.0f,134.0f));
+	ArrowSpawnLocation->SetRelativeScale3D(FVector(-8.0f, 90.0f, 134.0f));
 	MaxHP = 35.0f;
 	CurrentHP = MaxHP;
 
@@ -124,17 +125,19 @@ ANormalMonster::ANormalMonster()
 	if (ABP_NormalMonster.Succeeded())
 	{
 		UClass* NormalMonsterAnimBlueprint = ABP_NormalMonster.Object;
-		
+
 		if (NormalMonsterAnimBlueprint)
 		{
 			GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 			GetMesh()->SetAnimInstanceClass(NormalMonsterAnimBlueprint);
-		}		
+		}
 	}
 	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 	Target = nullptr;
 	FresnelValue = 1.0f;
-	CanbeDamaged = true;	
+	CanbeDamaged = true;
+	DestroyFlag = false;
+	MainMapSpawnFlag = false;
 
 	Tags.Add(TEXT("Monster"));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -151,7 +154,7 @@ void ANormalMonster::BeginPlay()
 
 	if (RandomMesh == 1)
 	{
-		GetMesh()->SetSkeletalMesh(ArcherSKMesh);		
+		GetMesh()->SetSkeletalMesh(ArcherSKMesh);
 	}
 	else
 	{
@@ -167,7 +170,19 @@ void ANormalMonster::BeginPlay()
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &ANormalMonster::OnSeeCharacter);
 		PawnSensing->OnHearNoise.AddDynamic(this, &ANormalMonster::OnHearNoise);
-	}	
+	}
+}
+
+void ANormalMonster::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	switch (EndPlayReason)
+	{
+	case EEndPlayReason::Destroyed:
+
+		break;
+	}
 }
 
 // Called every frame
@@ -241,7 +256,7 @@ void ANormalMonster::OnSeeCharacter(APawn * Pawn)
 							CurrentState = ENormalMonsterState::Chase;
 							break;
 						}
-					}					
+					}
 				}
 			}
 		}
@@ -278,11 +293,11 @@ void ANormalMonster::OnHearNoise(APawn* Pawn, const FVector& Location, float Vol
 				}
 			}
 		}
-	}	
+	}
 }
 
 void ANormalMonster::Fresnel()
-{	
+{
 	GetMesh()->SetVectorParameterValueOnMaterials(TEXT("Fresnel_color_3"), FVector(1.0f, 0.2f, 0));
 	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Fresnel_exp_3"), FresnelValue);
 	FresnelValue += 1.6f;
@@ -293,13 +308,13 @@ void ANormalMonster::Fresnel()
 		GetWorld()->GetTimerManager().ClearTimer(FresnelTimer);
 		GetMesh()->SetVectorParameterValueOnMaterials(TEXT("Fresnel_color_3"), FVector(0, 0, 0));
 		GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Fresnel_exp_3"), FresnelValue);
-	}	
+	}
 }
 
 float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-		
+
 	if (CanbeDamaged)
 	{
 		CurrentHP -= Damage;
@@ -343,30 +358,33 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 		{
 			CanbeDamaged = false;
 
-			if (GetOwner())
+			if (!CanbeDamaged)
 			{
 				ABoss* Boss = Cast<ABoss>(GetOwner());
 
 				if (Boss)
 				{
-					Boss->CurrentNormalMonsterCount--;
+					if (Boss->CurrentBattleState == EBossBattleState::UltimateAttack)
+					{
+						Boss->CurrentNormalMonsterCount--;
+					}					
 				}
 				else
 				{
-					ANormalMonsterSpawnPosition* NMSpawnPosition = Cast<ANormalMonsterSpawnPosition>(GetOwner());
+					AMainMapGameMode* MainMapGM = Cast<AMainMapGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 
-					if (NMSpawnPosition)
+					if (MainMapGM)
 					{
-						AMainMapGameMode* MainMapGM = Cast<AMainMapGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-
-						if (MainMapGM)
+						if (!MainMapSpawnFlag)
 						{
+							MainMapSpawnFlag = true;							
 							MainMapGM->NormalMonsterCount--;
-						}
+							GLog->Log(FString::Printf(TEXT("NormalMonsterCount : %d"), MainMapGM->NormalMonsterCount));
+						}						
 					}
 				}
 			}
-						
+
 			CurrentHP = 0;
 			if (Bow)
 			{
@@ -377,8 +395,9 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 			{
 				Sword->Destroy();
 			}
+
 			CurrentState = ENormalMonsterState::Dead;
-		}		
+		}
 	}
 	return Damage;
 }
@@ -418,8 +437,8 @@ void ANormalMonster::SetEquipment()
 }
 
 void ANormalMonster::SetTarget()
-{	
-	AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
+{
+	AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
 	if (MyCharacter)
 	{
@@ -429,14 +448,14 @@ void ANormalMonster::SetTarget()
 		{
 			Target = MyCharacter;
 			TargetCamera = MyCharacter->CameraLocation;
-					
+
 			AI->BBComponent->SetValueAsObject("Player", Target);
 			AI->BBComponent->SetValueAsObject("PlayerCamera", MyCharacter->CameraLocation);
 
 			CurrentAnimState = ENormalMonsterAnimState::Walk;
-			CurrentState = ENormalMonsterState::Chase;			
+			CurrentState = ENormalMonsterState::Chase;
 		}
-		
+
 	}
 }
 
@@ -458,7 +477,7 @@ void ANormalMonster::ChangeFormSword()
 
 	if (Bow)
 	{
-		Bow->Destroy();		
+		Bow->Destroy();
 
 		NMArrowComponent->SetStaticMesh(nullptr);
 
@@ -467,18 +486,18 @@ void ANormalMonster::ChangeFormSword()
 		{
 			Sword->AttachToComponent(GetMesh(), AttachRules, TEXT("SwordSocket"));
 		}
-		
+
 		if (AI)
 		{
 			MonsterKind = ENormalMonsterKind::SwordMan;
 			CurrentArcherAttackState = ENormalMonsterArcherAttackState::idle;
 			CurrentAttackState = ENormalMonsterAttackState::Idle;
 			CurrentAnimState = ENormalMonsterAnimState::Walk;
-			CurrentState = ENormalMonsterState::Chase;		
-		
+			CurrentState = ENormalMonsterState::Chase;
+
 			AI->BTComponent->StartTree(*(SwordBehaviorTree));
 		}
-	}	
+	}
 }
 
 void ANormalMonster::ChangeFormBow()

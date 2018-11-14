@@ -15,7 +15,7 @@ void UAnimNotifyState_BossAttackArea::NotifyBegin(USkeletalMeshComponent * MeshC
 	{
 		if (Boss->Sickle)
 		{
-
+			Boss->Sickle->IsWeaponAttack = true;
 			switch (Boss->CurrentBattleState)
 			{
 			case EBossBattleState::CloseAttack:
@@ -48,8 +48,7 @@ void UAnimNotifyState_BossAttackArea::NotifyBegin(USkeletalMeshComponent * MeshC
 				}
 				break;
 			}
-		}
-		Boss->Sickle->IsWeaponAttack = true;
+		}		
 	}
 }
 

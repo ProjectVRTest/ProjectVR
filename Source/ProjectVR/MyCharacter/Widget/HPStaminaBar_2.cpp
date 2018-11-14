@@ -1,8 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "HPStaminaBar_2.h"
-#include "Components/StaticMeshComponent.h"			// ¹Ú½º ¸Ş½¬
-#include "UObject/ConstructorHelpers.h"					// ·¹ÆÛ·±½º °æ·Î
+#include "Components/StaticMeshComponent.h"			// ë°•ìŠ¤ ë©”ì‰¬
+#include "UObject/ConstructorHelpers.h"					// ë ˆí¼ëŸ°ìŠ¤ ê²½ë¡œ
 #include "Engine/StaticMesh.h"
 #include "MyCharacter/MotionControllerCharacter.h"
 #include "Kismet/GameplayStatics.h"
@@ -34,7 +34,7 @@ AHPStaminaBar_2::AHPStaminaBar_2()
 	if (HPBackground_Material.Succeeded())
 		HPBackground->SetMaterial(0, HPBackground_Material.Object);
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface>HP_Material(TEXT("Material'/Game/Assets/ui/StateBar/2_Mat.2_Mat'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>HP_Material(TEXT("MaterialInstanceConstant'/Game/Assets/ui/StateBar/M_HP.M_HP'"));
 	if (HP_Material.Succeeded())
 		HPBar->SetMaterial(0, HP_Material.Object);
 
@@ -58,7 +58,7 @@ AHPStaminaBar_2::AHPStaminaBar_2()
 	if (StaminaBackground_Material.Succeeded())
 		StaminaBackground->SetMaterial(0, StaminaBackground_Material.Object);
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface>Stamina_Material(TEXT("Material'/Game/Assets/ui/StateBar/3_Mat.3_Mat'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface>Stamina_Material(TEXT("MaterialInstanceConstant'/Game/Assets/ui/StateBar/M_Stamina.M_Stamina'"));
 	if (Stamina_Material.Succeeded())
 		StaminaBar->SetMaterial(0, Stamina_Material.Object);
 
@@ -85,7 +85,7 @@ AHPStaminaBar_2::AHPStaminaBar_2()
 		StaminaBar->SetMaterial(0, Stamina_Material.Object);*/
 
 
-	// »çÀÌÁî ¹× À§Ä¡ ÁöÁ¤
+	// ì‚¬ì´ì¦ˆ ë° ìœ„ì¹˜ ì§€ì •
 	HPBackground->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	HPBackground->SetRelativeScale3D(FVector(0.3f, -0.001f, 0.02f));
 	HPScene->SetRelativeLocation(FVector(-50.0f, -60.442318f, 0.0f));
@@ -107,7 +107,7 @@ AHPStaminaBar_2::AHPStaminaBar_2()
 	StaminaBar->SetRelativeLocation(FVector(50.001f, 50.0f, 0.000076f));
 	StaminaBar->SetRelativeScale3D(FVector(1.0f, 0.007f, 1.0f));*/
 
-	// ¿À¹ö·¦ ÀÌº¥Æ® ¼³Á¤
+	// ì˜¤ë²„ë© ì´ë²¤íŠ¸ ì„¤ì •
 	HPBackground->SetCollisionProfileName("NoCollision");
 	HPBar->SetCollisionProfileName("NoCollision");
 	HPBackground->SetEnableGravity(false);
@@ -138,7 +138,7 @@ void AHPStaminaBar_2::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ÃÊ±â°ª ¼³Á¤
+	// ì´ˆê¸°ê°’ ì„¤ì •
 	OwnerCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (OwnerCharacter)
 	{
@@ -167,21 +167,21 @@ void AHPStaminaBar_2::Tick(float DeltaTime)
 
 	if (CurrentHP != VirtualHP)
 	{
-		ChangOfHP = DeltaTime * 1.0f;		// º¯È­·®
-											// µ¥¹ÌÁö ¹ŞÀ½
+		ChangOfHP = DeltaTime * 1.0f;		// ë³€í™”ëŸ‰
+											// ë°ë¯¸ì§€ ë°›ìŒ
 		if (CurrentHP > VirtualHP)
 		{
 			CurrentHP -= ChangOfHP;
 			HPScene->SetRelativeScale3D(FVector(CurrentHP, 1.0f, 1.0f));
-			if (CurrentHP < VirtualHP)					// ÇöÀçHP¿Í °¡»óHP¸¦ ¸ÂÃß±â
+			if (CurrentHP < VirtualHP)					// í˜„ì¬HPì™€ ê°€ìƒHPë¥¼ ë§ì¶”ê¸°
 				CurrentHP = VirtualHP;
 		}
-		// HP È¸º¹
+		// HP íšŒë³µ
 		else
 		{
 			CurrentHP += ChangOfHP;
 			HPScene->SetRelativeScale3D(FVector(CurrentHP, 1.0f, 1.0f));
-			if (CurrentHP > VirtualHP)					// ÇöÀçHP¿Í °¡»óHP¸¦ ¸ÂÃß±â
+			if (CurrentHP > VirtualHP)					// í˜„ì¬HPì™€ ê°€ìƒHPë¥¼ ë§ì¶”ê¸°
 				CurrentHP = VirtualHP;
 		}
 	}
@@ -189,22 +189,22 @@ void AHPStaminaBar_2::Tick(float DeltaTime)
 	if (CurrentStamina != VirtualStamina)
 	{
 		//UE_LOG(LogTemp, Log, TEXT("%f / %f"), CurrentStamina, VirtualStamina);
-		ChangOfStamina = DeltaTime * 1.0f;		// º¯È­·®
+		ChangOfStamina = DeltaTime * 1.0f;		// ë³€í™”ëŸ‰
 
-												// µ¥¹ÌÁö ¹ŞÀ½
+												// ë°ë¯¸ì§€ ë°›ìŒ
 		if (CurrentStamina > VirtualStamina)
 		{
 			CurrentStamina -= ChangOfStamina;
 			SteminaScene->SetRelativeScale3D(FVector(CurrentStamina, 1.0f, 1.0f));
-			if (CurrentStamina < VirtualStamina)					// ÇöÀçHP¿Í °¡»óHP¸¦ ¸ÂÃß±â
+			if (CurrentStamina < VirtualStamina)					// í˜„ì¬HPì™€ ê°€ìƒHPë¥¼ ë§ì¶”ê¸°
 				CurrentStamina = VirtualStamina;
 		}
-		// HP È¸º¹
+		// HP íšŒë³µ
 		else
 		{
 			CurrentStamina += ChangOfStamina;
 			SteminaScene->SetRelativeScale3D(FVector(CurrentStamina, 1.0f, 1.0f));
-			if (CurrentStamina > VirtualStamina)					// ÇöÀçHP¿Í °¡»óHP¸¦ ¸ÂÃß±â
+			if (CurrentStamina > VirtualStamina)					// í˜„ì¬HPì™€ ê°€ìƒHPë¥¼ ë§ì¶”ê¸°
 				CurrentStamina = VirtualStamina;
 		}
 	}
@@ -212,7 +212,7 @@ void AHPStaminaBar_2::Tick(float DeltaTime)
 
 void AHPStaminaBar_2::GetDamage(float damage)
 {
-	VirtualHP -= damage / 100;			// µ¥¹ÌÁö¸¦ ¾ò¾î °¡»óÃ¼·ÂÀ» °¨¼Ò½ÃÅ²´Ù.
+	VirtualHP -= damage / 100;			// ë°ë¯¸ì§€ë¥¼ ì–»ì–´ ê°€ìƒì²´ë ¥ì„ ê°ì†Œì‹œí‚¨ë‹¤.
 }
 
 void AHPStaminaBar_2::RecoveryHP(float recoveryHP)

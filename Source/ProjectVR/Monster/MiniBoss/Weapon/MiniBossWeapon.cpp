@@ -35,13 +35,14 @@ AMiniBossWeapon::AMiniBossWeapon()
 		DefaultMaterials = M_Sword.Object;
 		SwordMesh->SetMaterial(0,M_Sword.Object);
 	}
+
 	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
 	SwordCollision->SetupAttachment(SwordMesh);	
 	SwordCollision->SetCollisionProfileName(TEXT("NoCollision"));	
 	SwordCollision->SetRelativeLocation(FVector(62.0f, 0, 0));
 	SwordCollision->SetRelativeRotation(FRotator(90.0f, 0, 0));	
 	SwordCollision->SetRelativeScale3D(FVector(1.3f, 1.3f, 2.5f));
-	SwordCollision->bHiddenInGame = false;
+	SwordCollision->bHiddenInGame = true;
 	
 	IsWeaponAttack = false;
 	IsParryingAttack = false;

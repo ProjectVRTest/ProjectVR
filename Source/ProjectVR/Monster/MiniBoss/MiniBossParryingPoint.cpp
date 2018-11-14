@@ -86,10 +86,13 @@ void AMiniBossParryingPoint::ParryingPointBeginOverlap(UPrimitiveComponent* Over
 				{
 					if (MiniBoss && !IsAttackMiniBossWeapon)
 					{
-						IsAttackMiniBossWeapon = true;
-						MiniBoss->ParryingPointCount++;
-						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingPointExplosionEffect, OtherComp->GetComponentLocation());
-						Destroy();
+						if (MiniBoss->CurrentParryingState == EMiniBossParryingState::ParryingLoop)
+						{
+							IsAttackMiniBossWeapon = true;
+							MiniBoss->ParryingPointCount++;
+							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingPointExplosionEffect, OtherComp->GetComponentLocation());
+							Destroy();
+						}						
 					}
 				}
 			}
@@ -103,10 +106,13 @@ void AMiniBossParryingPoint::ParryingPointBeginOverlap(UPrimitiveComponent* Over
 					{
 						if (Boss && !IsAttackBossWeapon)
 						{
-							IsAttackBossWeapon = true;
-							Boss->ParryingPointCount++;
-							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingPointExplosionEffect, OtherComp->GetComponentLocation());
-							Destroy();
+							if (Boss->CurrentParryingState == EBossParryingState::ParryingLoop)
+							{
+								IsAttackBossWeapon = true;
+								Boss->ParryingPointCount++;
+								UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingPointExplosionEffect, OtherComp->GetComponentLocation());
+								Destroy();
+							}							
 						}
 					}
 				}

@@ -14,7 +14,7 @@
 ANMWeaponSword::ANMWeaponSword()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true; 
+	PrimaryActorTick.bCanEverTick = false; 
 
 	SwordMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwordMesh")); //스테틱 메쉬 컴포넌트를 생성해주고
 	SetRootComponent(SwordMesh); //루트 컴포넌트로 정한다.
@@ -47,8 +47,8 @@ ANMWeaponSword::ANMWeaponSword()
 	SwordCollision->SetupAttachment(SwordMesh); //스테틱메쉬 아래에 붙인다.
 	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll")); //콜리전반응을 OverlapAll로 정해준다.
 	SwordCollision->SetRelativeScale3D(FVector(0.6f, 0.6f, 1.2f)); //크기를 정한다.
-	SwordCollision->ComponentTags.Add(FName(TEXT("NormalMonsterWeapon")));
-	SwordCollision->bHiddenInGame = false; //게임상에서 보이게 해준다.
+	SwordCollision->ComponentTags.Add(FName(TEXT("NormalMonsterWeapon"))); 
+	SwordCollision->bHiddenInGame = true; //게임상에서 보이게 해준다.
 
 	//왼손과 오른손에 반응이 없게 태그를 달아준다.
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
@@ -72,19 +72,6 @@ void ANMWeaponSword::BeginPlay()
 void ANMWeaponSword::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	ANormalMonster* NormalMonster = Cast<ANormalMonster>(GetAttachParentActor());
-
-	if (NormalMonster)
-	{
-		if (NormalMonster->CurrentState == ENormalMonsterState::Dead)
-		{
-			SwordMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-			SwordMesh->SetSimulatePhysics(true);
-			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-			InitialLifeSpan = 4.0f;
-		}
-	}
 }
 
 void ANMWeaponSword::SwordBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

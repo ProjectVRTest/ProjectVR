@@ -15,7 +15,7 @@ EBTNodeResult::Type UBTTask_BossCloseAttackReadyState::ExecuteTask(UBehaviorTree
 
 		if (Boss)
 		{
-			RandValue = FMath::RandRange(1, 15);
+			RandValue = FMath::RandRange(1, 5);
 			
 			//1~5 패링이 가능한 공격
 			if (RandValue >= 1 && RandValue <= 5)

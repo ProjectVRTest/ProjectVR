@@ -37,6 +37,7 @@ void UBTTask_BossUltimateAttackLoop::TickTask(UBehaviorTreeComponent & OwnerComp
 	{
 		CurrentNormalMonsterCount = Boss->CurrentNormalMonsterCount;
 
+		GLog->Log(FString::Printf(TEXT("소환할 몬스터 수 : %d"), CurrentNormalMonsterCount));
 		if (ExitFlag || CurrentNormalMonsterCount <=0)
 		{
 			if (CurrentNormalMonsterCount <= 0)
@@ -45,7 +46,6 @@ void UBTTask_BossUltimateAttackLoop::TickTask(UBehaviorTreeComponent & OwnerComp
 				UltimateEnd();
 			}
 
-			GLog->Log(FString::Printf(TEXT("궁극기 시전 끝나서 End상태로 ㄱㄱ")));
 			Boss->CurrentNormalMonsterCount = 3;
 			Boss->UltimateAuraEffectComponent->SetVisibility(false);
 			Boss->CurrentUltimateAttackState = EBossUltimateAttackState::UltimateAttackEnd;
@@ -72,6 +72,7 @@ void UBTTask_BossUltimateAttackLoop::UltimateEnd()
 
 			Boss->UltimateOrbs.Empty(); //궁극기 오브를 담아둔 배열을 깨끗하게 정리한다.
 		}
+		Boss->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 		GLog->Log(FString::Printf(TEXT("남아 있는 오브 수 %d"), Boss->UltimateOrbs.Num()));
 	}
 }

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTTask_NMDeadInVisibleState.h"
 #include "Headers/NormalMonsterAIHeader.h"
@@ -32,8 +32,12 @@ void UBTTask_NMDeadInVisibleState::TickTask(UBehaviorTreeComponent & OwnerComp, 
 		{
 			if (DeadInVisibleValue > 1.0f)
 			{			
-				NormalMonster->Destroy();				
-				FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+				if (!NormalMonster->IsPendingKill())
+				{
+					GLog->Log(FString::Printf(TEXT("몬스터뒤짐")));
+					NormalMonster->Destroy();
+					FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+				}				
 			}
 			else
 			{

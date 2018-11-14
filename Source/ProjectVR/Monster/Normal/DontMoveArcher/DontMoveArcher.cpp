@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "DontMoveArcher.h"
 #include "UObject/ConstructorHelpers.h"
@@ -208,6 +208,7 @@ void ADontMoveArcher::Fresnel()
 
 float ADontMoveArcher::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
+	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	CurrentHP -= Damage;
 
 	GetWorld()->GetTimerManager().SetTimer(FresnelTimer, this, &ADontMoveArcher::Fresnel, 0.1f, true, 0.1f);
@@ -215,6 +216,13 @@ float ADontMoveArcher::TakeDamage(float Damage, FDamageEvent const & DamageEvent
 	if (CurrentHP < 0)
 	{
 		CurrentHP = 0;
+
+		if (Bow)
+		{
+			GLog->Log(FString::Printf(TEXT("보우 잇음")));
+			Bow->Destroy();
+		}
+		
 		CurrentState = EDontMoveArcherState::Dead;
 	}
 	return Damage;

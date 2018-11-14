@@ -79,7 +79,7 @@ ARightHandMotionController::ARightHandMotionController()
 	OverlapSphere->SetCollisionProfileName("OverlapAll");
 	OverlapSphere->SetRelativeLocation(FVector(9.0f, 3.4f, -1.6f));
 	OverlapSphere->SetSphereRadius(7.0f);
-	OverlapSphere->bHiddenInGame = false;
+	OverlapSphere->bHiddenInGame = true;
 
 	interaction = CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("Interaction"));
 	interaction->SetupAttachment(GrabSphere);
@@ -122,7 +122,7 @@ ARightHandMotionController::ARightHandMotionController()
 	// 포션생성 위치
 	AttachDogPosition = CreateDefaultSubobject<USceneComponent>(TEXT("AttachDogPosition"));
 	AttachDogPosition->SetupAttachment(HandMesh);
-	AttachDogPosition->SetRelativeLocation(FVector(-10.0f, 53.0f, -30.0f));
+	AttachDogPosition->SetRelativeLocation(FVector(-10.0f, 71.845093f, -38.933586f));
 	AttachDogPosition->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 
 	//손에 무기를 붙이기 위해 사용할 씬컴포넌트를 생성해서 SwordAttachScene에 넣어준다.

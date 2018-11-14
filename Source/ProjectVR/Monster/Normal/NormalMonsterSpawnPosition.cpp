@@ -21,6 +21,7 @@ ANormalMonsterSpawnPosition::ANormalMonsterSpawnPosition()
 	}
 
 	NowSpawn = false;
+	SPawnTime = 1.0f;
 }
 
 void ANormalMonsterSpawnPosition::Tick(float DeltaTime)
@@ -29,6 +30,7 @@ void ANormalMonsterSpawnPosition::Tick(float DeltaTime)
 
 	if (NowSpawn)
 	{
+		SetSpawnTime(SPawnTime);
 		MonsterSpawn();
 	}
 }
@@ -49,14 +51,16 @@ void ANormalMonsterSpawnPosition::MonsterSpawn()
 	{
 		FActorSpawnParameters SpawnActorOption;
 
-		ABoss* Boss = Cast<ABoss>(GetOwner());
+		Boss = Cast<ABoss>(GetOwner());
 		
 		if (Boss)
 		{
+			GLog->Log(FString::Printf(TEXT("부모가 보스")));
 			SpawnActorOption.Owner = Boss;
 		}
 		else
 		{
+			GLog->Log(FString::Printf(TEXT("부모가 일반 스폰 포지션")));
 			SpawnActorOption.Owner = this;
 		}
 		
@@ -98,4 +102,9 @@ void ANormalMonsterSpawnPosition::MonsterSpawn()
 		GetWorld()->GetTimerManager().SetTimer(FindTimer, this, &ANormalMonsterSpawnPosition::FindTarget, 1.0f, false);
 		NowSpawn = false;
 	}
+}
+
+void ANormalMonsterSpawnPosition::SetSpawnTime(float NewSpawnTime)
+{
+	SPawnTime = NewSpawnTime;
 }

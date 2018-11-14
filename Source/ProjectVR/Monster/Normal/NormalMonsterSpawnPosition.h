@@ -28,8 +28,12 @@ public:
 		bool NowSpawn;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 		float MonsterHP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+		float SPawnTime;
 	UPROPERTY()
 		FTimerHandle FindTimer;
+	UPROPERTY()
+		class ABoss* Boss;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UParticleSystem* SpawnEffect;
 
@@ -39,4 +43,6 @@ public:
 		void FindTarget();
 	UFUNCTION()
 		void MonsterSpawn();
+	UFUNCTION()
+		void SetSpawnTime(float NewSpawnTime);
 };

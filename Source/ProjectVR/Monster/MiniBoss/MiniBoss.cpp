@@ -113,7 +113,12 @@ AMiniBoss::AMiniBoss()
 		InVisibleStartEffect = PT_InVisibleStartEffect.Object;
 	}
 
-
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_ParryingSuccessEffect(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PT_ParryingSuccess.PT_ParryingSuccess'"));
+	if (PT_ParryingSuccessEffect.Succeeded())
+	{
+		ParryingSuccessEffect = PT_ParryingSuccessEffect.Object;
+	}
+	
 	SwordWaveCount = 1;
 	ParryingPointMaxCount = 0;
 	ParryingPointCount = 0;
@@ -402,6 +407,11 @@ float AMiniBoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACon
 	if (CurrentHP < 0)
 	{
 		CurrentHP = 0;
+
+		if (Sword)
+		{
+			Sword->Destroy();
+		}
 		CurrentState = EMiniBossState::Dead;
 	}
 	return Damage;

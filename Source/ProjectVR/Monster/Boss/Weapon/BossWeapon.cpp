@@ -22,6 +22,13 @@ ABossWeapon::ABossWeapon()
 	SwordMesh->SetCollisionProfileName(TEXT("OverlapAll"));
 	SwordMesh->ComponentTags.Add(FName(TEXT("BossWeapon")));
 
+	SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
+	SwordCollision->SetupAttachment(SwordMesh);
+	SwordCollision->SetCollisionProfileName(TEXT("OverlapAll"));
+	SwordCollision->SetRelativeLocation(FVector(0, 0, -39.0f));	
+	SwordCollision->SetRelativeScale3D(FVector(1.0f, 1.0f, 2.5f));
+	SwordCollision->bHiddenInGame = true;
+
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Boss_Sword(TEXT("StaticMesh'/Game/Assets/CharacterEquipment/Monster/Boss/Weapon/Mesh/SM_BossWeapon.SM_BossWeapon'"));
 
 	if (SM_Boss_Sword.Succeeded())
@@ -52,14 +59,14 @@ void ABossWeapon::BeginPlay()
 	if (SwordMesh)
 	{
 		SwordMesh->OnComponentBeginOverlap.AddDynamic(this, &ABossWeapon::WeaponBeginOverlap);
+		SwordCollision->OnComponentBeginOverlap.AddDynamic(this, &ABossWeapon::WeaponBeginOverlap);
 	}
 }
 
 // Called every frame
 void ABossWeapon::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-		
+	Super::Tick(DeltaTime);	
 }
 
 void ABossWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)

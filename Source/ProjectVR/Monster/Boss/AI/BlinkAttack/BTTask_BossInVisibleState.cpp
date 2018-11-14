@@ -76,16 +76,16 @@ void UBTTask_BossInVisibleState::InVisible()
 				if (RandomValue > 6) //정해진 포인트로 이동
 				{
 					GLog->Log(FString::Printf(TEXT("정해진 포인트로 이동")));
-					TeleportLocation = Boss->TeleportPoints[0]->GetActorLocation();
+					TeleportLocation = Boss->MapCenterLocation;
 				}
 				else // 캐릭터 앞으로 이동 
 				{
 					GLog->Log(FString::Printf(TEXT("캐릭터 앞으로 이동")));
-					TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(500.0f, 0, 0);
+					TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(250.0f, 0, 0);
 				}
 				break;
 			case EBossBattleState::UltimateAttack:				
-				TeleportLocation = Boss->TeleportPoints[1]->GetActorLocation();
+				TeleportLocation = Boss->UltimateStartLocation;
 				break;
 			}			
 			SetTeleportLocation(Boss->CurrentBattleState,TeleportLocation);
@@ -95,6 +95,8 @@ void UBTTask_BossInVisibleState::InVisible()
 
 void UBTTask_BossInVisibleState::SetTeleportLocation(EBossBattleState & BattleState,FVector & Location)
 {
+	GLog->Log(FString::Printf(TEXT("TeleportLocation : %f %f %f"), Location.X, Location.Y, Location.Z));
+
 	AI->BBComponent->SetValueAsVector("TeleportLocation", Location);
 
 	switch (BattleState)

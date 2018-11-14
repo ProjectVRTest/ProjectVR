@@ -27,7 +27,8 @@ public:
 		bool IsParryingAttack;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
 		class UMaterialInterface* DefaultSwordMaterials;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UCapsuleComponent* SwordCollision;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

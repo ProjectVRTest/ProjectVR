@@ -34,7 +34,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "StateBar")
 		class AHPStaminaBar_2* StateBar;		// 캐릭터 상태 바
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
-		class UParticleSystem* ParryingEffect;
+		class UParticleSystem* ParryingEffect;	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
 		class UParticleSystem* ShieldBlockEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Owner")

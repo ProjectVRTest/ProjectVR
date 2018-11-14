@@ -30,8 +30,6 @@ void UBTTask_NMBattleWalkState::TickTask(UBehaviorTreeComponent & OwnerComp, uin
 
 	if (NormalMonster)
 	{
-		GLog->Log(FString::Printf(TEXT("RandomMovePattern : %d "), RandomMovePattern));
-
 		float Distance = AI->BBComponent->GetValueAsFloat("Distance");
 
 		if (RandomMovePattern > 0 && RandomMovePattern < 6)

@@ -34,8 +34,11 @@ void UBTTask_NMDMArcherDeadState::TickTask(UBehaviorTreeComponent & OwnerComp, u
 		{
 			if (DeadInVisibleValue > 1.0f)
 			{
-				DontMoveArcher->Destroy();
-				FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+				if (!DontMoveArcher->IsPendingKill())
+				{
+					DontMoveArcher->Destroy();
+					FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+				}				
 			}
 			else
 			{

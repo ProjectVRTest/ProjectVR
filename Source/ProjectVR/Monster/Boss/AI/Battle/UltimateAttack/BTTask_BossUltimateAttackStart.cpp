@@ -53,6 +53,35 @@ void UBTTask_BossUltimateAttackStart::UltimateLoop()
 		SpawnActorOption.Owner = Boss;
 		SpawnActorOption.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
+		if (Boss->MonsterSpawnBoound)
+		{
+			if (SpawnNormalMaxCount > 0)
+			{
+				UKismetSystemLibrary::GetComponentBounds(Boss->MonsterSpawnBoound, Origin, Extent, BoundRadius);
+
+				FVector RandomNormalMonsterSpawnLocation = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
+				
+				ANormalMonsterSpawnPosition* NormalSpawnPosition = GetWorld()->SpawnActor<ANormalMonsterSpawnPosition>(NormalSpawnPosition->StaticClass(), Boss->UltimateNormalMonsterSPawnPosition[SpawnNormalMaxCount - 1], FRotator::ZeroRotator, SpawnActorOption);
+
+				NormalSpawnPosition->SetSpawnTime(2.0f);
+
+				int RandomMonsterKind = FMath::RandRange(1, 2);
+
+				if (RandomMonsterKind == 1)
+				{
+					NormalSpawnPosition->NormalMonsterkind = ENormalMonsterKind::MoveArcher;
+				}
+				else
+				{
+					NormalSpawnPosition->NormalMonsterkind = ENormalMonsterKind::SwordMan;
+				}
+
+				NormalSpawnPosition->NowSpawn = true;
+
+				SpawnNormalMaxCount--;
+			}
+		}
+
 		if (Boss->ManyOrbBound)
 		{
 			if (OrbMaxCount > 0)
@@ -86,34 +115,7 @@ void UBTTask_BossUltimateAttackStart::UltimateLoop()
 			{
 				GetWorld()->GetTimerManager().ClearTimer(UltimateSpawnLoopTimer);
 			}
-		}
-
-		if (Boss->MonsterSpawnBoound)
-		{
-			if (SpawnNormalMaxCount > 0)
-			{
-				UKismetSystemLibrary::GetComponentBounds(Boss->MonsterSpawnBoound, Origin, Extent, BoundRadius);
-
-				FVector RandomNormalMonsterSpawnLocation = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
-
-				ANormalMonsterSpawnPosition* NormalSpawnPosition = GetWorld()->SpawnActor<ANormalMonsterSpawnPosition>(NormalSpawnPosition->StaticClass(), RandomNormalMonsterSpawnLocation, Boss->GetActorRotation(), SpawnActorOption);
-
-				int RandomMonsterKind = FMath::RandRange(1, 2);
-
-				if (RandomMonsterKind == 1)
-				{
-					NormalSpawnPosition->NormalMonsterkind = ENormalMonsterKind::MoveArcher;
-				}
-				else
-				{
-					NormalSpawnPosition->NormalMonsterkind = ENormalMonsterKind::SwordMan;
-				}
-
-				NormalSpawnPosition->NowSpawn = true;
-
-				SpawnNormalMaxCount--;
-			}
-		}
+		}		
 	}
 }
 

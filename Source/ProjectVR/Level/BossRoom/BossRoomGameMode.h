@@ -13,7 +13,8 @@ UCLASS()
 class PROJECTVR_API ABossRoomGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+public:	
+	ABossRoomGameMode();
 	
 	
 	

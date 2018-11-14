@@ -46,6 +46,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Level/MainMap/MainMapGameMode.h"
+#include "Level/BossRoom/BossRoomGameMode.h"
+
 // Sets default values
 AMotionControllerCharacter::AMotionControllerCharacter()
 {
@@ -55,9 +58,8 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 	bUseControllerRotationYaw = true;
 
 	GetCapsuleComponent()->SetCollisionProfileName(FName(TEXT("MyCharacter")));
-
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArm->SetupAttachment(RootComponent);
+	SpringArm->SetupAttachment(RootComponent);		
 	SpringArm->bUsePawnControlRotation = true;
 	SpringArm->bInheritPitch = true;
 	SpringArm->bInheritYaw = true;
@@ -66,8 +68,7 @@ AMotionControllerCharacter::AMotionControllerCharacter()
 		
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
-
-
+	
 	Stereo = CreateDefaultSubobject<UStereoLayerComponent>(TEXT("StereoB"));
 	Stereo->SetupAttachment(Camera);
 
@@ -153,7 +154,12 @@ void AMotionControllerCharacter::BeginPlay()
 
 	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
 	{
+		GLog->Log(FString::Printf(TEXT("DeviceName : %s"),*DeviceName.ToString()));
 		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Eye);
+		if (SpringArm)
+		{
+			//SpringArm->SetRelativeLocation(FVector(0, 0, GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()*-1.0f));
+		}
 	}
 
 	FActorSpawnParameters SpawnActorOption;
@@ -410,7 +416,7 @@ void AMotionControllerCharacter::DashOn()
 			{
 				FVector DashVector = FVector::ZeroVector;
 				DashVector = GetVelocity().GetSafeNormal()*3000.0f;
-				DashVector.Z = 0;
+				DashVector.Z = 20.0f;
 				LaunchCharacter(DashVector, false, false);
 				bDash = true;
 			}
@@ -502,7 +508,17 @@ void AMotionControllerCharacter::DamageTimer()
 
 void AMotionControllerCharacter::MainScene()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), "Main");
+	AMainMapGameMode* MainMapGM = Cast<AMainMapGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	if (MainMapGM)
+	{
+		UGameplayStatics::OpenLevel(GetWorld(), "Area4_Temple");
+	}
+	else
+	{
+		ABossRoomGameMode* BossGM = Cast<ABossRoomGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	}
+	
 }
 
 void AMotionControllerCharacter::MoveMainScene()

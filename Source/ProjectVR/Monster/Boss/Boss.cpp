@@ -139,7 +139,7 @@ ABoss::ABoss()
 	UltimateAuraEffectComponent->SetupAttachment(GetRootComponent());
 	UltimateAuraEffectComponent->SetRelativeLocation(FVector(0, 0, -200.0f));
 
-	MaxHP = 400.0f;
+	MaxHP = 350.0f;
 	CurrentHP = MaxHP;
 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BlinkSmoke(TEXT("ParticleSystem'/Game/Assets/Effect/ES_Skill/PT_BossBlinkSmoke.PT_BossBlinkSmoke'"));
@@ -209,7 +209,11 @@ void ABoss::BeginPlay()
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &ABoss::OnSeeCharacter);
-	}	
+	}
+
+	UltimateNormalMonsterSPawnPosition.Add(FVector(6081.0f, -732.0f, 211.0f));
+	UltimateNormalMonsterSPawnPosition.Add(FVector(6263.0f, -265.0f, 248.0f));
+	UltimateNormalMonsterSPawnPosition.Add(FVector(6109.0f, 531.0f, 211.0f));
 }
 
 // Called every frame

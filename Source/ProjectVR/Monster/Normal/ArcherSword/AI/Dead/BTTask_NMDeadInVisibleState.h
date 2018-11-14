@@ -15,6 +15,7 @@ class PROJECTVR_API UBTTask_NMDeadInVisibleState : public UBTTask_BlackboardBase
 	GENERATED_BODY()
 private:
 	float DeadInVisibleValue;
+	bool DestroyFlag;
 	class ANormalMonsterAIController* AI;
 	class ANormalMonster* NormalMonster;
 	virtual void InitializeFromAsset(UBehaviorTree& Asset) override;

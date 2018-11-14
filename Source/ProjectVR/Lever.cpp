@@ -32,23 +32,23 @@ ALever::ALever()
 	Collision->SetupAttachment(Lever);
 
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Door(TEXT("StaticMesh'/Game/Assets/MapBuild/RoughMap/Bridge/mesh/bridge_door_bridge_door_01.bridge_door_bridge_door_01'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_Door(TEXT("StaticMesh'/Game/Assets/MapBuild/RoughMap/Cathedral_door/backup/Main_door.Main_door'"));		// 레퍼런스 경로로 방패 매쉬를 찾음
 	if (SM_Door.Succeeded())		// 검 메쉬를 찾았을 경우 실행
 	{
 		LeverScene->SetStaticMesh(SM_Door.Object);			// 스태틱 메쉬에 검 모양 설정
 	}
 
-	Scene->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+	Scene->SetRelativeScale3D(FVector(0.117701f, 0.117701f, 0.117701f));
 
 	LeverScene->SetRelativeScale3D(FVector(4.0f, 4.0f, 4.0f));
 
-	Lever->SetRelativeLocation(FVector(-157.43f, 0.6f, 78.95f));
-	Lever->SetRelativeScale3D(FVector(0.09f, 0.09f, 2.03f));
+	Lever->SetRelativeLocation(FVector(-99.801483f, 2.628052f, 191.0f));
+	Lever->SetRelativeScale3D(FVector(0.318f, 0.787583f, 1.380393f));
 
-	Collision->SetRelativeLocation(FVector(886.22f, 0.0f, 0.09f));
-	Collision->SetRelativeScale3D(FVector(26.28f, 0.7f, 1.0f));
+	Collision->SetRelativeLocation(FVector(148.561737f, 0.259847f, 15.835767f));
+	Collision->SetRelativeScale3D(FVector(4.620687f, 0.188942f, 3.429634f));
 
-	AutoRot = FRotator(LeverScene->RelativeRotation.Pitch, LeverScene->RelativeRotation.Yaw + 60.0f, LeverScene->RelativeRotation.Roll);
+	AutoRot = FRotator(LeverScene->RelativeRotation.Pitch, LeverScene->RelativeRotation.Yaw + 85.0f, LeverScene->RelativeRotation.Roll);
 	DefaultYaw = LeverScene->GetComponentRotation().Yaw;
 
 	Collision->bGenerateOverlapEvents = false;
