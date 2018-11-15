@@ -356,34 +356,32 @@ float ANormalMonster::TakeDamage(float Damage, FDamageEvent const & DamageEvent,
 		}
 		else if (CurrentHP < 0)
 		{
+			GLog->Log(FString::Printf(TEXT("데미지 받으러 들어옴")));
 			CanbeDamaged = false;
 
-			if (!CanbeDamaged)
+			ABoss* Boss = Cast<ABoss>(GetOwner());
+
+			if (Boss)
 			{
-				ABoss* Boss = Cast<ABoss>(GetOwner());
-
-				if (Boss)
+				if (Boss->CurrentBattleState == EBossBattleState::UltimateAttack)
 				{
-					if (Boss->CurrentBattleState == EBossBattleState::UltimateAttack)
-					{
-						Boss->CurrentNormalMonsterCount--;
-					}					
-				}
-				else
-				{
-					AMainMapGameMode* MainMapGM = Cast<AMainMapGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-
-					if (MainMapGM)
-					{
-						if (!MainMapSpawnFlag)
-						{
-							MainMapSpawnFlag = true;							
-							MainMapGM->NormalMonsterCount--;
-							GLog->Log(FString::Printf(TEXT("NormalMonsterCount : %d"), MainMapGM->NormalMonsterCount));
-						}						
-					}
+					Boss->CurrentNormalMonsterCount--;
 				}
 			}
+			else
+			{
+				AMainMapGameMode* MainMapGM = Cast<AMainMapGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+				if (MainMapGM)
+				{
+					if (MainMapSpawnFlag)
+					{
+						MainMapSpawnFlag = false;
+						MainMapGM->NormalMonsterCount--;
+						GLog->Log(FString::Printf(TEXT("NormalMonsterCount : %d"), MainMapGM->NormalMonsterCount));
+					}
+				}
+			}		
 
 			CurrentHP = 0;
 			if (Bow)

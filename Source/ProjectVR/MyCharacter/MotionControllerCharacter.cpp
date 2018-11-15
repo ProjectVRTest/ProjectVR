@@ -347,8 +347,6 @@ void AMotionControllerCharacter::GrabRightOn()
 	GrabState = E_HandState::Grab;
 
 	RightHand->GrabActor();
-
-	RightHand->Sword->ConvertOfOpacity(1);
 }
 
 void AMotionControllerCharacter::GrabRightOff()
@@ -358,8 +356,6 @@ void AMotionControllerCharacter::GrabRightOff()
 	GrabState = E_HandState::Open;
 
 	RightHand->ReleaseActor();
-
-	RightHand->Sword->ConvertOfOpacity(0.5f);
 }
 
 // 플레이어의 상태에 따라 걷기 / 달리기 
@@ -517,6 +513,11 @@ void AMotionControllerCharacter::MainScene()
 	else
 	{
 		ABossRoomGameMode* BossGM = Cast<ABossRoomGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+		if (BossGM)
+		{
+			UGameplayStatics::OpenLevel(GetWorld(), "Cathedral_inside");
+		}
 	}
 	
 }

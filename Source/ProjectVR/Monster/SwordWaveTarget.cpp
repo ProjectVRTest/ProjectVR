@@ -20,7 +20,7 @@ ASwordWaveTarget::ASwordWaveTarget()
 	SetRootComponent(SwordWaveTargetBox);
 	SwordWaveTargetBox->SetCollisionProfileName("OverlapAll");
 	SwordWaveTargetBox->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
-	SwordWaveTargetBox->bHiddenInGame = false;
+	SwordWaveTargetBox->bHiddenInGame = true;
 
 	SwordWaveTargetBox->ComponentTags.Add(FName(TEXT("SwordWaveTarget")));
 	SwordWaveTargetBox->ComponentTags.Add(FName(TEXT("DisregardForLeftHand")));

@@ -23,6 +23,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Monster/MiniBoss/MiniBossParryingPoint.h"
 #include "MyTargetPoint.h"
+#include "TimerManager.h"
 
 // Sets default values
 ABoss::ABoss()
@@ -41,7 +42,7 @@ ABoss::ABoss()
 		GetMesh()->SetSkeletalMesh(Boss_SK_Mesh.Object);
 	}
 
-	GetCapsuleComponent()->bHiddenInGame = false;
+	GetCapsuleComponent()->bHiddenInGame = true;
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -88.0f));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
@@ -58,10 +59,12 @@ ABoss::ABoss()
 	CurrentUpDownAttackState = EBossUpDownAttackState::Idle;
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
-	PawnSensing->bHearNoises = false;
+	PawnSensing->HearingThreshold = 2300.0f;
+	PawnSensing->LOSHearingThreshold = 2400.0f;
+	PawnSensing->bHearNoises = true;
 	PawnSensing->bSeePawns = true;
-	PawnSensing->SetPeripheralVisionAngle(30.0f);
-	PawnSensing->SightRadius = 2000.0f;
+	PawnSensing->SetPeripheralVisionAngle(40.0f);
+	PawnSensing->SightRadius = 2200.0f;
 	PawnSensing->SensingInterval = 0.01f;
 
 	
@@ -178,6 +181,8 @@ void ABoss::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GetWorld()->GetTimerManager().SetTimer(BeginCharacterTimer, this, &ABoss::FindCharacter, 1.0f, false);		// 1.5초 후 무적시간을 비활성화
+
 	ParryingPointInit();
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMyTargetPoint::StaticClass(), TeleportPoints);
 	
@@ -368,8 +373,9 @@ void ABoss::ParryingPointValueSet(int ParryingCount)
 
 void ABoss::OnSeeCharacter(APawn * Pawn)
 {
-	if (Pawn->ActorHasTag("Character"))
+	/*if (Pawn->ActorHasTag("Character"))
 	{
+		GLog->Log(FString::Printf(TEXT("캐릭터 발견")));
 		ABossAIController* AI = Cast<ABossAIController>(GetController());
 
 		if (AI)
@@ -391,6 +397,43 @@ void ABoss::OnSeeCharacter(APawn * Pawn)
 			}
 		}
 	}
+	else
+	{
+		GLog->Log(FString::Printf(TEXT("캐릭터 노발견")));
+	}*/
+}
+
+void ABoss::OnHearNoise(APawn * Pawn, const FVector & Location, float Volume)
+{
+	if (!Target)
+	{
+		if (Pawn->ActorHasTag(TEXT("Character")))
+		{
+			AMotionControllerCharacter* Mycharacter = Cast<AMotionControllerCharacter>(Pawn);
+
+			if (Mycharacter)
+			{
+				Target = Mycharacter;
+				if (Mycharacter->CameraLocation)
+				{
+					TargetCamera = Mycharacter->CameraLocation;
+					ABossAIController* AI = Cast<ABossAIController>(GetController());
+					if (AI)
+					{
+						AI->BBComponent->SetValueAsObject("Player", Pawn);
+						AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
+
+						FRotator LookRotator = FRotationMatrix::MakeFromX(Pawn->GetActorLocation() - GetActorLocation()).Rotator();
+						SetActorRotation(LookRotator);
+
+						CurrentBlinkAttackState = EBossBlinkAttackState::AddAttackStart;
+						CurrentBattleState = EBossBattleState::AddAttack;
+						CurrentState = EBossState::Battle;
+					}
+				}
+			}
+		}
+	}
 }
 
 float ABoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
@@ -404,6 +447,12 @@ float ABoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControl
 	if (CurrentHP < 0)
 	{
 		CurrentHP = 0;
+
+		if (Sickle)
+		{
+			Sickle->Destroy();
+		}
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 		CurrentState = EBossState::Dead;
 	}
 
@@ -411,39 +460,65 @@ float ABoss::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControl
 
 	GLog->Log(FString::Printf(TEXT("HPPercent %f"), HPPercent));
 	
-	if (HPPercent >= 0.65f && HPPercent <=0.71f)
+	if (CurrentState != EBossState::Dead)
 	{
-		CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
-		CurrentLongAttackState = EBossLongAttackState::Idle;
-		CurrentCloseAttackState = EBossCloseAttackState::Idle;
-		CurrentParryingState = EBossParryingState::Idle;
-		CurrentBattleWatchState = EBossBattleWatchState::Idle;
-		CurrentConfrontationState = EBossConfrontationState::Idle;	
-		CurrentUltimateAttackState = EBossUltimateAttackState::Idle;
-		CurrentBattleState = EBossBattleState::UltimateAttack;		
-	}
-	else if(HPPercent >=0.35f && HPPercent <= 0.41f)
-	{
-		CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
-		CurrentLongAttackState = EBossLongAttackState::Idle;
-		CurrentCloseAttackState = EBossCloseAttackState::Idle;
-		CurrentParryingState = EBossParryingState::Idle;
-		CurrentBattleWatchState = EBossBattleWatchState::Idle;
-		CurrentConfrontationState = EBossConfrontationState::Idle;
-		CurrentUltimateAttackState = EBossUltimateAttackState::Idle;
-		CurrentBattleState = EBossBattleState::UltimateAttack;
-	}
-	else if (HPPercent >= 0.08f && HPPercent <=0.12f)
-	{
-		CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
-		CurrentLongAttackState = EBossLongAttackState::Idle;
-		CurrentCloseAttackState = EBossCloseAttackState::Idle;
-		CurrentParryingState = EBossParryingState::Idle;
-		CurrentBattleWatchState = EBossBattleWatchState::Idle;
-		CurrentConfrontationState = EBossConfrontationState::Idle;
-		CurrentUltimateAttackState = EBossUltimateAttackState::Idle;
-		CurrentBattleState = EBossBattleState::UltimateAttack;
-	}
+		if (HPPercent >= 0.70f && HPPercent <= 0.71f)
+		{
+			CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
+			CurrentLongAttackState = EBossLongAttackState::Idle;
+			CurrentCloseAttackState = EBossCloseAttackState::Idle;
+			CurrentParryingState = EBossParryingState::Idle;
+			CurrentBattleWatchState = EBossBattleWatchState::Idle;
+			CurrentConfrontationState = EBossConfrontationState::Idle;
+			CurrentUltimateAttackState = EBossUltimateAttackState::Idle;
+			CurrentBattleState = EBossBattleState::UltimateAttack;
+		}
+		else if (HPPercent >= 0.40f && HPPercent <= 0.41f)
+		{
+			CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
+			CurrentLongAttackState = EBossLongAttackState::Idle;
+			CurrentCloseAttackState = EBossCloseAttackState::Idle;
+			CurrentParryingState = EBossParryingState::Idle;
+			CurrentBattleWatchState = EBossBattleWatchState::Idle;
+			CurrentConfrontationState = EBossConfrontationState::Idle;
+			CurrentUltimateAttackState = EBossUltimateAttackState::Idle;
+			CurrentBattleState = EBossBattleState::UltimateAttack;
+		}
+		else if (HPPercent >= 0.10f && HPPercent <= 0.12f)
+		{
+			CurrentBlinkAttackState = EBossBlinkAttackState::Idle;
+			CurrentLongAttackState = EBossLongAttackState::Idle;
+			CurrentCloseAttackState = EBossCloseAttackState::Idle;
+			CurrentParryingState = EBossParryingState::Idle;
+			CurrentBattleWatchState = EBossBattleWatchState::Idle;
+			CurrentConfrontationState = EBossConfrontationState::Idle;
+			CurrentUltimateAttackState = EBossUltimateAttackState::Idle;
+			CurrentBattleState = EBossBattleState::UltimateAttack;
+		}
+	}	
 
 	return Damage;
+}
+
+void ABoss::FindCharacter()
+{
+	ABossAIController* AI = Cast<ABossAIController>(GetController());
+	if (AI)
+	{
+		if (!Target)
+		{
+			AMotionControllerCharacter* MyCharacter = Cast<AMotionControllerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+			if (MyCharacter)
+			{
+				Target = MyCharacter;
+				TargetCamera = MyCharacter->CameraLocation;
+				AI->BBComponent->SetValueAsObject("Player", MyCharacter);
+				AI->BBComponent->SetValueAsObject("PlayerCamera", TargetCamera);
+				CurrentBlinkAttackState = EBossBlinkAttackState::AddAttackStart;
+				CurrentBattleState = EBossBattleState::AddAttack;
+				CurrentState = EBossState::Battle;
+			}
+		}
+	}
 }

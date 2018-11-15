@@ -38,7 +38,11 @@ public:
 		class UParticleSystem* BloodEffect;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect")
 		class UParticleSystem* OrbHitEffect;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UAudioComponent* SwordSoundComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class USoundCue* SwrodSound;
+	
 	// 칼의 운동 값
 	FVector SwordCurrentPosistion, SwordMoveDelta, SwordPreviousPosistion, SwordMoveVelocity;
 	
@@ -47,10 +51,6 @@ public:
 		void OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);		// 오버랩이벤트로 데미지를 전달하기위한 함수
 	
-	// 투명도 변경
-	UFUNCTION()
-		void ConvertOfOpacity(float opacity);
-
 	UFUNCTION()
 		void RumbleRightController(float Intensity);
 

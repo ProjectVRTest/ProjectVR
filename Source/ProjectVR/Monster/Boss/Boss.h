@@ -99,7 +99,8 @@ public:
 		class UBoxComponent* MonsterSpawnBoound; //궁극기를 쓸때 오브들을 스폰시키는데 필요한 박스
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UParticleSystemComponent* UltimateAuraEffectComponent;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		FTimerHandle BeginCharacterTimer;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 		float MaxHP;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
@@ -152,5 +153,9 @@ public:
 	UFUNCTION()
 		void OnSeeCharacter(APawn * Pawn);
 	UFUNCTION()
+		void OnHearNoise(APawn * Pawn, const FVector & Location, float Volume);
+	UFUNCTION()
 		virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	UFUNCTION()
+		void FindCharacter();
 };

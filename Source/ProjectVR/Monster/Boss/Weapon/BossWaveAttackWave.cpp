@@ -32,7 +32,7 @@ ABossWaveAttackWave::ABossWaveAttackWave()
 	Projecttile->MaxSpeed = 800.0f;
 
 	Sphere->ComponentTags.Add(FName(TEXT("BossWaveAttackWave")));
-	Sphere->bHiddenInGame = false;
+	Sphere->bHiddenInGame = true;
 	Sphere->SetSphereRadius(80.0f);
 
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));

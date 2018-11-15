@@ -22,6 +22,7 @@ ANormalMonsterSpawnPosition::ANormalMonsterSpawnPosition()
 
 	NowSpawn = false;
 	SPawnTime = 1.0f;
+	MonsterHP = 30.0f;
 }
 
 void ANormalMonsterSpawnPosition::Tick(float DeltaTime)
@@ -70,6 +71,7 @@ void ANormalMonsterSpawnPosition::MonsterSpawn()
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SpawnEffect, NormalMonster->GetActorLocation());
 
+		NormalMonster->MainMapSpawnFlag = true;
 
 		switch (NormalMonsterkind)
 		{

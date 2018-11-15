@@ -31,10 +31,12 @@ ABossRedOrbWave::ABossRedOrbWave()
 
 	Sphere->ComponentTags.Add(FName(TEXT("BossRedOrbWave")));
 	
-	Damage = 10.0f;
+	Damage = 30.0f;
 
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
+
+	InitialLifeSpan = 10.0f;
 }
 
 void ABossRedOrbWave::BeginPlay()

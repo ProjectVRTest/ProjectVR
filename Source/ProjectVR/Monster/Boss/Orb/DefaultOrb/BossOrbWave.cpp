@@ -21,7 +21,7 @@ ABossOrbWave::ABossOrbWave()
 	SetRootComponent(Sphere);
 	Sphere->SetCollisionProfileName("OverlapAll");
 	Sphere->SetSphereRadius(28.0f);
-	Sphere->bHiddenInGame = false;
+	Sphere->bHiddenInGame = true;
 
 	PrimaryActorTick.bCanEverTick = false;
 	OrbWaveParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SwordWaveTailComponent"));
@@ -51,7 +51,7 @@ ABossOrbWave::ABossOrbWave()
 	Sphere->ComponentTags.Add(FName(TEXT("BossOrbWave")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));
-	Damage = 15.0f;
+	Damage = 30.0f;
 
 	InitialLifeSpan = 5.0f;
 }

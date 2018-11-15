@@ -141,7 +141,7 @@ void APlayerShield::Tick(float DeltaTime)
 		ShieldPreviousPosition = ShieldCurrentPosition;
 	}
 
-	//GLog->Log(FString::Printf(TEXT("%d"), IsMiniBossWeaponOverlap));
+	//GLog->Log(FString::Printf(TEXT("%d"), IsActivation));
 }
 
 void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭터에서 호출)

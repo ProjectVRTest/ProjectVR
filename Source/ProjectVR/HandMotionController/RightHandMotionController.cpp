@@ -319,11 +319,14 @@ void ARightHandMotionController::GrabActor()
 							AttachedActor = Potion;
 							//Potion->Mesh->SetSimulatePhysics(true);
 							//Potion->SetActorRelativeScale3D(FVector(0.22f, 0.15f, 0.15f));
-							Potion->Mesh->SetCollisionProfileName(TEXT("OverlapAll"));
-							Potion->SetActorRelativeScale3D(FVector(1.1f, 1.1f, 1.1f));
-							Potion->AttachToComponent(PotionPosition, AttachRules);//스폰한 검을 SwordAttachScene에 붙인다.
-							HandGrabState();
-							bGrabPotion = true;
+							if (Potion->Mesh)
+							{
+								Potion->Mesh->SetCollisionProfileName(TEXT("OverlapAll"));
+								Potion->SetActorRelativeScale3D(FVector(1.1f, 1.1f, 1.1f));
+								Potion->AttachToComponent(PotionPosition, AttachRules);//스폰한 검을 SwordAttachScene에 붙인다.
+								HandGrabState();
+								bGrabPotion = true;
+							}							
 						}
 						else
 						{

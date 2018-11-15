@@ -58,38 +58,41 @@ void UBTTask_BossInVisibleState::InVisible()
 {
 	if (Boss)
 	{
-		AMotionControllerCharacter* MyCharacer = Cast<AMotionControllerCharacter>(Boss->Target);
-
-		if (MyCharacer)
+		if (Boss->CurrentState != EBossState::Dead)
 		{
-			int RandomValue;
-			FVector TeleportLocation;
-			switch (Boss->CurrentBattleState)
-			{
-			case EBossBattleState::AddAttack:
-				TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + MyCharacer->CameraLocation->GetActorForwardVector()*200.0f;
-				break;			
-			case EBossBattleState::BattleWatch:
-				RandomValue = FMath::RandRange(1, 10);
+			AMotionControllerCharacter* MyCharacer = Cast<AMotionControllerCharacter>(Boss->Target);
 
-				//캐릭터의 배틀 상태에 따라서 계산해주는 텔포 위치가 달라지는 것을 구현해야함
-				if (RandomValue > 6) //정해진 포인트로 이동
+			if (MyCharacer)
+			{
+				int RandomValue;
+				FVector TeleportLocation;
+				switch (Boss->CurrentBattleState)
 				{
-					GLog->Log(FString::Printf(TEXT("정해진 포인트로 이동")));
-					TeleportLocation = Boss->MapCenterLocation;
+				case EBossBattleState::AddAttack:
+					TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + MyCharacer->CameraLocation->GetActorForwardVector()*200.0f;
+					break;
+				case EBossBattleState::BattleWatch:
+					RandomValue = FMath::RandRange(1, 10);
+
+					//캐릭터의 배틀 상태에 따라서 계산해주는 텔포 위치가 달라지는 것을 구현해야함
+					if (RandomValue > 6) //정해진 포인트로 이동
+					{
+						GLog->Log(FString::Printf(TEXT("정해진 포인트로 이동")));
+						TeleportLocation = Boss->MapCenterLocation;
+					}
+					else // 캐릭터 앞으로 이동 
+					{
+						GLog->Log(FString::Printf(TEXT("캐릭터 앞으로 이동")));
+						TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(250.0f, 0, 0);
+					}
+					break;
+				case EBossBattleState::UltimateAttack:
+					TeleportLocation = Boss->UltimateStartLocation;
+					break;
 				}
-				else // 캐릭터 앞으로 이동 
-				{
-					GLog->Log(FString::Printf(TEXT("캐릭터 앞으로 이동")));
-					TeleportLocation = MyCharacer->CameraLocation->GetActorLocation() + FVector(250.0f, 0, 0);
-				}
-				break;
-			case EBossBattleState::UltimateAttack:				
-				TeleportLocation = Boss->UltimateStartLocation;
-				break;
-			}			
-			SetTeleportLocation(Boss->CurrentBattleState,TeleportLocation);
-		}
+				SetTeleportLocation(Boss->CurrentBattleState, TeleportLocation);
+			}
+		}		
 	}
 }
 

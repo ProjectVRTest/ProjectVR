@@ -14,7 +14,7 @@ ABossWaveTarget::ABossWaveTarget()
 	BossWaveTargetBox->SetCollisionProfileName("OverlapAll");
 	BossWaveTargetBox->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
 
-	BossWaveTargetBox->bHiddenInGame = false;
+	BossWaveTargetBox->bHiddenInGame = true;
 	BossWaveTargetBox->ComponentTags.Add(FName(TEXT("BossWaveTarget")));
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
 	Tags.Add(FName(TEXT("DisregardForRightHand")));

@@ -17,6 +17,7 @@
 #include "Monster/Dog/Dog.h"
 #include "Monster/Boss/Orb/Ultimate/Wave/BossRedOrbWave.h"
 #include "Monster/Boss/Orb/DefaultOrb/BossOrb.h"
+#include "Components/AudioComponent.h"
 
 
 // Sets default values
@@ -47,6 +48,9 @@ APlayerSword::APlayerSword()
 	SwordCollision->SetRelativeScale3D(FVector(0.75f, 0.75f, 1.6f));
 	SwordCollision->ComponentTags.Add(FName(TEXT("PlayerSwordCollision")));
 	
+	SwordSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("SwordSoundComponent"));
+	SwordSoundComponent->SetupAttachment(SwordMesh);
+
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BloodEffect(TEXT("ParticleSystem'/Game/Assets/Effect/HitFeedback/Blood_cloud_large.Blood_cloud_large'"));
 	if (PT_BloodEffect.Succeeded())
 	{
@@ -166,14 +170,6 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 				UGameplayStatics::ApplyDamage(OtherActor, Damage, UGameplayStatics::GetPlayerController(GetWorld(), 0), this, nullptr);				
 			}
 		}
-	}
-}
-
-void APlayerSword::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭터에서 호출)
-{
-	if (SwordMesh)
-	{
-		SwordMesh->SetScalarParameterValueOnMaterials(FName(TEXT("SwordOpacity")), opacity);
 	}
 }
 
