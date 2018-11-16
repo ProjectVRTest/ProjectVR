@@ -61,7 +61,10 @@ public:
 		class UMaterialInterface* ShieldVisibleMaterial;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Materials")
 		class UMaterialInterface* ShieldInVisibleMaterial;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class UAudioComponent* ShieldSoundComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class USoundCue* ShieldSound;
 
 	UFUNCTION()
 		void ConvertOfOpacity(float opacity); //방패를 활성,비활성 시킬때 투명도를 정해줄 함수

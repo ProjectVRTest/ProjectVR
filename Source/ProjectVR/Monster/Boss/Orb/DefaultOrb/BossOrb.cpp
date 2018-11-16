@@ -151,7 +151,7 @@ void ABossOrb::OwnerSave(AActor * _OrbOwner)
 
 void ABossOrb::RandomFireLocation(FVector &Location)
 {
-	float LeftRandLocation = FMath::FRandRange(-30.0f, 30.0f);
+	float LeftRandLocation = FMath::FRandRange(-25.0f, 25.0f);
 	float RightRandLocation = FMath::FRandRange(5.0f, 10.0f);
 
 	Location.Y = Location.Y - LeftRandLocation * RightRandLocation;

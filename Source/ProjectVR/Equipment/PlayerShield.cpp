@@ -32,6 +32,8 @@
 #include "Monster/Normal/ArcherSword/Weapon/Bow/NMWeaponArrow.h"
 #include "Monster/MiniBoss/Weapon/MiniBossWeapon.h"
 #include "Monster/MiniBoss/Weapon/SwordWave/MiniBossSwordWave.h"
+#include "Components/AudioComponent.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values
 APlayerShield::APlayerShield()
@@ -95,6 +97,18 @@ APlayerShield::APlayerShield()
 	// 스테이트바 씬의 위기값과 회전값 설정
 	StateBarScene->SetRelativeLocation(FVector(-6.9f, -23.0f, 9.4f));
 	StateBarScene->SetRelativeRotation(FRotator(0.0f, -19.0f, -90.0f));
+
+	ShieldSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("SwordSoundComponent"));
+	ShieldSoundComponent->SetupAttachment(ShieldMesh);
+	//ShieldSoundComponent->SetRelativeLocation(FVector(0, 85.0f, 0));
+
+	static ConstructorHelpers::FObjectFinder<USoundCue>PlayerShieldSoundAsset(TEXT("SoundCue'/Game/Assets/Sounds/Character/player_shield_Cue.player_shield_Cue'"));
+	if (PlayerShieldSoundAsset.Succeeded())
+	{
+		ShieldSound = PlayerShieldSoundAsset.Object;
+		ShieldSoundComponent->SetSound(ShieldSound);
+	}
+
 	IsActivation = false;
 	IsMiniBossWeaponOverlap = false;
 	IsBossWeaponOverlap = false;
@@ -180,6 +194,11 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 					{
 						if (ShieldOwner->UseStamina(MiniBossWeapon->GetDamage()*1.2f))
 						{
+							if (!ShieldSoundComponent->IsPlaying())
+							{
+								ShieldSoundComponent->Play(0);
+							}
+
 							MiniBossWeapon->IsWeaponAttack = false;
 							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
 						}
@@ -229,6 +248,11 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 					{
 						if (ShieldOwner->UseStamina(BossWeapon->GetDamage()*1.2f))
 						{
+							if (!ShieldSoundComponent->IsPlaying())
+							{
+								ShieldSoundComponent->Play(0);
+							}
+
 							BossWeapon->IsWeaponAttack = false;
 							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
 						}
@@ -270,6 +294,11 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 			{
 				if (ShieldOwner)
 				{
+					if (!ShieldSoundComponent->IsPlaying())
+					{
+						ShieldSoundComponent->Play(0);
+					}
+
 					if (ShieldOwner->UseStamina(DefaultOrb->GetOrbDamage()*1.2f))
 					{
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, DefaultOrb->GetActorLocation());
@@ -291,6 +320,11 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 				{
 					if (ShieldOwner->UseStamina(BossBlueOrbWave->GetOrbDamage()*1.2f))
 					{
+						if (!ShieldSoundComponent->IsPlaying())
+						{
+							ShieldSoundComponent->Play(0);
+						}
+
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, BossBlueOrbWave->GetActorLocation());
 						BossBlueOrbWave->Destroy();
 					}
@@ -315,6 +349,11 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 					
 					if (ShieldOwner->UseStamina(AttackBall->GetDamage()*1.2f))
 					{
+						if (!ShieldSoundComponent->IsPlaying())
+						{
+							ShieldSoundComponent->Play(0);
+						}
+
 						AttackBall->Destroy();
 					}					
 				}
@@ -333,6 +372,11 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 				{
 					if (ShieldOwner->UseStamina(NMArrow->GetDamage()*1.2f))
 					{
+						if (!ShieldSoundComponent->IsPlaying())
+						{
+							ShieldSoundComponent->Play(0);
+						}
+
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
 						NMArrow->Destroy();
 					}
@@ -352,6 +396,11 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 				{
 					if (ShieldOwner->UseStamina(MBSwordWave->GetDamage()*1.2f))
 					{
+						if (!ShieldSoundComponent->IsPlaying())
+						{
+							ShieldSoundComponent->Play(0);
+						}
+
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
 						MBSwordWave->Destroy();
 					}
@@ -373,6 +422,11 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 					{
 						if (ShieldOwner->UseStamina(NMSword->GetDamage()*1.2f))
 						{
+							if (!ShieldSoundComponent->IsPlaying())
+							{
+								ShieldSoundComponent->Play(0);
+							}
+
 							NMSword->IsWeaponAttack = false;
 							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
 						}

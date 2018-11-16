@@ -41,7 +41,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UAudioComponent* SwordSoundComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class USoundCue* SwrodSound;
+		class USoundCue* SwordSound;
 	
 	// 칼의 운동 값
 	FVector SwordCurrentPosistion, SwordMoveDelta, SwordPreviousPosistion, SwordMoveVelocity;

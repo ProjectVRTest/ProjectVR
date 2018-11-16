@@ -18,7 +18,7 @@
 #include "Monster/Boss/Orb/Ultimate/Wave/BossRedOrbWave.h"
 #include "Monster/Boss/Orb/DefaultOrb/BossOrb.h"
 #include "Components/AudioComponent.h"
-
+#include "Sound/SoundCue.h"
 
 // Sets default values
 APlayerSword::APlayerSword()
@@ -50,17 +50,25 @@ APlayerSword::APlayerSword()
 	
 	SwordSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("SwordSoundComponent"));
 	SwordSoundComponent->SetupAttachment(SwordMesh);
-
+	SwordSoundComponent->SetRelativeLocation(FVector(0, 85.0f, 0));
+	
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_BloodEffect(TEXT("ParticleSystem'/Game/Assets/Effect/HitFeedback/Blood_cloud_large.Blood_cloud_large'"));
 	if (PT_BloodEffect.Succeeded())
 	{
 		BloodEffect = PT_BloodEffect.Object;
 	}
-
+	
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>PT_OrbHitEffect(TEXT("ParticleSystem'/Game/Assets/Effect/HitFeedback/PT_OrbHitEffect.PT_OrbHitEffect'"));
 	if (PT_OrbHitEffect.Succeeded())
 	{
 		OrbHitEffect = PT_OrbHitEffect.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<USoundCue>PlayerSwordSoundAsset(TEXT("SoundCue'/Game/Assets/Sounds/NormalMob/PlayerSwordSound.PlayerSwordSound'"));
+	if (PlayerSwordSoundAsset.Succeeded())
+	{
+		SwordSound = PlayerSwordSoundAsset.Object;
+		SwordSoundComponent->SetSound(SwordSound);
 	}
 
 	Timer = 0.0f;		// 타이머 초기화
@@ -99,6 +107,14 @@ void APlayerSword::Tick(float DeltaTime)
 		SwordMoveDelta = SwordCurrentPosistion - SwordPreviousPosistion;
 		SwordMoveVelocity = SwordMoveDelta / DeltaTime;
 		SwordPreviousPosistion = SwordCurrentPosistion;
+
+		if (SwordMoveVelocity.Size() >= 1000.0f)
+		{
+			if (!SwordSoundComponent->IsPlaying())
+			{
+				SwordSoundComponent->Play(0);
+			}			
+		}
 	}
 }
 
@@ -117,7 +133,7 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 	{			
 		if (Timer >= 0.5f)			// 타이머가 0.5 이상의 수를 가지고 있을 때 실행 (조건1)
 		{
-			if (SwordMoveVelocity.Size() >= 1000) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
+			if (SwordMoveVelocity.Size() >= 1000.0f) //그립버튼을 누르고 선속도의 크기가 200 이상일 때만 공격 판정이 일어남 (조건2)
 			{
 				// 최소 스테미너이상 있을 때 공격 가능 
 				if (SwordOwner->CurrentStamina >= SwordOwner->AttackPoint)
@@ -125,7 +141,7 @@ void APlayerSword::OnSwordOverlap(UPrimitiveComponent * OverlappedComp, AActor *
 					SwordOwner->UseStamina(SwordOwner->AttackPoint);			// 스테미너 감소 및 대기시간 후 스테미너 회복시작
 					Timer = 0.0f;		// 공격 판정이 일어났을 때 타이머 0으로
 
-					if (SwordMoveVelocity.Size() <= 1000)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
+					if (SwordMoveVelocity.Size() <= 1000.0f)// 선속도의 크기가 500이하일 때 데미지 10 (조건4)
 					{
 						RumbleRightController(0.5f);
 						Damage = 10.0f;
