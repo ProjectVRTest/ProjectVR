@@ -9,7 +9,7 @@ AMainMapGameMode::AMainMapGameMode()
 	DefaultPawnClass = AMotionControllerCharacter::StaticClass();
 	PlayerControllerClass = AMotionControllerPC::StaticClass();
 
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 void AMainMapGameMode::BeginPlay()
@@ -23,6 +23,5 @@ void AMainMapGameMode::BeginPlay()
 void AMainMapGameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	GLog->Log(FString::Printf(TEXT("NormalMonsterCount : %d"), NormalMonsterCount));
+	
 }

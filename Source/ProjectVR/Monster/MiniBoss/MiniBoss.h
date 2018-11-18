@@ -82,6 +82,8 @@ public:
 		class AMiniBossWeapon* Sword;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class USceneComponent* SwordWaveSpawn;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+		class UMonsterParryingManager* ParryingManager;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SwordWave")
 		int SwordWaveCount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
@@ -107,7 +109,7 @@ public:
 	UPROPERTY()
 		float FresnelValue;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, Category = "Parrying")
 		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열
 
 	UFUNCTION()

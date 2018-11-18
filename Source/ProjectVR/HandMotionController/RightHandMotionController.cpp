@@ -317,9 +317,7 @@ void ARightHandMotionController::GrabActor()
 							GLog->Log(FString::Printf(TEXT("가방에서 꺼낸 포션이 잇음")));
 							// 손에 붙임
 							AttachedActor = Potion;
-							//Potion->Mesh->SetSimulatePhysics(true);
-							//Potion->SetActorRelativeScale3D(FVector(0.22f, 0.15f, 0.15f));
-							if (Potion->Mesh)
+							if (!Potion->Mesh->IsPendingKill())
 							{
 								Potion->Mesh->SetCollisionProfileName(TEXT("OverlapAll"));
 								Potion->SetActorRelativeScale3D(FVector(1.1f, 1.1f, 1.1f));

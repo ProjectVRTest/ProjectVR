@@ -23,6 +23,7 @@
 #include "Components/CapsuleComponent.h"
 #include "MiniBossParryingPoint.h"
 #include "TimerManager.h"
+#include "Component/Monster/MonsterParryingManager.h"
 
 // Sets default values
 AMiniBoss::AMiniBoss()
@@ -127,6 +128,8 @@ AMiniBoss::AMiniBoss()
 	SwordWaveSpawn->SetupAttachment(GetRootComponent());
 	SwordWaveSpawn->SetRelativeLocation(FVector(80.0f, 0, 50.0f));
 
+	ParryingManager = CreateDefaultSubobject<UMonsterParryingManager>(TEXT("ParryingManager"));	
+
 	static ConstructorHelpers::FObjectFinder<UClass>ABP_MiniBos(TEXT("AnimBlueprint'/Game/Blueprints/Monster/MiniBoss/Blueprints/ABP_MiniBoss.ABP_MiniBoss_C'"));
 
 	if (ABP_MiniBos.Succeeded())
@@ -153,7 +156,8 @@ void AMiniBoss::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ParryingPointInit();
+	ParryingManager->ParryingPointInit(this, ParryingPoints);
+	//ParryingPointInit();
 
 	FActorSpawnParameters SpawnActorOption;
 	SpawnActorOption.Owner = this;
@@ -193,36 +197,8 @@ void AMiniBoss::Tick(float DeltaTime)
 		AI->BBComponent->SetValueAsEnum("CurrentBackAttackState", (uint8)CurrentBackAttackState);
 		AI->BBComponent->SetValueAsEnum("CurrentParryingState", (uint8)CurrentParryingState);
 		CurrentFalling = GetCharacterMovement()->IsFalling();
-	}
-
-	/*FVector TraceEnd = (GetActorLocation()) + (GetActorForwardVector()*-10000.0f);
-	TArray<TEnumAsByte<EObjectTypeQuery>>ObjectTypes;
-
-	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic));
-
-	TArray<AActor*>IgonreActors;
-	IgonreActors.Add(this);
-	IgonreActors.Add(Sword);
-
-	FHitResult HitResult;
-
-	bool CanSpawn = UKismetSystemLibrary::LineTraceSingleForObjects(
-		GetWorld(),
-		GetActorLocation()+ FVector(0,0,80.0f),
-		TraceEnd,
-		ObjectTypes,
-		true,
-		IgonreActors,
-		EDrawDebugTrace::ForDuration,
-		HitResult,
-		true
-	);
-
-	if (CanSpawn)
-	{
-		float WallDistance = FVector::Distance(GetActorLocation(), HitResult.Location);
-		GLog->Log(FString::Printf(TEXT("WallDistance : %f "), WallDistance));
-	}*/
+	}	
+	
 }
 
 // Called to bind functionality to input
