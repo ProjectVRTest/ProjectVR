@@ -75,7 +75,6 @@ AMiniBoss::AMiniBoss()
 	CurrentFalling = false;
 	ParryingFlag = false;
 	AttackCompleteFlag = false;
-	IsParrying = false;
 	IsAttack = false; //공격할수 있게 해줌
 	StabFlag = false;
 	TwoHandWidthFlag = false;
@@ -199,6 +198,7 @@ void AMiniBoss::Tick(float DeltaTime)
 		CurrentFalling = GetCharacterMovement()->IsFalling();
 	}	
 	
+	//GLog->Log(FString::Printf(TEXT("HP Percent : %f"), CurrentHP / MaxHP));
 }
 
 // Called to bind functionality to input

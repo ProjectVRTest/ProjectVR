@@ -34,6 +34,7 @@
 #include "Monster/MiniBoss/Weapon/SwordWave/MiniBossSwordWave.h"
 #include "Components/AudioComponent.h"
 #include "Sound/SoundCue.h"
+#include "Component/Monster/MonsterParryingManager.h"
 
 // Sets default values
 APlayerShield::APlayerShield()
@@ -218,13 +219,14 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 						// 최소 스테미너이상 있을 때 방패로 막기 가능 
 						if (ShieldOwner->CurrentStamina > ShieldOwner->DefencePoint)
 						{
+							GLog->Log(FString::Printf(TEXT("중간보스 패링 진입")));
 							UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.5f);
 							GetWorld()->GetTimerManager().SetTimer(GlobalTimeTimer, this, &APlayerShield::GlobalTimeInit, 0.5f, false);
 							ShieldOwner->UseStamina(ShieldOwner->DefencePoint);		// 스테미너 감소 및 대기시간 후 스테미너 회복시작
 							RumbleLeftController(1.0f); //패드에 진동을 울려주고
 							MiniBossWeapon->IsParryingAttack = false;
 							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParryingEffect, OtherComp->GetComponentLocation());
-							MiniBoss->ParryingPointSet();//패링 포인트를 스폰(HP에 따라)						
+							MiniBoss->ParryingManager->ParryingPointSet(MiniBoss, MiniBoss->ParryingPoints, MiniBoss->CurrentHP, MiniBoss->MaxHP, MiniBoss->ParryingPointMaxCount);							
 							MiniBoss->CurrentParryingState = EMiniBossParryingState::ParryingStart;
 							MiniBoss->CurrentAttackState = EMiniBossAttackState::ParryingState;
 						}
@@ -284,6 +286,35 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 			}
 		}
 	}
+	else if (OtherComp->ComponentHasTag(TEXT("NormalMonsterWeapon")))
+	{
+		if (IsActivation)
+		{
+			ANMWeaponSword* NMSword = Cast<ANMWeaponSword>(OtherComp->GetOwner());
+
+			if (NMSword)
+			{
+				if (NMSword->IsWeaponAttack)
+				{
+					if (ShieldOwner)
+					{
+						if (ShieldOwner->UseStamina(NMSword->GetDamage()*1.2f))
+						{
+							if (!ShieldSoundComponent->IsPlaying())
+							{
+								ShieldSoundComponent->Play(0);
+							}
+
+							RumbleLeftController(0.5f);
+
+							NMSword->IsWeaponAttack = false;
+							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
+						}
+					}
+				}
+			}
+		}
+	}
 	else if (OtherComp->ComponentHasTag(TEXT("BossOrbWave")))
 	{
 		if (IsActivation)
@@ -294,13 +325,15 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 			{
 				if (ShieldOwner)
 				{
-					if (!ShieldSoundComponent->IsPlaying())
-					{
-						ShieldSoundComponent->Play(0);
-					}
-
 					if (ShieldOwner->UseStamina(DefaultOrb->GetOrbDamage()*1.2f))
 					{
+						if (!ShieldSoundComponent->IsPlaying())
+						{
+							ShieldSoundComponent->Play(0);
+						}
+
+						RumbleLeftController(0.5f);
+
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, DefaultOrb->GetActorLocation());
 						DefaultOrb->Destroy();
 					}
@@ -325,6 +358,8 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 							ShieldSoundComponent->Play(0);
 						}
 
+						RumbleLeftController(0.5f);
+
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, BossBlueOrbWave->GetActorLocation());
 						BossBlueOrbWave->Destroy();
 					}
@@ -345,8 +380,7 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 				if (AttackBall)
 				{
 					GetWorld()->GetTimerManager().SetTimer(ShieldFresnelTimer, this, &APlayerShield::Fresnel, 0.1f, true, 0.1f);
-					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, AttackBall->GetActorLocation());
-					
+										
 					if (ShieldOwner->UseStamina(AttackBall->GetDamage()*1.2f))
 					{
 						if (!ShieldSoundComponent->IsPlaying())
@@ -354,6 +388,9 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 							ShieldSoundComponent->Play(0);
 						}
 
+						RumbleLeftController(0.5f);
+
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, AttackBall->GetActorLocation());
 						AttackBall->Destroy();
 					}					
 				}
@@ -376,6 +413,8 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 						{
 							ShieldSoundComponent->Play(0);
 						}
+
+						RumbleLeftController(0.5f);
 
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
 						NMArrow->Destroy();
@@ -401,41 +440,15 @@ void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponen
 							ShieldSoundComponent->Play(0);
 						}
 
+						RumbleLeftController(0.5f);
+
 						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
 						MBSwordWave->Destroy();
 					}
 				}
 			}
 		}
-	}
-	else if (OtherComp->ComponentHasTag(TEXT("NormalMonsterWeapon")))
-	{
-		if (IsActivation)
-		{
-			ANMWeaponSword* NMSword = Cast<ANMWeaponSword>(OtherComp->GetOwner());
-
-			if (NMSword)
-			{
-				if (NMSword->IsWeaponAttack)
-				{
-					if (ShieldOwner)
-					{
-						if (ShieldOwner->UseStamina(NMSword->GetDamage()*1.2f))
-						{
-							if (!ShieldSoundComponent->IsPlaying())
-							{
-								ShieldSoundComponent->Play(0);
-							}
-
-							NMSword->IsWeaponAttack = false;
-							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
-						}
-					}
-				}				
-			}
-		}
-	}
-	
+	}	
 }
 
 void APlayerShield::OnShieldOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -469,11 +482,6 @@ void APlayerShield::GlobalTimeInit()
 {
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
 	GLog->Log(FString::Printf(TEXT("타이머 도는중")));
-}
-
-void APlayerShield::OrbWaveCrash(AActor * Orb)
-{
-	
 }
 
 void APlayerShield::Fresnel()

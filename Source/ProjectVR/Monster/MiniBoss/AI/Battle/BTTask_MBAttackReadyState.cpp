@@ -99,9 +99,7 @@ float UBTTask_MBAttackReadyState::WallCheckDistance()
 
 		if (CanSpawn)
 		{
-			WallDistance = FVector::Distance(MiniBoss->GetActorLocation(), HitResult.Location);
-			GLog->Log(FString::Printf(TEXT("WallDistance : %f "), WallDistance));
-			GLog->Log(HitResult.Actor->GetName());
+			WallDistance = FVector::Distance(MiniBoss->GetActorLocation(), HitResult.Location);			
 		}
 		return WallDistance;
 	}

@@ -24,6 +24,7 @@
 #include "Monster/MiniBoss/MiniBossParryingPoint.h"
 #include "MyTargetPoint.h"
 #include "TimerManager.h"
+#include "Component/Monster/MonsterParryingManager.h"
 
 // Sets default values
 ABoss::ABoss()
@@ -132,15 +133,11 @@ ABoss::ABoss()
 	ManyOrbBound->SetRelativeLocation(FVector(-142.0f,1.0f,318.0f));
 	ManyOrbBound->SetRelativeScale3D(FVector(1.5f, 16.0f, 12.75f));
 		
-	MonsterSpawnBoound = CreateDefaultSubobject<UBoxComponent>(TEXT("MonsterSpawnBoound"));
-	MonsterSpawnBoound->SetupAttachment(GetRootComponent());
-	MonsterSpawnBoound->SetCollisionProfileName("NoCollision");
-	MonsterSpawnBoound->SetRelativeLocation(FVector(293.0f, 0, 110.0f));
-	MonsterSpawnBoound->SetRelativeScale3D(FVector(5.25f, 10.25f, 6.25f));
-
 	UltimateAuraEffectComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("UltimateAuraEffectComponent"));
 	UltimateAuraEffectComponent->SetupAttachment(GetRootComponent());
 	UltimateAuraEffectComponent->SetRelativeLocation(FVector(0, 0, -200.0f));
+
+	ParryingManager = CreateDefaultSubobject<UMonsterParryingManager>(TEXT("ParryingManager"));
 
 	MaxHP = 350.0f;
 	CurrentHP = MaxHP;
@@ -183,7 +180,9 @@ void ABoss::BeginPlay()
 	
 	GetWorld()->GetTimerManager().SetTimer(BeginCharacterTimer, this, &ABoss::FindCharacter, 1.0f, false);		// 1.5초 후 무적시간을 비활성화
 
-	ParryingPointInit();
+	ParryingManager->ParryingPointInit(this, ParryingPoints);
+
+	//ParryingPointInit();
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMyTargetPoint::StaticClass(), TeleportPoints);
 	
 	for (int i = 0; i < TeleportPoints.Num(); i++)

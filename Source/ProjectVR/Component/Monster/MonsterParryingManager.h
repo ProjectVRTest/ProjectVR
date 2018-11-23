@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -24,5 +24,8 @@ public:
 
 	UFUNCTION()
 		void ParryingPointInit(class AActor* Monster, TArray<FName> &_ParryingPoints);
-
+	UFUNCTION()
+		void ParryingPointSet(class ACharacter * Monster, TArray<FName>& _ParryingPoints, float CurrentHP, float MaxHP, int32 &ParryingPointMaxCount);
+	UFUNCTION()
+		void ParryingPointValueSet(class ACharacter* Monster, TArray<FName>& _ParryingPoints, int32 ParryingPointMaxCount); //HP가 50%이하인경우 지정한 패링포인트 수만큼 랜덤하게 스폰해주는 함수
 };

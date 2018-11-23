@@ -77,7 +77,5 @@ public:
 	UFUNCTION()
 		void GlobalTimeInit();
 	UFUNCTION()
-		void OrbWaveCrash(class AActor* Orb);	
-	UFUNCTION()
 		void Fresnel();
 };

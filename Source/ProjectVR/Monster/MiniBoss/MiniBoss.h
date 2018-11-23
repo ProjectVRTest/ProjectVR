@@ -56,12 +56,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimMontage")
 		class UAnimMontage* AttackReverseMontage; //단타 공격 회복 애니메이션 몽타주
+	//캐릭터가 현재 추락하고 있는지 확인해줄 변수 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Jump")
-		bool CurrentFalling; //캐릭터가 현재 추락하고 있는지 확인해줄 변수 
+		bool CurrentFalling;
+	//패링이 가능한 구간에 true로 바뀌고 구간이 끝나면 false로 바뀌는 변수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
-		bool ParryingFlag; //패링이 가능한 구간에 true로 바뀌고 구간이 끝나면 false로 바뀌는 변수
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
-		bool IsParrying; //현재 패링중인지 아닌지
+		bool ParryingFlag; 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Stat")
 		float MaxHP; //최대 HP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
@@ -82,14 +82,15 @@ public:
 		class AMiniBossWeapon* Sword;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 		class USceneComponent* SwordWaveSpawn;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
 		class UMonsterParryingManager* ParryingManager;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SwordWave")
-		int SwordWaveCount;
+		int32 SwordWaveCount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
-		int ParryingPointMaxCount; //HP에 따라서 확정된 패링카운트 갯수
+		int32 ParryingPointMaxCount; //HP에 따라서 확정된 패링카운트 갯수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
-		int ParryingPointCount; //현재 기록된 패링카운트 갯수
+		int32 ParryingPointCount; //현재 기록된 패링카운트 갯수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BattleWalk")
 		float Yaw; //캐릭터가 좌우로 움직일때 판단해줄 값
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Rotate")

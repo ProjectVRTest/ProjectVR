@@ -72,11 +72,6 @@ void UBossAnimInstance::AnimNotify_LongDistanceAttackBallSpawn(UAnimNotify * Not
 	}
 }
 
-void UBossAnimInstance::AnimNotify_Test(UAnimNotify * Notify)
-{
-	GLog->Log(FString::Printf(TEXT("애니메이션 실행")));
-}
-
 void UBossAnimInstance::AnimNotify_OrbCreate(UAnimNotify * Notify)
 {
 	GLog->Log(FString::Printf(TEXT("오브 생성")));

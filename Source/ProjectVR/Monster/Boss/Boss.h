@@ -95,10 +95,11 @@ public:
 		class USceneComponent* OrbCreateLocation;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "OrbCreateLocation")
 		class UBoxComponent* ManyOrbBound; //궁극기를 쓸때 오브들을 스폰시키는데 필요한 박스
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MonsterSpawnLocation")
-		class UBoxComponent* MonsterSpawnBoound; //궁극기를 쓸때 오브들을 스폰시키는데 필요한 박스
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class UParticleSystemComponent* UltimateAuraEffectComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SwordWave")
+		class UMonsterParryingManager* ParryingManager;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FTimerHandle BeginCharacterTimer;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
@@ -119,7 +120,7 @@ public:
 		int32 ParryingPointMaxCount; //HP에 따라서 확정된 패링카운트 갯수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parrying")
 		int32 ParryingPointCount; //현재 기록된 패링카운트 갯수
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, Category = "Parrying")
 		TArray<FName>ParryingPoints; //패링포인트 소켓이름을 저장해둘 배열
 	UPROPERTY(VisibleAnyWhere,Category = "TeleportPoint")
 		FVector MapCenterLocation;
