@@ -545,8 +545,8 @@ void ARightHandMotionController::OnHandBeginOverlap(UPrimitiveComponent * Overla
 	if (OtherComp->ComponentHasTag("DisregardForLeftHand") || OtherComp->ComponentHasTag("DisregardForRightHand"))
 	{
 		if (OtherComp->ComponentHasTag("Head"))
-		{
-			HandNomalState();
+		{			
+			HandNomalState();			
 		}
 		return;
 	}

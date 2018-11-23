@@ -180,28 +180,28 @@ void APlayerShield::ConvertOfOpacity(float opacity)		// Opacity값 세팅(캐릭
 
 void APlayerShield::OnShieldOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherComp->ComponentHasTag(TEXT("MBWeapon")))
+	if (OtherComp->ComponentHasTag(TEXT("MBWeapon"))) //방패에 부딪힌 컴포넌트가 중간보스 무기인지 확인한다.
 	{
-		IsMiniBossWeaponOverlap = true;
-		AMiniBossWeapon* MiniBossWeapon = Cast<AMiniBossWeapon>(OtherComp->GetOwner()); //확인되면 중간보스 무기로 변환해서 저장한다.
+		IsMiniBossWeaponOverlap = true; //중간보스 검이 겹쳐져 있다고 알려주고
+		AMiniBossWeapon* MiniBossWeapon = Cast<AMiniBossWeapon>(OtherComp->GetOwner()); //부딪힌 컴포넌트를 소유하는 액터를 가져와서 중간보스 무기로 변환한다.
 
-		if (MiniBossWeapon) //변환이 성공하면
+		if (MiniBossWeapon) //변환이 성공하고
 		{
-			if (IsActivation)
+			if (IsActivation) //방패가 활성화 상태이고
 			{
-				if (MiniBossWeapon->IsWeaponAttack)
+				if (MiniBossWeapon->IsWeaponAttack) //중간보스 검이 공격가능 상태이면
 				{
-					if (ShieldOwner)
+					if (ShieldOwner) 
 					{
-						if (ShieldOwner->UseStamina(MiniBossWeapon->GetDamage()*1.2f))
+						if (ShieldOwner->UseStamina(MiniBossWeapon->GetDamage()*1.2f)) //스테미너가 부족하지 않다면
 						{
 							if (!ShieldSoundComponent->IsPlaying())
 							{
-								ShieldSoundComponent->Play(0);
+								ShieldSoundComponent->Play(0); //방패 막는 소리를 재생시키고
 							}
 
-							MiniBossWeapon->IsWeaponAttack = false;
-							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation());
+							MiniBossWeapon->IsWeaponAttack = false; //공격을 불가능으로 만든다.
+							UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShieldBlockEffect, OtherComp->GetComponentLocation()); //방패 막는 이펙트를 호출한다.
 						}
 					}
 				}

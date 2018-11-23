@@ -38,7 +38,6 @@ APotion::APotion()
 		PotionUseEffect = PT_PotionUseEffect.Object;
 	}
 	
-	//Mesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));		// 크기 설정		-> 테스트용 포션메쉬 나오면 테스트해서 재수정
 	Mesh->SetCollisionProfileName(TEXT("NoCollision"));	
 	Tags.Add(FName(TEXT("Potion")));		// 생성한 포션을 'Potion'란 이름으로 태그를 줌
 	Tags.Add(FName(TEXT("DisregardForLeftHand")));
@@ -71,7 +70,7 @@ void APotion::Tick(float DeltaTime)
 
 	if (BagInputCompleteFlag)
 	{
-		Destroy(this);
+		Destroy();
 	}
 }
 
@@ -86,7 +85,7 @@ void APotion::OnPotionBeginOverlap(UPrimitiveComponent * OverlappedComponent, AA
 		{
 			if (OtherActor->ActorHasTag(TEXT("Land")))
 			{
-				Destroy(this);
+				Destroy();
 			}
 
 			if (OtherComp->ComponentHasTag("Head"))
@@ -96,7 +95,7 @@ void APotion::OnPotionBeginOverlap(UPrimitiveComponent * OverlappedComponent, AA
 					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PotionUseEffect, GetActorLocation());
 				}				
 				MyCharacter->CurrentHp += 30.0f;
-				Destroy(this);
+				Destroy();
 				TokenCompleteDelegate.ExecuteIfBound();
 			}
 		}
